@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="precomp.h" />
+    <ClInclude Include="triangle_mesh_shape.h" />
+    <ClInclude Include="cmodel_format.h" />
+    <ClInclude Include="find_first_hit.h" />
+    <ClInclude Include="sphere_shape.h" />
+    <ClInclude Include="test_scene_cache.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="triangle_mesh_shape.cpp" />
+    <ClCompile Include="test_scene_cache.cpp" />
+  </ItemGroup>
+</Project>
