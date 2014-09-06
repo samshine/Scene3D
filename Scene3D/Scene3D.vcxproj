@@ -1,0 +1,566 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\physics3d.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_contact_pair_test.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_contact_test.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_object.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_ray_test.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_shape.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_sweep_test.h" />
+    <ClInclude Include="Include\Physics3D\physics3d_world.h" />
+    <ClInclude Include="Include\scene3d.h" />
+    <ClInclude Include="Include\Scene3D\LevelData\level_data.h" />
+    <ClInclude Include="Include\Scene3D\LevelData\level_data_light.h" />
+    <ClInclude Include="Include\Scene3D\LevelData\level_data_object.h" />
+    <ClInclude Include="Include\Scene3D\LevelData\level_data_portal.h" />
+    <ClInclude Include="Include\Scene3D\LevelData\level_data_sector.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_animation.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_animation_data.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_animation_timeline.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_attachment_point.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_bone.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_camera.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_draw_range.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_light.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_mesh.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_particle_emitter.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_texture.h" />
+    <ClInclude Include="Include\Scene3D\ModelData\model_data_texture_map.h" />
+    <ClInclude Include="Include\Scene3D\Performance\gpu_timer.h" />
+    <ClInclude Include="Include\Scene3D\Performance\scope_timer.h" />
+    <ClInclude Include="Include\Scene3D\Resources\scene_cache.h" />
+    <ClInclude Include="Include\Scene3D\scene.h" />
+    <ClInclude Include="Include\Scene3D\scene_camera.h" />
+    <ClInclude Include="Include\Scene3D\scene_cull_provider.h" />
+    <ClInclude Include="Include\Scene3D\scene_light.h" />
+    <ClInclude Include="Include\Scene3D\scene_light_probe.h" />
+    <ClInclude Include="Include\Scene3D\scene_model.h" />
+    <ClInclude Include="Include\Scene3D\scene_object.h" />
+    <ClInclude Include="Include\Scene3D\scene_particle_emitter.h" />
+    <ClInclude Include="Include\Scene3D\scene_pass.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\btBulletCollisionCommon.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\btBulletDynamicsCommon.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btBroadphaseInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btBroadphaseProxy.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvt.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvtBroadphase.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDispatcher.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btMultiSapBroadphase.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btOverlappingPairCache.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btOverlappingPairCallback.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btQuantizedBvh.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btSimpleBroadphase.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btActivatingCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBox2dBox2dCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBoxBoxCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBoxBoxDetector.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionConfiguration.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionCreateFunc.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionDispatcher.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionObject.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionObjectWrapper.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionWorld.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCompoundCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvex2dConvex2dAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexConcaveCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexConvexAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexPlaneCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btDefaultCollisionConfiguration.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btEmptyCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btGhostObject.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btInternalEdgeUtility.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btManifoldResult.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSimulationIslandManager.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereBoxCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereSphereCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereTriangleCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btUnionFind.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\SphereTriangleDetector.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBox2dShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBoxShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBvhTriangleMeshShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCapsuleShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCollisionMargin.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCollisionShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCompoundShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConcaveShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConeShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvex2dShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexHullShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexInternalShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexPointCloudShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexPolyhedron.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexTriangleMeshShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCylinderShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btEmptyShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMaterial.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMinkowskiSumShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMultimaterialTriangleMeshShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMultiSphereShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btOptimizedBvh.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btPolyhedralConvexShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btScaledBvhTriangleMeshShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btShapeHull.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btSphereShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btStaticPlaneShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btStridingMeshInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTetrahedronShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleBuffer.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleCallback.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleIndexVertexArray.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleIndexVertexMaterialArray.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleInfoMap.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleMesh.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleMeshShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btUniformScalingShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btBoxCollision.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btClipPolygon.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btContactProcessing.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGenericPoolAllocator.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGeometryOperations.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactBvh.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactMassUtil.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactQuantizedBvh.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactShape.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btQuantization.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btTriangleShapeEx.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_array.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_basic_geometry_operations.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_bitset.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_box_collision.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_box_set.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_clip_polygon.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_contact.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_geometry.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_geom_types.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_hash_table.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_linear_math.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_math.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_memory.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_radixsort.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_tri_collision.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btContinuousConvexCollision.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btConvexCast.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btConvexPenetrationDepthSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btDiscreteCollisionDetectorInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkConvexCast.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkEpa2.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkEpaPenetrationDepthSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkPairDetector.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btManifoldPoint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btMinkowskiPenetrationDepthSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btPersistentManifold.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btPointCollector.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btRaycastCallback.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btSimplexSolverInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btSubSimplexConvexCast.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btVoronoiSimplexSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Character\btCharacterControllerInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Character\btKinematicCharacterController.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btConeTwistConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btConstraintSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btContactConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btContactSolverInfo.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGearConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btHinge2Constraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btHingeConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btJacobianEntry.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSliderConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSolverBody.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSolverConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btTypedConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btUniversalConstraint.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btActionInterface.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btDynamicsWorld.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btRigidBody.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btSimpleDynamicsWorld.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Vehicle\btRaycastVehicle.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Vehicle\btVehicleRaycaster.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletDynamics\Vehicle\btWheelInfo.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btDefaultSoftBodySolver.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBody.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyConcaveCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyData.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyHelpers.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyInternals.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyRigidBodyCollisionConfiguration.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodySolvers.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodySolverVertexBuffer.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftRigidCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftRigidDynamicsWorld.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftSoftCollisionAlgorithm.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\BulletSoftBody\btSparseSDF.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btAabbUtil2.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btAlignedAllocator.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btAlignedObjectArray.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btConvexHull.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btConvexHullComputer.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btDefaultMotionState.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btGeometryUtil.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btGrahamScan2dConvexHull.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btHashMap.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btIDebugDraw.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btList.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btMatrix3x3.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btMinMax.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btMotionState.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btPolarDecomposition.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btPoolAllocator.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btQuadWord.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btQuaternion.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btQuickprof.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btRandom.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btScalar.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btSerializer.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btStackAlloc.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btTransform.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btTransformUtil.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\LinearMath\btVector3.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\boolInVec.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\floatInVec.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\mat_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\quat_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\vectormath_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\scalar\vec_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\boolInVec.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\floatInVec.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\mat_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\quat_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\vecidx_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\vectormath_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\vec_aos.h" />
+    <ClInclude Include="Sources\Physics3D\Bullet\vectormath\vmInclude.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_constraint_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_contact_pair_test_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_contact_test_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_object_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_ray_test_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_shape_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_sweep_test_impl.h" />
+    <ClInclude Include="Sources\Physics3D\physics3d_world_impl.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\OctTree\oct_tree.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\OctTree\oct_tree_node.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\PortalMap\portal.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\PortalMap\portal_clipping.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\PortalMap\portal_map.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\PortalMap\portal_sector.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\QuadTree\quad_tree.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\QuadTree\quad_tree_node.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree.h" />
+    <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree_root.h" />
+    <ClInclude Include="Sources\Scene3D\Framework\instances_buffer.h" />
+    <ClInclude Include="Sources\Scene3D\Framework\material_cache.h" />
+    <ClInclude Include="Sources\Scene3D\Framework\shader_setup.h" />
+    <ClInclude Include="Sources\Scene3D\Framework\shadow_maps.h" />
+    <ClInclude Include="Sources\Scene3D\Level\level.h" />
+    <ClInclude Include="Sources\Scene3D\Level\level_instance.h" />
+    <ClInclude Include="Sources\Scene3D\Model\dual_quaternion.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_cache.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_instance.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_lod.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_material_cache.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_mesh_visitor.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_render_command.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_shader_cache.h" />
+    <ClInclude Include="Sources\Scene3D\Model\model_shader_description.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Bloom\bloom_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\DiffuseGI\diffuse_gi_pass_cs.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Final\final_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\icosahedron.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\LogAverageLight\log_average_light.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass_data.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_uniforms.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_2d.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_3d.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Skybox\skybox_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\SSAO\ssao_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\Transparency\transparency_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\VSMShadowMap\vsm_shadow_map_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.h" />
+    <ClInclude Include="Sources\Scene3D\scene_camera_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_light_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_light_probe_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_model_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_object_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_particle_emitter_impl.h" />
+    <ClInclude Include="Sources\Scene3D\scene_pass_impl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btBroadphaseProxy.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvt.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvtBroadphase.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDispatcher.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btMultiSapBroadphase.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btOverlappingPairCache.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btQuantizedBvh.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btSimpleBroadphase.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btActivatingCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBox2dBox2dCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBoxBoxCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btBoxBoxDetector.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionDispatcher.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionObject.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCollisionWorld.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btCompoundCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvex2dConvex2dAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexConcaveCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexConvexAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btConvexPlaneCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btDefaultCollisionConfiguration.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btEmptyCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btGhostObject.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btInternalEdgeUtility.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btManifoldResult.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSimulationIslandManager.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereBoxCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereSphereCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btSphereTriangleCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\btUnionFind.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionDispatch\SphereTriangleDetector.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBox2dShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBoxShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btBvhTriangleMeshShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCapsuleShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCollisionShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCompoundShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConcaveShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConeShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvex2dShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexHullShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexInternalShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexPointCloudShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexPolyhedron.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btConvexTriangleMeshShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btCylinderShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btEmptyShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btHeightfieldTerrainShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMinkowskiSumShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMultimaterialTriangleMeshShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btMultiSphereShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btOptimizedBvh.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btPolyhedralConvexShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btScaledBvhTriangleMeshShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btShapeHull.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btSphereShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btStaticPlaneShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btStridingMeshInterface.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTetrahedronShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleBuffer.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleCallback.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleIndexVertexArray.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleIndexVertexMaterialArray.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleMesh.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btTriangleMeshShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\CollisionShapes\btUniformScalingShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btContactProcessing.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGenericPoolAllocator.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactBvh.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactQuantizedBvh.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btGImpactShape.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\btTriangleShapeEx.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_box_set.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_contact.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_memory.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\Gimpact\gim_tri_collision.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btContinuousConvexCollision.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btConvexCast.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkConvexCast.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkEpa2.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkEpaPenetrationDepthSolver.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btGjkPairDetector.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btMinkowskiPenetrationDepthSolver.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btPersistentManifold.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btRaycastCallback.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btSubSimplexConvexCast.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\NarrowPhaseCollision\btVoronoiSimplexSolver.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Character\btKinematicCharacterController.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btConeTwistConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btContactConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGearConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btHinge2Constraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btHingeConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSliderConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btTypedConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\ConstraintSolver\btUniversalConstraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btRigidBody.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Dynamics\btSimpleDynamicsWorld.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Vehicle\btRaycastVehicle.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletDynamics\Vehicle\btWheelInfo.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btDefaultSoftBodySolver.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBody.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyConcaveCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyHelpers.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftBodyRigidBodyCollisionConfiguration.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftRigidCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftRigidDynamicsWorld.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\BulletSoftBody\btSoftSoftCollisionAlgorithm.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btAlignedAllocator.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btConvexHull.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btConvexHullComputer.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btGeometryUtil.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btPolarDecomposition.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btQuickprof.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btSerializer.cpp" />
+    <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btVector3.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_constraint.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_contact_pair_test.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_contact_test.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_object.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_ray_test.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_shape.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_sweep_test.cpp" />
+    <ClCompile Include="Sources\Physics3D\physics3d_world.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree_node.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\PortalMap\portal_clipping.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\PortalMap\portal_map.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\QuadTree\quad_tree.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\QuadTree\quad_tree_node.cpp" />
+    <ClCompile Include="Sources\Scene3D\Culling\RTree\rtree.cpp" />
+    <ClCompile Include="Sources\Scene3D\Framework\instances_buffer.cpp" />
+    <ClCompile Include="Sources\Scene3D\Framework\material_cache.cpp" />
+    <ClCompile Include="Sources\Scene3D\Framework\shader_setup.cpp" />
+    <ClCompile Include="Sources\Scene3D\Framework\shadow_maps.cpp" />
+    <ClCompile Include="Sources\Scene3D\Level\level.cpp" />
+    <ClCompile Include="Sources\Scene3D\Model\model.cpp" />
+    <ClCompile Include="Sources\Scene3D\Model\model_cache.cpp" />
+    <ClCompile Include="Sources\Scene3D\Model\model_instance.cpp" />
+    <ClCompile Include="Sources\Scene3D\Model\model_lod.cpp" />
+    <ClCompile Include="Sources\Scene3D\Model\model_shader_cache.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\Bloom\bloom_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\Final\final_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\LogAverageLight\log_average_light.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass_data.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\Skybox\skybox_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\SSAO\ssao_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\Transparency\transparency_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\VSMShadowMap\vsm_shadow_map_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.cpp" />
+    <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp" />
+    <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp" />
+    <ClCompile Include="Sources\Scene3D\Resources\scene_cache.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_camera.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_light.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_light_probe.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_model.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_object.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_particle_emitter.cpp" />
+    <ClCompile Include="Sources\Scene3D\scene_pass.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Scene3D</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
