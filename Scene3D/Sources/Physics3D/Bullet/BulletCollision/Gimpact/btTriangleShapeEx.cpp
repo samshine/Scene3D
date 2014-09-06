@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*! \file btGImpactTriangleShape.h
 \author Francisco Leon Najera
 */

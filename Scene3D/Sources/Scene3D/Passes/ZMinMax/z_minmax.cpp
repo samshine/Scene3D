@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "z_minmax.h"
 #include "Scene3D/Framework/shader_setup.h"
 

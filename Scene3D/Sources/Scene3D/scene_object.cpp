@@ -26,13 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "API/Scene3D/scene_object.h"
-#include "API/Scene3D/scene_model.h"
-#include "API/Scene3D/scene.h"
+#include "precomp.h"
+#include "Scene3D/scene_object.h"
+#include "Scene3D/scene_model.h"
+#include "Scene3D/scene.h"
 #include <algorithm>
 #include "Scene3D/scene_object_impl.h"
-#include "API/Core/Math/aabb.h"
 #include "Scene3D/Model/model.h"
 #include "Scene3D/scene_impl.h"
 #include "Scene3D/scene_model_impl.h"

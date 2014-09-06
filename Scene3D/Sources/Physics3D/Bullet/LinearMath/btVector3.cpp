@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*
  Copyright (c) 2011 Apple Inc.
  http://continuousphysics.com/Bullet/
@@ -55,7 +55,7 @@ long _maxdot_large( const float *vv, const float *vec, unsigned long count, floa
     size_t segment = 0;
     float4 stack_array[ STACK_ARRAY_COUNT ];
     
-#if DEBUG
+#ifdef DEBUG
     memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
 #endif
     
@@ -440,7 +440,7 @@ long _mindot_large( const float *vv, const float *vec, unsigned long count, floa
     size_t segment = 0;
     float4 stack_array[ STACK_ARRAY_COUNT ];
     
-#if DEBUG
+#ifdef DEBUG
     memset( stack_array, -1, STACK_ARRAY_COUNT * sizeof(stack_array[0]) );
 #endif
     

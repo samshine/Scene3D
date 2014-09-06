@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*! \file gim_box_set.h
 \author Francisco Leon Najera
 */

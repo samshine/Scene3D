@@ -28,9 +28,6 @@
 
 #pragma once
 
-#include "API/Core/Math/vec3.h"
-#include "API/Core/Math/quaternion.h"
-
 namespace clan
 {
 

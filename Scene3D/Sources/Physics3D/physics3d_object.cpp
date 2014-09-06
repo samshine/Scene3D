@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Physics3D/precomp.h"
-#include "API/Physics3D/physics3d_object.h"
-#include "API/Physics3D/physics3d_shape.h"
-#include "API/Physics3D/physics3d_constraint.h"
-#include "API/Physics3D/physics3d_world.h"
+#include "precomp.h"
+#include "Physics3D/physics3d_object.h"
+#include "Physics3D/physics3d_shape.h"
+#include "Physics3D/physics3d_constraint.h"
+#include "Physics3D/physics3d_world.h"
 #include "physics3d_object_impl.h"
 #include "physics3d_shape_impl.h"
 #include "physics3d_constraint_impl.h"

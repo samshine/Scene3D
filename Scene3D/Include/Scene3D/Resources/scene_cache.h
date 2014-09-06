@@ -29,8 +29,6 @@
 
 #pragma once
 
-#include "../../Core/Resources/resource.h"
-#include "../../Display/Render/texture.h"
 #include "../ModelData/model_data.h"
 #include <memory>
 #include <string>

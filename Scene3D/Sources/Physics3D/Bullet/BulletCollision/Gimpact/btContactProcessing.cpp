@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 
 /*
 This source file is part of GIMPACT Library.

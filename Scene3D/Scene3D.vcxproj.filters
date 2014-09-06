@@ -1083,6 +1083,9 @@
     <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\vectormath_aos.h">
       <Filter>Sources\Physics3D\Bullet\vectormath\sse</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1239,9 +1242,6 @@
       <Filter>Sources\Physics3D</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp">
-      <Filter>Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btBroadphaseProxy.cpp">
       <Filter>Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp">
@@ -1618,6 +1618,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btVector3.cpp">
       <Filter>Sources\Physics3D\Bullet\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

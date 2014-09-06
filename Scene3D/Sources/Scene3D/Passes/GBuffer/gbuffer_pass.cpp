@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "gbuffer_pass.h"
-#include "API/Scene3D/scene.h"
+#include "Scene3D/scene.h"
 #include "Scene3D/Model/model_lod.h"
 #include "Scene3D/scene_impl.h"
-#include "API/Core/Math/frustum_planes.h"
+#include <ClanLib/gl.h>
 
 namespace clan
 {

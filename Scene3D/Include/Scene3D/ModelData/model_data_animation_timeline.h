@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "../../Core/Math/cl_math.h"
-
 namespace clan
 {
 

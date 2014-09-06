@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "shader_setup.h"
 
 namespace clan

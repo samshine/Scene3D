@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../Display/Render/graphic_context.h"
 #include "Performance/gpu_timer.h"
 #include <memory>
 

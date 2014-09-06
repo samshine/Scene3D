@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "diffuse_gi_pass_cs.h"
-#include "API/Scene3D/Performance/scope_timer.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/scene_impl.h"
 
 namespace clan

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "oct_tree.h"
 
 namespace clan

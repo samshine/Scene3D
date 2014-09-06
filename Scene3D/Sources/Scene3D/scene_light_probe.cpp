@@ -26,10 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "API/Scene3D/scene_light_probe.h"
-#include "API/Scene3D/scene.h"
-#include "API/Core/Math/aabb.h"
+#include "precomp.h"
+#include "Scene3D/scene_light_probe.h"
+#include "Scene3D/scene.h"
 #include "scene_light_probe_impl.h"
 #include "scene_impl.h"
 

@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*
 Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
 

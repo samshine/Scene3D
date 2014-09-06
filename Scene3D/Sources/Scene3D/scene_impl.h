@@ -28,11 +28,10 @@
 
 #pragma once
 
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Scene3D/scene_camera.h"
-#include "API/Scene3D/scene_pass.h"
-#include "API/Scene3D/scene_cull_provider.h"
-#include "API/Scene3D/Performance/gpu_timer.h"
+#include "Scene3D/scene_camera.h"
+#include "Scene3D/scene_pass.h"
+#include "Scene3D/scene_cull_provider.h"
+#include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
 #include "Scene3D/Model/model_shader_cache.h"

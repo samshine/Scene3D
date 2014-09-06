@@ -29,7 +29,6 @@
 #pragma once
 
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
-#include "API/Core/Math/vec3.h"
 
 namespace clan
 {

@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*
 Copyright (c) 2011 Ole Kniemeyer, MAXON, www.maxon.net
 

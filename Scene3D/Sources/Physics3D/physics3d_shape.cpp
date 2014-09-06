@@ -26,12 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Physics3D/precomp.h"
-#include "API/Physics3D/physics3d_shape.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Math/vec3.h"
-#include "API/Core/Math/quaternion.h"
-#include "API/Scene3D/ModelData/model_data.h"
+#include "precomp.h"
+#include "Physics3D/physics3d_shape.h"
+#include "Scene3D/ModelData/model_data.h"
 #include "Physics3D/Bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "Physics3D/Bullet/BulletCollision/Gimpact/btGImpactShape.h"
 #include "physics3d_shape_impl.h"

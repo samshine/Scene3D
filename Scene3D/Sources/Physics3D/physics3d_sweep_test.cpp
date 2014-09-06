@@ -26,13 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Physics3D/precomp.h"
-#include "API/Physics3D/physics3d_sweep_test.h"
-#include "API/Physics3D/physics3d_object.h"
-#include "API/Physics3D/physics3d_shape.h"
-#include "API/Physics3D/physics3d_world.h"
-#include "API/Core/System/exception.h"
-#include "API/Core/Math/cl_math.h"
+#include "precomp.h"
+#include "Physics3D/physics3d_sweep_test.h"
+#include "Physics3D/physics3d_object.h"
+#include "Physics3D/physics3d_shape.h"
+#include "Physics3D/physics3d_world.h"
 #include "physics3d_sweep_test_impl.h"
 #include "physics3d_world_impl.h"
 #include "physics3d_shape_impl.h"

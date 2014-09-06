@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../Core/Math/vec3.h"
 #include <memory>
 
 namespace clan

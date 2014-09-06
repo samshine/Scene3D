@@ -26,10 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Physics3D/precomp.h"
-#include "API/Physics3D/physics3d_world.h"
+#include "precomp.h"
+#include "Physics3D/physics3d_world.h"
 #include "physics3d_world_impl.h"
-#include "API/Core/System/exception.h"
 
 namespace clan
 {

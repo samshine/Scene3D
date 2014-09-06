@@ -28,8 +28,7 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_cull_provider.h"
-#include "API/Core/Math/frustum_planes.h"
+#include "Scene3D/scene_cull_provider.h"
 
 namespace clan
 {

@@ -26,18 +26,18 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "API/Scene3D/scene.h"
-#include "API/Scene3D/scene_object.h"
-#include "API/Scene3D/scene_light.h"
-#include "API/Scene3D/scene_particle_emitter.h"
-#include "API/Scene3D/Performance/scope_timer.h"
-#include "API/Core/Math/frustum_planes.h"
+#include "precomp.h"
+#include "Scene3D/scene.h"
+#include "Scene3D/scene_object.h"
+#include "Scene3D/scene_light.h"
+#include "Scene3D/scene_particle_emitter.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Culling/OctTree/oct_tree.h"
 #include "scene_impl.h"
 #include "scene_object_impl.h"
 #include "scene_light_probe_impl.h"
 #include "scene_pass_impl.h"
+#include <ClanLib/gl.h>
 
 namespace clan
 {
@@ -120,7 +120,7 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
 
-	Vec2f pos(screen_pos.x - impl->viewport->left, impl->viewport->bottom - screen_pos.y);
+	Vec2f pos((float)(screen_pos.x - impl->viewport->left), (float)(impl->viewport->bottom - screen_pos.y));
 
 	Vec2f normalized(pos.x * 2.0f / impl->viewport->get_width(), pos.y * 2.0f / impl->viewport->get_height());
 	normalized -= 1.0f;

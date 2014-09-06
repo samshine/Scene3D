@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*! \file btGenericPoolAllocator.cpp
 \author Francisco Leon Najera. email projectileman@yahoo.com
 

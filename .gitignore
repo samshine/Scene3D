@@ -1,3 +1,8 @@
 *.sdf
 *.suo
 /Tests/CollisionLib/Dreary
+/Debug
+ipch
+/Release
+/Scene3D/Debug
+/Scene3D/Release

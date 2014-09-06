@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "log_average_light.h"
 #include "Scene3D/Framework/shader_setup.h"
 

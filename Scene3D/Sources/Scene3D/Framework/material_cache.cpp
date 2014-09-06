@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "material_cache.h"
-#include "API/Scene3D/Resources/scene_cache.h"
+#include "Scene3D/Resources/scene_cache.h"
 #include "Scene3D/scene_impl.h"
 
 namespace clan

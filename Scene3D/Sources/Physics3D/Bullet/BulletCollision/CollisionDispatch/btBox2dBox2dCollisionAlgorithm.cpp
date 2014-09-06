@@ -1,4 +1,4 @@
-#include "Physics3D/precomp.h"
+#include "precomp.h"
 /*
 Bullet Continuous Collision Detection and Physics Library
 * The b2CollidePolygons routines are Copyright (c) 2006-2007 Erin Catto http://www.gphysics.com

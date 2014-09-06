@@ -26,11 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "model_instance.h"
 #include "model.h"
-#include "API/Scene3D/ModelData/model_data.h"
-#include "API/Core/Math/aabb.h"
+#include "Scene3D/ModelData/model_data.h"
 
 namespace clan
 {

@@ -26,12 +26,13 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "API/Scene3D/Performance/gpu_timer.h"
-#include "API/Core/System/comptr.h"
+#include "precomp.h"
+#include "Scene3D/Performance/gpu_timer.h"
 #ifdef WIN32
 #include <d3d11.h>
 #endif
+
+#include <ClanLib/d3d.h>
 
 namespace clan
 {

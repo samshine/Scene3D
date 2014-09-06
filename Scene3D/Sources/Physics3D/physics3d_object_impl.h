@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Physics3D/physics3d_shape.h"
+#include "Physics3D/physics3d_shape.h"
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 
 namespace clan

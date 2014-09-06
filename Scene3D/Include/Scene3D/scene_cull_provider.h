@@ -29,8 +29,6 @@
 
 #pragma once
 
-#include "../Core/Math/vec3.h"
-#include "../Core/Math/mat4.h"
 #include <vector>
 
 namespace clan

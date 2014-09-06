@@ -26,9 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
+#include "precomp.h"
 #include "oct_tree_node.h"
-#include "API/Core/Math/intersection_test.h"
 #include <algorithm>
 
 namespace clan

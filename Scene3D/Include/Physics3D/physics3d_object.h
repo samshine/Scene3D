@@ -29,9 +29,6 @@
 
 #pragma once
 
-#include "../Core/Math/vec3.h"
-#include "../Core/Math/quaternion.h"
-#include "../Core/System/userdata.h"
 #include <memory>
 
 namespace clan

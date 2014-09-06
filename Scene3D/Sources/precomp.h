@@ -34,22 +34,13 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#endif
-
-#include "API/core.h"
-#include "API/display.h"
-#include "API/gui.h"
-#include "API/gl.h"
-#ifdef WIN32
-#include "API/d3d.h"
+#undef min
+#undef max
 #endif
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
 
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <map>
-
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>

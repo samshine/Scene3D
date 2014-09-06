@@ -28,8 +28,7 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_cull_provider.h"
-#include "API/Core/Math/aabb.h"
+#include "Scene3D/scene_cull_provider.h"
 #include "rtree_root.h"
 
 namespace clan
