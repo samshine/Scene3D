@@ -55,24 +55,9 @@
 #endif
 
 #if defined(_MSC_VER)
-	#if !defined(_MT)
-		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
-	#endif
 	#if !defined(_DEBUG)
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene3D-dll.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene3D-static-mtdll.lib")
-		#else
-			#pragma comment(lib, "clanScene3D-static-mt.lib")
-		#endif
+		#pragma comment(lib, "Scene3D.lib")
 	#else
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene3D-dll-debug.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene3D-static-mtdll-debug.lib")
-		#else
-			#pragma comment(lib, "clanScene3D-static-mt-debug.lib")
-		#endif
+		#pragma comment(lib, "Scene3Dd.lib")
 	#endif
 #endif
