@@ -50,8 +50,8 @@
 
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)
-		#pragma comment(lib, "Physics3D.lib")
+		#pragma comment(lib, "Scene3D.lib")
 	#else
-		#pragma comment(lib, "Physics3Dd.lib")
+		#pragma comment(lib, "Scene3Dd.lib")
 	#endif
 #endif
