@@ -64,7 +64,7 @@ public:
 		return get_inout_container().get<Type>(name);
 	}
 
-	void set_viewport(const Rect &box);
+	void set_viewport(const Rect &box, const FrameBuffer &fb = FrameBuffer());
 	void set_camera(const SceneCamera &camera);
 
 	void render(GraphicContext &gc);

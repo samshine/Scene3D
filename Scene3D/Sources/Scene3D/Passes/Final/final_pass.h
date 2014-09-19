@@ -39,6 +39,7 @@ public:
 
 private:
 	// In:
+	Resource<FrameBuffer> viewport_fb;
 	Resource<Rect> viewport;
 	Resource<Texture2D> final_color;
 	Resource<Texture2D> bloom_blur_texture;

@@ -68,7 +68,7 @@ public:
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
-	void set_viewport(const Rect &box);
+	void set_viewport(const Rect &box, const FrameBuffer &fb = FrameBuffer());
 	void set_camera(const Vec3f &position, const Quaternionf &orientation);
 	void set_camera_position(const Vec3f &position);
 	void set_camera_orientation(const Quaternionf &orientation);
@@ -114,6 +114,7 @@ private:
 	SceneCamera camera;
 
 	Resource<float> camera_field_of_view;
+	Resource<FrameBuffer> viewport_fb;
 	Resource<Rect> viewport;
 	Resource<Mat4f> out_world_to_eye;
 

@@ -72,9 +72,9 @@ ResourceContainer &Scene::get_inout_container()
 	return impl->inout_data;
 }
 
-void Scene::set_viewport(const Rect &box)
+void Scene::set_viewport(const Rect &box, const FrameBuffer &fb)
 {
-	impl->set_viewport(box);
+	impl->set_viewport(box, fb);
 }
 
 void Scene::set_camera(const SceneCamera &camera)
@@ -217,6 +217,7 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path, inout_data));
 	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path, inout_data));
 
+	viewport_fb = inout_data.get<FrameBuffer>("ViewportFrameBuffer");
 	viewport = inout_data.get<Rect>("Viewport");
 	camera_field_of_view = inout_data.get<float>("FieldOfView");
 	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
@@ -280,9 +281,10 @@ ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &inser
 	}
 }
 
-void Scene_Impl::set_viewport(const Rect &box)
+void Scene_Impl::set_viewport(const Rect &box, const FrameBuffer &fb)
 {
 	viewport.set(box);
+	viewport_fb.set(fb);
 }
 
 void Scene_Impl::render(GraphicContext &gc)

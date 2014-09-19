@@ -37,6 +37,7 @@ namespace clan
 
 FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
+	viewport_fb = inout.get<FrameBuffer>("ViewportFrameBuffer");
 	viewport = inout.get<Rect>("Viewport");
 	final_color = inout.get<Texture2D>("FinalColor");
 	bloom_blur_texture = inout.get<Texture2D>("BloomContribution");
@@ -89,6 +90,7 @@ void FinalPass::run(GraphicContext &gc)
 	final_color->set_min_filter(filter_nearest);
 	final_color->set_mag_filter(filter_nearest);
 
+	if (!viewport_fb.get().is_null()) gc.set_frame_buffer(viewport_fb.get());
 	gc.set_viewport(viewport.get());
 	gc.set_texture(0, final_color.get());
 	gc.set_texture(2, bloom_blur_texture.get());
@@ -98,6 +100,7 @@ void FinalPass::run(GraphicContext &gc)
 	gc.reset_program_object();
 	gc.reset_texture(0);
 	gc.reset_texture(2);
+	gc.reset_frame_buffer();
 }
 
 }
