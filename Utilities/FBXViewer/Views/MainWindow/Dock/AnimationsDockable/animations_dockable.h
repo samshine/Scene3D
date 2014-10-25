@@ -1,14 +1,12 @@
 
 #pragma once
 
-#include <UICore/View/view.h>
-
 class RolloutView;
 class RolloutTextFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
-class AnimationsDockable : public uicore::View
+class AnimationsDockable : public clan::View
 {
 public:
 	AnimationsDockable();

@@ -3,7 +3,7 @@
 
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
-#include <ClanLib/scene3d.h>
+#include <scene3d.h>
 
 class ViewerSceneCache : public clan::SceneCache
 {

@@ -1,4 +1,5 @@
 
+#include "precomp.h"
 #include "viewer_scene_cache.h"
 
 using namespace clan;

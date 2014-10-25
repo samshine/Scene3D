@@ -1,19 +1,16 @@
 
+#include "precomp.h"
 #include "scene_view.h"
 #include "viewer_scene_cache.h"
 #include "../../../Model/app_model.h"
-#include <UICore/Targets/target_clan.h>
-#include <UICore/Canvas/canvas.h>
-#include <UICore/Math/mat3x2f.h>
-#include <UICore/Events/key_event.h>
 
-using namespace uicore;
+using namespace clan;
 
 SceneView::SceneView()
 {
 	style.set_layout_hbox();
 	style.set_flex(1.0f, 1.0f);
-	style.set_background(Colorf::rgb8(200, 200, 200));
+	style.set_background(Colorf(200, 200, 200));
 	style.set_padding(5.0f);
 
 	set_focus_policy(FocusPolicy::accept);
@@ -79,18 +76,20 @@ SceneView::SceneView()
 		}
 	});
 
-	timer = Timer::repeating(10, [this]()
+	timer = Timer();
+	timer.func_expired() = [this]()
 	{
 		set_needs_render();
-	});
+	};
+	timer.start(10, true);
 }
 
 void SceneView::render_content(Canvas &canvas)
 {
-	Pointf viewport_pos = canvas.get_transform() * Pointf(0.0f, 0.0f);
-	Sizef viewport_size = geometry().content.size();
+	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+	Sizef viewport_size = geometry().content.get_size();
 
-	clan::GraphicContext gc = get_gc(canvas);
+	clan::GraphicContext gc = canvas.get_gc();
 
 	setup_scene(gc);
 	update_model(gc);

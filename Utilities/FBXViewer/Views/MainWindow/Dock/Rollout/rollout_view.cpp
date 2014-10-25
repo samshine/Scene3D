@@ -1,6 +1,9 @@
 
+#include "precomp.h"
 #include "rollout_view.h"
 #include "rollout_header.h"
+
+using namespace clan;
 
 RolloutView::RolloutView(const std::string &title)
 {

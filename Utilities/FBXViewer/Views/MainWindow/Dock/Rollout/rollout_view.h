@@ -1,11 +1,9 @@
 
 #pragma once
 
-#include <UICore/View/view.h>
-
 class RolloutHeader;
 
-class RolloutView : public uicore::View
+class RolloutView : public clan::View
 {
 public:
 	RolloutView(const std::string &title);

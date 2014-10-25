@@ -1,12 +1,12 @@
 
+#include "precomp.h"
 #include "animations_dockable.h"
-#include "../Rollout/rollout_view.h"
-#include "../Rollout/rollout_list.h"
-#include "../Rollout/rollout_text_field_property.h"
-#include "../../../../Model/app_model.h"
-#include <UICore/Text/text.h>
+#include "Views/MainWindow/Dock/Rollout/rollout_view.h"
+#include "Views/MainWindow/Dock/Rollout/rollout_list.h"
+#include "Views/MainWindow/Dock/Rollout/rollout_text_field_property.h"
+#include "Model/app_model.h"
 
-using namespace uicore;
+using namespace clan;
 
 AnimationsDockable::AnimationsDockable()
 {
@@ -56,12 +56,12 @@ void AnimationsDockable::update_animation_fields()
 		animation->set_hidden(false);
 
 		const auto &anim = AppModel::instance()->animations[selection->index];
-		start_property->text_field->set_text(Text::int_to_text(anim.start_frame));
-		end_property->text_field->set_text(Text::int_to_text(anim.end_frame));
-		play_property->text_field->set_text(Text::float_to_text(anim.play_speed));
-		move_property->text_field->set_text(Text::float_to_text(anim.move_speed));
+		start_property->text_field->set_text(StringHelp::int_to_text(anim.start_frame));
+		end_property->text_field->set_text(StringHelp::int_to_text(anim.end_frame));
+		play_property->text_field->set_text(StringHelp::float_to_text(anim.play_speed));
+		move_property->text_field->set_text(StringHelp::float_to_text(anim.move_speed));
 		loop_property->text_field->set_text(anim.loop ? "1" : "0");
-		rarity_property->text_field->set_text(Text::int_to_text(anim.rarity));
+		rarity_property->text_field->set_text(StringHelp::int_to_text(anim.rarity));
 	}
 	else
 	{

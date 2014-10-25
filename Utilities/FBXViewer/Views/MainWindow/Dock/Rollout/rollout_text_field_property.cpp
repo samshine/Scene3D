@@ -1,8 +1,9 @@
 
+#include "precomp.h"
 #include "rollout_text_field_property.h"
 #include "rollout_view.h"
 
-using namespace uicore;
+using namespace clan;
 
 RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text)
 {
@@ -18,7 +19,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 
 	text_field = std::make_shared<TextFieldView>();
 	text_field->style.set_flex(1.0f, 1.0f);
-	text_field->style.set_background(Colorf::rgb8(230, 230, 230));
+	text_field->style.set_background(Colorf(230, 230, 230));
 	text_field->style.set_border_radius(3.0f);
 	text_field->style.set_padding(5.0f, 2.0f);
 

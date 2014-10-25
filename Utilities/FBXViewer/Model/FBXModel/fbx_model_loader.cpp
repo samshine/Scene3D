@@ -1,7 +1,5 @@
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/scene3d.h>
+#include "precomp.h"
 #include "fbx_model_loader.h"
 #include "fbx_model.h"
 #include "../animation.h"

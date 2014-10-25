@@ -128,19 +128,19 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 	if (!model_data->meshes.empty() && !model_data->meshes[0].draw_ranges.empty())
 	{
 		is_two_sided = model_data->meshes[0].draw_ranges[0].two_sided;
-		out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 	}
 
 	bool uses_bones = !model_data->bones.empty();
 
+	bool raster_set = false;
 	bool first_program = true;
 	ModelShaderDescription current_program;
 
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
 		bool uses_color_channel = !mesh_buffers[i].colors.is_null();
+		bool buffers_set = false;
 
-		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
 		{
 			const ModelDataDrawRange &material_range = model_data->meshes[i].draw_ranges[j];
@@ -150,6 +150,18 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 
 			if (!material_range.transparent)
 				continue;
+
+			if (!raster_set)
+			{
+				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
+				raster_set = true;
+			}
+
+			if (!buffers_set)
+			{
+				out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
+				buffers_set = true;
+			}
 
 			if (material_range.diffuse_map.texture != -1)
 			{

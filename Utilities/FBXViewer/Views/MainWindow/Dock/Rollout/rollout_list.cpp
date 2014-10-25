@@ -1,14 +1,14 @@
 
+#include "precomp.h"
 #include "rollout_list.h"
-#include <UICore/Events/key_event.h>
 
-using namespace uicore;
+using namespace clan;
 
 RolloutList::RolloutList()
 {
 	style.set_layout_vbox();
-	style.set_border(Colorf::rgb8(200, 200, 200), 1.0f);
-	style.set_background(Colorf::rgb8(240, 240, 240));
+	style.set_border(Colorf(200, 200, 200), 1.0f);
+	style.set_background(Colorf(240, 240, 240));
 	style.set_padding(5.0f);
 }
 
@@ -101,14 +101,14 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 		{
 			stop_animations();
 			if (value)
-				animate(0.0f, 255.0f, [this](float t) { style.set_background(Colorf::rgba8(220, 220, 255, (int)t));  }, 400, Easing::easeinout);
+				animate(0.0f, 255.0f, [this](float t) { style.set_background(Colorf(220, 220, 255, (int)t));  }, 400, Easing::easeinout);
 			else
-				animate(255.0f, 0.0f, [this](float t) { style.set_background(Colorf::rgba8(220, 220, 255, (int)t)); }, 400, Easing::easeinout, [this]() { style.set_background_none(); });
+				animate(255.0f, 0.0f, [this](float t) { style.set_background(Colorf(220, 220, 255, (int)t)); }, 400, Easing::easeinout, [this]() { style.set_background_none(); });
 		}
 		else
 		{
 			if (value)
-				style.set_background(Colorf::rgb8(220, 220, 255));
+				style.set_background(Colorf(220, 220, 255));
 			else
 				style.set_background_none();
 		}

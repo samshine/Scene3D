@@ -1,4 +1,5 @@
 
+#include "precomp.h"
 #include "fbx_model.h"
 #include "fbx_model_loader.h"
 #include <ClanLib/core.h>

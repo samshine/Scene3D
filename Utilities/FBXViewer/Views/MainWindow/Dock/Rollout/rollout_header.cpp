@@ -1,14 +1,15 @@
 
+#include "precomp.h"
 #include "rollout_header.h"
 
-using namespace uicore;
+using namespace clan;
 
 RolloutHeader::RolloutHeader()
 {
 	style.set_layout_block();
 	style.set_margin(5.0f);
 	style.set_padding(10.0f, 2.0f);
-	style.set_background(Colorf::rgb8(230, 230, 230));
+	style.set_background(Colorf(230, 230, 230));
 
 	label = std::make_shared<LabelView>();
 	label->set_font(FontDescription("Segoe UI", 13.0f, 1.4f));

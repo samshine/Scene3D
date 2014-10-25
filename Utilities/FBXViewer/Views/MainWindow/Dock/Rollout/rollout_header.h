@@ -1,15 +1,12 @@
 
 #pragma once
 
-#include <UICore/View/view.h>
-#include <UICore/StandardViews/label_view.h>
-
-class RolloutHeader : public uicore::View
+class RolloutHeader : public clan::View
 {
 public:
 	RolloutHeader();
 	void set_text(const std::string &text);
 
 private:
-	std::shared_ptr<uicore::LabelView> label;
+	std::shared_ptr<clan::LabelView> label;
 };

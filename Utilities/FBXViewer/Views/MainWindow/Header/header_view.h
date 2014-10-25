@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <UICore/View/view.h>
-#include <UICore/StandardViews/button_view.h>
-
-class HeaderView : public uicore::View
+class HeaderView : public clan::View
 {
 public:
 	HeaderView();

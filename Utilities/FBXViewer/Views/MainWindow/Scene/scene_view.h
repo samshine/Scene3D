@@ -3,16 +3,13 @@
 
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
-#include <ClanLib/scene3d.h>
-#include <UICore/View/view.h>
-#include <UICore/StandardViews/button_view.h>
-#include <UICore/Animation/timer.h>
+#include <scene3d.h>
 
-class SceneView : public uicore::View
+class SceneView : public clan::View
 {
 public:
 	SceneView();
-	void render_content(uicore::Canvas &canvas) override;
+	void render_content(clan::Canvas &canvas) override;
 
 private:
 	void setup_scene(clan::GraphicContext &gc);
@@ -20,7 +17,7 @@ private:
 
 	std::string current_animation = "default";
 
-	uicore::Timer timer;
+	clan::Timer timer;
 
 	clan::ResourceManager resources;
 

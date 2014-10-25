@@ -1,16 +1,16 @@
 
+#include "precomp.h"
 #include "main_window.h"
 #include "Header/header_view.h"
 #include "Scene/scene_view.h"
 #include "Dock/dock_view.h"
-#include <UICore/Window/run_loop.h>
 
-using namespace uicore;
+using namespace clan;
 
 MainWindow::MainWindow() : WindowView(create_desc())
 {
 	style.set_layout_vbox();
-	style.set_background(Colorf::rgb8(240, 240, 240));
+	style.set_background(Colorf(240, 240, 240));
 	slots.connect(sig_close(), [](CloseEvent &e) { RunLoop::exit(); });
 
 	header_view = std::make_shared<HeaderView>();
@@ -27,10 +27,10 @@ MainWindow::MainWindow() : WindowView(create_desc())
 	add_subview(workspace);
 }
 
-WindowDescription MainWindow::create_desc()
+DisplayWindowDescription MainWindow::create_desc()
 {
-	WindowDescription desc;
-	desc.set_size(1280.0f, 768.0f);
+	DisplayWindowDescription desc;
+	desc.set_size(Size(1280, 768), false);
 	desc.set_title("FBX Viewer");
 	return desc;
 }

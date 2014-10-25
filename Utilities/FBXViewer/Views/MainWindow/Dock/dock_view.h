@@ -1,12 +1,9 @@
 
 #pragma once
 
-#include <UICore/View/view.h>
-#include <UICore/StandardViews/button_view.h>
-
 class AnimationsDockable;
 
-class DockView : public uicore::View
+class DockView : public clan::View
 {
 public:
 	DockView();

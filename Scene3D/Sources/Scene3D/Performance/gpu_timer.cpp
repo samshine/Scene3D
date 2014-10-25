@@ -40,7 +40,7 @@ namespace clan
 class GPUTimer_Impl
 {
 public:
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	struct Frame
 	{
 		std::vector<std::string> names;
@@ -66,7 +66,7 @@ GPUTimer::GPUTimer()
 
 void GPUTimer::begin_frame(GraphicContext &gc)
 {
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	if (impl->unused_disjoint_queries.empty())
 	{
 		ID3D11Device *device = D3DTarget::get_device_handle(gc);
@@ -94,7 +94,7 @@ void GPUTimer::begin_frame(GraphicContext &gc)
 
 void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
 {
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	impl->frames.back()->names.push_back(name);
 	impl->timestamp(gc);
 #endif
@@ -102,14 +102,14 @@ void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
 
 void GPUTimer::end_time(GraphicContext &gc)
 {
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	impl->timestamp(gc);
 #endif
 }
 
 void GPUTimer::end_frame(GraphicContext &gc)
 {
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 	context->End(impl->frames.back()->disjoint_query.get());
 #endif
@@ -117,7 +117,7 @@ void GPUTimer::end_frame(GraphicContext &gc)
 
 std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 {
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjoint_data;
@@ -150,7 +150,7 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 #endif
 }
 
-#ifdef WIN32
+#if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 void GPUTimer_Impl::timestamp(GraphicContext &gc)
 {
 	if (unused_queries.empty())

@@ -1,10 +1,6 @@
 
 #pragma once
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/scene3d.h>
-#include <UICore/Signals/signal.h>
 #include "attachment_point.h"
 #include "particle_emitter.h"
 #include "animation.h"
@@ -33,12 +29,12 @@ public:
 	void open(const std::string &filename);
 	void update_scene_model();
 
-	uicore::Signal<void()> &sig_model_data_updated() { return _sig_model_data_updated; }
+	clan::Signal<void()> &sig_model_data_updated() { return _sig_model_data_updated; }
 
 private:
 	std::shared_ptr<FBXModel> _fbx;
 	std::shared_ptr<clan::ModelData> _model_data;
-	uicore::Signal<void()> _sig_model_data_updated;
+	clan::Signal<void()> _sig_model_data_updated;
 
 	static AppModel *instance_ptr;
 };
