@@ -38,7 +38,12 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 	style.set_layout_vbox();
 	style.set_padding(3.0f);
 
+	FontDescription font_desc("Segoe UI");
+	font_desc.set_height(13);
+	font_desc.set_line_height(1.4f * 13);
+
 	label = std::make_shared<LabelView>();
+	label->set_font(font_desc);
 	add_subview(label);
 
 	textfield = std::make_shared<TextFieldView>();
