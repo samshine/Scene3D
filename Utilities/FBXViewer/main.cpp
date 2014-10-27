@@ -3,11 +3,13 @@
 #include "Views/MainWindow/main_window.h"
 #include "Model/app_model.h"
 
+using namespace clan;
+
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	clan::SetupCore core;
-	clan::SetupDisplay display;
-	clan::SetupD3D d3d;
+	SetupCore core;
+	SetupDisplay display;
+	SetupD3D d3d;
 
 	AppModel model;
 
@@ -16,7 +18,10 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto window = std::make_shared<MainWindow>();
 	window->show();
 
-	RunLoop::run();
+	while (!window->exit)
+	{
+		KeepAlive::process(250);
+	}
 	return 0;
 }
 

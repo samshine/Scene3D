@@ -11,8 +11,12 @@ RolloutHeader::RolloutHeader()
 	style.set_padding(10.0f, 2.0f);
 	style.set_background(Colorf(230, 230, 230));
 
+	FontDescription font_desc("Segoe UI");
+	font_desc.set_height(13);
+	font_desc.set_line_height(1.4f * 13);
+
 	label = std::make_shared<LabelView>();
-	label->set_font(FontDescription("Segoe UI", 13.0f, 1.4f));
+	label->set_font(font_desc);
 	add_subview(label);
 }
 

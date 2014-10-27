@@ -3,7 +3,7 @@
 
 #include <fbxsdk.h>
 #include <ClanLib/core.h>
-#include <ClanLib/scene3d.h>
+#include <scene3d.h>
 #include "vertex_mapping.h"
 #include "skinned_bone.h"
 

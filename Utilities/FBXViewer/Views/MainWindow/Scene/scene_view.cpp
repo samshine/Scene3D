@@ -76,16 +76,17 @@ SceneView::SceneView()
 		}
 	});
 
-	timer = Timer();
+	/*timer = Timer();
 	timer.func_expired() = [this]()
 	{
 		set_needs_render();
 	};
-	timer.start(10, true);
+	timer.start(10, true);*/
 }
 
 void SceneView::render_content(Canvas &canvas)
 {
+	return;
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content.get_size();
 

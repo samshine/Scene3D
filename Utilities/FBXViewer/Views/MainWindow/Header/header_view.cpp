@@ -47,7 +47,10 @@ void HeaderView::create_button(const std::string &text, std::function<void()> cl
 	button->style.set_border(Colorf(150, 150, 150), 1.0f);
 	button->style.set_border_radius(3.0f);
 	button->style.set_padding(15.0f, 5.0f);
-	button->label()->set_font(FontDescription("Segoe UI", 13.0f, 1.4f));
+	FontDescription font_desc("Segoe UI");
+	font_desc.set_height(13);
+	font_desc.set_line_height(1.4f * 13);
+	button->label()->set_font(font_desc);
 	button->label()->set_text(text);
 	button->label()->set_text_color(Colorf(0, 0, 0));
 	slots.connect(button->sig_key_press(), [=](KeyEvent &e) { click(); e.stop_propagation(); });

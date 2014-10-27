@@ -11,7 +11,10 @@ MainWindow::MainWindow() : WindowView(create_desc())
 {
 	style.set_layout_vbox();
 	style.set_background(Colorf(240, 240, 240));
-	slots.connect(sig_close(), [](CloseEvent &e) { RunLoop::exit(); });
+	slots.connect(sig_close(), [this](CloseEvent &e)
+	{
+		exit = true;
+	});
 
 	header_view = std::make_shared<HeaderView>();
 	scene_view = std::make_shared<SceneView>();
@@ -32,5 +35,6 @@ DisplayWindowDescription MainWindow::create_desc()
 	DisplayWindowDescription desc;
 	desc.set_size(Size(1280, 768), false);
 	desc.set_title("FBX Viewer");
+	desc.set_allow_resize(true);
 	return desc;
 }

@@ -10,6 +10,8 @@ class MainWindow : public clan::WindowView
 public:
 	MainWindow();
 
+	bool exit = false;
+
 private:
 	static clan::DisplayWindowDescription create_desc();
 
