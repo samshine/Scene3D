@@ -7,9 +7,9 @@ using namespace clan;
 RolloutList::RolloutList()
 {
 	style.set_layout_vbox();
-	style.set_border(Colorf(200, 200, 200), 1.0f);
-	style.set_background(Colorf(240, 240, 240));
-	style.set_padding(5.0f);
+	//style.set_border(Colorf(200, 200, 200), 1.0f);
+	//style.set_background(Colorf(240, 240, 240));
+	style.set_padding(0.0f, 5.0f);
 }
 
 std::shared_ptr<RolloutListItemView> RolloutList::selection()
@@ -37,17 +37,21 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 {
 	style.set_layout_vbox();
 	style.set_padding(3.0f);
+	style.set_border_radius(2.0f);
 
-	FontDescription font_desc("Segoe UI");
-	font_desc.set_height(13);
+	FontDescription font_desc("Lato");
+	font_desc.set_height(12);
 	font_desc.set_line_height(1.4f * 13);
 
 	label = std::make_shared<LabelView>();
-	label->set_font(font_desc);
+	label->set_font(Font::resource(UIThread::get_resource_canvas(), font_desc, UIThread::get_resources()));
+	label->set_text_color(Colorf(255, 255, 255));
 	add_subview(label);
 
 	textfield = std::make_shared<TextFieldView>();
 	textfield->set_hidden();
+	textfield->set_font(Font::resource(UIThread::get_resource_canvas(), font_desc, UIThread::get_resources()));
+	textfield->set_text_color(Colorf(255, 255, 255));
 	add_subview(textfield);
 
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
@@ -106,14 +110,14 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 		{
 			stop_animations();
 			if (value)
-				animate(0.0f, 255.0f, [this](float t) { style.set_background(Colorf(220, 220, 255, (int)t));  }, 400, Easing::easeinout);
+				animate(0.0f, 255.0f, [this](float t) { style.set_background(Colorf(255, 255, 255, (int)(t * 0.3)));  }, 400, Easing::easeinout);
 			else
-				animate(255.0f, 0.0f, [this](float t) { style.set_background(Colorf(220, 220, 255, (int)t)); }, 400, Easing::easeinout, [this]() { style.set_background_none(); });
+				animate(255.0f, 0.0f, [this](float t) { style.set_background(Colorf(255, 255, 255, (int)(t * 0.3))); }, 400, Easing::easeinout, [this]() { style.set_background_none(); });
 		}
 		else
 		{
 			if (value)
-				style.set_background(Colorf(220, 220, 255));
+				style.set_background(Colorf(255, 255, 255, 76));
 			else
 				style.set_background_none();
 		}

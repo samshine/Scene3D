@@ -12,19 +12,19 @@ AnimationsDockable::AnimationsDockable()
 {
 	style.set_layout_block();
 
-	animations = std::make_shared<RolloutView>("Animations");
-	animation = std::make_shared<RolloutView>("Animation");
+	animations = std::make_shared<RolloutView>("ANIMATIONS");
+	animation = std::make_shared<RolloutView>("ANIMATION");
 
 	add_subview(animations);
 	add_subview(animation);
 
 	animations_list = std::make_shared<RolloutList>();
-	start_property = std::make_shared<RolloutTextFieldProperty>("Start frame");
-	end_property = std::make_shared<RolloutTextFieldProperty>("End frame");
-	play_property = std::make_shared<RolloutTextFieldProperty>("Play speed");
-	move_property = std::make_shared<RolloutTextFieldProperty>("Move speed");
-	loop_property = std::make_shared<RolloutTextFieldProperty>("Loop");
-	rarity_property = std::make_shared<RolloutTextFieldProperty>("Rarity");
+	start_property = std::make_shared<RolloutTextFieldProperty>("START FRAME");
+	end_property = std::make_shared<RolloutTextFieldProperty>("END FRAME");
+	play_property = std::make_shared<RolloutTextFieldProperty>("PLAY SPEED");
+	move_property = std::make_shared<RolloutTextFieldProperty>("MOVE SPEED");
+	loop_property = std::make_shared<RolloutTextFieldProperty>("LOOP");
+	rarity_property = std::make_shared<RolloutTextFieldProperty>("RARITY");
 
 	animations->content->add_subview(animations_list);
 

@@ -8,3 +8,6 @@ ipch
 /Scene3D/Release
 /Utilities/FBXViewer/Resources/Thalania
 /Utilities/FBXViewer/Debug
+/Utilities/FBXViewer/Release
+*.opensdf
+*.user

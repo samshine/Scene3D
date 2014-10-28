@@ -10,7 +10,7 @@ SceneView::SceneView()
 {
 	style.set_layout_hbox();
 	style.set_flex(1.0f, 1.0f);
-	style.set_background(Colorf(200, 200, 200));
+	style.set_background(Colorf(236, 240, 243));
 	style.set_padding(5.0f);
 
 	set_focus_policy(FocusPolicy::accept);

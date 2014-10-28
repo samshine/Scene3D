@@ -14,7 +14,7 @@ RolloutView::RolloutView(const std::string &title)
 	add_subview(header);
 
 	content = std::make_shared<View>();
-	content->style.set_margin(15.0f, 5.0f);
+	content->style.set_margin(10.0f, 5.0f);
 	add_subview(content);
 }
 
