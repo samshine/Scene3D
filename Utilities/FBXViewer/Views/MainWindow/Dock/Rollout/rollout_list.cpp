@@ -6,10 +6,10 @@ using namespace clan;
 
 RolloutList::RolloutList()
 {
-	style.set_layout_vbox();
-	//style.set_border(Colorf(200, 200, 200), 1.0f);
-	//style.set_background(Colorf(240, 240, 240));
-	style.set_padding(0.0f, 5.0f);
+	box_style.set_layout_vbox();
+	//box_style.set_border(Colorf(200, 200, 200), 1.0f);
+	//box_style.set_background(Colorf(240, 240, 240));
+	box_style.set_padding(0.0f, 5.0f);
 }
 
 std::shared_ptr<RolloutListItemView> RolloutList::selection()
@@ -35,9 +35,9 @@ std::shared_ptr<RolloutListItemView> RolloutList::add_animation(const std::strin
 
 RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 {
-	style.set_layout_vbox();
-	style.set_padding(3.0f);
-	style.set_border_radius(2.0f);
+	box_style.set_layout_vbox();
+	box_style.set_padding(3.0f);
+	box_style.set_border_radius(2.0f);
 
 	FontDescription font_desc("Lato");
 	font_desc.set_height(12);
@@ -110,16 +110,16 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 		{
 			stop_animations();
 			if (value)
-				animate(0.0f, 255.0f, [this](float t) { style.set_background(Colorf(255, 255, 255, (int)(t * 0.3)));  }, 400, Easing::easeinout);
+				animate(0.0f, 255.0f, [this](float t) { box_style.set_background(Colorf(255, 255, 255, (int)(t * 0.3)));  }, 400, Easing::easeinout);
 			else
-				animate(255.0f, 0.0f, [this](float t) { style.set_background(Colorf(255, 255, 255, (int)(t * 0.3))); }, 400, Easing::easeinout, [this]() { style.set_background_none(); });
+				animate(255.0f, 0.0f, [this](float t) { box_style.set_background(Colorf(255, 255, 255, (int)(t * 0.3))); }, 400, Easing::easeinout, [this]() { box_style.set_background_none(); });
 		}
 		else
 		{
 			if (value)
-				style.set_background(Colorf(255, 255, 255, 76));
+				box_style.set_background(Colorf(255, 255, 255, 76));
 			else
-				style.set_background_none();
+				box_style.set_background_none();
 		}
 
 		if (value)

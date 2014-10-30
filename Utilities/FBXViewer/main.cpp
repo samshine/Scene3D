@@ -18,6 +18,8 @@ public:
 		if (lato_regular.get().is_null())
 		{
 			lato_regular.set(Font(canvas, desc, "Resources/Fonts/Lato/Lato-Regular.ttf"));
+			canvas.flush();
+			canvas.get_gc().flush();
 		}
 		return lato_regular;
 	}
@@ -30,7 +32,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	SetupCore core;
 	SetupDisplay display;
-	SetupGL gl;
+	SetupD3D d3d;
 
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<SimpleDisplayCache>());

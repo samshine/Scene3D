@@ -10,7 +10,7 @@ using namespace clan;
 
 AnimationsDockable::AnimationsDockable()
 {
-	style.set_layout_block();
+	box_style.set_layout_block();
 
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");

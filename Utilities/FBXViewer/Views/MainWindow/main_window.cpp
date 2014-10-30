@@ -9,8 +9,8 @@ using namespace clan;
 
 MainWindow::MainWindow() : WindowView(create_desc())
 {
-	style.set_layout_vbox();
-	style.set_background(Colorf(240, 240, 240));
+	box_style.set_layout_vbox();
+	box_style.set_background(Colorf(240, 240, 240));
 	slots.connect(sig_close(), [this](CloseEvent &e)
 	{
 		exit = true;
@@ -21,8 +21,8 @@ MainWindow::MainWindow() : WindowView(create_desc())
 	dock_view = std::make_shared<DockView>();
 
 	auto workspace = std::make_shared<View>();
-	workspace->style.set_layout_hbox();
-	workspace->style.set_flex(1.0f, 0.0f);
+	workspace->box_style.set_layout_hbox();
+	workspace->box_style.set_flex(1.0f, 0.0f);
 	workspace->add_subview(scene_view);
 	workspace->add_subview(dock_view);
 

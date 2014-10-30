@@ -6,10 +6,10 @@ using namespace clan;
 
 RolloutHeader::RolloutHeader()
 {
-	style.set_layout_block();
-	//style.set_margin(5.0f);
-	style.set_padding(10.0f, 2.0f);
-	style.set_background(Colorf(6, 31, 62));
+	box_style.set_layout_block();
+	//box_style.set_margin(5.0f);
+	box_style.set_padding(10.0f, 2.0f);
+	box_style.set_background(Colorf(6, 31, 62));
 
 	FontDescription font_desc("Lato");
 	font_desc.set_height(12);

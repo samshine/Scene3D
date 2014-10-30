@@ -8,10 +8,10 @@ using namespace clan;
 
 SceneView::SceneView()
 {
-	style.set_layout_hbox();
-	style.set_flex(1.0f, 1.0f);
-	style.set_background(Colorf(236, 240, 243));
-	style.set_padding(5.0f);
+	box_style.set_layout_hbox();
+	box_style.set_flex(1.0f, 1.0f);
+	box_style.set_background(Colorf(236, 240, 243));
+	//box_style.set_padding(5.0f);
 
 	set_focus_policy(FocusPolicy::accept);
 
@@ -86,10 +86,10 @@ SceneView::SceneView()
 
 void SceneView::render_content(Canvas &canvas)
 {
-	return;
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content.get_size();
 
+	canvas.flush();
 	clan::GraphicContext gc = canvas.get_gc();
 
 	setup_scene(gc);
