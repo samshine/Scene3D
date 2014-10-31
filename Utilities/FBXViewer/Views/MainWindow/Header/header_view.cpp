@@ -42,10 +42,6 @@ void HeaderView::on_options()
 
 void HeaderView::create_button(const std::string &text, std::function<void()> click)
 {
-	FontDescription font_desc("Lato");
-	font_desc.set_height(12);
-	font_desc.set_line_height(1.4f * 13);
-
 	auto button = std::make_shared<ButtonView>();
 	button->box_style.set_flex(0.0f, 0.0f);
 	button->box_style.set_margin(5.0f);
@@ -53,9 +49,9 @@ void HeaderView::create_button(const std::string &text, std::function<void()> cl
 	//button->box_style.set_border(Colorf(150, 150, 150), 1.0f);
 	//button->box_style.set_border_radius(3.0f);
 	button->box_style.set_padding(15.0f, 5.0f);
-	button->label()->set_font(Font::resource(UIThread::get_resource_canvas(), font_desc, UIThread::get_resources()));
 	button->label()->set_text(StringHelp::text_to_upper(text));
-	button->label()->set_text_color(Colorf(255, 255, 255));
+	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
+	button->label()->text_style().set_color(Colorf(255, 255, 255));
 	slots.connect(button->sig_key_press(), [=](KeyEvent &e) { click(); e.stop_propagation(); });
 	add_subview(button);
 }

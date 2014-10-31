@@ -39,19 +39,15 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 	box_style.set_padding(3.0f);
 	box_style.set_border_radius(2.0f);
 
-	FontDescription font_desc("Lato");
-	font_desc.set_height(12);
-	font_desc.set_line_height(1.4f * 13);
-
 	label = std::make_shared<LabelView>();
-	label->set_font(Font::resource(UIThread::get_resource_canvas(), font_desc, UIThread::get_resources()));
-	label->set_text_color(Colorf(255, 255, 255));
+	label->text_style().set_font("Lato", 12, 1.4f * 13);
+	label->text_style().set_color(Colorf(255, 255, 255));
 	add_subview(label);
 
 	textfield = std::make_shared<TextFieldView>();
 	textfield->set_hidden();
-	textfield->set_font(Font::resource(UIThread::get_resource_canvas(), font_desc, UIThread::get_resources()));
-	textfield->set_text_color(Colorf(255, 255, 255));
+	textfield->text_style().set_font("Lato", 12, 1.4f * 13);
+	textfield->text_style().set_color(Colorf(255, 255, 255));
 	add_subview(textfield);
 
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
