@@ -13,6 +13,9 @@
     <Filter Include="Sources\AssetCompiler">
       <UniqueIdentifier>{af27d171-eeb0-4b3d-afc0-eb5942a6d644}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Crunch">
+      <UniqueIdentifier>{0e9eece8-8c0c-4162-99b7-b579dc6e4239}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp">
@@ -20,6 +23,225 @@
     </ClCompile>
     <ClCompile Include="Sources\AssetCompiler\asset_compiler.cpp">
       <Filter>Sources\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_arealist.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_assert.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_checksum.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_command_line_params.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_comp.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_condition_var.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_console.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_core.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_data_stream.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dds_comp.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dds_texture.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_decomp.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt_endpoint_refiner.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt_fast.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt_hc.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt_hc_common.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt_image.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt1.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dxt5a.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dynamic_string.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_dynamic_wstring.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_hash.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_hash_map.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_huffman_codes.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_image_utils.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_lzma_codec.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_math.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_mem.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_pixel_format.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_platform.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_prefix_coding.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_qdxt1.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_qdxt5.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_rand.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_resample_filters.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_resampler.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_ryg_dxt.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_sparse_bit_array.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_stb_image.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_strutils.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_symbol_codec.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_task_pool.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_texture_comp.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_texture_conversion.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_texture_file_types.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_threaded_resampler.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_utils.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_value.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_vector.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_win32_console.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_win32_file_utils.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_win32_find_files.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_win32_threading.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_win32_timer.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crn_zeng.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\crnlib.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_7zBuf.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_7zBuf2.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_7zCrc.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_7zFile.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_7zStream.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_Alloc.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_Bcj2.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_Bra.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_Bra86.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_BraIA64.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_LzFind.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_LzFindMt.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_LzmaDec.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_LzmaEnc.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_LzmaLib.cpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Crunch\lzma_Threads.cpp">
+      <Filter>Sources\Crunch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +257,318 @@
     <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h">
       <Filter>Sources\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_arealist.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_assert.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_buffer_stream.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_cfile_stream.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_checksum.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_clusterizer.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_color.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_command_line_params.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_comp.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_condition_var.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_console.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_core.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_data_stream.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_data_stream_serializer.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dds_comp.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dds_texture.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_decomp.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt_endpoint_refiner.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt_fast.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt_hc.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt_hc_common.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt_image.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt1.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dxt5a.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dynamic_stream.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dynamic_string.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_dynamic_wstring.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_event.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_hash.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_hash_map.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_helpers.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_huffman_codes.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_image.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_image_utils.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_intersect.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_lzma_codec.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_math.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_matrix.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_mem.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_mutex.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_packed_uint.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_pixel_format.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_platform.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_prefix_coding.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_qdxt1.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_qdxt5.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_rand.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_ray.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_rect.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_resample_filters.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_resampler.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_ryg_dxt.hpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_ryg_types.hpp">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_semaphore.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_sparse_array.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_sparse_bit_array.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_spinlock.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_strutils.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_symbol_codec.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_task_pool.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_texture_comp.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_texture_conversion.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_texture_file_types.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_threaded_clusterizer.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_threaded_resampler.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_traits.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_tree_clusterizer.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_types.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_utils.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_value.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_vec.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_vec_interval.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_vector.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_win32_console.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_win32_file_utils.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_win32_find_files.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_win32_threading.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_win32_timer.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_winhdr.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crn_zeng.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\crnlib.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\dds_defs.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_7zBuf.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_7zCrc.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_7zFile.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_7zVersion.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_Alloc.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_Bcj2.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_Bra.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_CpuArch.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzFind.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzFindMt.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzHash.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzmaDec.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzmaEnc.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_LzmaLib.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_MyVersion.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_Threads.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Crunch\lzma_Types.h">
+      <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sources\Crunch\crnlib.cbp">
+      <Filter>Sources\Crunch</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Sources\Crunch\license.txt">
+      <Filter>Sources\Crunch</Filter>
+    </Text>
+    <Text Include="Sources\Crunch\readme.txt">
+      <Filter>Sources\Crunch</Filter>
+    </Text>
   </ItemGroup>
 </Project>

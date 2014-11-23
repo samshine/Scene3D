@@ -11,3 +11,5 @@ ipch
 /Utilities/FBXViewer/Release
 *.opensdf
 *.user
+/AssetCompiler/Debug
+/AssetCompiler/Release
