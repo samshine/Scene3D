@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{5cc491fe-451f-4b9a-aecc-e129a0720198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{4edfe5a8-98a6-42df-8797-18c6ec1dd12c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\AssetCompiler">
+      <UniqueIdentifier>{5b5c58f2-15a4-4b57-964a-cace577d65c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\AssetCompiler">
+      <UniqueIdentifier>{af27d171-eeb0-4b3d-afc0-eb5942a6d644}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\AssetCompiler\asset_compiler.cpp">
+      <Filter>Sources\AssetCompiler</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\asset_compiler.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\asset_compiler.h">
+      <Filter>Include\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h">
+      <Filter>Sources\AssetCompiler</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
