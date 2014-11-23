@@ -16,6 +16,12 @@
     <Filter Include="Sources\Crunch">
       <UniqueIdentifier>{0e9eece8-8c0c-4162-99b7-b579dc6e4239}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\FBXModel">
+      <UniqueIdentifier>{93dd5919-ce99-4a03-91df-306a289f6c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\FBXModel">
+      <UniqueIdentifier>{03eb5988-4d60-4ae8-9c8a-4cef098320a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp">
@@ -243,6 +249,12 @@
     <ClCompile Include="Sources\Crunch\lzma_Threads.cpp">
       <Filter>Sources\Crunch</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\FBXModel\fbx_model.cpp">
+      <Filter>Sources\FBXModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp">
+      <Filter>Sources\FBXModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h">
@@ -250,9 +262,6 @@
     </ClInclude>
     <ClInclude Include="Include\asset_compiler.h">
       <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\asset_compiler.h">
-      <Filter>Include\AssetCompiler</Filter>
     </ClInclude>
     <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h">
       <Filter>Sources\AssetCompiler</Filter>
@@ -556,6 +565,33 @@
     </ClInclude>
     <ClInclude Include="Sources\Crunch\lzma_Types.h">
       <Filter>Sources\Crunch</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FBXModel\fbx_model_loader.h">
+      <Filter>Sources\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FBXModel\skinned_bone.h">
+      <Filter>Sources\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FBXModel\vertex_mapping.h">
+      <Filter>Sources\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FBXModel\fbx_model_impl.h">
+      <Filter>Sources\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\AssetCompiler\asset_compiler.h">
+      <Filter>Include\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h">
+      <Filter>Include\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h">
+      <Filter>Include\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h">
+      <Filter>Include\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h">
+      <Filter>Include\FBXModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

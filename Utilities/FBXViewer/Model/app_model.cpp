@@ -1,9 +1,9 @@
 
 #include "precomp.h"
 #include "app_model.h"
-#include "FBXModel/fbx_model.h"
-#include "FBXModel/fbx_model_loader.h"
 #include <memory>
+
+using namespace clan;
 
 AppModel::AppModel()
 {

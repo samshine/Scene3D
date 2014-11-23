@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "AssetCompiler/asset_compiler.h"
+#include "AssetCompiler/AssetCompiler/asset_compiler.h"
 #include "asset_compiler_impl.h"
 
 namespace clan

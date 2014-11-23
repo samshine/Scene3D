@@ -11,7 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\AssetCompiler\asset_compiler.h" />
+    <ClInclude Include="Include\AssetCompiler\AssetCompiler\asset_compiler.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h" />
     <ClInclude Include="Include\asset_compiler.h" />
     <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h" />
     <ClInclude Include="Sources\Crunch\crnlib.h" />
@@ -114,6 +118,10 @@
     <ClInclude Include="Sources\Crunch\lzma_MyVersion.h" />
     <ClInclude Include="Sources\Crunch\lzma_Threads.h" />
     <ClInclude Include="Sources\Crunch\lzma_Types.h" />
+    <ClInclude Include="Sources\FBXModel\fbx_model_impl.h" />
+    <ClInclude Include="Sources\FBXModel\fbx_model_loader.h" />
+    <ClInclude Include="Sources\FBXModel\skinned_bone.h" />
+    <ClInclude Include="Sources\FBXModel\vertex_mapping.h" />
     <ClInclude Include="Sources\precomp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +199,8 @@
     <ClCompile Include="Sources\Crunch\lzma_LzmaEnc.cpp" />
     <ClCompile Include="Sources\Crunch\lzma_LzmaLib.cpp" />
     <ClCompile Include="Sources\Crunch\lzma_Threads.cpp" />
+    <ClCompile Include="Sources\FBXModel\fbx_model.cpp" />
+    <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -242,7 +252,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Sources;$(ProjectDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Sources;$(ProjectDir)\Include;C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -261,7 +271,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Sources;$(ProjectDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Sources;$(ProjectDir)\Include;C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>

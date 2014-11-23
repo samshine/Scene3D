@@ -2,18 +2,17 @@
 #pragma once
 
 #include "model_command.h"
-#include "../animation.h"
 
 class UpdateAnimationCommand : public ModelCommand
 {
 public:
-	UpdateAnimationCommand(size_t index, Animation animation);
+	UpdateAnimationCommand(size_t index, clan::FBXAnimation animation);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	Animation old_animation;
-	Animation new_animation;
+	clan::FBXAnimation old_animation;
+	clan::FBXAnimation new_animation;
 };

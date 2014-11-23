@@ -7,9 +7,6 @@
     <Filter Include="Model\Commands">
       <UniqueIdentifier>{51d1247d-fff2-4cb8-a381-d8a287e5807f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\FBXModel">
-      <UniqueIdentifier>{36f4c92b-7886-42b4-9582-9136323f6675}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Views">
       <UniqueIdentifier>{2053cb8c-a395-4400-98af-2d50e1052ece}</UniqueIdentifier>
     </Filter>
@@ -33,16 +30,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model\animation.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\app_model.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\attachment_point.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\particle_emitter.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\undo_system.h">
@@ -53,18 +41,6 @@
     </ClInclude>
     <ClInclude Include="Model\Commands\update_animation_command.h">
       <Filter>Model\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\FBXModel\fbx_model.h">
-      <Filter>Model\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\FBXModel\fbx_model_loader.h">
-      <Filter>Model\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\FBXModel\skinned_bone.h">
-      <Filter>Model\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\FBXModel\vertex_mapping.h">
-      <Filter>Model\FBXModel</Filter>
     </ClInclude>
     <ClInclude Include="Views\MainWindow\main_window.h">
       <Filter>Views\MainWindow</Filter>
@@ -107,12 +83,6 @@
     </ClCompile>
     <ClCompile Include="Model\Commands\update_animation_command.cpp">
       <Filter>Model\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\FBXModel\fbx_model.cpp">
-      <Filter>Model\FBXModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\FBXModel\fbx_model_loader.cpp">
-      <Filter>Model\FBXModel</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Views\MainWindow\main_window.cpp">

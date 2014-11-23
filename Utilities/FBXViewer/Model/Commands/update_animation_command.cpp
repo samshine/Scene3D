@@ -3,7 +3,9 @@
 #include "update_animation_command.h"
 #include "../app_model.h"
 
-UpdateAnimationCommand::UpdateAnimationCommand(size_t index, Animation animation) : index(index), new_animation(animation)
+using namespace clan;
+
+UpdateAnimationCommand::UpdateAnimationCommand(size_t index, FBXAnimation animation) : index(index), new_animation(animation)
 {
 }
 
