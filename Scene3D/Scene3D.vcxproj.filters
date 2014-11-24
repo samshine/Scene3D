@@ -157,6 +157,9 @@
     <Filter Include="Sources\Scene3D\Culling\RTree">
       <UniqueIdentifier>{cbe64dba-8ef0-48df-a2fd-f91630bf67b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scene3D\ModelData">
+      <UniqueIdentifier>{29011300-d8a1-4378-976f-a07db1d33374}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1621,6 +1624,9 @@
     </ClCompile>
     <ClCompile Include="Sources\precomp.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp">
+      <Filter>Sources\Scene3D\ModelData</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

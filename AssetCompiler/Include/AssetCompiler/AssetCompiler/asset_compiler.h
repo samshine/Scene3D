@@ -18,7 +18,7 @@ namespace clan
 	{
 	public:
 		CompilerMessage() { }
-		CompilerMessage(CompilerMessageType type, const std::string &text, const std::string &file, int line = 0) : type(type), text(text), file(file), line(line) { }
+		CompilerMessage(CompilerMessageType type, const std::string &text, const std::string &file = std::string(), int line = 0) : type(type), text(text), file(file), line(line) { }
 
 		CompilerMessageType type = CompilerMessageType::info;
 		std::string text;

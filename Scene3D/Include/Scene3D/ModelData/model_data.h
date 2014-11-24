@@ -39,21 +39,24 @@
 
 namespace clan
 {
+	class IODevice;
 
-/// \brief Data structure describing a model.
-class ModelData
-{
-public:
-	std::vector<ModelDataMesh> meshes;
-	std::vector<ModelDataTexture> textures;
-	std::vector<ModelDataBone> bones;
-	std::vector<ModelDataLight> lights;
-	std::vector<ModelDataCamera> cameras;
-	std::vector<ModelDataAttachmentPoint> attachment_points;
-	std::vector<ModelDataParticleEmitter> particle_emitters;
-	std::vector<ModelDataAnimation> animations;
-	Vec3f aabb_min, aabb_max;
-};
+	/// \brief Data structure describing a model.
+	class ModelData
+	{
+	public:
+		std::vector<ModelDataMesh> meshes;
+		std::vector<ModelDataTexture> textures;
+		std::vector<ModelDataBone> bones;
+		std::vector<ModelDataLight> lights;
+		std::vector<ModelDataCamera> cameras;
+		std::vector<ModelDataAttachmentPoint> attachment_points;
+		std::vector<ModelDataParticleEmitter> particle_emitters;
+		std::vector<ModelDataAnimation> animations;
+		Vec3f aabb_min, aabb_max;
 
+		static void save(IODevice &device, std::shared_ptr<ModelData> data);
+		static std::shared_ptr<ModelData> load(const std::string &filename);
+		static std::shared_ptr<ModelData> load(IODevice &device, const std::string &base_path);
+	};
 }
-

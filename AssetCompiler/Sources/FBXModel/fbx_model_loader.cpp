@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "fbx_model_loader.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
-#include "AssetCompiler/FBXModel/animation.h"
+#include "AssetCompiler/FBXModel/fbx_animation.h"
 #include "fbx_model_impl.h"
 #include <algorithm>
 

@@ -472,6 +472,7 @@
     <ClCompile Include="Sources\Scene3D\Framework\shader_setup.cpp" />
     <ClCompile Include="Sources\Scene3D\Framework\shadow_maps.cpp" />
     <ClCompile Include="Sources\Scene3D\Level\level.cpp" />
+    <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model_instance.cpp" />
