@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AssetCompiler/AssetCompiler/asset_compiler.h"
+#include "AssetCompiler/FBXModel/fbx_model_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "AssetCompiler/FBXModel/fbx_animation.h"
 #include "AssetCompiler/FBXModel/fbx_attachment_point.h"

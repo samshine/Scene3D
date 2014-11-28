@@ -15,6 +15,7 @@
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model_desc.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h" />
     <ClInclude Include="Include\asset_compiler.h" />
     <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="Sources\Crunch\lzma_LzmaLib.cpp" />
     <ClCompile Include="Sources\Crunch\lzma_Threads.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model.cpp" />
+    <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

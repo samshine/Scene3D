@@ -255,6 +255,9 @@
     <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp">
       <Filter>Sources\FBXModel</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp">
+      <Filter>Sources\FBXModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h">
@@ -591,6 +594,9 @@
       <Filter>Include\FBXModel</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h">
+      <Filter>Include\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model_desc.h">
       <Filter>Include\FBXModel</Filter>
     </ClInclude>
   </ItemGroup>
