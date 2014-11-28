@@ -4,9 +4,16 @@
 
 namespace clan
 {
+	FBXModelDesc::FBXModelDesc()
+	{
+		animations.push_back(FBXAnimation());
+		animations[0].name = "default";
+	}
+
 	FBXModelDesc FBXModelDesc::load(const std::string &filename)
 	{
 		FBXModelDesc desc;
+		desc.animations.clear();
 
 		JsonValue json = JsonValue::from_json(File::read_text(filename));
 		if ((std::string)json["type"] != "fbx-model")
@@ -14,7 +21,7 @@ namespace clan
 		if ((int)json["version"] != 1)
 			throw Exception("Unsupported model description file version");
 
-		desc.fbx_filename = json["fbx_filename"];
+		desc.fbx_filename = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json["fbx_filename"]);
 
 		for (const auto &json_animation : json["animations"].get_items())
 		{
@@ -100,7 +107,7 @@ namespace clan
 		json["animations"] = json_animations;
 		json["attachment_points"] = json_attachment_points;
 		json["emitters"] = json_emitters;
-		json["fbx_filename"] = fbx_filename;
+		json["fbx_filename"] = PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename);
 
 		File::write_text(filename, json.to_json());
 	}

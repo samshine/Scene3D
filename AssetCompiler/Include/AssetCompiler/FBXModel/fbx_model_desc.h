@@ -11,6 +11,8 @@ namespace clan
 	class FBXModelDesc
 	{
 	public:
+		FBXModelDesc();
+
 		std::string fbx_filename;
 		std::vector<FBXAnimation> animations;
 		std::vector<FBXAttachmentPoint> attachment_points;
