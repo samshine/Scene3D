@@ -51,11 +51,11 @@ AnimationsDockable::AnimationsDockable()
 void AnimationsDockable::update_animation_fields()
 {
 	auto selection = animations_list->selection();
-	if (selection && selection->index < AppModel::instance()->animations.size())
+	if (selection && selection->index < AppModel::instance()->desc.animations.size())
 	{
 		animation->set_hidden(false);
 
-		const auto &anim = AppModel::instance()->animations[selection->index];
+		const auto &anim = AppModel::instance()->desc.animations[selection->index];
 		start_property->text_field->set_text(StringHelp::int_to_text(anim.start_frame));
 		end_property->text_field->set_text(StringHelp::int_to_text(anim.end_frame));
 		play_property->text_field->set_text(StringHelp::float_to_text(anim.play_speed));
@@ -79,13 +79,13 @@ void AnimationsDockable::animations_list_edit_saved()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		if (selection->index >= AppModel::instance()->animations.size())
+		if (selection->index >= AppModel::instance()->desc.animations.size())
 		{
-			AppModel::instance()->animations.resize(selection->index + 1);
+			AppModel::instance()->desc.animations.resize(selection->index + 1);
 			animations_list->add_animation("");
 		}
 
-		auto &anim = AppModel::instance()->animations[selection->index];
+		auto &anim = AppModel::instance()->desc.animations[selection->index];
 		anim.name = selection->text();
 
 		update_animation_fields();
@@ -98,7 +98,7 @@ void AnimationsDockable::start_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.start_frame = start_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
@@ -110,7 +110,7 @@ void AnimationsDockable::end_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.end_frame = end_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
@@ -122,7 +122,7 @@ void AnimationsDockable::play_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.play_speed = play_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
@@ -134,7 +134,7 @@ void AnimationsDockable::move_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.move_speed = move_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
@@ -146,7 +146,7 @@ void AnimationsDockable::loop_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.loop = loop_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
@@ -158,7 +158,7 @@ void AnimationsDockable::rarity_property_value_changed()
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
-		auto animation = app_model->animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection->index);
 		animation.rarity = rarity_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}

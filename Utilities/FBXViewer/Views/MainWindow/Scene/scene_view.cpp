@@ -15,7 +15,7 @@ SceneView::SceneView()
 
 	set_focus_policy(FocusPolicy::accept);
 
-	slots.connect(AppModel::instance()->sig_model_data_updated(), [this]()
+	slots.connect(AppModel::instance()->sig_model_data_updated, [this]()
 	{
 		model_data_updated = true;
 		set_needs_render();
@@ -117,9 +117,9 @@ void SceneView::update_model(clan::GraphicContext &gc)
 	model1 = clan::SceneModel();
 	object1 = clan::SceneObject();
 
-	if (AppModel::instance()->model_data())
+	if (AppModel::instance()->model_data)
 	{
-		model1 = clan::SceneModel(gc, scene, AppModel::instance()->model_data());
+		model1 = clan::SceneModel(gc, scene, AppModel::instance()->model_data);
 		object1 = clan::SceneObject(scene, model1, clan::Vec3f(), clan::Quaternionf(), clan::Vec3f(1.0f));
 		object1.play_animation(current_animation);
 	}

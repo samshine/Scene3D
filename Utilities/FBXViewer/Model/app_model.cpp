@@ -18,17 +18,28 @@ AppModel::~AppModel()
 
 void AppModel::open(const std::string &filename)
 {
-	_fbx = std::make_shared<FBXModel>(filename);
-	animations.clear();
-	animations.resize(1);
-	animations.at(0).name = "default";
+	desc = FBXModelDesc::load(filename);
+	open_filename = filename;
+	set_fbx_model(desc.fbx_filename);
+}
+
+void AppModel::save(const std::string &filename)
+{
+	desc.save(filename);
+	open_filename = filename;
+}
+
+void AppModel::set_fbx_model(const std::string &filename)
+{
+	desc.fbx_filename = filename;
+	fbx = std::make_shared<FBXModel>(desc.fbx_filename);
 	update_scene_model();
 }
 
 void AppModel::update_scene_model()
 {
-	_model_data = _fbx->convert(animations, attachment_points, particle_emitters);
-	_sig_model_data_updated();
+	model_data = fbx->convert(desc.animations, desc.attachment_points, desc.emitters);
+	sig_model_data_updated();
 }
 
 AppModel *AppModel::instance()

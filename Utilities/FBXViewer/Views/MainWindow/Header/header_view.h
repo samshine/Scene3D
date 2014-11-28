@@ -11,6 +11,7 @@ private:
 	void on_save();
 	void on_save_as();
 	void on_options();
+	void on_change_model();
 
 	void create_button(const std::string &text, std::function<void()> click);
 };

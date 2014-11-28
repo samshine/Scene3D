@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "header_view.h"
+#include "Model/app_model.h"
 
 using namespace clan;
 
@@ -21,19 +22,63 @@ HeaderView::HeaderView()
 	spacer->box_style.set_flex(1.0f, 1.0f);
 	add_subview(spacer);
 
+	create_button("Change Model", bind_member(this, &HeaderView::on_change_model));
+
 	create_button("Animations", bind_member(this, &HeaderView::on_options));
 }
 
 void HeaderView::on_load()
 {
+	OpenFileDialog dialog(this);
+	dialog.set_title("Select Model");
+	dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
+	dialog.add_filter("All files (*.*)", "*.*", false);
+	dialog.set_filename(AppModel::instance()->open_filename);
+	if (dialog.show())
+	{
+		AppModel::instance()->open(dialog.get_filename());
+	}
 }
 
 void HeaderView::on_save()
 {
+	if (AppModel::instance()->open_filename.empty())
+	{
+		on_save_as();
+	}
+	else
+	{
+		AppModel::instance()->save(AppModel::instance()->open_filename);
+	}
 }
 
 void HeaderView::on_save_as()
 {
+	SaveFileDialog dialog(this);
+	dialog.set_title("Save Model Description");
+	dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
+	dialog.add_filter("All files (*.*)", "*.*", false);
+	dialog.set_filename(AppModel::instance()->open_filename);
+	if (dialog.show())
+	{
+		std::string filename = dialog.get_filename();
+		if (PathHelp::get_extension(filename).empty())
+			filename += ".modeldesc";
+		AppModel::instance()->save(filename);
+	}
+}
+
+void HeaderView::on_change_model()
+{
+	OpenFileDialog dialog(this);
+	dialog.set_title("Select Model");
+	dialog.add_filter("Autodesk FBX files (*.fbx)", "*.fbx", true);
+	dialog.add_filter("All files (*.*)", "*.*", false);
+	dialog.set_filename(AppModel::instance()->desc.fbx_filename);
+	if (dialog.show())
+	{
+		AppModel::instance()->set_fbx_model(dialog.get_filename());
+	}
 }
 
 void HeaderView::on_options()
@@ -52,6 +97,6 @@ void HeaderView::create_button(const std::string &text, std::function<void()> cl
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
 	button->label()->text_style().set_color(Colorf(255, 255, 255));
-	slots.connect(button->sig_key_press(), [=](KeyEvent &e) { click(); e.stop_propagation(); });
+	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e) { click(); e.stop_propagation(); });
 	add_subview(button);
 }

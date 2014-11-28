@@ -40,8 +40,6 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	AppModel model;
 
-	model.open("Resources/Thalania/Thalania.fbx");
-
 	auto window = std::make_shared<MainWindow>();
 	window->show();
 
