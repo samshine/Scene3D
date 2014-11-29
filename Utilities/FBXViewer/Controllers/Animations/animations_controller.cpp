@@ -44,7 +44,24 @@ AnimationsController::AnimationsController()
 	slots.connect(loop_property->sig_value_changed(), this, &AnimationsController::loop_property_value_changed);
 	slots.connect(rarity_property->sig_value_changed(), this, &AnimationsController::rarity_property_value_changed);
 
-	animations_list->add_animation("default")->set_selected(true, false);
+	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_animations(); });
+
+	update_animations();
+}
+
+void AnimationsController::update_animations()
+{
+	animations_list->clear();
+	bool first = true;
+	for (const auto &anim : AppModel::instance()->desc.animations)
+	{
+		auto item = animations_list->add_animation(anim.name);
+		if (first)
+		{
+			item->set_selected(true, false);
+			first = false;
+		}
+	}
 	animations_list->add_animation("");
 }
 

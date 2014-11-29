@@ -19,6 +19,7 @@ public:
 
 	UndoSystem undo_system;
 
+	clan::Signal<void()> sig_load_finished;
 	clan::Signal<void()> sig_model_data_updated;
 
 	void open(const std::string &filename);

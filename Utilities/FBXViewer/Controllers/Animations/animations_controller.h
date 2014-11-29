@@ -12,6 +12,7 @@ public:
 	AnimationsController();
 
 private:
+	void update_animations();
 	void update_animation_fields();
 
 	void animations_list_selection_changed();

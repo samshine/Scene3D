@@ -13,6 +13,7 @@ public:
 	clan::Signal<void()> &sig_selection_changed() { return selection_changed; }
 	clan::Signal<void()> &sig_edit_saved() { return edit_saved; }
 
+	void clear();
 	std::shared_ptr<RolloutListItemView> add_animation(const std::string &anim_name);
 
 private:

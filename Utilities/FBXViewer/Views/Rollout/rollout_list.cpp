@@ -22,6 +22,13 @@ std::shared_ptr<RolloutListItemView> RolloutList::selection()
 	return std::shared_ptr<RolloutListItemView>();
 }
 
+void RolloutList::clear()
+{
+	auto s = subviews();
+	for (const auto &v : s)
+		v->remove_from_super();
+}
+
 std::shared_ptr<RolloutListItemView> RolloutList::add_animation(const std::string &anim_name)
 {
 	auto item = std::make_shared<RolloutListItemView>(subviews().size());
