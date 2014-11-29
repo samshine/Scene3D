@@ -11,10 +11,13 @@ public:
 	SceneView();
 	void render_content(clan::Canvas &canvas) override;
 
+	void set_model_data(std::shared_ptr<clan::ModelData> model_data);
+
 private:
 	void setup_scene(clan::GraphicContext &gc);
 	void update_model(clan::GraphicContext &gc);
 
+	std::shared_ptr<clan::ModelData> model_data;
 	std::string current_animation = "default";
 
 	clan::Timer timer;

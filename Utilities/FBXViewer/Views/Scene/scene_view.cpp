@@ -2,7 +2,6 @@
 #include "precomp.h"
 #include "scene_view.h"
 #include "viewer_scene_cache.h"
-#include "../../../Model/app_model.h"
 
 using namespace clan;
 
@@ -10,16 +9,8 @@ SceneView::SceneView()
 {
 	box_style.set_layout_hbox();
 	box_style.set_flex(1.0f, 1.0f);
-	box_style.set_background(Colorf(236, 240, 243));
-	//box_style.set_padding(5.0f);
 
 	set_focus_policy(FocusPolicy::accept);
-
-	slots.connect(AppModel::instance()->sig_model_data_updated, [this]()
-	{
-		model_data_updated = true;
-		set_needs_render();
-	});
 
 	slots.connect(sig_pointer_press(), [this](PointerEvent &e)
 	{
@@ -84,6 +75,13 @@ SceneView::SceneView()
 	timer.start(10, true);*/
 }
 
+void SceneView::set_model_data(std::shared_ptr<clan::ModelData> new_model_data)
+{
+	model_data = new_model_data;
+	model_data_updated = true;
+	set_needs_render();
+}
+
 void SceneView::render_content(Canvas &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
@@ -117,11 +115,16 @@ void SceneView::update_model(clan::GraphicContext &gc)
 	model1 = clan::SceneModel();
 	object1 = clan::SceneObject();
 
-	if (AppModel::instance()->model_data)
+	if (model_data)
 	{
-		model1 = clan::SceneModel(gc, scene, AppModel::instance()->model_data);
+		model1 = clan::SceneModel(gc, scene, model_data);
 		object1 = clan::SceneObject(scene, model1, clan::Vec3f(), clan::Quaternionf(), clan::Vec3f(1.0f));
 		object1.play_animation(current_animation);
+	}
+	else
+	{
+		model1 = clan::SceneModel();
+		object1 = clan::SceneObject();
 	}
 }
 

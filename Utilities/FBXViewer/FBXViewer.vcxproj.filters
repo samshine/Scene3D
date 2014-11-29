@@ -10,23 +10,29 @@
     <Filter Include="Views">
       <UniqueIdentifier>{2053cb8c-a395-4400-98af-2d50e1052ece}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow">
-      <UniqueIdentifier>{7cfccf02-e679-4054-be46-49f013c0af13}</UniqueIdentifier>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{90ff30f9-8cef-4dbc-a586-97bae7ea17ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow\Dock">
-      <UniqueIdentifier>{d22f796e-71a3-429d-87df-e03727303c3e}</UniqueIdentifier>
+    <Filter Include="Controllers\MainWindow">
+      <UniqueIdentifier>{793c5f73-9021-4ca4-b7f8-7ed8fcf46326}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow\Dock\AnimationsDockable">
-      <UniqueIdentifier>{84a8e3f2-5671-403f-97ad-ee087d4cc500}</UniqueIdentifier>
+    <Filter Include="Views\Header">
+      <UniqueIdentifier>{36110ab4-2de5-4ff8-a483-8f3cbd6c3986}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow\Dock\Rollout">
-      <UniqueIdentifier>{9f5b83ea-de0b-4b28-b5ec-50486201e860}</UniqueIdentifier>
+    <Filter Include="Views\Scene">
+      <UniqueIdentifier>{152acbd1-1f1c-43c6-8267-2d0f50b50b9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow\Header">
-      <UniqueIdentifier>{204aa70f-d99c-4bab-97b2-c569fe1989d2}</UniqueIdentifier>
+    <Filter Include="Views\Rollout">
+      <UniqueIdentifier>{d55376b4-6bd5-4327-8471-35f99bc6930e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Views\MainWindow\Scene">
-      <UniqueIdentifier>{3f247c08-293d-4b5b-aa5d-a364c9ff58d6}</UniqueIdentifier>
+    <Filter Include="Controllers\Workspace">
+      <UniqueIdentifier>{305029f2-0327-4482-9c22-0f80177e5875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Scene">
+      <UniqueIdentifier>{784e753d-82d8-46d1-839d-6176eae46241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Animations">
+      <UniqueIdentifier>{57f3eb26-439a-4d3c-8551-d254a7432bb2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,37 +48,40 @@
     <ClInclude Include="Model\Commands\update_animation_command.h">
       <Filter>Model\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="Views\MainWindow\main_window.h">
-      <Filter>Views\MainWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\dock_view.h">
-      <Filter>Views\MainWindow\Dock</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\AnimationsDockable\animations_dockable.h">
-      <Filter>Views\MainWindow\Dock\AnimationsDockable</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\Rollout\rollout_header.h">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\Rollout\rollout_list.h">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\Rollout\rollout_text_field_property.h">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Dock\Rollout\rollout_view.h">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Header\header_view.h">
-      <Filter>Views\MainWindow\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Scene\scene_view.h">
-      <Filter>Views\MainWindow\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\MainWindow\Scene\viewer_scene_cache.h">
-      <Filter>Views\MainWindow\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="precomp.h" />
+    <ClInclude Include="Controllers\MainWindow\main_window.h">
+      <Filter>Controllers\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Header\header_view.h">
+      <Filter>Views\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\scene_view.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\viewer_scene_cache.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_header.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_list.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_text_field_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_view.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Workspace\workspace_controller.h">
+      <Filter>Controllers\Workspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Scene\scene_controller.h">
+      <Filter>Controllers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Animations\animations_controller.h">
+      <Filter>Controllers\Animations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -85,36 +94,39 @@
       <Filter>Model\Commands</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Views\MainWindow\main_window.cpp">
-      <Filter>Views\MainWindow</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\dock_view.cpp">
-      <Filter>Views\MainWindow\Dock</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\AnimationsDockable\animations_dockable.cpp">
-      <Filter>Views\MainWindow\Dock\AnimationsDockable</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\Rollout\rollout_header.cpp">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\Rollout\rollout_list.cpp">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\Rollout\rollout_text_field_property.cpp">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Dock\Rollout\rollout_view.cpp">
-      <Filter>Views\MainWindow\Dock\Rollout</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Header\header_view.cpp">
-      <Filter>Views\MainWindow\Header</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Scene\scene_view.cpp">
-      <Filter>Views\MainWindow\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Views\MainWindow\Scene\viewer_scene_cache.cpp">
-      <Filter>Views\MainWindow\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="Controllers\MainWindow\main_window.cpp">
+      <Filter>Controllers\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Header\header_view.cpp">
+      <Filter>Views\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\scene_view.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\viewer_scene_cache.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_header.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_list.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_text_field_property.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_view.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Workspace\workspace_controller.cpp">
+      <Filter>Controllers\Workspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Scene\scene_controller.cpp">
+      <Filter>Controllers\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Animations\animations_controller.cpp">
+      <Filter>Controllers\Animations</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

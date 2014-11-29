@@ -6,10 +6,10 @@ class RolloutTextFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
-class AnimationsDockable : public clan::View
+class AnimationsController : public clan::ViewController
 {
 public:
-	AnimationsDockable();
+	AnimationsController();
 
 private:
 	void update_animation_fields();
@@ -33,4 +33,6 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> move_property;
 	std::shared_ptr<RolloutTextFieldProperty> loop_property;
 	std::shared_ptr<RolloutTextFieldProperty> rarity_property;
+
+	clan::SlotContainer slots;
 };

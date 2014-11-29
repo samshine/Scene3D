@@ -1,22 +1,22 @@
 
 #include "precomp.h"
-#include "animations_dockable.h"
-#include "Views/MainWindow/Dock/Rollout/rollout_view.h"
-#include "Views/MainWindow/Dock/Rollout/rollout_list.h"
-#include "Views/MainWindow/Dock/Rollout/rollout_text_field_property.h"
+#include "animations_controller.h"
+#include "Views/Rollout/rollout_view.h"
+#include "Views/Rollout/rollout_list.h"
+#include "Views/Rollout/rollout_text_field_property.h"
 #include "Model/app_model.h"
 
 using namespace clan;
 
-AnimationsDockable::AnimationsDockable()
+AnimationsController::AnimationsController()
 {
-	box_style.set_layout_block();
+	view->box_style.set_layout_block();
 
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");
 
-	add_subview(animations);
-	add_subview(animation);
+	view->add_subview(animations);
+	view->add_subview(animation);
 
 	animations_list = std::make_shared<RolloutList>();
 	start_property = std::make_shared<RolloutTextFieldProperty>("START FRAME");
@@ -35,20 +35,20 @@ AnimationsDockable::AnimationsDockable()
 	animation->content->add_subview(loop_property);
 	animation->content->add_subview(rarity_property);
 
-	slots.connect(animations_list->sig_selection_changed(), this, &AnimationsDockable::animations_list_selection_changed);
-	slots.connect(animations_list->sig_edit_saved(), this, &AnimationsDockable::animations_list_edit_saved);
-	slots.connect(start_property->sig_value_changed(), this, &AnimationsDockable::start_property_value_changed);
-	slots.connect(end_property->sig_value_changed(), this, &AnimationsDockable::end_property_value_changed);
-	slots.connect(play_property->sig_value_changed(), this, &AnimationsDockable::play_property_value_changed);
-	slots.connect(move_property->sig_value_changed(), this, &AnimationsDockable::move_property_value_changed);
-	slots.connect(loop_property->sig_value_changed(), this, &AnimationsDockable::loop_property_value_changed);
-	slots.connect(rarity_property->sig_value_changed(), this, &AnimationsDockable::rarity_property_value_changed);
+	slots.connect(animations_list->sig_selection_changed(), this, &AnimationsController::animations_list_selection_changed);
+	slots.connect(animations_list->sig_edit_saved(), this, &AnimationsController::animations_list_edit_saved);
+	slots.connect(start_property->sig_value_changed(), this, &AnimationsController::start_property_value_changed);
+	slots.connect(end_property->sig_value_changed(), this, &AnimationsController::end_property_value_changed);
+	slots.connect(play_property->sig_value_changed(), this, &AnimationsController::play_property_value_changed);
+	slots.connect(move_property->sig_value_changed(), this, &AnimationsController::move_property_value_changed);
+	slots.connect(loop_property->sig_value_changed(), this, &AnimationsController::loop_property_value_changed);
+	slots.connect(rarity_property->sig_value_changed(), this, &AnimationsController::rarity_property_value_changed);
 
 	animations_list->add_animation("default")->set_selected(true, false);
 	animations_list->add_animation("");
 }
 
-void AnimationsDockable::update_animation_fields()
+void AnimationsController::update_animation_fields()
 {
 	auto selection = animations_list->selection();
 	if (selection && selection->index < AppModel::instance()->desc.animations.size())
@@ -69,12 +69,12 @@ void AnimationsDockable::update_animation_fields()
 	}
 }
 
-void AnimationsDockable::animations_list_selection_changed()
+void AnimationsController::animations_list_selection_changed()
 {
 	update_animation_fields();
 }
 
-void AnimationsDockable::animations_list_edit_saved()
+void AnimationsController::animations_list_edit_saved()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -92,7 +92,7 @@ void AnimationsDockable::animations_list_edit_saved()
 	}
 }
 
-void AnimationsDockable::start_property_value_changed()
+void AnimationsController::start_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -104,7 +104,7 @@ void AnimationsDockable::start_property_value_changed()
 	}
 }
 
-void AnimationsDockable::end_property_value_changed()
+void AnimationsController::end_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -116,7 +116,7 @@ void AnimationsDockable::end_property_value_changed()
 	}
 }
 
-void AnimationsDockable::play_property_value_changed()
+void AnimationsController::play_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -128,7 +128,7 @@ void AnimationsDockable::play_property_value_changed()
 	}
 }
 
-void AnimationsDockable::move_property_value_changed()
+void AnimationsController::move_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -140,7 +140,7 @@ void AnimationsDockable::move_property_value_changed()
 	}
 }
 
-void AnimationsDockable::loop_property_value_changed()
+void AnimationsController::loop_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)
@@ -152,7 +152,7 @@ void AnimationsDockable::loop_property_value_changed()
 	}
 }
 
-void AnimationsDockable::rarity_property_value_changed()
+void AnimationsController::rarity_property_value_changed()
 {
 	auto selection = animations_list->selection();
 	if (selection)

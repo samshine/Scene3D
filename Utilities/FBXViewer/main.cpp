@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "Views/MainWindow/main_window.h"
+#include "Controllers/MainWindow/main_window.h"
 #include "Model/app_model.h"
 
 using namespace clan;
@@ -41,7 +41,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	AppModel model;
 
 	auto window = std::make_shared<MainWindow>();
-	window->show();
+	window->window_view()->show();
 
 	while (!window->exit)
 	{
