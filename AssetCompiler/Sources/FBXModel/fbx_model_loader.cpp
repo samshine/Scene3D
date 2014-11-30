@@ -683,13 +683,20 @@ namespace clan
 		animation.rarity = animation_desc.rarity;
 		model_data->animations.push_back(animation);
 
-		int num_steps = (int)std::ceil((stop_time - start_time) * 60.0f);
+		int num_steps = (int)std::ceil((stop_time - start_time) * 60.0f) + 1;
 		for (int step = 0; step <= num_steps; step++)
 		{
 			float step_time = std::min(start_time + step / 60.0f, stop_time);
 
 			FbxTime current_time;
-			current_time.SetSecondDouble(step_time);
+			if (animation_desc.loop && step == num_steps)
+			{
+				current_time.SetSecondDouble(start_time);
+			}
+			else
+			{
+				current_time.SetSecondDouble(step_time);
+			}
 
 			for (size_t bone_index = 0; bone_index < bones.size(); bone_index++)
 			{

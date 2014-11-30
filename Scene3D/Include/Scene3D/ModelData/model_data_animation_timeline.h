@@ -91,7 +91,7 @@ inline Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float time
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);
-	return Quaternionf::lerp(values[index], values[index2], t);
+	return Quaternionf::slerp(values[index], values[index2], t);
 }
 
 template<>

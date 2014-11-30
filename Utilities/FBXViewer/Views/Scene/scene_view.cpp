@@ -66,6 +66,12 @@ SceneView::SceneView()
 			}
 		}
 	});
+
+	timer = Timer();
+	timer.func_expired() = [this]()
+	{
+		set_needs_render();
+	};
 }
 
 void SceneView::set_model_data(std::shared_ptr<clan::ModelData> new_model_data)
@@ -99,13 +105,6 @@ void SceneView::render_content(Canvas &canvas)
 
 	gc.set_viewport(gc.get_size());
 
-	///
-
-	timer = Timer();
-	timer.func_expired() = [this]()
-	{
-		set_needs_render();
-	};
 	timer.start(10, false);
 }
 

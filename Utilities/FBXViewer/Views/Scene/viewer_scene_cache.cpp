@@ -21,12 +21,35 @@ Resource<Texture> ViewerSceneCache::get_texture(GraphicContext &gc, const std::s
 
 	try
 	{
-		ImageImportDescription import_desc;
-		import_desc.set_flip_vertical(false);
-		import_desc.set_srgb(!linear);
+		PixelBuffer image = ImageProviderFactory::load(name, std::string(), !linear);
+		image.premultiply_alpha();
 
-		Resource<Texture> texture = Texture2D(gc, name, import_desc);
-		loaded_textures[name] = texture;
+		// Convert sRGB 16 bit image to linear:
+		if (image.get_format() == tf_rgba16 && !linear)
+			image.premultiply_gamma(2.2f);
+
+		bool has_mipmaps = is_power_of_two(image.get_width(), image.get_height());
+
+		Texture2D loaded_texture = Texture2D(gc, image.get_width(), image.get_height(), image.get_format(), has_mipmaps ? 0 : 1);
+		loaded_texture.set_image(gc, image);
+
+		if (has_mipmaps)
+		{
+			loaded_texture.set_min_filter(filter_linear_mipmap_linear);
+			loaded_texture.set_mag_filter(filter_linear);
+			loaded_texture.generate_mipmap();
+			loaded_texture.set_max_anisotropy(4.0f);
+		}
+		else
+		{
+			loaded_texture.set_min_filter(filter_linear);
+			loaded_texture.set_mag_filter(filter_linear);
+		}
+
+		loaded_texture.set_wrap_mode(wrap_repeat, wrap_repeat);
+
+		Resource<Texture> texture;
+		texture.set(loaded_texture);
 		return texture;
 	}
 	catch (Exception &)
@@ -69,4 +92,14 @@ Texture2D ViewerSceneCache::get_dummy_texture(clan::GraphicContext &gc)
 	}
 
 	return dummy_texture;
+}
+
+bool ViewerSceneCache::is_power_of_two(int width, int height)
+{
+	int pot_width = 0, pot_height = 0;
+	while ((1 << pot_width) < width)
+		pot_width++;
+	while ((1 << pot_height) < height)
+		pot_height++;
+	return (width == (1 << pot_width) && height == (1 << pot_height));
 }

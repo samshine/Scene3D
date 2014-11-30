@@ -30,6 +30,7 @@
 #include "model_instance.h"
 #include "model.h"
 #include "Scene3D/ModelData/model_data.h"
+#include <algorithm>
 
 namespace clan
 {
@@ -57,21 +58,24 @@ void ModelInstance::update(float time_elapsed)
 {
 	if (animation_index != -1)
 	{
-		if (renderer->get_model_data()->animations[animation_index].length <= 0.0f)
+		animation_time += time_elapsed * renderer->get_model_data()->animations[animation_index].playback_speed;
+		if (animation_time >= renderer->get_model_data()->animations[animation_index].length)
 		{
-			animation_time = 0.0f;
-		}
-		else
-		{
-			animation_time += time_elapsed * renderer->get_model_data()->animations[animation_index].playback_speed;
 			if (renderer->get_model_data()->animations[animation_index].loop)
 			{
-				while (animation_time > renderer->get_model_data()->animations[animation_index].length)
-					animation_time -= renderer->get_model_data()->animations[animation_index].length;
+				if (renderer->get_model_data()->animations[animation_index].length <= 0.0f)
+				{
+					animation_time = 0.0f;
+				}
+				else
+				{
+					while (animation_time >= renderer->get_model_data()->animations[animation_index].length)
+						animation_time -= renderer->get_model_data()->animations[animation_index].length;
+				}
 			}
 			else
 			{
-				animation_time = renderer->get_model_data()->animations[animation_index].length;
+				play_animation("default");
 			}
 		}
 	}

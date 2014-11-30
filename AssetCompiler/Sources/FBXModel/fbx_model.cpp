@@ -22,7 +22,7 @@ namespace clan
 	/////////////////////////////////////////////////////////////////////////
 
 	FBXModelImpl::FBXModelImpl(const std::string &filename)
-		: base_path(PathHelp::get_basepath(filename)), manager(nullptr), iosettings(nullptr), scene(nullptr)
+		: base_path(PathHelp::get_fullpath(filename)), manager(nullptr), iosettings(nullptr), scene(nullptr)
 	{
 		try
 		{

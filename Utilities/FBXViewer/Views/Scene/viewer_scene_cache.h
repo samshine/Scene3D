@@ -16,6 +16,7 @@ public:
 
 private:
 	clan::Texture2D get_dummy_texture(clan::GraphicContext &gc);
+	static bool is_power_of_two(int width, int height);
 
 	clan::Texture2D dummy_texture;
 	std::map<std::string, clan::Resource<clan::Texture> > loaded_textures;
