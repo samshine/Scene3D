@@ -69,20 +69,19 @@ public:
 private:
 	size_t binary_search(float timestamp) const
 	{
-		size_t imin = 0;
-		size_t imax = timestamps.size() - 1;
+		int search_max = static_cast<int>(timestamps.size()) - 1;
+		int imin = 0;
+		int imax = search_max;
 		while (imin < imax)
 		{
-			size_t imid = imin + (imax - imin) / 2;
+			int imid = imin + (imax - imin) / 2;
 			if (timestamps[imid] > timestamp)
 				imax = imid;
 			else
 				imin = imid + 1;
 		}
-		if (imin < timestamps.size() - 1)
-			return imin - 1;
-		else
-			return imin;
+		bool found = (imax == imin && timestamps[imin] > timestamp);
+		return found ? imin - 1 : search_max;
 	}
 };
 

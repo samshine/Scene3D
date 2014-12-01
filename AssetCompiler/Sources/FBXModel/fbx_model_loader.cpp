@@ -663,12 +663,12 @@ namespace clan
 		float scene_start_time = (float)timespan.GetStart().GetSecondDouble();
 		float scene_stop_time = (float)timespan.GetStop().GetSecondDouble();
 
-		float start_time = (float)(scene_start_time + animation_desc.start_frame / FbxTime::GetFrameRate(time_mode));
-		float stop_time = (float)(scene_start_time + animation_desc.end_frame / FbxTime::GetFrameRate(time_mode));
+		int start_frame = animation_desc.start_frame;
+		int end_frame = std::max(animation_desc.end_frame, start_frame);
 
-		start_time = clan::clamp(start_time, scene_start_time, scene_stop_time);
-		stop_time = clan::clamp(stop_time, scene_start_time, scene_stop_time);
-		stop_time = std::max(stop_time, start_time);
+		float start_time = (float)(scene_start_time + start_frame / FbxTime::GetFrameRate(time_mode));
+		float stop_time = (float)(scene_start_time + end_frame / FbxTime::GetFrameRate(time_mode));
+		float stop_time_loop = (float)(scene_start_time + (end_frame + 1) / FbxTime::GetFrameRate(time_mode));
 
 		FbxAnimEvaluator *scene_evaluator = model->scene->GetAnimationEvaluator();
 
@@ -676,27 +676,19 @@ namespace clan
 
 		ModelDataAnimation animation;
 		animation.name = animation_desc.name;
-		animation.length = stop_time - start_time;
+		animation.length = animation_desc.loop ? (stop_time_loop - start_time) : (stop_time - start_time);
 		animation.loop = animation_desc.loop;
 		animation.playback_speed = animation_desc.play_speed;
 		animation.moving_speed = animation_desc.move_speed;
 		animation.rarity = animation_desc.rarity;
 		model_data->animations.push_back(animation);
 
-		int num_steps = (int)std::ceil((stop_time - start_time) * 60.0f) + 1;
-		for (int step = 0; step <= num_steps; step++)
+		for (int frame = start_frame; frame <= end_frame + 1; frame++)
 		{
-			float step_time = std::min(start_time + step / 60.0f, stop_time);
+			float step_time = (float)(scene_start_time + frame / FbxTime::GetFrameRate(time_mode));
 
 			FbxTime current_time;
-			if (animation_desc.loop && step == num_steps)
-			{
-				current_time.SetSecondDouble(start_time);
-			}
-			else
-			{
-				current_time.SetSecondDouble(step_time);
-			}
+			current_time.SetSecondDouble((frame != end_frame + 1) ? step_time : start_time);
 
 			for (size_t bone_index = 0; bone_index < bones.size(); bone_index++)
 			{
