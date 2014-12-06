@@ -17,61 +17,33 @@ SceneView::SceneView()
 		set_focus();
 	});
 
-	slots.connect(sig_key_press(), [this](KeyEvent &e)
-	{
-		if (e.key() == Key::left && e.repeat_count() == 0)
-		{
-			keys_down++;
-
-			current_animation = "left";
-			if (!object1.is_null())
-				object1.play_animation(current_animation);
-		}
-		else if (e.key() == Key::right && e.repeat_count() == 0)
-		{
-			keys_down++;
-
-			current_animation = "right";
-			if (!object1.is_null())
-				object1.play_animation(current_animation);
-		}
-		else if (e.key() == Key::up && e.repeat_count() == 0)
-		{
-			keys_down++;
-
-			current_animation = "up";
-			if (!object1.is_null())
-				object1.play_animation(current_animation);
-		}
-		else if (e.key() == Key::down && e.repeat_count() == 0)
-		{
-			keys_down++;
-
-			current_animation = "down";
-			if (!object1.is_null())
-				object1.play_animation(current_animation);
-		}
-	});
-
-	slots.connect(sig_key_release(), [this](KeyEvent &e)
-	{
-		if (e.key() == Key::left || e.key() == Key::right || e.key() == Key::up || e.key() == Key::down)
-		{
-			keys_down--;
-			if (keys_down == 0)
-			{
-				current_animation = "default";
-				if (!object1.is_null())
-					object1.play_animation(current_animation);
-			}
-		}
-	});
-
 	timer = Timer();
 	timer.func_expired() = [this]()
 	{
 		set_needs_render();
 	};
+}
+
+std::string SceneView::get_animation() const
+{
+	if (!object1.is_null())
+		return object1.get_animation();
+	else
+		return current_animation;
+}
+
+void SceneView::play_animation(const std::string &name, bool instant)
+{
+	current_animation = name;
+	if (!object1.is_null())
+		object1.play_animation(current_animation, instant);
+}
+
+void SceneView::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
+{
+	current_animation = anim2;
+	if (!object1.is_null())
+		object1.play_transition(anim1, anim2, instant);
 }
 
 void SceneView::set_model_data(std::shared_ptr<clan::ModelData> new_model_data)
@@ -120,7 +92,7 @@ void SceneView::update_model(clan::GraphicContext &gc)
 	{
 		model1 = clan::SceneModel(gc, scene, model_data);
 		object1 = clan::SceneObject(scene, model1, clan::Vec3f(), clan::Quaternionf(), clan::Vec3f(1.0f));
-		object1.play_animation(current_animation);
+		object1.play_animation(current_animation, true);
 	}
 	else
 	{

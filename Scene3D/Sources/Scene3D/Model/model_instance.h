@@ -49,19 +49,26 @@ public:
 	ModelInstance();
 	std::shared_ptr<Model> get_renderer() const { return renderer; }
 	void set_renderer(std::shared_ptr<Model> renderer);
-	void play_animation(const std::string &name);
+	void play_animation(const std::string &name, bool instant);
+	void play_transition(const std::string &anim1, const std::string &anim2, bool instant);
 	void update(float time_elapsed);
 	void moved(float units_moved);
 
+	const std::string &get_animation() const { return animation_name; }
 	int get_animation_index() const { return animation_index; }
 	float get_animation_time() const { return animation_time; }
 
 private:
 	void update_animation_index();
+	void next_animation();
 
 	std::string animation_name;
+	std::string next_animation_name;
+	std::string next_animation_name2;
+
 	int animation_index;
 	float animation_time;
+
 	std::vector<ModelReplacedMaterial> replaced_materials;
 	std::shared_ptr<Model> renderer;
 

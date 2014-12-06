@@ -62,8 +62,21 @@ public:
 	// \brief Rotate object relative to its current orientation
 	SceneObject &rotate(float dir, float up, float tilt);
 
-	void play_animation(const std::string &name);
+	// \brief Returns the currently active animation
+	std::string get_animation() const;
+
+	// \brief Plays a new animation
+	// \param instant True if animation should change immidately. False if it should wait for current to finish
+	void play_animation(const std::string &name, bool instant);
+
+	// \brief Plays two sequential animations
+	// \param instant True if animation should change immidately. False if it should wait for current to finish
+	void play_transition(const std::string &anim1, const std::string &anim2, bool instant);
+
+	// \brief Updates current animation playback
 	void update(float time_elapsed);
+
+	// \brief Updates current animation based on movement
 	void moved(float units_moved);
 
 private:

@@ -47,35 +47,58 @@ void ModelInstance::set_renderer(std::shared_ptr<Model> new_renderer)
 	update_animation_index();
 }
 
-void ModelInstance::play_animation(const std::string &name)
+void ModelInstance::play_animation(const std::string &name, bool instant)
 {
-	animation_name = name;
+	play_transition(name, std::string(), instant);
+}
+
+void ModelInstance::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
+{
+	next_animation_name = anim1;
+	next_animation_name2 = anim2;
+	if (instant || animation_index == -1)
+		next_animation();
+}
+
+void ModelInstance::next_animation()
+{
+	animation_name = next_animation_name;
 	animation_time = 0.0f;
+	next_animation_name = next_animation_name2;
+	next_animation_name2.clear();
+	if (animation_name.empty())
+		animation_name = "default";
 	update_animation_index();
 }
 
 void ModelInstance::update(float time_elapsed)
 {
-	if (animation_index != -1)
+	while (time_elapsed > 0.0f)
 	{
-		animation_time += time_elapsed * renderer->get_model_data()->animations[animation_index].playback_speed;
-		if (animation_time >= renderer->get_model_data()->animations[animation_index].length)
+		if (animation_index == -1)
+			break;
+
+		const auto &animation = renderer->get_model_data()->animations[animation_index];
+		if (animation.playback_speed <= 0.0f || animation.length <= 0.0f)
 		{
-			if (renderer->get_model_data()->animations[animation_index].loop)
+			next_animation();
+			break;
+		}
+		else
+		{
+			float time_left = (animation.length - animation_time) / animation.playback_speed;
+			if (time_left < time_elapsed)
 			{
-				if (renderer->get_model_data()->animations[animation_index].length <= 0.0f)
-				{
-					animation_time = 0.0f;
-				}
-				else
-				{
-					while (animation_time >= renderer->get_model_data()->animations[animation_index].length)
-						animation_time -= renderer->get_model_data()->animations[animation_index].length;
-				}
+				time_elapsed -= time_left;
+				animation_time = 0.0f;
+
+				if (!animation.loop || !next_animation_name.empty())
+					next_animation();
 			}
 			else
 			{
-				play_animation("default");
+				animation_time += time_elapsed * animation.playback_speed;
+				break;
 			}
 		}
 	}
@@ -83,18 +106,28 @@ void ModelInstance::update(float time_elapsed)
 
 void ModelInstance::moved(float units_moved)
 {
-	if (animation_index != -1)
+	while (units_moved > 0.0f)
 	{
-		if (renderer->get_model_data()->animations[animation_index].length <= 0.0f)
+		if (animation_index == -1)
+			break;
+
+		const auto &animation = renderer->get_model_data()->animations[animation_index];
+		if (animation.moving_speed <= 0.0f || animation.length <= 0.0f)
+			break;
+
+		float units_left = (animation.length - animation_time) / animation.moving_speed;
+		if (units_left < units_moved)
 		{
+			units_moved -= units_left;
 			animation_time = 0.0f;
+
+			if (!animation.loop || !next_animation_name.empty())
+				next_animation();
 		}
 		else
 		{
-			float local_distance_moved = units_moved;
-			animation_time += local_distance_moved * renderer->get_model_data()->animations[animation_index].moving_speed;
-			while (animation_time > renderer->get_model_data()->animations[animation_index].length)
-				animation_time -= renderer->get_model_data()->animations[animation_index].length;
+			animation_time += units_moved * animation.moving_speed;
+			break;
 		}
 	}
 }

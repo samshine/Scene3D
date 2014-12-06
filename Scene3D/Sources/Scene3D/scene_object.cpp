@@ -103,9 +103,20 @@ void SceneObject::set_light_probe_receiver(bool enable)
 	impl->light_probe_receiver = enable;
 }
 
-void SceneObject::play_animation(const std::string &name)
+std::string SceneObject::get_animation() const
 {
-	impl->instance.play_animation(name);
+	return impl->instance.get_animation();
+}
+
+void SceneObject::play_animation(const std::string &name, bool instant)
+{
+	impl->instance.play_animation(name, instant);
+	impl->update_lights();
+}
+
+void SceneObject::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
+{
+	impl->instance.play_transition(anim1, anim2, instant);
 	impl->update_lights();
 }
 
