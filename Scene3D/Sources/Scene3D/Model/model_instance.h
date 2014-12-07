@@ -43,6 +43,31 @@ public:
 	Resource<Texture> replaced_texture;
 };
 
+class ModelAnimationTime
+{
+public:
+	void play_animation(std::shared_ptr<Model> &renderer, const std::string &anim1, const std::string &anim2, bool instant);
+
+	void update(std::shared_ptr<Model> &renderer, float time_elapsed);
+	void moved(std::shared_ptr<Model> &renderer, float units_moved);
+
+	void update_animation_index(std::shared_ptr<Model> &renderer);
+
+	const std::string &get_animation() const { return animation_name; }
+	int get_animation_index() const { return animation_index; }
+	float get_animation_time() const { return animation_time; }
+
+private:
+	void next_animation(std::shared_ptr<Model> &renderer);
+
+	std::string animation_name = "default";
+	std::string next_animation_name;
+	std::string next_animation_name2;
+
+	int animation_index = -1;
+	float animation_time = 0.0f;
+};
+
 class ModelInstance
 {
 public:
@@ -54,20 +79,14 @@ public:
 	void update(float time_elapsed);
 	void moved(float units_moved);
 
-	const std::string &get_animation() const { return animation_name; }
-	int get_animation_index() const { return animation_index; }
-	float get_animation_time() const { return animation_time; }
+	const std::string &get_animation() const { return cur_anim.get_animation(); }
+	int get_animation_index() const { return cur_anim.get_animation_index(); }
+	float get_animation_time() const { return cur_anim.get_animation_time(); }
 
 private:
-	void update_animation_index();
-	void next_animation();
-
-	std::string animation_name;
-	std::string next_animation_name;
-	std::string next_animation_name2;
-
-	int animation_index;
-	float animation_time;
+	ModelAnimationTime last_anim;
+	ModelAnimationTime cur_anim;
+	float transition = 1.0f;
 
 	std::vector<ModelReplacedMaterial> replaced_materials;
 	std::shared_ptr<Model> renderer;

@@ -17,6 +17,8 @@ public:
 	void play_transition(const std::string &anim1, const std::string &anim2, bool instant);
 	std::string get_animation() const;
 
+	clan::Signal<void(clan::Scene &, clan::GraphicContext &, clan::InputContext &)> sig_update_scene;
+
 private:
 	void setup_scene(clan::GraphicContext &gc);
 	void update_model(clan::GraphicContext &gc);

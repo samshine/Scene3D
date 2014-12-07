@@ -80,7 +80,7 @@ const std::vector<ModelDataLight> &Model::get_lights()
 
 bool Model::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color)
 {
-	if (instance.animation_index == -1)
+	if (instance.cur_anim.get_animation_index() == -1)
 		return false;
 
 	if (instance_frame != frame)
@@ -146,11 +146,30 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 
 		vectors[15] = Vec4f(instances_light_probe_color[j], 0.0f);
 
+		int animation_index = instances[j]->cur_anim.get_animation_index();
+		float animation_time = instances[j]->cur_anim.get_animation_time();
+
+		int last_animation_index = instances[j]->last_anim.get_animation_index();
+		float last_animation_time = instances[j]->last_anim.get_animation_time();
+
+		float anim_transition = instances[j]->transition;
+
 		for (size_t i = 0; i < model_data->bones.size(); i++)
 		{
-			Vec3f position = model_data->bones[i].position.get_value(instances[j]->animation_index, instances[j]->animation_time);
-			Quaternionf orientation = model_data->bones[i].orientation.get_value(instances[j]->animation_index, instances[j]->animation_time);
-			Vec3f scale = model_data->bones[i].scale.get_value(instances[j]->animation_index, instances[j]->animation_time);
+			Vec3f position = model_data->bones[i].position.get_value(animation_index, animation_time);
+			Quaternionf orientation = model_data->bones[i].orientation.get_value(animation_index, animation_time);
+			Vec3f scale = model_data->bones[i].scale.get_value(animation_index, animation_time);
+
+			if (anim_transition < 1.0f && last_animation_index != -1)
+			{
+				Vec3f last_position = model_data->bones[i].position.get_value(last_animation_index, last_animation_time);
+				Quaternionf last_orientation = model_data->bones[i].orientation.get_value(last_animation_index, last_animation_time);
+				Vec3f last_scale = model_data->bones[i].scale.get_value(last_animation_index, last_animation_time);
+
+				position = mix(last_position, position, anim_transition);
+				orientation = Quaternionf::slerp(last_orientation, orientation, anim_transition);
+				scale = mix(last_scale, scale, anim_transition);
+			}
 
 			if (model_data->bones[i].billboarded)
 			{
@@ -164,13 +183,6 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 				orientation = Quaternionf::inverse(camera_orientation) * orientation;
 			}
 
-			/*
-			DualQuaternionf dual_quaternion(position, orientation);
-
-			vectors[instance_base_vectors + i * vectors_per_bone + 0] = Vec4f(dual_quaternion.first.x, dual_quaternion.first.y, dual_quaternion.first.z, dual_quaternion.first.w);
-			vectors[instance_base_vectors + i * vectors_per_bone + 1] = Vec4f(dual_quaternion.second.x, dual_quaternion.second.y, dual_quaternion.second.z, dual_quaternion.second.w);
-			*/
-
 			Mat4f transform = Mat4f::translate(position) * orientation.to_matrix() * Mat4f::scale(scale);
 			transform.transpose();
 			vectors[instance_base_vectors + i * vectors_per_bone + 0] = Vec4f(transform[0], transform[1], transform[2], transform[3]);
@@ -183,17 +195,17 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 		{
 			int material_offset = instance_base_vectors + model_data->bones.size() * vectors_per_bone + i * vectors_per_material;
 
-			Vec3f self_illumination = model_data->meshes[0].draw_ranges[i].self_illumination.get_value(instances[j]->animation_index, instances[j]->animation_time);
-			float self_illumination_amount = model_data->meshes[0].draw_ranges[i].self_illumination_amount.get_value(instances[j]->animation_index, instances[j]->animation_time);
+			Vec3f self_illumination = model_data->meshes[0].draw_ranges[i].self_illumination.get_value(animation_index, animation_time);
+			float self_illumination_amount = model_data->meshes[0].draw_ranges[i].self_illumination_amount.get_value(animation_index, animation_time);
 			vectors[material_offset + 0] = Vec4f(self_illumination, self_illumination_amount);
 			vectors[material_offset + 1] = Vec4f(0.0f); // model_data->meshes[0].draw_ranges[i].diffuse_map.replaceable_texture
 
 			Mat4f uvw[4] = 
 			{
-				model_data->meshes[0].draw_ranges[i].diffuse_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].draw_ranges[i].bumpmap_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].draw_ranges[i].self_illumination_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].draw_ranges[i].specular_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time)
+				model_data->meshes[0].draw_ranges[i].diffuse_map.get_uvw_matrix(animation_index, animation_time),
+				model_data->meshes[0].draw_ranges[i].bumpmap_map.get_uvw_matrix(animation_index, animation_time),
+				model_data->meshes[0].draw_ranges[i].self_illumination_map.get_uvw_matrix(animation_index, animation_time),
+				model_data->meshes[0].draw_ranges[i].specular_map.get_uvw_matrix(animation_index, animation_time)
 			};
 
 			for (int h = 0; h < 4; h++)

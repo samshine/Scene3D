@@ -37,14 +37,14 @@ namespace clan
 
 
 ModelInstance::ModelInstance()
-: animation_name("default"), animation_index(-1), animation_time(0.0f)
 {
 }
 
 void ModelInstance::set_renderer(std::shared_ptr<Model> new_renderer)
 {
 	renderer = new_renderer;
-	update_animation_index();
+	last_anim.update_animation_index(renderer);
+	cur_anim.update_animation_index(renderer);
 }
 
 void ModelInstance::play_animation(const std::string &name, bool instant)
@@ -54,13 +54,35 @@ void ModelInstance::play_animation(const std::string &name, bool instant)
 
 void ModelInstance::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
 {
+	last_anim = cur_anim;
+	cur_anim.play_animation(renderer, anim1, anim2, true);
+	transition = instant ? 1.0f : 0.0f;
+}
+
+void ModelInstance::update(float time_elapsed)
+{
+	last_anim.update(renderer, time_elapsed);
+	cur_anim.update(renderer, time_elapsed);
+	transition = std::min(transition + time_elapsed * (1.0f / 0.150f), 1.0f);
+}
+
+void ModelInstance::moved(float units_moved)
+{
+	last_anim.moved(renderer, units_moved);
+	cur_anim.moved(renderer, units_moved);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void ModelAnimationTime::play_animation(std::shared_ptr<Model> &renderer, const std::string &anim1, const std::string &anim2, bool instant)
+{
 	next_animation_name = anim1;
 	next_animation_name2 = anim2;
 	if (instant || animation_index == -1)
-		next_animation();
+		next_animation(renderer);
 }
 
-void ModelInstance::next_animation()
+void ModelAnimationTime::next_animation(std::shared_ptr<Model> &renderer)
 {
 	animation_name = next_animation_name;
 	animation_time = 0.0f;
@@ -68,10 +90,10 @@ void ModelInstance::next_animation()
 	next_animation_name2.clear();
 	if (animation_name.empty())
 		animation_name = "default";
-	update_animation_index();
+	update_animation_index(renderer);
 }
 
-void ModelInstance::update(float time_elapsed)
+void ModelAnimationTime::update(std::shared_ptr<Model> &renderer, float time_elapsed)
 {
 	while (time_elapsed > 0.0f)
 	{
@@ -81,7 +103,7 @@ void ModelInstance::update(float time_elapsed)
 		const auto &animation = renderer->get_model_data()->animations[animation_index];
 		if (animation.playback_speed <= 0.0f || animation.length <= 0.0f)
 		{
-			next_animation();
+			next_animation(renderer);
 			break;
 		}
 		else
@@ -93,7 +115,7 @@ void ModelInstance::update(float time_elapsed)
 				animation_time = 0.0f;
 
 				if (!animation.loop || !next_animation_name.empty())
-					next_animation();
+					next_animation(renderer);
 			}
 			else
 			{
@@ -104,7 +126,7 @@ void ModelInstance::update(float time_elapsed)
 	}
 }
 
-void ModelInstance::moved(float units_moved)
+void ModelAnimationTime::moved(std::shared_ptr<Model> &renderer, float units_moved)
 {
 	while (units_moved > 0.0f)
 	{
@@ -122,7 +144,7 @@ void ModelInstance::moved(float units_moved)
 			animation_time = 0.0f;
 
 			if (!animation.loop || !next_animation_name.empty())
-				next_animation();
+				next_animation(renderer);
 		}
 		else
 		{
@@ -132,7 +154,7 @@ void ModelInstance::moved(float units_moved)
 	}
 }
 
-void ModelInstance::update_animation_index()
+void ModelAnimationTime::update_animation_index(std::shared_ptr<Model> &renderer)
 {
 	animation_index = -1;
 	if (renderer)

@@ -60,8 +60,11 @@ void SceneView::render_content(Canvas &canvas)
 
 	canvas.flush();
 	clan::GraphicContext gc = canvas.get_gc();
+	clan::InputContext ic;
+	if (dynamic_cast<WindowView*>(root_view())) ic = static_cast<WindowView*>(root_view())->get_display_window().get_ic();
 
 	setup_scene(gc);
+	sig_update_scene(scene, gc, ic);
 	update_model(gc);
 
 	camera.set_orientation(clan::Quaternionf(up, dir, 0.0f, clan::angle_degrees, clan::order_YXZ));
