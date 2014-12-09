@@ -34,6 +34,9 @@
     <Filter Include="Controllers\Animations">
       <UniqueIdentifier>{57f3eb26-439a-4d3c-8551-d254a7432bb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Attachments">
+      <UniqueIdentifier>{db36d6a7-7b96-48eb-abdc-95459af8eaaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -82,6 +85,12 @@
     <ClInclude Include="Controllers\Animations\animations_controller.h">
       <Filter>Controllers\Animations</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Attachments\attachments_controller.h">
+      <Filter>Controllers\Attachments</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Commands\update_attachment_command.h">
+      <Filter>Model\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -127,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="Controllers\Animations\animations_controller.cpp">
       <Filter>Controllers\Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Attachments\attachments_controller.cpp">
+      <Filter>Controllers\Attachments</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Commands\update_attachment_command.cpp">
+      <Filter>Model\Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

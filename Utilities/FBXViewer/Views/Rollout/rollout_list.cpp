@@ -29,10 +29,10 @@ void RolloutList::clear()
 		v->remove_from_super();
 }
 
-std::shared_ptr<RolloutListItemView> RolloutList::add_animation(const std::string &anim_name)
+std::shared_ptr<RolloutListItemView> RolloutList::add_item(const std::string &item_name)
 {
 	auto item = std::make_shared<RolloutListItemView>(subviews().size());
-	item->set_text(anim_name);
+	item->set_text(item_name);
 
 	add_subview(item);
 	return item;

@@ -55,14 +55,14 @@ void AnimationsController::update_animations()
 	bool first = true;
 	for (const auto &anim : AppModel::instance()->desc.animations)
 	{
-		auto item = animations_list->add_animation(anim.name);
+		auto item = animations_list->add_item(anim.name);
 		if (first)
 		{
 			item->set_selected(true, false);
 			first = false;
 		}
 	}
-	animations_list->add_animation("");
+	animations_list->add_item("");
 }
 
 void AnimationsController::update_animation_fields()
@@ -99,7 +99,7 @@ void AnimationsController::animations_list_edit_saved()
 		if (selection->index >= AppModel::instance()->desc.animations.size())
 		{
 			AppModel::instance()->desc.animations.resize(selection->index + 1);
-			animations_list->add_animation("");
+			animations_list->add_item("");
 		}
 
 		auto &anim = AppModel::instance()->desc.animations[selection->index];
@@ -180,10 +180,3 @@ void AnimationsController::rarity_property_value_changed()
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
 	}
 }
-
-/*
-Tpose 0 - 0
-static 4 4
-walk 32 83
-run 115 144
-*/
