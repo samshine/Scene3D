@@ -96,6 +96,7 @@
     <ClInclude Include="Views\Header\header_view.h" />
     <ClInclude Include="Views\Rollout\rollout_header.h" />
     <ClInclude Include="Views\Rollout\rollout_list.h" />
+    <ClInclude Include="Views\Rollout\rollout_position_property.h" />
     <ClInclude Include="Views\Rollout\rollout_text_field_property.h" />
     <ClInclude Include="Views\Rollout\rollout_view.h" />
     <ClInclude Include="Views\Scene\scene_view.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="Views\Header\header_view.cpp" />
     <ClCompile Include="Views\Rollout\rollout_header.cpp" />
     <ClCompile Include="Views\Rollout\rollout_list.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_position_property.cpp" />
     <ClCompile Include="Views\Rollout\rollout_text_field_property.cpp" />
     <ClCompile Include="Views\Rollout\rollout_view.cpp" />
     <ClCompile Include="Views\Scene\scene_view.cpp" />

@@ -2,6 +2,7 @@
 #pragma once
 
 class RolloutView;
+class RolloutPositionProperty;
 class RolloutTextFieldProperty;
 class RolloutList;
 class RolloutListItemView;
@@ -25,8 +26,8 @@ private:
 	std::shared_ptr<RolloutList> attachments_list;
 
 	std::shared_ptr<RolloutView> attachment;
-	std::shared_ptr<RolloutTextFieldProperty> position_property;
-	std::shared_ptr<RolloutTextFieldProperty> orientation_property;
+	std::shared_ptr<RolloutPositionProperty> position_property;
+	std::shared_ptr<RolloutPositionProperty> orientation_property;
 	std::shared_ptr<RolloutTextFieldProperty> bone_name_property;
 
 	clan::SlotContainer slots;

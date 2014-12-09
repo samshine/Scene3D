@@ -91,6 +91,9 @@
     <ClInclude Include="Model\Commands\update_attachment_command.h">
       <Filter>Model\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_position_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -142,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="Model\Commands\update_attachment_command.cpp">
       <Filter>Model\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_position_property.cpp">
+      <Filter>Views\Rollout</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include "attachments_controller.h"
 #include "Views/Rollout/rollout_view.h"
 #include "Views/Rollout/rollout_list.h"
+#include "Views/Rollout/rollout_position_property.h"
 #include "Views/Rollout/rollout_text_field_property.h"
 #include "Model/app_model.h"
 
@@ -19,8 +20,8 @@ AttachmentsController::AttachmentsController()
 	view->add_subview(attachment);
 
 	attachments_list = std::make_shared<RolloutList>();
-	position_property = std::make_shared<RolloutTextFieldProperty>("POSITION");
-	orientation_property = std::make_shared<RolloutTextFieldProperty>("ORIENTATION");
+	position_property = std::make_shared<RolloutPositionProperty>("POSITION");
+	orientation_property = std::make_shared<RolloutPositionProperty>("ORIENTATION");
 	bone_name_property = std::make_shared<RolloutTextFieldProperty>("BONE NAME");
 
 	attachments->content->add_subview(attachments_list);
@@ -64,8 +65,17 @@ void AttachmentsController::update_attachment_fields()
 		attachment->set_hidden(false);
 
 		const auto &attachment = AppModel::instance()->desc.attachment_points[selection->index];
-		position_property->text_field->set_text(StringHelp::float_to_text(attachment.position.x));
-		orientation_property->text_field->set_text(StringHelp::float_to_text(attachment.orientation.x));
+		position_property->input_x->set_text(StringHelp::float_to_text(attachment.position.x));
+		position_property->input_y->set_text(StringHelp::float_to_text(attachment.position.y));
+		position_property->input_z->set_text(StringHelp::float_to_text(attachment.position.z));
+
+		Vec3f rotation = attachment.orientation.to_matrix().get_euler(order_YXZ);
+		rotation *= 180.0f / PI;
+
+		orientation_property->input_x->set_text(StringHelp::float_to_text(rotation.x));
+		orientation_property->input_y->set_text(StringHelp::float_to_text(rotation.y));
+		orientation_property->input_z->set_text(StringHelp::float_to_text(rotation.z));
+
 		bone_name_property->text_field->set_text(attachment.bone_name);
 	}
 	else
@@ -104,7 +114,9 @@ void AttachmentsController::position_property_value_changed()
 	{
 		auto app_model = AppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
-		attachment.position.x = position_property->text_field->text_float();
+		attachment.position.x = position_property->input_x->text_float();
+		attachment.position.y = position_property->input_y->text_float();
+		attachment.position.z = position_property->input_z->text_float();
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
 	}
 }
@@ -116,7 +128,13 @@ void AttachmentsController::orientation_property_value_changed()
 	{
 		auto app_model = AppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
-		attachment.orientation.x = orientation_property->text_field->text_float();
+
+		Vec3f rotation;
+		rotation.x = orientation_property->input_x->text_float();
+		rotation.y = orientation_property->input_y->text_float();
+		rotation.z = orientation_property->input_z->text_float();
+		attachment.orientation.set(rotation, angle_degrees, order_YXZ);
+
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
 	}
 }

@@ -68,7 +68,7 @@ void SceneView::render_content(Canvas &canvas)
 	update_model(gc);
 
 	camera.set_orientation(clan::Quaternionf(up, dir, 0.0f, clan::angle_degrees, clan::order_YXZ));
-	camera.set_position(camera.get_orientation().rotate_vector(clan::Vec3f(0.0f, 15.0f, -25.0f)));
+	camera.set_position(camera.get_orientation().rotate_vector(clan::Vec3f(0.0f, 10.0f, -25.0f)));
 
 	gametime.update();
 
