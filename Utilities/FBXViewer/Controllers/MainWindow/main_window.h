@@ -5,6 +5,7 @@ class HeaderView;
 class WorkspaceController;
 class SceneController;
 class AnimationsController;
+class AttachmentsController;
 
 class MainWindow : public clan::ViewController
 {
@@ -19,7 +20,8 @@ private:
 	void on_load();
 	void on_save();
 	void on_save_as();
-	void on_options();
+	void on_show_attachments();
+	void on_show_animations();
 	void on_change_model();
 
 	std::shared_ptr<HeaderView> header_view;
@@ -27,6 +29,7 @@ private:
 
 	std::shared_ptr<SceneController> scene_controller;
 	std::shared_ptr<AnimationsController> animations_controller;
+	std::shared_ptr<AttachmentsController> attachments_controller;
 
 	clan::SlotContainer slots;
 };

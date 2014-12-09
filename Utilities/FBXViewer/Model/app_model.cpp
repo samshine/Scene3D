@@ -39,7 +39,11 @@ void AppModel::set_fbx_model(const std::string &filename)
 
 void AppModel::update_scene_model()
 {
-	model_data = fbx->convert(desc.animations, desc.attachment_points, desc.emitters);
+	if (fbx)
+		model_data = fbx->convert(desc.animations, desc.attachment_points, desc.emitters);
+	else
+		model_data.reset();
+
 	sig_model_data_updated();
 }
 

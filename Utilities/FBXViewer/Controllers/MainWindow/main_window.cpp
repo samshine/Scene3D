@@ -6,6 +6,7 @@
 #include "Controllers/Workspace/workspace_controller.h"
 #include "Controllers/Scene/scene_controller.h"
 #include "Controllers/Animations/animations_controller.h"
+#include "Controllers/Attachments/attachments_controller.h"
 
 using namespace clan;
 
@@ -23,10 +24,12 @@ MainWindow::MainWindow()
 	header_view->add_left_button("Save As", bind_member(this, &MainWindow::on_save_as));
 
 	header_view->add_right_button("Change Model", bind_member(this, &MainWindow::on_change_model));
-	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_options));
+	header_view->add_right_button("Attachments", bind_member(this, &MainWindow::on_show_attachments));
+	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_show_animations));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
+	attachments_controller = std::make_shared<AttachmentsController>();
 
 	workspace_controller->set_center(scene_controller);
 	workspace_controller->set_docked(animations_controller);
@@ -104,6 +107,12 @@ void MainWindow::on_change_model()
 	}
 }
 
-void MainWindow::on_options()
+void MainWindow::on_show_attachments()
 {
+	workspace_controller->set_docked(attachments_controller);
+}
+
+void MainWindow::on_show_animations()
+{
+	workspace_controller->set_docked(animations_controller);
 }
