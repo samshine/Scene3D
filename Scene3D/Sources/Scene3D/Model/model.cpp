@@ -146,30 +146,11 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 
 		vectors[15] = Vec4f(instances_light_probe_color[j], 0.0f);
 
-		int animation_index = instances[j]->cur_anim.get_animation_index();
-		float animation_time = instances[j]->cur_anim.get_animation_time();
-
-		int last_animation_index = instances[j]->last_anim.get_animation_index();
-		float last_animation_time = instances[j]->last_anim.get_animation_time();
-
-		float anim_transition = instances[j]->transition;
-
 		for (size_t i = 0; i < model_data->bones.size(); i++)
 		{
-			Vec3f position = model_data->bones[i].position.get_value(animation_index, animation_time);
-			Quaternionf orientation = model_data->bones[i].orientation.get_value(animation_index, animation_time);
-			Vec3f scale = model_data->bones[i].scale.get_value(animation_index, animation_time);
-
-			if (anim_transition < 1.0f && last_animation_index != -1)
-			{
-				Vec3f last_position = model_data->bones[i].position.get_value(last_animation_index, last_animation_time);
-				Quaternionf last_orientation = model_data->bones[i].orientation.get_value(last_animation_index, last_animation_time);
-				Vec3f last_scale = model_data->bones[i].scale.get_value(last_animation_index, last_animation_time);
-
-				position = mix(last_position, position, anim_transition);
-				orientation = Quaternionf::slerp(last_orientation, orientation, anim_transition);
-				scale = mix(last_scale, scale, anim_transition);
-			}
+			Vec3f position, scale;
+			Quaternionf orientation;
+			instances[j]->get_bone_transform(model_data->bones[i], position, orientation, scale);
 
 			if (model_data->bones[i].billboarded)
 			{
@@ -194,6 +175,9 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 		for (size_t i = 0; i < num_materials; i++)
 		{
 			int material_offset = instance_base_vectors + model_data->bones.size() * vectors_per_bone + i * vectors_per_material;
+
+			int animation_index = instances[j]->cur_anim.get_animation_index();
+			float animation_time = instances[j]->cur_anim.get_animation_time();
 
 			Vec3f self_illumination = model_data->meshes[0].draw_ranges[i].self_illumination.get_value(animation_index, animation_time);
 			float self_illumination_amount = model_data->meshes[0].draw_ranges[i].self_illumination_amount.get_value(animation_index, animation_time);

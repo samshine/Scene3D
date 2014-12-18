@@ -46,7 +46,7 @@ void SceneView::play_transition(const std::string &anim1, const std::string &ani
 		object1.play_transition(anim1, anim2, instant);
 }
 
-void SceneView::set_model_data(std::shared_ptr<clan::ModelData> new_model_data)
+void SceneView::set_model_data(std::shared_ptr<ModelData> new_model_data)
 {
 	model_data = new_model_data;
 	model_data_updated = true;
@@ -57,89 +57,134 @@ void SceneView::render_content(Canvas &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content.get_size();
+	Size viewport_size_i = Size(viewport_size) * 2;
 
 	canvas.flush();
-	clan::GraphicContext gc = canvas.get_gc();
-	clan::InputContext ic;
+	GraphicContext gc = canvas.get_gc();
+	InputContext ic;
 	if (dynamic_cast<WindowView*>(root_view())) ic = static_cast<WindowView*>(root_view())->get_display_window().get_ic();
 
 	setup_scene(gc);
 	sig_update_scene(scene, gc, ic);
 	update_model(gc);
 
-	camera.set_orientation(clan::Quaternionf(up, dir, 0.0f, clan::angle_degrees, clan::order_YXZ));
-	camera.set_position(camera.get_orientation().rotate_vector(clan::Vec3f(0.0f, 10.0f, -25.0f)));
+	camera.set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
+	camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 10.0f, -25.0f)));
 
 	gametime.update();
 
-	if (!object1.is_null()) object1.update(gametime.get_time_elapsed());
+	if (!object1.is_null())
+	{
+		object1.update(gametime.get_time_elapsed());
+		if (!attach1.is_null())
+		{
+			Vec3f attach_pos;
+			Quaternionf attach_orientation;
+			object1.get_attachment_location("gun", attach_pos, attach_orientation);
+			attach1.set_position(attach_pos);
+			attach1.set_orientation(attach_orientation);
+			attach1.update(gametime.get_time_elapsed());
+		}
+	}
 	scene.update(gc, gametime.get_time_elapsed());
 
-	scene.set_viewport(clan::RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
+	if (scene_frame_buffer.is_null() || scene_texture.is_null() || scene_texture.get_size() != viewport_size_i)
+	{
+		scene_frame_buffer = FrameBuffer();
+		scene_texture = Texture2D();
+		scene_texture = Texture2D(gc, viewport_size_i);
+		scene_frame_buffer = FrameBuffer(gc);
+		scene_frame_buffer.attach_color(0, scene_texture);
+	}
+
+	//scene.set_viewport(RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
+	scene.set_viewport(viewport_size_i, scene_frame_buffer);
 	scene.render(gc);
 
 	gc.set_viewport(gc.get_size());
 
+	canvas.fill_triangles(
+		{
+			Vec2f(0.0f, 0.0f), Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f),
+			Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f), Vec2f(viewport_size_i.width / 2.0f, viewport_size_i.height / 2.0f)
+		}, scene_texture);
+
 	timer.start(10, false);
 }
 
-void SceneView::update_model(clan::GraphicContext &gc)
+void SceneView::update_model(GraphicContext &gc)
 {
 	if (!model_data_updated) return;
 	model_data_updated = false;
 
-	model1 = clan::SceneModel();
-	object1 = clan::SceneObject();
+	model1 = SceneModel();
+	object1 = SceneObject();
+	attach1 = SceneObject();
 
 	if (model_data)
 	{
-		model1 = clan::SceneModel(gc, scene, model_data);
-		object1 = clan::SceneObject(scene, model1, clan::Vec3f(), clan::Quaternionf(), clan::Vec3f(1.0f));
+		model1 = SceneModel(gc, scene, model_data);
+		object1 = SceneObject(scene, model1, Vec3f(), Quaternionf(), Vec3f(1.0f));
 		object1.play_animation(current_animation, true);
+
+		model2 = SceneModel(gc, scene, model_data);
+		attach1 = SceneObject(scene, model2, Vec3f(), Quaternionf(), Vec3f(0.2f));
 	}
 	else
 	{
-		model1 = clan::SceneModel();
-		object1 = clan::SceneObject();
+		model1 = SceneModel();
+		object1 = SceneObject();
+		attach1 = SceneObject();
 	}
 }
 
-void SceneView::setup_scene(clan::GraphicContext &gc)
+void SceneView::setup_scene(GraphicContext &gc)
 {
 	if (!scene.is_null()) return;
 
-	resources = clan::ResourceManager();
-	clan::SceneCache::set(resources, std::shared_ptr<clan::SceneCache>(new ViewerSceneCache()));
+	resources = ResourceManager();
+	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ViewerSceneCache()));
 
-	scene = clan::Scene(gc, resources, "Resources/Scene3D");
+	scene = Scene(gc, resources, "Resources/Scene3D");
 
 	scene.show_skybox_stars(false);
-	std::vector<clan::Colorf> gradient;
-	gradient.push_back(clan::Colorf::gray70);
-	gradient.push_back(clan::Colorf::gray70);
-	gradient.push_back(clan::Colorf::gray70);
-	gradient.push_back(clan::Colorf::gray70);
-	gradient.push_back(clan::Colorf::gray60);
-	gradient.push_back(clan::Colorf::gray50);
-	gradient.push_back(clan::Colorf::gray40);
-	gradient.push_back(clan::Colorf::gray30);
+	std::vector<Colorf> gradient;
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 6 / 10, 240 * 6 / 10, 243 * 6 / 10));
+	gradient.push_back(Colorf(236 * 7 / 10, 240 * 7 / 10, 243 * 7 / 10));
+	gradient.push_back(Colorf(236 * 8 / 10, 240 * 8 / 10, 243 * 8 / 10));
+	for (auto &g : gradient)
+	{
+		g.r = std::pow(g.r, 2.2f);
+		g.g = std::pow(g.g, 2.2f);
+		g.b = std::pow(g.b, 2.2f);
+	}
 	scene.set_skybox_gradient(gc, gradient);
 
-	light1 = clan::SceneLight(scene);
-	light1.set_position(clan::Vec3f(100.0f, 100.0f, 100.0f));
-	light1.set_type(clan::SceneLight::type_omni);
+	light1 = SceneLight(scene);
+	light1.set_position(Vec3f(30.0f, 42.0f, 30.0f));
+	light1.set_orientation(Quaternionf(45.0f, 225.0f, 0.0f, angle_degrees, order_YXZ));
+	light1.set_type(SceneLight::type_spot);
 	light1.set_attenuation_start(900.0f);
 	light1.set_attenuation_end(1000.0f);
-	light1.set_color(clan::Vec3f(1.0f));
-
-	light2 = clan::SceneLight(scene);
-	light2.set_position(clan::Vec3f(-100.0f, -100.0f, -100.0f));
-	light2.set_type(clan::SceneLight::type_omni);
+	light1.set_color(Vec3f(1.0f, 0.95f, 0.90f));
+	light1.set_shadow_caster(true);
+	light1.set_hotspot(10.0f);
+	light1.set_falloff(45.0f);
+	
+	light2 = SceneLight(scene);
+	light2.set_position(Vec3f(-100.0f, -100.0f, 100.0f));
+	light2.set_type(SceneLight::type_omni);
 	light2.set_attenuation_start(900.0f);
 	light2.set_attenuation_end(1000.0f);
-	light2.set_color(clan::Vec3f(0.6f));
-
-	camera = clan::SceneCamera(scene);
+	light2.set_color(Vec3f(0.1f, 0.1f, 0.12f));
+	
+	camera = SceneCamera(scene);
 	scene.set_camera(camera);
 
 	gametime.reset();

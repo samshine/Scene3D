@@ -3,6 +3,8 @@
 #include "fbx_model_loader.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "AssetCompiler/FBXModel/fbx_animation.h"
+#include "AssetCompiler/FBXModel/fbx_attachment_point.h"
+#include "AssetCompiler/FBXModel/fbx_particle_emitter.h"
 #include "fbx_model_impl.h"
 #include <algorithm>
 
@@ -18,6 +20,31 @@ namespace clan
 		{
 			convert_bones(anim);
 		}
+
+		for (const auto &fbx_attachment : attachment_points)
+		{
+			int bone_index = find_bone_index(fbx_attachment.bone_name);
+			if (bone_index != -1)
+			{
+				ModelDataAttachmentPoint attachment;
+				attachment.name = fbx_attachment.name;
+				attachment.position = fbx_attachment.position;
+				attachment.orientation = fbx_attachment.orientation;
+				attachment.bone_selector = bone_index;
+				model_data->attachment_points.push_back(attachment);
+			}
+		}
+	}
+
+	int FBXModelLoader::find_bone_index(const std::string &name)
+	{
+		for (size_t i = 0; i < bones.size(); i++)
+		{
+			if (bones[i].bone_node->GetName() == name)
+				return (int)i;
+		}
+
+		return -1;
 	}
 
 	void FBXModelLoader::convert_node(FbxNode *node)

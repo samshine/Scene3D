@@ -34,6 +34,7 @@ namespace clan
 class Model;
 class ModelInstanceUniforms;
 class ModelMeshVisitor;
+class ModelDataBone;
 class AxisAlignedBoundingBox;
 
 class ModelReplacedMaterial
@@ -82,6 +83,10 @@ public:
 	const std::string &get_animation() const { return cur_anim.get_animation(); }
 	int get_animation_index() const { return cur_anim.get_animation_index(); }
 	float get_animation_time() const { return cur_anim.get_animation_time(); }
+
+	void get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation) const;
+
+	void get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const;
 
 private:
 	ModelAnimationTime last_anim;

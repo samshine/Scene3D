@@ -144,6 +144,13 @@ SceneObject &SceneObject::rotate(float dir, float up, float tilt)
 	return *this;
 }
 
+void SceneObject::get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation) const
+{
+	impl->instance.get_attachment_location(name, position, orientation);
+	position = get_position() + position;
+	orientation = orientation * get_orientation();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene)

@@ -30,12 +30,17 @@ private:
 
 	clan::ResourceManager resources;
 
+	clan::Texture2D scene_texture;
+	clan::FrameBuffer scene_frame_buffer;
+
 	clan::Scene scene;
 
 	clan::SceneLight light1;
 	clan::SceneLight light2;
 	clan::SceneModel model1;
+	clan::SceneModel model2;
 	clan::SceneObject object1;
+	clan::SceneObject attach1;
 	clan::SceneCamera camera;
 
 	clan::GameTime gametime;

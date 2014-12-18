@@ -26,6 +26,8 @@ namespace clan
 		void triangulate_scene();
 		void bake_geometric_transforms(FbxNode *node = nullptr);
 
+		int find_bone_index(const std::string &name);
+
 		void convert_node(FbxNode *node);
 		void convert_mesh(FbxNode *node);
 		void convert_camera(FbxNode *node);

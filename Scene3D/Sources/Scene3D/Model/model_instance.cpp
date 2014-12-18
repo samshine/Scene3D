@@ -72,6 +72,70 @@ void ModelInstance::moved(float units_moved)
 	cur_anim.moved(renderer, units_moved);
 }
 
+void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_position, Quaternionf &out_orientation) const
+{
+	out_position = Vec3f();
+	out_orientation = Quaternionf();
+
+	if (renderer)
+	{
+		auto &model_data = renderer->get_model_data();
+		for (const auto &attachment : model_data->attachment_points)
+		{
+			if (attachment.name == name)
+			{
+				const auto &bone = model_data->bones[attachment.bone_selector];
+
+				Vec3f bone_position, bone_scale;
+				Quaternionf bone_orientation;
+				get_bone_transform(bone, bone_position, bone_orientation, bone_scale);
+
+				Mat4f transform = Mat4f::translate(bone_position) * bone_orientation.to_matrix() * Mat4f::scale(bone_scale);
+
+				Vec4f point_in_object = transform * Vec4f(attachment.position, 1.0f);
+				Quaternionf orientation_in_object = attachment.orientation * bone_orientation;
+
+				out_position = Vec3f(point_in_object);
+				out_orientation = orientation_in_object;
+				return;
+			}
+		}
+	}
+}
+
+void ModelInstance::get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const
+{
+	if (!renderer)
+	{
+		position = Vec3f();
+		orientation = Quaternionf();
+		return;
+	}
+
+	auto &model_data = renderer->get_model_data();
+
+	int animation_index = cur_anim.get_animation_index();
+	float animation_time = cur_anim.get_animation_time();
+
+	int last_animation_index = last_anim.get_animation_index();
+	float last_animation_time = last_anim.get_animation_time();
+
+	position = bone.position.get_value(animation_index, animation_time);
+	orientation = bone.orientation.get_value(animation_index, animation_time);
+	scale = bone.scale.get_value(animation_index, animation_time);
+
+	if (transition < 1.0f && last_animation_index != -1)
+	{
+		Vec3f last_position = bone.position.get_value(last_animation_index, last_animation_time);
+		Quaternionf last_orientation = bone.orientation.get_value(last_animation_index, last_animation_time);
+		Vec3f last_scale = bone.scale.get_value(last_animation_index, last_animation_time);
+
+		position = mix(last_position, position, transition);
+		orientation = Quaternionf::slerp(last_orientation, orientation, transition);
+		scale = mix(last_scale, scale, transition);
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 void ModelAnimationTime::play_animation(std::shared_ptr<Model> &renderer, const std::string &anim1, const std::string &anim2, bool instant)
