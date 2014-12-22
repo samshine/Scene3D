@@ -78,11 +78,12 @@ void SceneView::render_content(Canvas &canvas)
 		object1.update(gametime.get_time_elapsed());
 		if (!attach1.is_null())
 		{
-			Vec3f attach_pos;
+			Vec3f attach_pos, attach_scale;
 			Quaternionf attach_orientation;
-			object1.get_attachment_location("gun", attach_pos, attach_orientation);
+			object1.get_attachment_location("gun", attach_pos, attach_orientation, attach_scale);
 			attach1.set_position(attach_pos);
 			attach1.set_orientation(attach_orientation);
+			attach1.set_scale(attach_scale * Vec3f(0.2f));
 			attach1.update(gametime.get_time_elapsed());
 		}
 	}

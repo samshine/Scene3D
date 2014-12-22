@@ -93,7 +93,7 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 				Mat4f transform = Mat4f::translate(bone_position) * bone_orientation.to_matrix();
 
 				Vec4f point_in_object = transform * Vec4f(attachment.position, 1.0f);
-				Quaternionf orientation_in_object = attachment.orientation * bone_orientation;
+				Quaternionf orientation_in_object = bone_orientation * attachment.orientation;
 
 				out_position = Vec3f(point_in_object);
 				out_orientation = orientation_in_object;

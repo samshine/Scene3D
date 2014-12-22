@@ -144,11 +144,14 @@ SceneObject &SceneObject::rotate(float dir, float up, float tilt)
 	return *this;
 }
 
-void SceneObject::get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation) const
+void SceneObject::get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const
 {
-	impl->instance.get_attachment_location(name, position, orientation);
-	position = get_position() + position;
-	orientation = orientation * get_orientation();
+	Vec3f local_position;
+	Quaternionf local_orientation;
+	impl->instance.get_attachment_location(name, local_position, local_orientation);
+	position = get_position() + get_orientation().rotate_vector(local_position) * get_scale();
+	orientation = get_orientation() * local_orientation;
+	scale = get_scale();
 }
 
 /////////////////////////////////////////////////////////////////////////////

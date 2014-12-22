@@ -79,8 +79,8 @@ public:
 	// \brief Updates current animation based on movement
 	void moved(float units_moved);
 
-	// \brief Returns the current position of an object attachment point
-	void get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation) const;
+	// \brief Returns the current position of an object attachment
+	void get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const;
 
 private:
 	std::shared_ptr<SceneObject_Impl> impl;
