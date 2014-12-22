@@ -42,7 +42,6 @@ public:
 	short parent_bone;
 	ModelDataAnimationData<Vec3f> position;
 	ModelDataAnimationData<Quaternionf> orientation; // Maybe use a Vec4ub version to save memory?
-	ModelDataAnimationData<Vec3f> scale;
 	Vec3f pivot;
 };
 

@@ -167,8 +167,8 @@ void SceneView::setup_scene(GraphicContext &gc)
 	scene.set_skybox_gradient(gc, gradient);
 
 	light1 = SceneLight(scene);
-	light1.set_position(Vec3f(30.0f, 42.0f, 30.0f));
-	light1.set_orientation(Quaternionf(45.0f, 225.0f, 0.0f, angle_degrees, order_YXZ));
+	light1.set_position(Vec3f(30.0f, 42.0f, -30.0f));
+	light1.set_orientation(Quaternionf(45.0f, 315.0f, 0.0f, angle_degrees, order_YXZ));
 	light1.set_type(SceneLight::type_spot);
 	light1.set_attenuation_start(900.0f);
 	light1.set_attenuation_end(1000.0f);
@@ -178,7 +178,7 @@ void SceneView::setup_scene(GraphicContext &gc)
 	light1.set_falloff(45.0f);
 	
 	light2 = SceneLight(scene);
-	light2.set_position(Vec3f(-100.0f, -100.0f, 100.0f));
+	light2.set_position(Vec3f(-100.0f, -100.0f, -100.0f));
 	light2.set_type(SceneLight::type_omni);
 	light2.set_attenuation_start(900.0f);
 	light2.set_attenuation_end(1000.0f);

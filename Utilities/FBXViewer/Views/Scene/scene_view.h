@@ -45,7 +45,7 @@ private:
 
 	clan::GameTime gametime;
 
-	float dir = 180.0f;
+	float dir = 0.0f;
 	float up = 0.0f;
 	float turn_speed = 90.0f;
 

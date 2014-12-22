@@ -11,21 +11,50 @@ public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("Sprite resources not supported"); }
 	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("Image resources not supported"); }
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("Texture resources not supported"); }
-	Resource<CollisionOutline> get_collision(const std::string &id) override { throw Exception("Collision resources not supported"); }
 
 	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) override
 	{
-		if (lato_regular.get().is_null())
+		FontFace &font_face = font_faces[desc.get_typeface_name()];
+		if (font_face.is_null())
 		{
-			lato_regular.set(Font(canvas, desc, "Resources/Fonts/Lato/Lato-Regular.ttf"));
-			canvas.flush();
-			canvas.get_gc().flush();
+			font_face = FontFace(desc.get_typeface_name());
+			if (font_face.get_family_name() == "Lato")
+			{
+				FontDescription regular;
+				regular.set_typeface_name("Lato");
+				font_face.add(regular, "Resources/Fonts/Lato/Lato-Regular.ttf");
+
+				FontDescription bold;
+				bold.set_typeface_name("Lato");
+				bold.set_weight(FontWeight::bold);
+				font_face.add(bold, "Resources/Fonts/Lato/Lato-Bold.ttf");
+
+				FontDescription italic;
+				italic.set_typeface_name("Lato");
+				italic.set_style(FontStyle::italic);
+				font_face.add(italic, "Resources/Fonts/Lato/Lato-Italic.ttf");
+
+				FontDescription light;
+				light.set_typeface_name("Lato");
+				light.set_weight(FontWeight::light);
+				font_face.add(light, "Resources/Fonts/Lato/Lato-Light.ttf");
+
+				FontDescription black;
+				black.set_typeface_name("Lato");
+				black.set_weight(FontWeight::heavy);
+				font_face.add(black, "Resources/Fonts/Lato/Lato-Black.ttf");
+			}
+			else
+			{
+				font_face.add(desc);
+			}
 		}
-		return lato_regular;
+
+		return Font(font_face, desc);
 	}
 
 private:
-	Resource<Font> lato_regular;
+	std::map<std::string, FontFace> font_faces;
 };
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

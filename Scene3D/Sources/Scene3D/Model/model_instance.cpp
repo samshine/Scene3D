@@ -86,11 +86,11 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 			{
 				const auto &bone = model_data->bones[attachment.bone_selector];
 
-				Vec3f bone_position, bone_scale;
+				Vec3f bone_position;
 				Quaternionf bone_orientation;
-				get_bone_transform(bone, bone_position, bone_orientation, bone_scale);
+				get_bone_transform(bone, bone_position, bone_orientation);
 
-				Mat4f transform = Mat4f::translate(bone_position) * bone_orientation.to_matrix() * Mat4f::scale(bone_scale);
+				Mat4f transform = Mat4f::translate(bone_position) * bone_orientation.to_matrix();
 
 				Vec4f point_in_object = transform * Vec4f(attachment.position, 1.0f);
 				Quaternionf orientation_in_object = attachment.orientation * bone_orientation;
@@ -103,7 +103,7 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 	}
 }
 
-void ModelInstance::get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const
+void ModelInstance::get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation) const
 {
 	if (!renderer)
 	{
@@ -122,17 +122,14 @@ void ModelInstance::get_bone_transform(const ModelDataBone &bone, Vec3f &positio
 
 	position = bone.position.get_value(animation_index, animation_time);
 	orientation = bone.orientation.get_value(animation_index, animation_time);
-	scale = bone.scale.get_value(animation_index, animation_time);
 
 	if (transition < 1.0f && last_animation_index != -1)
 	{
 		Vec3f last_position = bone.position.get_value(last_animation_index, last_animation_time);
 		Quaternionf last_orientation = bone.orientation.get_value(last_animation_index, last_animation_time);
-		Vec3f last_scale = bone.scale.get_value(last_animation_index, last_animation_time);
 
 		position = mix(last_position, position, transition);
 		orientation = Quaternionf::slerp(last_orientation, orientation, transition);
-		scale = mix(last_scale, scale, transition);
 	}
 }
 

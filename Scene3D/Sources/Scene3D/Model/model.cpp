@@ -148,9 +148,9 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 
 		for (size_t i = 0; i < model_data->bones.size(); i++)
 		{
-			Vec3f position, scale;
+			Vec3f position;
 			Quaternionf orientation;
-			instances[j]->get_bone_transform(model_data->bones[i], position, orientation, scale);
+			instances[j]->get_bone_transform(model_data->bones[i], position, orientation);
 
 			if (model_data->bones[i].billboarded)
 			{
@@ -164,7 +164,7 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 				orientation = Quaternionf::inverse(camera_orientation) * orientation;
 			}
 
-			Mat4f transform = Mat4f::translate(position) * orientation.to_matrix() * Mat4f::scale(scale);
+			Mat4f transform = Mat4f::translate(position) * orientation.to_matrix() * Mat4f::translate(-model_data->bones[i].pivot);
 			transform.transpose();
 			vectors[instance_base_vectors + i * vectors_per_bone + 0] = Vec4f(transform[0], transform[1], transform[2], transform[3]);
 			vectors[instance_base_vectors + i * vectors_per_bone + 1] = Vec4f(transform[4], transform[5], transform[6], transform[7]);

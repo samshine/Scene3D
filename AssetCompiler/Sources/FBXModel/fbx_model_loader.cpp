@@ -89,6 +89,7 @@ namespace clan
 		FbxMesh *mesh = static_cast<FbxMesh*>(node->GetNodeAttribute());
 
 		Mat4f mesh_to_world = to_mat4f(node->EvaluateGlobalTransform() * FbxAMatrix(node->GetGeometricTranslation(FbxNode::eSourcePivot), node->GetGeometricRotation(FbxNode::eSourcePivot), node->GetGeometricScaling(FbxNode::eSourcePivot)));
+		mesh_to_world = Mat4f::scale(1.0f, 1.0f, -1.0f) * mesh_to_world; // Flip Z axis
 		Mat3f normal_mesh_to_world = Mat3f(mesh_to_world).inverse().transpose();
 
 		VertexMappingVector vertices(mesh->GetControlPointsCount());
@@ -370,26 +371,6 @@ namespace clan
 		}
 	}
 
-	/*
-		bind_node_to_world = pCluster->GetTransformMatrix();
-		// Multiply bind_mesh_to_world by Geometric Transformation
-		mesh_to_node = node->GeometryXX
-		bind_mesh_to_world = mesh_to_node * bind_node_to_world;
-
-		// Get the link initial global position and the link current global position.
-		bind_bone_to_world = pCluster->GetTransformLinkMatrix();
-		bone_to_world = GetGlobalPosition(pCluster->GetLink(), pTime, pPose);
-
-		// Compute the initial position of the link relative to the reference.
-		bind_mesh_to_bind_bone = bind_bone_to_world.Inverse() * bind_mesh_to_world;
-
-		// Compute the current position of the link relative to the reference.
-		bone_to_mesh = mesh_to_world.Inverse() * bone_to_world;
-
-		// Compute the shift of the link relative to the reference.
-		bind_mesh_to_mesh = bone_to_mesh * bind_mesh_to_bind_bone;
-		*/
-
 	void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices)
 	{
 		int num_skins = mesh->GetDeformerCount(FbxDeformer::eSkin);
@@ -412,27 +393,12 @@ namespace clan
 				if (!cluster->GetLink())
 					throw Exception("Skin cluster with no link is not supported");
 
-				std::string link_name = cluster->GetLink()->GetName();
-
-				FbxAMatrix bind_node_to_world;
-				cluster->GetTransformMatrix(bind_node_to_world);
-
-				FbxAMatrix mesh_to_node(node->GetGeometricTranslation(FbxNode::eSourcePivot), node->GetGeometricRotation(FbxNode::eSourcePivot), node->GetGeometricScaling(FbxNode::eSourcePivot));
-
-				FbxAMatrix bind_mesh_to_world = bind_node_to_world * mesh_to_node;
-
-				FbxAMatrix bind_bone_to_world;
-				cluster->GetTransformLinkMatrix(bind_bone_to_world);
-
-				FbxAMatrix mesh_to_world = node->EvaluateGlobalTransform() * mesh_to_node;
-
-				int bone_selector = bones.size();
 				SkinnedBone bone;
 				bone.bone_node = cluster->GetLink();
-				bone.bind_mesh_to_world = to_mat4f(bind_mesh_to_world);
-				bone.bind_bone_to_world = to_mat4f(bind_bone_to_world);
-				bone.mesh_to_world = to_mat4f(mesh_to_world);
+				cluster->GetTransformLinkMatrix(bone.bind_bone_to_world);
 				bones.push_back(bone);
+
+				int bone_selector = bones.size() - 1;
 
 				int num_indices = cluster->GetControlPointIndicesCount();
 				int *indices = cluster->GetControlPointIndices();
@@ -699,8 +665,6 @@ namespace clan
 
 		FbxAnimEvaluator *scene_evaluator = model->scene->GetAnimationEvaluator();
 
-		size_t timeline_index = model_data->animations.size();
-
 		ModelDataAnimation animation;
 		animation.name = animation_desc.name;
 		animation.length = animation_desc.loop ? (stop_time_loop - start_time) : (stop_time - start_time);
@@ -709,6 +673,8 @@ namespace clan
 		animation.moving_speed = animation_desc.move_speed;
 		animation.rarity = animation_desc.rarity;
 		model_data->animations.push_back(animation);
+
+		size_t timeline_index = model_data->animations.size() - 1;
 
 		for (int frame = start_frame; frame <= end_frame + 1; frame++)
 		{
@@ -719,31 +685,32 @@ namespace clan
 
 			for (size_t bone_index = 0; bone_index < bones.size(); bone_index++)
 			{
-				Mat4f bone_to_world = to_mat4f(scene_evaluator->GetNodeGlobalTransform(bones[bone_index].bone_node, current_time, FbxNode::eSourcePivot, true));
-				const Mat4f &bind_mesh_to_world = bones[bone_index].bind_mesh_to_world;
-				const Mat4f &bind_bone_to_world = bones[bone_index].bind_bone_to_world;
-				const Mat4f &mesh_to_world = bones[bone_index].mesh_to_world;
+				const auto &fbx_bone = bones[bone_index];
+				auto &model_bone = model_data->bones[bone_index];
 
-				// bind mesh -> (bind) world -> bind bone -> (current bone) world -> bind mesh -> (current mesh) world
-				Mat4f skinned_bone_to_world = mesh_to_world * Mat4f::inverse(bind_mesh_to_world) * bone_to_world * Mat4f::inverse(bind_bone_to_world) * bind_mesh_to_world * Mat4f::inverse(mesh_to_world);
+				FbxAMatrix bone_to_world = scene_evaluator->GetNodeGlobalTransform(fbx_bone.bone_node, current_time, FbxNode::eSourcePivot, true);
+				FbxAMatrix bind_bone_to_world = fbx_bone.bind_bone_to_world;
 
-				Vec3f position, scale;
-				Quaternionf orientation;
-				skinned_bone_to_world.decompose(position, orientation, scale);
-				orientation.normalize();
+				// Flip Z axis
+				bone_to_world = FbxAMatrix(FbxVector4(0.0, 0.0, 0.0), FbxVector4(0.0, 0.0, 0.0), FbxVector4(1.0, 1.0, -1.0)) * bone_to_world;
+				bind_bone_to_world = FbxAMatrix(FbxVector4(0.0, 0.0, 0.0), FbxVector4(0.0, 0.0, 0.0), FbxVector4(1.0, 1.0, -1.0)) * bind_bone_to_world;
 
-				model_data->bones[bone_index].position.timelines.resize(timeline_index + 1);
-				model_data->bones[bone_index].orientation.timelines.resize(timeline_index + 1);
-				model_data->bones[bone_index].scale.timelines.resize(timeline_index + 1);
+				Vec3f bind_position = Vec3f(to_mat4f(bind_bone_to_world) * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+				Quaternionf bind_rotation = to_quaternionf(bind_bone_to_world.GetQ()).inverse();
 
-				model_data->bones[bone_index].position.timelines[timeline_index].timestamps.push_back(step_time - start_time);
-				model_data->bones[bone_index].position.timelines[timeline_index].values.push_back(position);
+				Vec3f position = Vec3f(to_mat4f(bone_to_world) * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+				Quaternionf orientation = to_quaternionf(bone_to_world.GetQ()) * bind_rotation;
 
-				model_data->bones[bone_index].orientation.timelines[timeline_index].timestamps.push_back(step_time - start_time);
-				model_data->bones[bone_index].orientation.timelines[timeline_index].values.push_back(orientation);
+				model_bone.pivot = bind_position;
 
-				model_data->bones[bone_index].scale.timelines[timeline_index].timestamps.push_back(step_time - start_time);
-				model_data->bones[bone_index].scale.timelines[timeline_index].values.push_back(scale);
+				model_bone.position.timelines.resize(timeline_index + 1);
+				model_bone.orientation.timelines.resize(timeline_index + 1);
+
+				model_bone.position.timelines[timeline_index].timestamps.push_back(step_time - start_time);
+				model_bone.position.timelines[timeline_index].values.push_back(position);
+
+				model_bone.orientation.timelines[timeline_index].timestamps.push_back(step_time - start_time);
+				model_bone.orientation.timelines[timeline_index].values.push_back(orientation);
 			}
 
 			// FbxMatrix &object_to_world = scene_evaluator->GetNodeGlobalTransform(node, current_time);
@@ -778,6 +745,11 @@ namespace clan
 		for (int i = 0; i < 16; i++)
 			matrix[i] = (float)src_matrix[i];
 		return matrix;
+	}
+
+	Quaternionf FBXModelLoader::to_quaternionf(const FbxQuaternion &q)
+	{
+		return Quaternionf((float)q.GetAt(3), (float)q.GetAt(0), (float)q.GetAt(1), (float)q.GetAt(2));
 	}
 }
 

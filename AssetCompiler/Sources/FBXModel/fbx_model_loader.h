@@ -50,6 +50,7 @@ namespace clan
 		static Vec4f to_vec4f(const FbxVector4 &v);
 		static Vec4ub to_vec4ub(const FbxColor &c);
 		static Mat4f to_mat4f(const FbxAMatrix &m);
+		static Quaternionf to_quaternionf(const FbxQuaternion &q);
 
 		FBXModelImpl *model;
 		std::vector<SkinnedBone> bones;

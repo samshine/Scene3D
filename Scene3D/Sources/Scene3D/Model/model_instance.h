@@ -86,7 +86,7 @@ public:
 
 	void get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation) const;
 
-	void get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const;
+	void get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation) const;
 
 private:
 	ModelAnimationTime last_anim;

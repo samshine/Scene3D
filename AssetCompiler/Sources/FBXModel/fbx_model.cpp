@@ -72,11 +72,6 @@ namespace clan
 			throw Exception("FbxScene::Create failed");
 
 
-		// Convert to DirectX coordinate system:
-		// Note: this line MUST be before importing a scene or something bugs in FBX! (or the documentation is unclear)
-		FbxAxisSystem::DirectX.ConvertScene(scene);
-
-
 		FbxImporter *importer = FbxImporter::Create(manager, "");
 		if (!importer)
 			throw Exception("FbxImporter::Create failed");

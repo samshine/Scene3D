@@ -74,7 +74,7 @@ namespace clan
 	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data)
 	{
 		file.write_uint32(11); // version number
-		file.write("ModelCaramba", 12); // file magic
+		file.write("ModelCaramba", 13); // file magic
 
 		file.write_uint32(data->textures.size());
 		file.write_uint32(data->bones.size());
@@ -193,7 +193,6 @@ namespace clan
 
 			write_animation_data(file, data->bones[i].position);
 			write_animation_data(file, data->bones[i].orientation);
-			write_animation_data(file, data->bones[i].scale);
 
 			file.write_float(data->bones[i].pivot.x);
 			file.write_float(data->bones[i].pivot.y);
@@ -264,7 +263,7 @@ namespace clan
 		if (memcmp(magic, "ModelCaramba", 12) != 0)
 			throw clan::Exception("Not a Caramba Model file");
 
-		if (version < 6 || version > 11)
+		if (version < 6 || version > 12)
 			throw clan::Exception("Unsupported file version");
 
 		std::shared_ptr<clan::ModelData> data(new clan::ModelData());
@@ -547,7 +546,12 @@ namespace clan
 
 			read_animation_data(file, data->bones[i].position);
 			read_animation_data(file, data->bones[i].orientation);
-			read_animation_data(file, data->bones[i].scale);
+
+			if (version < 12)
+			{
+				ModelDataAnimationData<Vec3f> scale;
+				read_animation_data(file, scale);
+			}
 
 			data->bones[i].pivot.x = file.read_float();
 			data->bones[i].pivot.y = file.read_float();
