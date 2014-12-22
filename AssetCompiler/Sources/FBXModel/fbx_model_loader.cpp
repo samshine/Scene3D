@@ -234,39 +234,9 @@ namespace clan
 				range.glossiness.set_single_value(0.0f);
 			}
 
-			// Get diffuse texture:
-			const char *property_name = FbxSurfaceMaterial::sDiffuse;
-			if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
-			{
-				FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
-				std::string filename = PathHelp::combine(model->base_path, PathHelp::get_filename(texture->GetFileName()));
-				std::string uv_set = texture->UVSet.Get();
-
-				Vec3f translate = to_vec3f(texture->Translation.Get());
-
-				FbxDouble3 r = texture->Rotation.Get();
-				Quaternionf rotation((float)r[0], (float)r[1], (float)r[2], angle_degrees, order_XYZ);
-
-				Vec3f scale = to_vec3f(texture->Scaling.Get());
-
-				range.diffuse_map.texture = model_data->textures.size();
-
-				range.diffuse_map.channel = 0;
-				range.diffuse_map.wrap_x = texture->WrapModeU.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
-				range.diffuse_map.wrap_y = texture->WrapModeV.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
-
-				if (texture->UVSwap.Get())
-				{
-					rotation = rotation * Quaternionf(0.0f, 0.0f, 90.0f, angle_degrees, order_XYZ);
-					scale.y = -scale.y;
-				}
-
-				range.diffuse_map.uvw_offset.set_single_value(translate);
-				range.diffuse_map.uvw_rotation.set_single_value(rotation);
-				range.diffuse_map.uvw_scale.set_single_value(scale);
-
-				model_data->textures.push_back(ModelDataTexture(filename, 2.2f));
-			}
+			range.diffuse_map = create_texture_channel(0, FbxSurfaceMaterial::sDiffuse, material, 2.2f);
+			range.specular_map = create_texture_channel(1, FbxSurfaceMaterial::sSpecular, material, 1.0f);
+			range.bumpmap_map = create_texture_channel(2, FbxSurfaceMaterial::sBump, material, 1.0f);
 		}
 		else
 		{
@@ -282,6 +252,45 @@ namespace clan
 		}
 
 		return range;
+	}
+
+	ModelDataTextureMap FBXModelLoader::create_texture_channel(int channel, const char *property_name, FbxSurfaceMaterial *material, float gamma)
+	{
+		ModelDataTextureMap map;
+
+		if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
+		{
+			FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
+			std::string filename = PathHelp::combine(model->base_path, PathHelp::get_filename(texture->GetFileName()));
+			std::string uv_set = texture->UVSet.Get();
+
+			Vec3f translate = to_vec3f(texture->Translation.Get());
+
+			FbxDouble3 r = texture->Rotation.Get();
+			Quaternionf rotation((float)r[0], (float)r[1], (float)r[2], angle_degrees, order_XYZ);
+
+			Vec3f scale = to_vec3f(texture->Scaling.Get());
+
+			map.texture = model_data->textures.size();
+
+			map.channel = channel;
+			map.wrap_x = texture->WrapModeU.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
+			map.wrap_y = texture->WrapModeV.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
+
+			if (texture->UVSwap.Get())
+			{
+				rotation = rotation * Quaternionf(0.0f, 0.0f, 90.0f, angle_degrees, order_XYZ);
+				scale.y = -scale.y;
+			}
+
+			map.uvw_offset.set_single_value(translate);
+			map.uvw_rotation.set_single_value(rotation);
+			map.uvw_scale.set_single_value(scale);
+
+			model_data->textures.push_back(ModelDataTexture(filename, gamma));
+		}
+
+		return map;
 	}
 
 	void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world)
@@ -323,6 +332,10 @@ namespace clan
 				Vec3f tangent = get_tangent(mesh, control_index, vertex_index + ccw_point);
 				Vec3f bitangent = get_bitangent(mesh, control_index, vertex_index + ccw_point);
 				Vec2f diffuse_uv = get_uv(mesh, control_index, vertex_index + ccw_point, 0);
+
+				normal.normalize();
+				tangent.normalize();
+				bitangent.normalize();
 
 				//diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
 				diffuse_uv.y = 1.0f - diffuse_uv.y; // Seems to be needed for Max

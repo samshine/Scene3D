@@ -38,6 +38,7 @@ namespace clan
 		void convert_bones(const FBXAnimation &animation);
 
 		ModelDataDrawRange create_draw_range(size_t start_element, size_t num_elements, FbxSurfaceMaterial *material);
+		ModelDataTextureMap create_texture_channel(int channel, const char *property_name, FbxSurfaceMaterial *material, float gamma);
 
 		Vec4ub get_color(FbxMesh *mesh, int control_index, int vertex_index);
 		Vec3f get_normal(FbxMesh *mesh, int control_index, int vertex_index);
