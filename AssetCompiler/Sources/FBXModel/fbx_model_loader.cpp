@@ -112,7 +112,7 @@ namespace clan
 				mapping->vertex_index = model_mesh.vertices.size();
 
 				model_mesh.vertices.push_back(mapping->position);
-				model_mesh.colors.push_back(mapping->color);
+				//model_mesh.colors.push_back(mapping->color);
 				model_mesh.normals.push_back(mapping->normal);
 				model_mesh.tangents.push_back(mapping->tangent);
 				model_mesh.bitangents.push_back(mapping->bitangent);
@@ -327,7 +327,7 @@ namespace clan
 				int control_index = mesh->GetPolygonVertex(poly, ccw_point);
 
 				Vec3f position = Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[control_index])), 1.0f));
-				Vec4ub color = get_color(mesh, control_index, vertex_index + ccw_point);
+				//Vec4ub color = get_color(mesh, control_index, vertex_index + ccw_point);
 				Vec3f normal = normal_mesh_to_world * get_normal(mesh, control_index, vertex_index + ccw_point);
 				Vec3f tangent = get_tangent(mesh, control_index, vertex_index + ccw_point);
 				Vec3f bitangent = get_bitangent(mesh, control_index, vertex_index + ccw_point);
@@ -344,7 +344,7 @@ namespace clan
 				{
 					vertices[control_index] = new VertexMapping();
 					vertices[control_index]->position = position;
-					vertices[control_index]->color = color;
+					//vertices[control_index]->color = color;
 					vertices[control_index]->normal = normal;
 					vertices[control_index]->tangent = tangent;
 					vertices[control_index]->bitangent = bitangent;
@@ -355,7 +355,7 @@ namespace clan
 				else
 				{
 					VertexMapping *mapping = vertices[control_index];
-					while (mapping->position != position || mapping->color != color || mapping->normal != normal || mapping->tangent != tangent || mapping->bitangent != bitangent || mapping->diffuse_uv != diffuse_uv)
+					while (mapping->position != position /*|| mapping->color != color*/ || mapping->normal != normal || mapping->tangent != tangent || mapping->bitangent != bitangent || mapping->diffuse_uv != diffuse_uv)
 					{
 						if (mapping->next)
 						{
@@ -367,7 +367,7 @@ namespace clan
 							mapping = mapping->next;
 
 							mapping->position = position;
-							mapping->color = color;
+							//mapping->color = color;
 							mapping->normal = normal;
 							mapping->tangent = tangent;
 							mapping->bitangent = bitangent;

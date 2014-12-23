@@ -46,6 +46,19 @@ namespace clan
 			desc.attachment_points.push_back(attachment);
 		}
 
+		if (json.get_members().find("materials") != json.get_members().end())
+		{
+			for (const auto &json_material : json["materials"].get_items())
+			{
+				FBXMaterial material;
+				material.name = json_material["name"];
+				material.two_sided = json_material["two_sided"].to_boolean();
+				material.alpha_test = json_material["alpha_test"].to_boolean();
+				material.mesh_material = json_material["mesh_material"];
+				desc.materials.push_back(material);
+			}
+		}
+
 		for (const auto &json_emitter : json["emitters"].get_items())
 		{
 			FBXParticleEmitter emitter;
@@ -99,6 +112,17 @@ namespace clan
 			json_attachment_points.get_items().push_back(json_attachment);
 		}
 
+		JsonValue json_materials = JsonValue::array();
+		for (const auto &material : materials)
+		{
+			JsonValue json_material = JsonValue::object();
+			json_material["name"] = material.name;
+			json_material["two_sided"] = material.two_sided;
+			json_material["alpha_test"] = material.alpha_test;
+			json_material["mesh_material"] = material.mesh_material;
+			json_materials.get_items().push_back(json_material);
+		}
+
 		JsonValue json_emitters = JsonValue::array();
 
 		JsonValue json = JsonValue::object();
@@ -106,6 +130,7 @@ namespace clan
 		json["version"] = 1;
 		json["animations"] = json_animations;
 		json["attachment_points"] = json_attachment_points;
+		json["materials"] = json_materials;
 		json["emitters"] = json_emitters;
 		json["fbx_filename"] = PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename);
 

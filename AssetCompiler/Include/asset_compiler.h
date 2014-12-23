@@ -7,6 +7,7 @@
 #include "AssetCompiler/FBXModel/fbx_animation.h"
 #include "AssetCompiler/FBXModel/fbx_attachment_point.h"
 #include "AssetCompiler/FBXModel/fbx_particle_emitter.h"
+#include "AssetCompiler/FBXModel/fbx_material.h"
 
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)

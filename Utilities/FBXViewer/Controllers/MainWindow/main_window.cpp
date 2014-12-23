@@ -7,6 +7,7 @@
 #include "Controllers/Scene/scene_controller.h"
 #include "Controllers/Animations/animations_controller.h"
 #include "Controllers/Attachments/attachments_controller.h"
+#include "Controllers/Materials/materials_controller.h"
 
 using namespace clan;
 
@@ -26,10 +27,12 @@ MainWindow::MainWindow()
 	header_view->add_right_button("Change Model", bind_member(this, &MainWindow::on_change_model));
 	header_view->add_right_button("Attachments", bind_member(this, &MainWindow::on_show_attachments));
 	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_show_animations));
+	header_view->add_right_button("Materials", bind_member(this, &MainWindow::on_show_materials));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
 	attachments_controller = std::make_shared<AttachmentsController>();
+	materials_controller = std::make_shared<MaterialsController>();
 
 	workspace_controller->set_center(scene_controller);
 	workspace_controller->set_docked(animations_controller);
@@ -115,4 +118,9 @@ void MainWindow::on_show_attachments()
 void MainWindow::on_show_animations()
 {
 	workspace_controller->set_docked(animations_controller);
+}
+
+void MainWindow::on_show_materials()
+{
+	workspace_controller->set_docked(materials_controller);
 }

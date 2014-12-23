@@ -37,6 +37,9 @@
     <Filter Include="Controllers\Attachments">
       <UniqueIdentifier>{db36d6a7-7b96-48eb-abdc-95459af8eaaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Materials">
+      <UniqueIdentifier>{194f3138-dc36-4403-ab89-4f6040e59d97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -94,6 +97,12 @@
     <ClInclude Include="Views\Rollout\rollout_position_property.h">
       <Filter>Views\Rollout</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Materials\materials_controller.h">
+      <Filter>Controllers\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Commands\update_material_command.h">
+      <Filter>Model\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -148,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="Views\Rollout\rollout_position_property.cpp">
       <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Materials\materials_controller.cpp">
+      <Filter>Controllers\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Commands\update_material_command.cpp">
+      <Filter>Model\Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

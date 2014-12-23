@@ -14,6 +14,7 @@
     <ClInclude Include="Include\AssetCompiler\AssetCompiler\asset_compiler.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h" />
+    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_material.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model_desc.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h" />
