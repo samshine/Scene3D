@@ -21,7 +21,7 @@ namespace clan
 
 			FBXModel model(desc.fbx_filename);
 
-			std::shared_ptr<ModelData> model_data = model.convert(desc.animations, desc.attachment_points, desc.emitters);
+			std::shared_ptr<ModelData> model_data = model.convert(desc);
 
 			File file(output_filename, File::create_always, File::access_read_write);
 			ModelData::save(file, model_data);

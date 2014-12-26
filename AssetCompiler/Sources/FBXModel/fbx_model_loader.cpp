@@ -2,9 +2,11 @@
 #include "precomp.h"
 #include "fbx_model_loader.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
+#include "AssetCompiler/FBXModel/fbx_model_desc.h"
 #include "AssetCompiler/FBXModel/fbx_animation.h"
 #include "AssetCompiler/FBXModel/fbx_attachment_point.h"
 #include "AssetCompiler/FBXModel/fbx_particle_emitter.h"
+#include "AssetCompiler/FBXModel/fbx_material.h"
 #include "fbx_model_impl.h"
 #include <algorithm>
 
@@ -12,16 +14,16 @@
 
 namespace clan
 {
-	FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const std::vector<FBXAnimation> &animations, const std::vector<FBXAttachmentPoint> &attachment_points, const std::vector<FBXParticleEmitter> &emitters)
-		: model(model), model_data(std::make_shared<ModelData>())
+	FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const FBXModelDesc &desc)
+		: model_desc(desc), model(model), model_data(std::make_shared<ModelData>())
 	{
 		convert_node(model->scene->GetRootNode());
-		for (const auto &anim : animations)
+		for (const auto &anim : model_desc.animations)
 		{
 			convert_bones(anim);
 		}
 
-		for (const auto &fbx_attachment : attachment_points)
+		for (const auto &fbx_attachment : model_desc.attachment_points)
 		{
 			int bone_index = find_bone_index(fbx_attachment.bone_name);
 			if (bone_index != -1)
@@ -127,24 +129,31 @@ namespace clan
 
 		std::vector<std::vector<VertexMapping *> > material_elements(node->GetMaterialCount());
 
-		for (int element_index = 0; element_index < mesh->GetElementMaterialCount(); element_index++)
+		if (node->GetMaterialCount() > 0)
 		{
-			FbxGeometryElementMaterial *element = mesh->GetElementMaterial(element_index);
-			if (element->GetMappingMode() == FbxGeometryElement::eByPolygon)
+			for (int element_index = 0; element_index < mesh->GetElementMaterialCount(); element_index++)
 			{
-				int index_array_size = element->GetIndexArray().GetCount();
-				for (int index = 0; index < index_array_size; index++)
+				FbxGeometryElementMaterial *element = mesh->GetElementMaterial(element_index);
+				if (element->GetMappingMode() == FbxGeometryElement::eByPolygon)
 				{
-					int material_index = element->GetIndexArray().GetAt(index);
+					int index_array_size = element->GetIndexArray().GetCount();
+					for (int index = 0; index < index_array_size; index++)
+					{
+						int material_index = element->GetIndexArray().GetAt(index);
 
-					material_elements[material_index].insert(material_elements[material_index].end(), elements.begin() + index * 3, elements.begin() + index * 3 + 3);
+						material_elements[material_index].insert(material_elements[material_index].end(), elements.begin() + index * 3, elements.begin() + index * 3 + 3);
+					}
+				}
+				else if (element->GetMappingMode() == FbxGeometryElement::eAllSame)
+				{
+					int material_index = element->GetIndexArray().GetAt(0);
+					material_elements[material_index].insert(material_elements[material_index].end(), elements.begin(), elements.end());
 				}
 			}
-			else if (element->GetMappingMode() == FbxGeometryElement::eAllSame)
-			{
-				int material_index = element->GetIndexArray().GetAt(0);
-				material_elements[material_index].insert(material_elements[material_index].end(), elements.begin(), elements.end());
-			}
+		}
+		else
+		{
+			material_elements.push_back(elements);
 		}
 
 		for (size_t material_index = 0; material_index < material_elements.size(); material_index++)
@@ -169,11 +178,21 @@ namespace clan
 		ModelDataDrawRange range;
 		range.start_element = start_element;
 		range.num_elements = num_elements;
-
-		// To do: where can we retrieve these flags from?
 		range.two_sided = false;
 		range.transparent = false;
 		range.alpha_test = false;
+
+		if (material == 0)
+		{
+			range.ambient.set_single_value(Vec3f(1.0f));
+			range.diffuse.set_single_value(Vec3f(1.0f));
+			range.specular.set_single_value(Vec3f(1.0f));
+			range.specular_level.set_single_value(0.0f);
+			range.glossiness.set_single_value(0.0f);
+			range.self_illumination_amount.set_single_value(0.0f);
+			range.self_illumination.set_single_value(Vec3f(0.0f));
+			return range;
+		}
 
 		if (material->GetClassId().Is(FbxSurfaceLambert::ClassId) || material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
@@ -251,6 +270,18 @@ namespace clan
 			range.self_illumination.set_single_value(Vec3f(0.0f));
 		}
 
+
+		std::string material_name = material->GetName();
+		for (const auto &desc_material : model_desc.materials)
+		{
+			if (desc_material.mesh_material == material_name)
+			{
+				range.alpha_test = desc_material.alpha_test;
+				range.two_sided = desc_material.two_sided;
+				//range.transparent = desc_material.transparent;
+			}
+		}
+
 		return range;
 	}
 
@@ -258,9 +289,21 @@ namespace clan
 	{
 		ModelDataTextureMap map;
 
-		if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
+		FbxFileTexture *texture = 0;
+
+		if (material->FindProperty(property_name).GetSrcObjectCount<FbxLayeredTexture>() > 0)
 		{
-			FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
+			FbxLayeredTexture *layer = material->FindProperty(property_name).GetSrcObject<FbxLayeredTexture>(0);
+			if (layer->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
+				texture = layer->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
+		}
+		else if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
+		{
+			texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
+		}
+
+		if (texture)
+		{
 			std::string filename = PathHelp::combine(model->base_path, PathHelp::get_filename(texture->GetFileName()));
 			std::string uv_set = texture->UVSet.Get();
 
@@ -638,24 +681,65 @@ namespace clan
 	void FBXModelLoader::convert_light(FbxNode *node)
 	{
 		FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
-		/*
-			std::string name = light->GetName();
 
-			FbxLight::EType type = light->LightType.Get(); // point, directional, spot
-			bool casts_light = light->CastLight.Get();
-			bool casts_shadows = light->CastShadows.Get();
+		// Directional lights with a 0,0,0 rotation vector points in the -Y direction. Ours point in the +Z direction.
+		Quaternionf directionRotation(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ);
 
-			std::string light_texture = light->FileName.Get();
-			bool ground_projection = light->DrawGroundProjection.Get();
-			bool volumetric_projection = light->DrawVolumetricLight.Get();
-			bool front_volumetric_projection = light->DrawFrontFacingVolumetricLight.Get();
+		// Is a light "geometric"? Nobody knows!
+		FbxAMatrix inverseZ = FbxAMatrix(FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(1.0, 1.0, -1.0, 1.0));
+		FbxAMatrix light_to_world = inverseZ * (node->EvaluateGlobalTransform() * FbxAMatrix(node->GetGeometricTranslation(FbxNode::eSourcePivot), node->GetGeometricRotation(FbxNode::eSourcePivot), node->GetGeometricScaling(FbxNode::eSourcePivot)));
 
-			FbxDouble3 color = light->Color.Get();
-			float intensity = (float)light->Intensity.Get();
-			float outer_angle = (float)light->OuterAngle.Get();
-			float inner_angle = (float)light->InnerAngle.Get();
-			float fog = (float)light->Fog.Get();
-			*/
+		Vec3f position = Vec3f(to_vec4f(light_to_world.GetT()));
+		Quaternionf orientation = to_quaternionf(light_to_world.GetQ()) * directionRotation;
+
+		ModelDataLight model_light;
+
+		model_light.position.set_single_value(position);
+		model_light.orientation.set_single_value(orientation);
+
+		switch (light->LightType.Get())
+		{
+			case FbxLight::ePoint:
+				// To do: add a light type to ModelDataLight
+				model_light.hotspot.set_single_value(0.0f);
+				model_light.falloff.set_single_value(0.0f);
+				break;
+
+			case FbxLight::eSpot:
+				model_light.hotspot.set_single_value((float)light->InnerAngle.Get());
+				model_light.falloff.set_single_value((float)light->OuterAngle.Get());
+				break;
+
+			case FbxLight::eDirectional:
+			case FbxLight::eArea:
+			case FbxLight::eVolume:
+			default:
+				return;
+		}
+
+		//model_light.casts_light = light->CastLight.Get();
+		model_light.casts_shadows = light->CastShadows.Get();
+
+		model_light.color.set_single_value(to_vec3f(light->Color.Get()) * (float)(light->Intensity.Get() * 0.01));
+		//model_light.shadow_color.set_single_value(light->ShadowColor.Get());
+
+		model_light.attenuation_start.set_single_value((float)light->NearAttenuationStart.Get());
+		model_light.attenuation_end.set_single_value((float)light->FarAttenuationEnd.Get());
+
+		model_light.aspect.set_single_value(1.0f);
+		model_light.ambient_illumination.set_single_value(0.0f);
+		model_light.rectangle = false;
+
+		// std::string gobo_filename = light->FileName.Get();
+		// FbxTexture *shadow_texture = light->GetShadowTexture();
+		// bool ground_projection = light->DrawGroundProjection.Get();
+		// bool volumetric_projection = light->DrawVolumetricLight.Get();
+		// bool front_volumetric_projection = light->DrawFrontFacingVolumetricLight.Get();
+		// float fog = (float)light->Fog.Get();
+
+		// std::string name = light->GetName();
+
+		model_data->lights.push_back(model_light);
 	}
 
 	void FBXModelLoader::convert_bones(const FBXAnimation &animation_desc)
@@ -744,6 +828,11 @@ namespace clan
 	Vec4f FBXModelLoader::to_vec4f(const FbxVector4 &v)
 	{
 		return Vec4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
+	}
+
+	Vec4f FBXModelLoader::to_vec4f(const FbxColor &c)
+	{
+		return Vec4f((float)c.mRed, (float)c.mGreen, (float)c.mBlue, (float)c.mAlpha);
 	}
 
 	Vec4ub FBXModelLoader::to_vec4ub(const FbxColor &c)

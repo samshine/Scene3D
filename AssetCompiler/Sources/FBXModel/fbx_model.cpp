@@ -13,9 +13,29 @@ namespace clan
 	{
 	}
 
-	std::shared_ptr<ModelData> FBXModel::convert(const std::vector<FBXAnimation> &animations, const std::vector<FBXAttachmentPoint> &attachment_points, const std::vector<FBXParticleEmitter> &emitters)
+	const std::vector<std::string> &FBXModel::material_names() const
 	{
-		FBXModelLoader loader(impl.get(), animations, attachment_points, emitters);
+		return impl->material_names;
+	}
+
+	const std::vector<std::string> &FBXModel::bone_names() const
+	{
+		return impl->bone_names;
+	}
+
+	const std::vector<std::string> &FBXModel::light_names() const
+	{
+		return impl->light_names;
+	}
+
+	const std::vector<std::string> &FBXModel::camera_names() const
+	{
+		return impl->camera_names;
+	}
+
+	std::shared_ptr<ModelData> FBXModel::convert(const FBXModelDesc &desc)
+	{
+		FBXModelLoader loader(impl.get(), desc);
 		return loader.model_data;
 	}
 
@@ -29,6 +49,7 @@ namespace clan
 			import_scene(filename);
 			triangulate_scene();
 			//bake_geometric_transforms();
+			inspect_node(scene->GetRootNode());
 		}
 		catch (...)
 		{
@@ -42,6 +63,100 @@ namespace clan
 	{
 		if (manager)
 			manager->Destroy();
+	}
+
+	void FBXModelImpl::inspect_node(FbxNode *node)
+	{
+		FbxNodeAttribute *node_attribute = node->GetNodeAttribute();
+		if (node_attribute)
+		{
+			FbxNodeAttribute::EType node_type = node_attribute->GetAttributeType();
+			switch (node_type)
+			{
+			case FbxNodeAttribute::eMesh:
+				inspect_mesh(node);
+				break;
+
+			case FbxNodeAttribute::eCamera:
+				inspect_camera(node);
+				break;
+
+			case FbxNodeAttribute::eLight:
+				inspect_light(node);
+
+			case FbxNodeAttribute::eMarker:
+			case FbxNodeAttribute::eSkeleton:
+			case FbxNodeAttribute::eNurbs:
+			case FbxNodeAttribute::ePatch:
+			case FbxNodeAttribute::eLODGroup:
+				break;
+			}
+		}
+
+		for (int i = 0; i < node->GetChildCount(); i++)
+		{
+			inspect_node(node->GetChild(i));
+		}
+	}
+
+	void FBXModelImpl::inspect_mesh(FbxNode *node)
+	{
+		FbxMesh *mesh = static_cast<FbxMesh*>(node->GetNodeAttribute());
+
+		for (int material_index = 0; material_index < node->GetMaterialCount(); material_index++)
+		{
+			FbxSurfaceMaterial *material = node->GetMaterial(material_index);
+
+			std::string name = material->GetName();
+			if (std::find(material_names.begin(), material_names.end(), name) == material_names.end())
+				material_names.push_back(name);
+		}
+
+		inspect_skins(node, mesh);
+	}
+
+	void FBXModelImpl::inspect_skins(FbxNode *node, FbxMesh *mesh)
+	{
+		int num_skins = mesh->GetDeformerCount(FbxDeformer::eSkin);
+		for (int skin_index = 0; skin_index < num_skins; skin_index++)
+		{
+			FbxSkin *skin = static_cast<FbxSkin *>(mesh->GetDeformer(skin_index, FbxDeformer::eSkin));
+
+			FbxSkin::EType skinning_type = skin->GetSkinningType();
+			if (skinning_type != FbxSkin::eLinear && skinning_type != FbxSkin::eRigid)
+				continue;
+
+			int num_clusters = skin->GetClusterCount();
+			for (int cluster_index = 0; cluster_index < num_clusters; cluster_index++)
+			{
+				FbxCluster *cluster = skin->GetCluster(cluster_index);
+				FbxNode *link = cluster->GetLink();
+				if (link)
+				{
+					std::string name = link->GetName();
+					if (std::find(bone_names.begin(), bone_names.end(), name) == bone_names.end())
+						bone_names.push_back(name);
+				}
+			}
+		}
+	}
+
+	void FBXModelImpl::inspect_camera(FbxNode *node)
+	{
+		FbxCamera *camera = static_cast<FbxCamera*>(node->GetNodeAttribute());
+
+		std::string name = camera->GetName();
+		if (std::find(camera_names.begin(), camera_names.end(), name) == camera_names.end())
+			camera_names.push_back(name);
+	}
+
+	void FBXModelImpl::inspect_light(FbxNode *node)
+	{
+		FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
+
+		std::string name = light->GetName();
+		if (std::find(light_names.begin(), light_names.end(), name) == light_names.end())
+			light_names.push_back(name);
 	}
 
 	void FBXModelImpl::triangulate_scene()

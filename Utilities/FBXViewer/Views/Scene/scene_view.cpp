@@ -184,7 +184,7 @@ void SceneView::setup_scene(GraphicContext &gc)
 	light2.set_attenuation_start(900.0f);
 	light2.set_attenuation_end(1000.0f);
 	light2.set_color(Vec3f(0.1f, 0.1f, 0.12f));
-	
+
 	camera = SceneCamera(scene);
 	scene.set_camera(camera);
 

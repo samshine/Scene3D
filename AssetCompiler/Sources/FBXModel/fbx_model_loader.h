@@ -13,11 +13,12 @@ namespace clan
 	class FBXAnimation;
 	class FBXAttachmentPoint;
 	class FBXParticleEmitter;
+	class FBXModelDesc;
 
 	class FBXModelLoader
 	{
 	public:
-		FBXModelLoader(FBXModelImpl *model, const std::vector<FBXAnimation> &animations, const std::vector<FBXAttachmentPoint> &attachment_points, const std::vector<FBXParticleEmitter> &emitters);
+		FBXModelLoader(FBXModelImpl *model, const FBXModelDesc &desc);
 
 		std::shared_ptr<ModelData> model_data;
 
@@ -49,10 +50,12 @@ namespace clan
 		static Vec2f to_vec2f(const FbxVector2 &v);
 		static Vec3f to_vec3f(const FbxDouble3 &d);
 		static Vec4f to_vec4f(const FbxVector4 &v);
+		static Vec4f to_vec4f(const FbxColor &c);
 		static Vec4ub to_vec4ub(const FbxColor &c);
 		static Mat4f to_mat4f(const FbxAMatrix &m);
 		static Quaternionf to_quaternionf(const FbxQuaternion &q);
 
+		const FBXModelDesc &model_desc;
 		FBXModelImpl *model;
 		std::vector<SkinnedBone> bones;
 	};
