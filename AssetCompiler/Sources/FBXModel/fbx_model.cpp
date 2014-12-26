@@ -143,18 +143,18 @@ namespace clan
 
 	void FBXModelImpl::inspect_camera(FbxNode *node)
 	{
-		FbxCamera *camera = static_cast<FbxCamera*>(node->GetNodeAttribute());
+		// FbxCamera *camera = static_cast<FbxCamera*>(node->GetNodeAttribute());
 
-		std::string name = camera->GetName();
+		std::string name = node->GetName();
 		if (std::find(camera_names.begin(), camera_names.end(), name) == camera_names.end())
 			camera_names.push_back(name);
 	}
 
 	void FBXModelImpl::inspect_light(FbxNode *node)
 	{
-		FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
+		// FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
 
-		std::string name = light->GetName();
+		std::string name = node->GetName();
 		if (std::find(light_names.begin(), light_names.end(), name) == light_names.end())
 			light_names.push_back(name);
 	}
