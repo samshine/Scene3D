@@ -252,6 +252,7 @@ namespace clan
 			range.diffuse_map = create_texture_channel(0, FbxSurfaceMaterial::sDiffuse, material, 2.2f);
 			range.specular_map = create_texture_channel(1, FbxSurfaceMaterial::sSpecular, material, 1.0f);
 			range.bumpmap_map = create_texture_channel(2, FbxSurfaceMaterial::sBump, material, 1.0f);
+			range.self_illumination_map = create_texture_channel(3, FbxSurfaceMaterial::sEmissive, material, 2.2f);
 		}
 		else
 		{
