@@ -50,6 +50,7 @@ Resource<Texture> ViewerSceneCache::get_texture(GraphicContext &gc, const std::s
 
 		Resource<Texture> texture;
 		texture.set(loaded_texture);
+		loaded_textures[name] = texture;
 		return texture;
 	}
 	catch (Exception &)

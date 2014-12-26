@@ -389,6 +389,9 @@ namespace clan
 					vertices[control_index]->tangent = tangent;
 					vertices[control_index]->bitangent = bitangent;
 					vertices[control_index]->diffuse_uv = diffuse_uv;
+					vertices[control_index]->specular_uv = diffuse_uv;
+					vertices[control_index]->normal_uv = diffuse_uv;
+					vertices[control_index]->emission_uv = diffuse_uv;
 
 					face_vertices.push_back(vertices[control_index]);
 				}
@@ -412,6 +415,9 @@ namespace clan
 							mapping->tangent = tangent;
 							mapping->bitangent = bitangent;
 							mapping->diffuse_uv = diffuse_uv;
+							mapping->specular_uv = diffuse_uv;
+							mapping->normal_uv = diffuse_uv;
+							mapping->emission_uv = diffuse_uv;
 							break;
 						}
 					}
