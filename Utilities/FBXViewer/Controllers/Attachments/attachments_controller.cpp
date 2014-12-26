@@ -98,12 +98,18 @@ void AttachmentsController::attachments_list_edit_saved()
 	{
 		if (selection->index >= AppModel::instance()->desc.attachment_points.size())
 		{
-			AppModel::instance()->desc.attachment_points.resize(selection->index + 1);
+			FBXAttachmentPoint attachment;
+			attachment.name = selection->text();
+			AppModel::instance()->undo_system.execute<AddAttachmentCommand>(attachment);
+
 			attachments_list->add_item("");
 		}
-
-		auto &attachment = AppModel::instance()->desc.attachment_points[selection->index];
-		attachment.name = selection->text();
+		else
+		{
+			FBXAttachmentPoint attachment = AppModel::instance()->desc.attachment_points[selection->index];
+			attachment.name = selection->text();
+			AppModel::instance()->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
+		}
 
 		update_attachment_fields();
 	}

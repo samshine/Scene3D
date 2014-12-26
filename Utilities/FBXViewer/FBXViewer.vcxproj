@@ -92,6 +92,9 @@
     <ClInclude Include="Controllers\Scene\scene_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
     <ClInclude Include="Model\app_model.h" />
+    <ClInclude Include="Model\Commands\add_animation_command.h" />
+    <ClInclude Include="Model\Commands\add_attachment_command.h" />
+    <ClInclude Include="Model\Commands\add_material_command.h" />
     <ClInclude Include="Model\Commands\model_command.h" />
     <ClInclude Include="Model\Commands\update_animation_command.h" />
     <ClInclude Include="Model\Commands\update_attachment_command.h" />
@@ -119,6 +122,9 @@
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\app_model.cpp" />
+    <ClCompile Include="Model\Commands\add_animation_command.cpp" />
+    <ClCompile Include="Model\Commands\add_attachment_command.cpp" />
+    <ClCompile Include="Model\Commands\add_material_command.cpp" />
     <ClCompile Include="Model\Commands\update_animation_command.cpp" />
     <ClCompile Include="Model\Commands\update_attachment_command.cpp" />
     <ClCompile Include="Model\Commands\update_material_command.cpp" />

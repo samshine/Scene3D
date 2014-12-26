@@ -101,12 +101,18 @@ void AnimationsController::animations_list_edit_saved()
 	{
 		if (selection->index >= AppModel::instance()->desc.animations.size())
 		{
-			AppModel::instance()->desc.animations.resize(selection->index + 1);
+			FBXAnimation anim;
+			anim.name = selection->text();
+			AppModel::instance()->undo_system.execute<AddAnimationCommand>(anim);
+
 			animations_list->add_item("");
 		}
-
-		auto &anim = AppModel::instance()->desc.animations[selection->index];
-		anim.name = selection->text();
+		else
+		{
+			FBXAnimation anim = AppModel::instance()->desc.animations[selection->index];
+			anim.name = selection->text();
+			AppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection->index, anim);
+		}
 
 		update_animation_fields();
 	}
