@@ -221,14 +221,10 @@ namespace clan
 			Vec3f vector_displacement_color = to_vec3f(lambert->VectorDisplacementColor.Get());
 			float vector_displacement_factor = (float)lambert->VectorDisplacementFactor.Get();
 
-			// Force emissive/self-illumination to zero until they are better understood.
-			emissive_factor = 0.0f;
-			emissive = Vec3f();
-
 			range.ambient.set_single_value(ambient * ambient_factor);
 			range.diffuse.set_single_value(diffuse * diffuse_factor);
-			range.self_illumination_amount.set_single_value(emissive_factor);
-			range.self_illumination.set_single_value(emissive * 0.25f); // To do: fix this properly (3ds max SI only can do 0-1 range, and we need more to allow blooming, grr..)
+			range.self_illumination_amount.set_single_value(1.0f);
+			range.self_illumination.set_single_value(emissive * emissive_factor);
 
 			if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
@@ -278,7 +274,7 @@ namespace clan
 			{
 				range.alpha_test = desc_material.alpha_test;
 				range.two_sided = desc_material.two_sided;
-				//range.transparent = desc_material.transparent;
+				range.transparent = desc_material.transparent;
 			}
 		}
 

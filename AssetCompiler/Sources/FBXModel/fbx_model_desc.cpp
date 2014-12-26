@@ -51,7 +51,8 @@ namespace clan
 			for (const auto &json_material : json["materials"].get_items())
 			{
 				FBXMaterial material;
-				material.name = json_material["name"];
+				if (json_material.get_members().find("transparent") != json_material.get_members().end())
+					material.transparent = json_material["transparent"].to_boolean();
 				material.two_sided = json_material["two_sided"].to_boolean();
 				material.alpha_test = json_material["alpha_test"].to_boolean();
 				material.mesh_material = json_material["mesh_material"];
@@ -116,10 +117,10 @@ namespace clan
 		for (const auto &material : materials)
 		{
 			JsonValue json_material = JsonValue::object();
-			json_material["name"] = material.name;
+			json_material["mesh_material"] = material.mesh_material;
+			json_material["transparent"] = material.transparent;
 			json_material["two_sided"] = material.two_sided;
 			json_material["alpha_test"] = material.alpha_test;
-			json_material["mesh_material"] = material.mesh_material;
 			json_materials.get_items().push_back(json_material);
 		}
 

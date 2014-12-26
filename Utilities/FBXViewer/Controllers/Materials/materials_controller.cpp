@@ -21,7 +21,7 @@ MaterialsController::MaterialsController()
 	materials_list = std::make_shared<RolloutList>();
 	two_sided_property = std::make_shared<RolloutTextFieldProperty>("TWO SIDED");
 	alpha_test_property = std::make_shared<RolloutTextFieldProperty>("ALPHA TEST");
-	mesh_material_property = std::make_shared<RolloutTextFieldProperty>("MESH MATERIAL");
+	transparent_property = std::make_shared<RolloutTextFieldProperty>("TRANSPARENT");
 
 	materials_list->set_allow_edit(false);
 
@@ -29,13 +29,13 @@ MaterialsController::MaterialsController()
 
 	material->content->add_subview(two_sided_property);
 	material->content->add_subview(alpha_test_property);
-	material->content->add_subview(mesh_material_property);
+	material->content->add_subview(transparent_property);
 
 	slots.connect(materials_list->sig_selection_changed(), this, &MaterialsController::materials_list_selection_changed);
 	slots.connect(materials_list->sig_selection_clicked(), this, &MaterialsController::materials_list_selection_clicked);
 	slots.connect(two_sided_property->sig_value_changed(), this, &MaterialsController::two_sided_property_value_changed);
 	slots.connect(alpha_test_property->sig_value_changed(), this, &MaterialsController::alpha_test_property_value_changed);
-	slots.connect(mesh_material_property->sig_value_changed(), this, &MaterialsController::mesh_material_property_value_changed);
+	slots.connect(transparent_property->sig_value_changed(), this, &MaterialsController::transparent_property_value_changed);
 
 	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_materials(); });
 
@@ -110,7 +110,7 @@ void MaterialsController::update_material_fields()
 		const auto &material = AppModel::instance()->desc.materials[index];
 		two_sided_property->text_field->set_text(material.two_sided ? "1" : "0");
 		alpha_test_property->text_field->set_text(material.alpha_test ? "1" : "0");
-		mesh_material_property->text_field->set_text(material.mesh_material);
+		transparent_property->text_field->set_text(material.transparent ? "1" : "0");
 	}
 	else
 	{
@@ -167,14 +167,14 @@ void MaterialsController::alpha_test_property_value_changed()
 	}
 }
 
-void MaterialsController::mesh_material_property_value_changed()
+void MaterialsController::transparent_property_value_changed()
 {
 	auto selection = materials_list->selection();
 	if (selection)
 	{
 		auto app_model = AppModel::instance();
 		auto material = app_model->desc.materials.at(selection->index);
-		material.mesh_material = mesh_material_property->text_field->text();
+		material.transparent = alpha_test_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateMaterialCommand>(selection->index, material);
 	}
 }
