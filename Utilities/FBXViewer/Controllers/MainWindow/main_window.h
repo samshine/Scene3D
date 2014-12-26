@@ -7,6 +7,9 @@ class SceneController;
 class AnimationsController;
 class AttachmentsController;
 class MaterialsController;
+class LightsController;
+class BonesController;
+class CamerasController;
 
 class MainWindow : public clan::ViewController
 {
@@ -24,6 +27,9 @@ private:
 	void on_show_attachments();
 	void on_show_animations();
 	void on_show_materials();
+	void on_show_lights();
+	void on_show_bones();
+	void on_show_cameras();
 	void on_change_model();
 
 	std::shared_ptr<HeaderView> header_view;
@@ -33,6 +39,9 @@ private:
 	std::shared_ptr<AnimationsController> animations_controller;
 	std::shared_ptr<AttachmentsController> attachments_controller;
 	std::shared_ptr<MaterialsController> materials_controller;
+	std::shared_ptr<LightsController> lights_controller;
+	std::shared_ptr<BonesController> bones_controller;
+	std::shared_ptr<CamerasController> cameras_controller;
 
 	clan::SlotContainer slots;
 };

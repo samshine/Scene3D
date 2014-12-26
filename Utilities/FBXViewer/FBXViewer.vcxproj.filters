@@ -40,6 +40,15 @@
     <Filter Include="Controllers\Materials">
       <UniqueIdentifier>{194f3138-dc36-4403-ab89-4f6040e59d97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Lights">
+      <UniqueIdentifier>{15ec84bd-3747-4728-8a79-6ce76e0a23ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Bones">
+      <UniqueIdentifier>{783fb30b-2e78-40fc-bcb2-868bf2db6c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Cameras">
+      <UniqueIdentifier>{fcc80a2b-b9ae-43bd-9dba-da68e5426496}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -103,6 +112,15 @@
     <ClInclude Include="Model\Commands\update_material_command.h">
       <Filter>Model\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Lights\lights_controller.h">
+      <Filter>Controllers\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Bones\bones_controller.h">
+      <Filter>Controllers\Bones</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Cameras\cameras_controller.h">
+      <Filter>Controllers\Cameras</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -163,6 +181,15 @@
     </ClCompile>
     <ClCompile Include="Model\Commands\update_material_command.cpp">
       <Filter>Model\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Lights\lights_controller.cpp">
+      <Filter>Controllers\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Bones\bones_controller.cpp">
+      <Filter>Controllers\Bones</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Cameras\cameras_controller.cpp">
+      <Filter>Controllers\Cameras</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

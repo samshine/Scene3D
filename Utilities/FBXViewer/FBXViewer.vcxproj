@@ -84,6 +84,9 @@
   <ItemGroup>
     <ClInclude Include="Controllers\Animations\animations_controller.h" />
     <ClInclude Include="Controllers\Attachments\attachments_controller.h" />
+    <ClInclude Include="Controllers\Bones\bones_controller.h" />
+    <ClInclude Include="Controllers\Cameras\cameras_controller.h" />
+    <ClInclude Include="Controllers\Lights\lights_controller.h" />
     <ClInclude Include="Controllers\MainWindow\main_window.h" />
     <ClInclude Include="Controllers\Materials\materials_controller.h" />
     <ClInclude Include="Controllers\Scene\scene_controller.h" />
@@ -107,6 +110,9 @@
   <ItemGroup>
     <ClCompile Include="Controllers\Animations\animations_controller.cpp" />
     <ClCompile Include="Controllers\Attachments\attachments_controller.cpp" />
+    <ClCompile Include="Controllers\Bones\bones_controller.cpp" />
+    <ClCompile Include="Controllers\Cameras\cameras_controller.cpp" />
+    <ClCompile Include="Controllers\Lights\lights_controller.cpp" />
     <ClCompile Include="Controllers\MainWindow\main_window.cpp" />
     <ClCompile Include="Controllers\Materials\materials_controller.cpp" />
     <ClCompile Include="Controllers\Scene\scene_controller.cpp" />

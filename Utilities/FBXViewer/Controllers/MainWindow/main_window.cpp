@@ -8,6 +8,9 @@
 #include "Controllers/Animations/animations_controller.h"
 #include "Controllers/Attachments/attachments_controller.h"
 #include "Controllers/Materials/materials_controller.h"
+#include "Controllers/Lights/lights_controller.h"
+#include "Controllers/Bones/bones_controller.h"
+#include "Controllers/Cameras/cameras_controller.h"
 
 using namespace clan;
 
@@ -28,11 +31,17 @@ MainWindow::MainWindow()
 	header_view->add_right_button("Attachments", bind_member(this, &MainWindow::on_show_attachments));
 	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_show_animations));
 	header_view->add_right_button("Materials", bind_member(this, &MainWindow::on_show_materials));
+	header_view->add_right_button("Lights", bind_member(this, &MainWindow::on_show_lights));
+	header_view->add_right_button("Bones", bind_member(this, &MainWindow::on_show_bones));
+	header_view->add_right_button("Cameras", bind_member(this, &MainWindow::on_show_cameras));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
 	attachments_controller = std::make_shared<AttachmentsController>();
 	materials_controller = std::make_shared<MaterialsController>();
+	lights_controller = std::make_shared<LightsController>();
+	bones_controller = std::make_shared<BonesController>();
+	cameras_controller = std::make_shared<CamerasController>();
 
 	workspace_controller->set_center(scene_controller);
 	workspace_controller->set_docked(animations_controller);
@@ -123,4 +132,19 @@ void MainWindow::on_show_animations()
 void MainWindow::on_show_materials()
 {
 	workspace_controller->set_docked(materials_controller);
+}
+
+void MainWindow::on_show_lights()
+{
+	workspace_controller->set_docked(lights_controller);
+}
+
+void MainWindow::on_show_bones()
+{
+	workspace_controller->set_docked(bones_controller);
+}
+
+void MainWindow::on_show_cameras()
+{
+	workspace_controller->set_docked(cameras_controller);
 }
