@@ -128,18 +128,16 @@ void MaterialsController::materials_list_selection_clicked()
 	auto selection = materials_list->selection();
 	if (selection)
 	{
-		/*
-		if (selection->index >= AppModel::instance()->desc.materials.size())
+		int index = get_select_item_index();
+		if (index == -1)
 		{
-			AppModel::instance()->desc.materials.resize(selection->index + 1);
-			materials_list->add_item("");
+			FBXMaterial material;
+			material.mesh_material = selection->text();
+			AppModel::instance()->undo_system.execute<AddMaterialCommand>(material);
+
+			selection->set_bold(true);
+			update_material_fields();
 		}
-
-		auto &material = AppModel::instance()->desc.materials[selection->index];
-		material.name = selection->text();
-
-		update_material_fields();
-		*/
 	}
 }
 
