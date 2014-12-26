@@ -61,9 +61,19 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 	{
 		set_focus();
 		if (selected())
-			begin_edit();
+		{
+			RolloutList *list = dynamic_cast<RolloutList*>(superview());
+			if (list)
+			{
+				list->sig_selection_clicked()();
+				if (list->is_edit_allowed())
+					begin_edit();
+			}
+		}
 		else
+		{
 			set_selected(true);
+		}
 	});
 	slots.connect(textfield->sig_focus_lost(), [this](FocusChangeEvent &e) { cancel_edit(); });
 	slots.connect(textfield->sig_enter_pressed(), [this]() { save_edit(); });
@@ -84,6 +94,14 @@ std::string RolloutListItemView::text() const
 void RolloutListItemView::set_text(const std::string &text)
 {
 	label->set_text(text);
+}
+
+void RolloutListItemView::set_bold(bool enable)
+{
+	if (enable)
+		label->text_style().set_weight(FontWeight::heavy);
+	else
+		label->text_style().set_weight_normal();
 }
 
 bool RolloutListItemView::selected() const

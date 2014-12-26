@@ -23,6 +23,8 @@ MaterialsController::MaterialsController()
 	alpha_test_property = std::make_shared<RolloutTextFieldProperty>("ALPHA TEST");
 	mesh_material_property = std::make_shared<RolloutTextFieldProperty>("MESH MATERIAL");
 
+	materials_list->set_allow_edit(false);
+
 	materials->content->add_subview(materials_list);
 
 	material->content->add_subview(two_sided_property);
@@ -30,7 +32,7 @@ MaterialsController::MaterialsController()
 	material->content->add_subview(mesh_material_property);
 
 	slots.connect(materials_list->sig_selection_changed(), this, &MaterialsController::materials_list_selection_changed);
-	slots.connect(materials_list->sig_edit_saved(), this, &MaterialsController::materials_list_edit_saved);
+	slots.connect(materials_list->sig_selection_clicked(), this, &MaterialsController::materials_list_selection_clicked);
 	slots.connect(two_sided_property->sig_value_changed(), this, &MaterialsController::two_sided_property_value_changed);
 	slots.connect(alpha_test_property->sig_value_changed(), this, &MaterialsController::alpha_test_property_value_changed);
 	slots.connect(mesh_material_property->sig_value_changed(), this, &MaterialsController::mesh_material_property_value_changed);
@@ -44,26 +46,68 @@ void MaterialsController::update_materials()
 {
 	materials_list->clear();
 	bool first = true;
+
+	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
+
+	if (AppModel::instance()->fbx)
+	{
+		for (const auto &mesh_mat : AppModel::instance()->fbx->material_names())
+		{
+			auto item = materials_list->add_item(mesh_mat);
+			if (first)
+			{
+				item->set_selected(true, false);
+				first = false;
+			}
+			items[mesh_mat] = item;
+		}
+	}
+
 	for (const auto &material : AppModel::instance()->desc.materials)
 	{
-		auto item = materials_list->add_item(material.name);
+		auto &item = items[material.mesh_material];
+		if (!item)
+			item = materials_list->add_item(material.mesh_material);
+
+		item->set_bold(true);
+
 		if (first)
 		{
 			item->set_selected(true, false);
 			first = false;
 		}
 	}
-	materials_list->add_item("");
+
+	if (!materials_list->selection())
+		material->set_hidden(true);
+}
+
+int MaterialsController::get_select_item_index()
+{
+	auto selection = materials_list->selection();
+	if (selection)
+	{
+		std::string name = selection->text();
+
+		const auto &materials = AppModel::instance()->desc.materials;
+		for (size_t i = 0; i < materials.size(); i++)
+		{
+			if (materials[i].mesh_material == name)
+				return (int)i;
+		}
+	}
+	return -1;
 }
 
 void MaterialsController::update_material_fields()
 {
-	auto selection = materials_list->selection();
-	if (selection && selection->index < AppModel::instance()->desc.materials.size())
+	int index = get_select_item_index();
+
+	if (index >= 0)
 	{
 		material->set_hidden(false);
 
-		const auto &material = AppModel::instance()->desc.materials[selection->index];
+		const auto &material = AppModel::instance()->desc.materials[index];
 		two_sided_property->text_field->set_text(material.two_sided ? "1" : "0");
 		alpha_test_property->text_field->set_text(material.alpha_test ? "1" : "0");
 		mesh_material_property->text_field->set_text(material.mesh_material);
@@ -79,11 +123,12 @@ void MaterialsController::materials_list_selection_changed()
 	update_material_fields();
 }
 
-void MaterialsController::materials_list_edit_saved()
+void MaterialsController::materials_list_selection_clicked()
 {
 	auto selection = materials_list->selection();
 	if (selection)
 	{
+		/*
 		if (selection->index >= AppModel::instance()->desc.materials.size())
 		{
 			AppModel::instance()->desc.materials.resize(selection->index + 1);
@@ -94,6 +139,7 @@ void MaterialsController::materials_list_edit_saved()
 		material.name = selection->text();
 
 		update_material_fields();
+		*/
 	}
 }
 

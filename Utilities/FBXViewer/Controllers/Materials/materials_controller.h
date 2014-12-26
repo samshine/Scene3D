@@ -16,10 +16,12 @@ private:
 	void update_material_fields();
 
 	void materials_list_selection_changed();
-	void materials_list_edit_saved();
+	void materials_list_selection_clicked();
 	void two_sided_property_value_changed();
 	void alpha_test_property_value_changed();
 	void mesh_material_property_value_changed();
+
+	int get_select_item_index();
 
 	std::shared_ptr<RolloutView> materials;
 	std::shared_ptr<RolloutList> materials_list;

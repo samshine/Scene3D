@@ -62,7 +62,10 @@ void AnimationsController::update_animations()
 			first = false;
 		}
 	}
-	animations_list->add_item("");
+
+	auto item = animations_list->add_item("");
+	if (first)
+		item->set_selected(true, false);
 }
 
 void AnimationsController::update_animation_fields()

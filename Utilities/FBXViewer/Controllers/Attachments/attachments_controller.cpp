@@ -54,7 +54,9 @@ void AttachmentsController::update_attachments()
 			first = false;
 		}
 	}
-	attachments_list->add_item("");
+	auto item = attachments_list->add_item("");
+	if (first)
+		item->set_selected(true, false);
 }
 
 void AttachmentsController::update_attachment_fields()
