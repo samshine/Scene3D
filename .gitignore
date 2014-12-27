@@ -13,3 +13,7 @@ ipch
 *.user
 /AssetCompiler/Debug
 /AssetCompiler/Release
+/AssetCompiler/x64
+/Scene3D/x64
+/Utilities/FBXViewer/x64
+/x64
