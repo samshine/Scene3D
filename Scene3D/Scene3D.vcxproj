@@ -276,6 +276,7 @@
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree.h" />
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree_root.h" />
     <ClInclude Include="Sources\Scene3D\Framework\instances_buffer.h" />
+    <ClInclude Include="Sources\Scene3D\Framework\mapped_buffer.h" />
     <ClInclude Include="Sources\Scene3D\Framework\material_cache.h" />
     <ClInclude Include="Sources\Scene3D\Framework\shader_setup.h" />
     <ClInclude Include="Sources\Scene3D\Framework\shadow_maps.h" />

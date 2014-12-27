@@ -29,6 +29,7 @@
 #include "precomp.h"
 #include "lightsource_pass.h"
 #include "Scene3D/Framework/shader_setup.h"
+#include "Scene3D/Framework/mapped_buffer.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"
@@ -154,7 +155,7 @@ void LightsourcePass::upload(GraphicContext &gc)
 	Mat4f eye_to_world = Mat4f::inverse(world_to_eye.get());
 
 	transfer_lights.lock(gc, access_write_only);
-	GPULight *data = transfer_lights.get_data();
+	MappedBuffer<GPULight> data(transfer_lights.get_data(), max_lights);
 	for (int i = 0; i < num_lights; i++)
 	{
 		float radius = lights[i]->attenuation_end;
@@ -250,6 +251,10 @@ void LightsourcePass::update_buffers(GraphicContext &gc)
 {
 	if (diffuse_color_gbuffer.updated())
 	{
+		final_color.set(Texture2D());
+		compute_visible_lights = StorageVector<unsigned int>();
+		gc.flush();
+
 		tile_size = 16;
 		num_tiles_x = (viewport->get_width() + tile_size - 1) / tile_size;
 		num_tiles_y = (viewport->get_height() + tile_size - 1) / tile_size;

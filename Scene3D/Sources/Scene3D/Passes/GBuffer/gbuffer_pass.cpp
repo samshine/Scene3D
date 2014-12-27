@@ -126,6 +126,15 @@ void GBufferPass::setup_gbuffer(GraphicContext &gc)
 	Size viewport_size = viewport->get_size();
 	if (diffuse_color_gbuffer->is_null() || diffuse_color_gbuffer->get_size() != viewport_size || !gc.is_frame_buffer_owner(fb_gbuffer))
 	{
+		diffuse_color_gbuffer.set(Texture2D());
+		specular_color_gbuffer.set(Texture2D());
+		specular_level_gbuffer.set(Texture2D());
+		self_illumination_gbuffer.set(Texture2D());
+		normal_z_gbuffer.set(Texture2D());
+		zbuffer.set(Texture2D());
+		fb_gbuffer = FrameBuffer();
+		gc.flush();
+
 		diffuse_color_gbuffer.set(Texture2D(gc, viewport_size.width, viewport_size.height, tf_rgba16));
 		specular_color_gbuffer.set(Texture2D(gc, viewport_size.width, viewport_size.height, tf_rgba8));
 		specular_level_gbuffer.set(Texture2D(gc, viewport_size.width, viewport_size.height, tf_rg16f));

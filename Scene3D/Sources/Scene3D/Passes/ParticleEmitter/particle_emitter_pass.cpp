@@ -30,6 +30,7 @@
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Framework/material_cache.h"
+#include "Scene3D/Framework/mapped_buffer.h"
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 
@@ -90,7 +91,7 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	}
 
 	instance_transfer.lock(gc, access_write_discard);
-	Vec4f *vectors = instance_transfer.get_data<Vec4f>();
+	MappedBuffer<Vec4f> vectors(instance_transfer.get_data<Vec4f>(), instance_transfer.get_width() * instance_transfer.get_height());
 	size_t vector_offset = 0;
 	for (size_t j = 0; j < active_emitters.size(); j++)
 	{

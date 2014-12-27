@@ -64,6 +64,7 @@ void SceneView::render_content(Canvas &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content.get_size();
+	//Size viewport_size_i = Size(2400*2 + rand() % 160 * 2, 1300*2 + rand() % 160 * 2);
 	Size viewport_size_i = Size(viewport_size) * 2;
 
 	canvas.flush();
@@ -103,6 +104,8 @@ void SceneView::render_content(Canvas &canvas)
 	{
 		scene_frame_buffer = FrameBuffer();
 		scene_texture = Texture2D();
+		gc.flush();
+
 		scene_texture = Texture2D(gc, viewport_size_i);
 		scene_frame_buffer = FrameBuffer(gc);
 		scene_frame_buffer.attach_color(0, scene_texture);

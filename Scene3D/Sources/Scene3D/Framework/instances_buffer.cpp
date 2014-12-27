@@ -89,12 +89,24 @@ void InstancesBuffer::lock(GraphicContext &gc)
 	num_vectors = 0;
 }
 
-Vec4f *InstancesBuffer::upload(int offset_index, int vectors)
+MappedBuffer<Vec4f> InstancesBuffer::upload(int offset_index, int vectors)
 {
+	if (offset_index < 0 || offset_index >= indexes_transfer[current_buffer].get_width() * indexes_transfer[current_buffer].get_height())
+	{
+		int *foobar = 0;
+		*foobar = 0xdeadbabe;
+	}
+
+	if (num_vectors + vectors > vectors_transfer[current_buffer].get_width() * vectors_transfer[current_buffer].get_height())
+	{
+		int *foobar = 0;
+		*foobar = 0xdeadbeef;
+	}
+
 	indexes_transfer[current_buffer].get_data<float>()[offset_index] = (float)num_vectors;
 	Vec4f *v = vectors_transfer[current_buffer].get_data<Vec4f>() + num_vectors;
 	num_vectors += vectors;
-	return v;
+	return MappedBuffer<Vec4f>(v, vectors);
 }
 
 void InstancesBuffer::unlock(GraphicContext &gc)

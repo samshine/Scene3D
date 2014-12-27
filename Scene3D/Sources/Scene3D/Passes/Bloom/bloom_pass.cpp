@@ -103,6 +103,10 @@ void BloomPass::setup_bloom_extract(GraphicContext &gc)
 	Size bloom_size = viewport_size / 2;
 	if (bloom_contribution->is_null() || bloom_contribution->get_size() != bloom_size || !gc.is_frame_buffer_owner(fb_bloom_extract))
 	{
+		bloom_contribution.set(Texture2D());
+		fb_bloom_extract = FrameBuffer();
+		gc.flush();
+
 		bloom_contribution.set(Texture2D(gc, bloom_size.width, bloom_size.height, tf_rgba8));
 
 		fb_bloom_extract = FrameBuffer(gc);

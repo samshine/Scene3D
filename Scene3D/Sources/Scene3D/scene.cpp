@@ -236,7 +236,7 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 		use_compute_shader_pass = gc.get_major_version() > 10;
 	}
 
-	use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
+	// use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
 
 	if (use_compute_shader_pass)
 	{

@@ -100,6 +100,10 @@ void LightsourceSimplePass::setup(GraphicContext &gc)
 	Size viewport_size = viewport->get_size();
 	if (fb.is_null() || !gc.is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated() || diffuse_color_gbuffer.updated())
 	{
+		final_color.set(Texture2D());
+		fb = FrameBuffer();
+		gc.flush();
+
 		final_color.set(Texture2D(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
 
 		fb = FrameBuffer(gc);

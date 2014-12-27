@@ -1089,6 +1089,9 @@
     <ClInclude Include="Sources\precomp.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\Framework\mapped_buffer.h">
+      <Filter>Sources\Scene3D\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">

@@ -114,10 +114,10 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 {
 	int vectors_per_instance = get_vectors_per_instance();
 
-	Vec4f *instance_data = instances_buffer.upload(model_index, get_instance_vectors_count());
+	MappedBuffer<Vec4f> instance_data = instances_buffer.upload(model_index, get_instance_vectors_count());
 	for (size_t j = 0; j < instances.size(); j++)
 	{
-		Vec4f *vectors = instance_data + j * vectors_per_instance;
+		MappedBuffer<Vec4f> vectors = instance_data + j * vectors_per_instance;
 
 		Mat3f object_normal_to_eye = Mat3f(world_to_eye * instances_object_to_world[j]).inverse().transpose();
 

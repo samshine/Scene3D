@@ -27,41 +27,41 @@
 */
 
 #pragma once
+
+#include "mapped_buffer.h"
+
 namespace clan
 {
+	class InstancesBuffer
+	{
+	public:
+		InstancesBuffer();
 
-class InstancesBuffer
-{
-public:
-	InstancesBuffer();
+		int new_offset_index();
 
-	int new_offset_index();
+		void clear();
+		void add(int vectors_count);
 
-	void clear();
-	void add(int vectors_count);
+		void lock(GraphicContext &gc);
+		MappedBuffer<Vec4f> upload(int offset_index, int vectors);
+		void unlock(GraphicContext &gc);
 
-	void lock(GraphicContext &gc);
-	Vec4f *upload(int offset_index, int vectors);
-	void unlock(GraphicContext &gc);
+		Texture2D &get_indexes() { return indexes[current_buffer]; }
+		Texture2D &get_vectors() { return vectors[current_buffer]; }
 
-	Texture2D &get_indexes() { return indexes[current_buffer]; }
-	Texture2D &get_vectors() { return vectors[current_buffer]; }
+	private:
+		enum { num_buffers = 4 };
+		PixelBuffer indexes_transfer[num_buffers];
+		PixelBuffer vectors_transfer[num_buffers];
 
-private:
-	enum { num_buffers = 4 };
-	PixelBuffer indexes_transfer[num_buffers];
-	PixelBuffer vectors_transfer[num_buffers];
+		int max_offset_indexes;
+		int next_offset_index;
 
-	int max_offset_indexes;
-	int next_offset_index;
+		int max_vectors;
+		int num_vectors;
 
-	int max_vectors;
-	int num_vectors;
-
-	int current_buffer;
-	Texture2D indexes[num_buffers];
-	Texture2D vectors[num_buffers];
-};
-
+		int current_buffer;
+		Texture2D indexes[num_buffers];
+		Texture2D vectors[num_buffers];
+	};
 }
-

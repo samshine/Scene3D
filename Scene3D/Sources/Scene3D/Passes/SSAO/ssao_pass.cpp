@@ -87,6 +87,10 @@ void SSAOPass::run(GraphicContext &gc)
 	Size viewport_size = normal_z_gbuffer->get_size();
 	if (ssao_contribution->is_null() || ssao_contribution->get_size() != viewport_size || !gc.is_frame_buffer_owner(fb))
 	{
+		ssao_contribution.set(Texture2D());
+		fb = FrameBuffer();
+		gc.flush();
+
 		ssao_contribution.set(Texture2D(gc, viewport_size.width / 2, viewport_size.height / 2, tf_r8));
 		ssao_contribution->set_min_filter(filter_linear);
 		ssao_contribution->set_mag_filter(filter_linear);
