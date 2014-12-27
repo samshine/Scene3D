@@ -5,6 +5,7 @@
 #include "Views/Rollout/rollout_list.h"
 #include "Views/Rollout/rollout_position_property.h"
 #include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/app_model.h"
 
 using namespace clan;
@@ -23,18 +24,24 @@ AttachmentsController::AttachmentsController()
 	position_property = std::make_shared<RolloutPositionProperty>("POSITION");
 	orientation_property = std::make_shared<RolloutPositionProperty>("ORIENTATION");
 	bone_name_property = std::make_shared<RolloutTextFieldProperty>("BONE NAME");
+	test_model_property = std::make_shared<RolloutBrowseFieldProperty>("TEST MODEL");
+	test_scale_property = std::make_shared<RolloutTextFieldProperty>("TEST SCALE");
 
 	attachments->content->add_subview(attachments_list);
 
 	attachment->content->add_subview(position_property);
 	attachment->content->add_subview(orientation_property);
 	attachment->content->add_subview(bone_name_property);
+	attachment->content->add_subview(test_model_property);
+	attachment->content->add_subview(test_scale_property);
 
 	slots.connect(attachments_list->sig_selection_changed(), this, &AttachmentsController::attachments_list_selection_changed);
 	slots.connect(attachments_list->sig_edit_saved(), this, &AttachmentsController::attachments_list_edit_saved);
 	slots.connect(position_property->sig_value_changed(), this, &AttachmentsController::position_property_value_changed);
 	slots.connect(orientation_property->sig_value_changed(), this, &AttachmentsController::orientation_property_value_changed);
 	slots.connect(bone_name_property->sig_value_changed(), this, &AttachmentsController::bone_name_property_value_changed);
+	slots.connect(test_model_property->sig_browse(), this, &AttachmentsController::test_model_property_browse);
+	slots.connect(test_scale_property->sig_value_changed(), this, &AttachmentsController::test_scale_property_value_changed);
 
 	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_attachments(); });
 
@@ -79,6 +86,9 @@ void AttachmentsController::update_attachment_fields()
 		orientation_property->input_z->set_text(StringHelp::float_to_text(rotation.z));
 
 		bone_name_property->text_field->set_text(attachment.bone_name);
+
+		test_model_property->browse_field->set_text(PathHelp::get_basename(attachment.test_model));
+		test_scale_property->text_field->set_text(StringHelp::float_to_text(attachment.test_scale));
 	}
 	else
 	{
@@ -155,6 +165,41 @@ void AttachmentsController::bone_name_property_value_changed()
 		auto app_model = AppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 		attachment.bone_name = bone_name_property->text_field->text();
+		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
+	}
+}
+
+void AttachmentsController::test_model_property_browse()
+{
+	auto selection = attachments_list->selection();
+	if (selection)
+	{
+		auto app_model = AppModel::instance();
+		auto attachment = app_model->desc.attachment_points.at(selection->index);
+
+		OpenFileDialog dialog(view.get());
+		dialog.set_title("Select Model");
+		dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
+		dialog.add_filter("All files (*.*)", "*.*", false);
+		dialog.set_filename(attachment.test_model);
+		if (dialog.show())
+		{
+			attachment.test_model = dialog.get_filename();
+			app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
+
+			update_attachment_fields();
+		}
+	}
+}
+
+void AttachmentsController::test_scale_property_value_changed()
+{
+	auto selection = attachments_list->selection();
+	if (selection)
+	{
+		auto app_model = AppModel::instance();
+		auto attachment = app_model->desc.attachment_points.at(selection->index);
+		attachment.test_scale = test_scale_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
 	}
 }

@@ -43,6 +43,11 @@ namespace clan
 			attachment.name = json_attachment["name"];
 			attachment.orientation = Quaternionf(json_attachment["orientation"]["w"], json_attachment["orientation"]["x"], json_attachment["orientation"]["y"], json_attachment["orientation"]["z"]);
 			attachment.position = Vec3f(json_attachment["position"]["x"], json_attachment["position"]["y"], json_attachment["position"]["z"]);
+			if (json_attachment.get_members().find("test_model") != json_attachment.get_members().end())
+			{
+				attachment.test_model = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json_attachment["test_model"]);
+				attachment.test_scale = json_attachment["test_scale"];
+			}
 			desc.attachment_points.push_back(attachment);
 		}
 
@@ -110,6 +115,8 @@ namespace clan
 			json_attachment["position"]["x"] = attachment.position.x;
 			json_attachment["position"]["y"] = attachment.position.y;
 			json_attachment["position"]["z"] = attachment.position.z;
+			json_attachment["test_model"] = PathHelp::make_relative(PathHelp::get_fullpath(filename), attachment.test_model);
+			json_attachment["test_scale"] = attachment.test_scale;
 			json_attachment_points.get_items().push_back(json_attachment);
 		}
 

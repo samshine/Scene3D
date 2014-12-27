@@ -130,6 +130,9 @@
     <ClInclude Include="Model\Commands\add_material_command.h">
       <Filter>Model\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_browse_field_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="Model\Commands\add_material_command.cpp">
       <Filter>Model\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp">
+      <Filter>Views\Rollout</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
