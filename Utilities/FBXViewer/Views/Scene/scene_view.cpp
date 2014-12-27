@@ -53,6 +53,13 @@ void SceneView::set_model_data(std::shared_ptr<ModelData> new_model_data)
 	set_needs_render();
 }
 
+void SceneView::set_attachments(std::vector<SceneViewAttachment> new_attachments)
+{
+	attachments = new_attachments;
+	model_data_updated = true;
+	set_needs_render();
+}
+
 void SceneView::render_content(Canvas &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
@@ -76,15 +83,18 @@ void SceneView::render_content(Canvas &canvas)
 	if (!object1.is_null())
 	{
 		object1.update(gametime.get_time_elapsed());
-		if (!attach1.is_null())
+		for (auto &attachment : attachments)
 		{
+			if (attachment.object.is_null())
+				continue;
+
 			Vec3f attach_pos, attach_scale;
 			Quaternionf attach_orientation;
-			object1.get_attachment_location("gun", attach_pos, attach_orientation, attach_scale);
-			attach1.set_position(attach_pos);
-			attach1.set_orientation(attach_orientation);
-			attach1.set_scale(attach_scale * Vec3f(0.2f));
-			attach1.update(gametime.get_time_elapsed());
+			object1.get_attachment_location(attachment.attachment_name, attach_pos, attach_orientation, attach_scale);
+			attachment.object.set_position(attach_pos);
+			attachment.object.set_orientation(attach_orientation);
+			attachment.object.set_scale(attach_scale * attachment.model_scale);
+			attachment.object.update(gametime.get_time_elapsed());
 		}
 	}
 	scene.update(gc, gametime.get_time_elapsed());
@@ -120,7 +130,6 @@ void SceneView::update_model(GraphicContext &gc)
 
 	model1 = SceneModel();
 	object1 = SceneObject();
-	attach1 = SceneObject();
 
 	if (model_data)
 	{
@@ -128,14 +137,27 @@ void SceneView::update_model(GraphicContext &gc)
 		object1 = SceneObject(scene, model1, Vec3f(), Quaternionf(), Vec3f(1.0f));
 		object1.play_animation(current_animation, true);
 
-		model2 = SceneModel(gc, scene, model_data);
-		attach1 = SceneObject(scene, model2, Vec3f(), Quaternionf(), Vec3f(0.2f));
+		for (auto &attachment : attachments)
+		{
+			try
+			{
+				FBXModelDesc model_desc = FBXModelDesc::load(attachment.model_name);
+
+				FBXModel fbx_model(model_desc.fbx_filename);
+				auto attachment_model_data = fbx_model.convert(model_desc);
+
+				attachment.model = SceneModel(gc, scene, attachment_model_data);
+				attachment.object = SceneObject(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
+			}
+			catch (Exception &)
+			{
+			}
+		}
 	}
 	else
 	{
 		model1 = SceneModel();
 		object1 = SceneObject();
-		attach1 = SceneObject();
 	}
 }
 

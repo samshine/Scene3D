@@ -13,6 +13,13 @@ SceneController::SceneController()
 	slots.connect(AppModel::instance()->sig_model_data_updated, [this]()
 	{
 		scene_view()->set_model_data(AppModel::instance()->model_data);
+
+		std::vector<SceneViewAttachment> attachments;
+		for (const auto &fbx_attach : AppModel::instance()->desc.attachment_points)
+		{
+			attachments.push_back(SceneViewAttachment(fbx_attach.name, fbx_attach.test_model, fbx_attach.test_scale));
+		}
+		scene_view()->set_attachments(attachments);
 	});
 
 	slots.connect(scene_view()->sig_update_scene, this, &SceneController::update_scene);
