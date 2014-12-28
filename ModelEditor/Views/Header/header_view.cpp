@@ -10,7 +10,7 @@ HeaderView::HeaderView()
 	box_style.set_flex(0.0f, 0.0f);
 	box_style.set_background(Colorf(240, 240, 240));
 	box_style.set_background_gradient_to_right(Colorf(15, 50, 77), Colorf(95, 128, 146));
-	box_style.set_padding(5.0f, 2.0f);
+	box_style.set_padding(0.0f, 2.0f);
 	box_style.set_border(Colorf(159, 184, 194), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	left_buttons = std::make_shared<View>();
@@ -30,23 +30,43 @@ HeaderView::HeaderView()
 
 void HeaderView::add_left_button(const std::string &text, std::function<void()> click)
 {
-	create_button(text, click, true);
+	create_button(text, std::string(), click, true);
+}
+
+void HeaderView::add_left_button(const std::string &text, const std::string &icon, std::function<void()> click)
+{
+	create_button(text, icon, click, true);
 }
 
 void HeaderView::add_right_button(const std::string &text, std::function<void()> click)
 {
-	create_button(text, click, false);
+	create_button(text, std::string(), click, false);
 }
 
-void HeaderView::create_button(const std::string &text, std::function<void()> click, bool left)
+void HeaderView::add_right_button(const std::string &text, const std::string &icon, std::function<void()> click, bool last)
+{
+	create_button(text, icon, click, false, last);
+}
+
+void HeaderView::create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last)
 {
 	auto button = std::make_shared<ButtonView>();
 	button->box_style.set_flex(0.0f, 0.0f);
-	button->box_style.set_margin(5.0f);
+	//button->box_style.set_margin(5.0f);
+	button->box_style.set_margin_top_auto();
+	button->box_style.set_margin_bottom_auto();
 	//button->box_style.set_background(Colorf(240, 240, 240));
 	//button->box_style.set_border(Colorf(150, 150, 150), 1.0f);
 	//button->box_style.set_border_radius(3.0f);
-	button->box_style.set_padding(15.0f, 5.0f);
+	button->box_style.set_padding(10.0f, 3.0f);
+	if (!icon.empty())
+	{
+		if (!last)
+			button->image_view()->box_style.set_margin(0.0f, 0.0, 5.0f, 0.0f);
+		else
+			button->image_view()->box_style.set_margin(5.0f, 0.0, 0.0f, 0.0f);
+		button->image_view()->set_image(ImageSource::from_resource(icon));
+	}
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
 	button->label()->text_style().set_color(Colorf(255, 255, 255));
@@ -55,4 +75,7 @@ void HeaderView::create_button(const std::string &text, std::function<void()> cl
 		left_buttons->add_subview(button);
 	else
 		right_buttons->add_subview(button);
+
+	if (last)
+		button->move_label_before_image();
 }

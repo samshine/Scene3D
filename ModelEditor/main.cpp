@@ -9,7 +9,16 @@ class SimpleDisplayCache : public DisplayCache
 {
 public:
 	Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override { throw Exception("Sprite resources not supported"); }
-	Resource<Image> get_image(Canvas &canvas, const std::string &id) override { throw Exception("Image resources not supported"); }
+
+	Resource<Image> get_image(Canvas &canvas, const std::string &id) override
+	{
+		if (images.find(id) == images.end())
+		{
+			images[id] = Image(canvas, PathHelp::combine("Resources", id));
+		}
+		return images[id];
+	}
+
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("Texture resources not supported"); }
 
 	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) override
@@ -54,6 +63,7 @@ public:
 	}
 
 private:
+	std::map<std::string, Resource<Image>> images;
 	std::map<std::string, FontFace> font_faces;
 };
 
