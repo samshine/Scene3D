@@ -21,7 +21,8 @@ public:
 
 private:
 	void create_layout();
-	void on_load();
+	void update_window_title();
+	void on_open();
 	void on_save();
 	void on_save_as();
 	void on_show_attachments();

@@ -23,7 +23,7 @@ MainWindow::MainWindow()
 		exit = true;
 	});
 
-	header_view->add_left_button("Load", bind_member(this, &MainWindow::on_load));
+	header_view->add_left_button("Open", bind_member(this, &MainWindow::on_open));
 	header_view->add_left_button("Save", bind_member(this, &MainWindow::on_save));
 	header_view->add_left_button("Save As", bind_member(this, &MainWindow::on_save_as));
 
@@ -68,7 +68,15 @@ void MainWindow::create_layout()
 	add_child_controller(workspace_controller);
 }
 
-void MainWindow::on_load()
+void MainWindow::update_window_title()
+{
+	if (!AppModel::instance()->open_filename.empty())
+		window_view()->get_display_window().set_title(PathHelp::get_basename(AppModel::instance()->open_filename) + " - Model Editor");
+	else
+		window_view()->get_display_window().set_title("Model Editor");
+}
+
+void MainWindow::on_open()
 {
 	OpenFileDialog dialog(view.get());
 	dialog.set_title("Select Model");
@@ -78,6 +86,7 @@ void MainWindow::on_load()
 	if (dialog.show())
 	{
 		AppModel::instance()->open(dialog.get_filename());
+		update_window_title();
 	}
 }
 
@@ -106,6 +115,7 @@ void MainWindow::on_save_as()
 		if (PathHelp::get_extension(filename).empty())
 			filename += ".modeldesc";
 		AppModel::instance()->save(filename);
+		update_window_title();
 	}
 }
 
