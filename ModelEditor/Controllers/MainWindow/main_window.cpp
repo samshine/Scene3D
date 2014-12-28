@@ -51,7 +51,7 @@ void MainWindow::create_layout()
 {
 	DisplayWindowDescription desc;
 	desc.set_size(Size(1280, 768), false);
-	desc.set_title("FBX Viewer");
+	desc.set_title("Model Editor");
 	desc.set_allow_resize(true);
 	view = std::make_shared<WindowView>(desc);
 

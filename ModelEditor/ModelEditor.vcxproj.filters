@@ -220,7 +220,4 @@
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\Icons\App\AppIcon.ico" />
-  </ItemGroup>
 </Project>
