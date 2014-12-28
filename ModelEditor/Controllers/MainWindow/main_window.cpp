@@ -3,6 +3,7 @@
 #include "main_window.h"
 #include "Model/app_model.h"
 #include "Views/Header/header_view.h"
+#include "Views/Header/header_menu_view.h"
 #include "Controllers/Workspace/workspace_controller.h"
 #include "Controllers/Scene/scene_controller.h"
 #include "Controllers/Animations/animations_controller.h"
@@ -28,20 +29,26 @@ MainWindow::MainWindow()
 	header_view->add_left_button("Open", bind_member(this, &MainWindow::on_open));
 	header_view->add_left_button("Save", bind_member(this, &MainWindow::on_save));
 	header_view->add_left_button("Save As", bind_member(this, &MainWindow::on_save_as));
-	/*
+	
 	header_view->add_right_button("Undo", "Icons/Undo/undo-24.png", []() {});
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
-	*/
-	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &MainWindow::on_change_model));
 	
+	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &MainWindow::on_change_model));
+	/*
 	header_view->add_right_button("Attachments", bind_member(this, &MainWindow::on_show_attachments));
 	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_show_animations));
 	header_view->add_right_button("Materials", bind_member(this, &MainWindow::on_show_materials));
 	header_view->add_right_button("Lights", bind_member(this, &MainWindow::on_show_lights));
 	header_view->add_right_button("Bones", bind_member(this, &MainWindow::on_show_bones));
 	header_view->add_right_button("Cameras", "Icons/Menu/menu-24.png", bind_member(this, &MainWindow::on_show_cameras), true);
-	
-	//header_view->add_right_button("Options", "Icons/Menu/menu-24.png", []() {}, true);
+	*/
+	auto menu = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
+	menu->add_item("Attachments", bind_member(this, &MainWindow::on_show_attachments));
+	menu->add_item("Animations", bind_member(this, &MainWindow::on_show_animations));
+	menu->add_item("Materials", bind_member(this, &MainWindow::on_show_materials));
+	menu->add_item("Lights", bind_member(this, &MainWindow::on_show_lights));
+	menu->add_item("Bones", bind_member(this, &MainWindow::on_show_bones));
+	menu->add_item("Cameras", bind_member(this, &MainWindow::on_show_cameras));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();

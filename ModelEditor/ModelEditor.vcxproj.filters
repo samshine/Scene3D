@@ -134,6 +134,9 @@
       <Filter>Views\Rollout</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Views\Header\header_menu_view.h">
+      <Filter>Views\Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp">
       <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Header\header_menu_view.cpp">
+      <Filter>Views\Header</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

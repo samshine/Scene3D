@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "header_view.h"
+#include "header_menu_view.h"
 
 using namespace clan;
 
@@ -46,6 +47,13 @@ void HeaderView::add_right_button(const std::string &text, std::function<void()>
 void HeaderView::add_right_button(const std::string &text, const std::string &icon, std::function<void()> click, bool last)
 {
 	create_button(text, icon, click, false, last);
+}
+
+std::shared_ptr<HeaderMenuView> HeaderView::add_right_menu(const std::string &text, const std::string &icon, bool last)
+{
+	auto menu = std::make_shared<HeaderMenuView>(text, icon, last);
+	right_buttons->add_subview(menu);
+	return menu;
 }
 
 void HeaderView::create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last)
