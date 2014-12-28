@@ -133,6 +133,7 @@
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h">
       <Filter>Views\Rollout</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -215,5 +216,11 @@
     <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp">
       <Filter>Views\Rollout</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Icons\App\AppIcon.ico" />
   </ItemGroup>
 </Project>

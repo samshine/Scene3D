@@ -18,3 +18,4 @@ ipch
 /Utilities/FBXViewer/x64
 /x64
 /ModelEditor/x64
+/ModelEditor/*.aps

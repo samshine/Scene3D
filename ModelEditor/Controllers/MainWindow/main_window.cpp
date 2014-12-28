@@ -55,6 +55,9 @@ void MainWindow::create_layout()
 	desc.set_allow_resize(true);
 	view = std::make_shared<WindowView>(desc);
 
+	window_view()->get_display_window().set_large_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-256.png"));
+	window_view()->get_display_window().set_small_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-16.png"));
+
 	view->box_style.set_layout_vbox();
 	view->box_style.set_background(Colorf(240, 240, 240));
 
