@@ -35,9 +35,11 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	items->box_style.set_layout_vbox();
 	items->box_style.set_absolute();
 	items->box_style.set_right(0.0f);
-	items->box_style.set_top(20.0f);
-	items->box_style.set_width(150.0f);
-	items->box_style.set_background(Colorf::gray90);
+	items->box_style.set_top(40.0f);
+	items->box_style.set_width(175.0f);
+	items->box_style.set_background(Colorf(15, 50, 77));
+	items->box_style.set_margin(5.0f);
+	items->box_style.set_box_shadow(Colorf(0.0f, 0.0f, 0.0f, 0.1f), 2.0f, 2.0f, 2.0f);
 	items->set_hidden(true);
 	add_subview(items);
 }
@@ -56,5 +58,12 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
 	button->label()->text_style().set_color(Colorf(255, 255, 255));
-	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e) { click(); e.stop_propagation(); });
+	auto items_ptr = items.get();
+	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e)
+	{
+		e.stop_propagation();
+		items_ptr->set_hidden(true);
+		click();
+	});
+	items->add_subview(button);
 }

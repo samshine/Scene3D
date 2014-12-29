@@ -34,14 +34,7 @@ MainWindow::MainWindow()
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
 	
 	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &MainWindow::on_change_model));
-	/*
-	header_view->add_right_button("Attachments", bind_member(this, &MainWindow::on_show_attachments));
-	header_view->add_right_button("Animations", bind_member(this, &MainWindow::on_show_animations));
-	header_view->add_right_button("Materials", bind_member(this, &MainWindow::on_show_materials));
-	header_view->add_right_button("Lights", bind_member(this, &MainWindow::on_show_lights));
-	header_view->add_right_button("Bones", bind_member(this, &MainWindow::on_show_bones));
-	header_view->add_right_button("Cameras", "Icons/Menu/menu-24.png", bind_member(this, &MainWindow::on_show_cameras), true);
-	*/
+
 	auto menu = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
 	menu->add_item("Attachments", bind_member(this, &MainWindow::on_show_attachments));
 	menu->add_item("Animations", bind_member(this, &MainWindow::on_show_animations));
