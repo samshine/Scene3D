@@ -28,13 +28,9 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), bind_member(this, &HeaderMenuView::button_clicked));
 	add_subview(button);
 
-	if (last)
-		button->move_label_before_image();
-
 	items = std::make_shared<PopupView>();
 	items->box_style.set_layout_vbox();
 	items->box_style.set_absolute();
-	items->box_style.set_right(0.0f);
 	items->box_style.set_top(40.0f);
 	items->box_style.set_width(175.0f);
 	items->box_style.set_background(Colorf(15, 50, 77));
@@ -42,6 +38,16 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	items->box_style.set_box_shadow(Colorf(0.0f, 0.0f, 0.0f, 0.1f), 2.0f, 2.0f, 2.0f);
 	items->set_hidden(true);
 	add_subview(items);
+
+	if (last)
+	{
+		button->move_label_before_image();
+		items->box_style.set_right(0.0f);
+	}
+	else
+	{
+		items->box_style.set_left(0.0f);
+	}
 }
 
 void HeaderMenuView::button_clicked(PointerEvent &e)

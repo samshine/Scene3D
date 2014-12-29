@@ -49,6 +49,13 @@ void HeaderView::add_right_button(const std::string &text, const std::string &ic
 	create_button(text, icon, click, false, last);
 }
 
+std::shared_ptr<HeaderMenuView> HeaderView::add_left_menu(const std::string &text, const std::string &icon)
+{
+	auto menu = std::make_shared<HeaderMenuView>(text, icon, false);
+	left_buttons->add_subview(menu);
+	return menu;
+}
+
 std::shared_ptr<HeaderMenuView> HeaderView::add_right_menu(const std::string &text, const std::string &icon, bool last)
 {
 	auto menu = std::make_shared<HeaderMenuView>(text, icon, last);
