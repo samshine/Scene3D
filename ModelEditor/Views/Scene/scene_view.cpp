@@ -46,6 +46,10 @@ void SceneView::play_transition(const std::string &anim1, const std::string &ani
 		object1.play_transition(anim1, anim2, instant);
 }
 
+void SceneView::set_map_model(const std::string &map_model)
+{
+}
+
 void SceneView::set_model_data(std::shared_ptr<ModelData> new_model_data)
 {
 	model_data = new_model_data;

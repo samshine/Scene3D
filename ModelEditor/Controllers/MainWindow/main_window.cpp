@@ -12,6 +12,7 @@
 #include "Controllers/Lights/lights_controller.h"
 #include "Controllers/Bones/bones_controller.h"
 #include "Controllers/Cameras/cameras_controller.h"
+#include "Controllers/Environment/environment_controller.h"
 
 using namespace clan;
 
@@ -42,6 +43,7 @@ MainWindow::MainWindow()
 	options->add_item("Lights", bind_member(this, &MainWindow::on_show_lights));
 	options->add_item("Bones", bind_member(this, &MainWindow::on_show_bones));
 	options->add_item("Cameras", bind_member(this, &MainWindow::on_show_cameras));
+	options->add_item("Environment", bind_member(this, &MainWindow::on_show_environment));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
@@ -50,6 +52,7 @@ MainWindow::MainWindow()
 	lights_controller = std::make_shared<LightsController>();
 	bones_controller = std::make_shared<BonesController>();
 	cameras_controller = std::make_shared<CamerasController>();
+	environment_controller = std::make_shared<EnvironmentController>();
 
 	workspace_controller->set_center(scene_controller);
 	workspace_controller->set_docked(animations_controller);
@@ -168,4 +171,9 @@ void MainWindow::on_show_bones()
 void MainWindow::on_show_cameras()
 {
 	workspace_controller->set_docked(cameras_controller);
+}
+
+void MainWindow::on_show_environment()
+{
+	workspace_controller->set_docked(environment_controller);
 }

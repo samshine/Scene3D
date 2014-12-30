@@ -28,6 +28,7 @@ public:
 	SceneView();
 	void render_content(clan::Canvas &canvas) override;
 
+	void set_map_model(const std::string &map_model);
 	void set_model_data(std::shared_ptr<clan::ModelData> model_data);
 	void set_attachments(std::vector<SceneViewAttachment> attachments);
 
@@ -68,5 +69,4 @@ private:
 	float turn_speed = 90.0f;
 
 	bool model_data_updated = true;
-
 };

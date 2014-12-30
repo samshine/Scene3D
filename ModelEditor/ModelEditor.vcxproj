@@ -155,6 +155,7 @@
     <ClInclude Include="Controllers\Attachments\attachments_controller.h" />
     <ClInclude Include="Controllers\Bones\bones_controller.h" />
     <ClInclude Include="Controllers\Cameras\cameras_controller.h" />
+    <ClInclude Include="Controllers\Environment\environment_controller.h" />
     <ClInclude Include="Controllers\Lights\lights_controller.h" />
     <ClInclude Include="Controllers\MainWindow\main_window.h" />
     <ClInclude Include="Controllers\Materials\materials_controller.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Model\Commands\add_attachment_command.h" />
     <ClInclude Include="Model\Commands\add_material_command.h" />
     <ClInclude Include="Model\Commands\model_command.h" />
+    <ClInclude Include="Model\Commands\set_map_model_command.h" />
     <ClInclude Include="Model\Commands\update_animation_command.h" />
     <ClInclude Include="Model\Commands\update_attachment_command.h" />
     <ClInclude Include="Model\Commands\update_material_command.h" />
@@ -187,6 +189,7 @@
     <ClCompile Include="Controllers\Attachments\attachments_controller.cpp" />
     <ClCompile Include="Controllers\Bones\bones_controller.cpp" />
     <ClCompile Include="Controllers\Cameras\cameras_controller.cpp" />
+    <ClCompile Include="Controllers\Environment\environment_controller.cpp" />
     <ClCompile Include="Controllers\Lights\lights_controller.cpp" />
     <ClCompile Include="Controllers\MainWindow\main_window.cpp" />
     <ClCompile Include="Controllers\Materials\materials_controller.cpp" />
@@ -197,6 +200,7 @@
     <ClCompile Include="Model\Commands\add_animation_command.cpp" />
     <ClCompile Include="Model\Commands\add_attachment_command.cpp" />
     <ClCompile Include="Model\Commands\add_material_command.cpp" />
+    <ClCompile Include="Model\Commands\set_map_model_command.cpp" />
     <ClCompile Include="Model\Commands\update_animation_command.cpp" />
     <ClCompile Include="Model\Commands\update_attachment_command.cpp" />
     <ClCompile Include="Model\Commands\update_material_command.cpp" />

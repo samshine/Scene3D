@@ -10,6 +10,7 @@ class MaterialsController;
 class LightsController;
 class BonesController;
 class CamerasController;
+class EnvironmentController;
 
 class MainWindow : public clan::ViewController
 {
@@ -31,6 +32,7 @@ private:
 	void on_show_lights();
 	void on_show_bones();
 	void on_show_cameras();
+	void on_show_environment();
 	void on_change_model();
 
 	std::shared_ptr<HeaderView> header_view;
@@ -43,6 +45,7 @@ private:
 	std::shared_ptr<LightsController> lights_controller;
 	std::shared_ptr<BonesController> bones_controller;
 	std::shared_ptr<CamerasController> cameras_controller;
+	std::shared_ptr<EnvironmentController> environment_controller;
 
 	clan::SlotContainer slots;
 };

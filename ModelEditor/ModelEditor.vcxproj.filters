@@ -49,6 +49,9 @@
     <Filter Include="Controllers\Cameras">
       <UniqueIdentifier>{fcc80a2b-b9ae-43bd-9dba-da68e5426496}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Environment">
+      <UniqueIdentifier>{a99383e8-fef3-4713-96b3-5e23ac44170e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -137,6 +140,12 @@
     <ClInclude Include="Views\Header\header_menu_view.h">
       <Filter>Views\Header</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Environment\environment_controller.h">
+      <Filter>Controllers\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Commands\set_map_model_command.h">
+      <Filter>Model\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -221,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="Views\Header\header_menu_view.cpp">
       <Filter>Views\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Environment\environment_controller.cpp">
+      <Filter>Controllers\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Commands\set_map_model_command.cpp">
+      <Filter>Model\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
