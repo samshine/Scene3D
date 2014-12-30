@@ -11,7 +11,6 @@ HeaderView::HeaderView()
 	box_style.set_flex(0.0f, 0.0f);
 	box_style.set_background(Colorf(240, 240, 240));
 	box_style.set_background_gradient_to_right(Colorf(15, 50, 77), Colorf(95, 128, 146));
-	box_style.set_padding(0.0f, 2.0f);
 	box_style.set_border(Colorf(159, 184, 194), 0.0f, 0.0f, 0.0f, 1.0f);
 
 	left_buttons = std::make_shared<View>();
@@ -73,7 +72,7 @@ void HeaderView::create_button(const std::string &text, const std::string &icon,
 	//button->box_style.set_background(Colorf(240, 240, 240));
 	//button->box_style.set_border(Colorf(150, 150, 150), 1.0f);
 	//button->box_style.set_border_radius(3.0f);
-	button->box_style.set_padding(10.0f, 3.0f);
+	button->box_style.set_padding(10.0f, 5.0f);
 	if (!icon.empty())
 	{
 		if (!last)

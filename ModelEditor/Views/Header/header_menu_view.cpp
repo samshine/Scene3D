@@ -8,6 +8,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 {
 	box_style.set_layout_hbox();
 	box_style.set_flex(0.0f, 0.0f);
+	box_style.set_padding(0.0f, 2.0f);
 
 	button = std::make_shared<ButtonView>();
 	button->box_style.set_flex(0.0f, 0.0f);
@@ -34,8 +35,8 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	items->box_style.set_top(40.0f);
 	items->box_style.set_width(175.0f);
 	items->box_style.set_background(Colorf(15, 50, 77));
-	items->box_style.set_margin(5.0f);
-	items->box_style.set_box_shadow(Colorf(0.0f, 0.0f, 0.0f, 0.1f), 2.0f, 2.0f, 2.0f);
+	items->box_style.set_margin(0.0f, 0.0f, 10.0f, 10.0f);
+	items->box_style.set_box_shadow(Colorf(0.0f, 0.0f, 0.0f, 0.2f), 5.0f, 5.0f, 5.0f);
 	items->set_hidden(true);
 	add_subview(items);
 
@@ -54,6 +55,10 @@ void HeaderMenuView::button_clicked(PointerEvent &e)
 {
 	e.stop_propagation();
 	items->set_hidden(!items->hidden());
+	if (!items->hidden())
+		box_style.set_background(Colorf(15, 50, 77));
+	else
+		box_style.set_background_none();
 }
 
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
@@ -64,11 +69,11 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
 	button->label()->text_style().set_color(Colorf(255, 255, 255));
-	auto items_ptr = items.get();
 	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e)
 	{
 		e.stop_propagation();
-		items_ptr->set_hidden(true);
+		box_style.set_background_none();
+		items->set_hidden(true);
 		click();
 	});
 	items->add_subview(button);
