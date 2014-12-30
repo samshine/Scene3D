@@ -41,6 +41,7 @@ public:
 private:
 	void setup_scene(clan::GraphicContext &gc);
 	void update_model(clan::GraphicContext &gc);
+	void update_map(clan::GraphicContext &gc);
 
 	std::shared_ptr<clan::ModelData> model_data;
 	std::string current_animation = "default";
@@ -59,6 +60,11 @@ private:
 	clan::SceneModel model1;
 	clan::SceneObject object1;
 	clan::SceneCamera camera;
+
+	std::string map_model_filename;
+	bool map_model_updated = true;
+	clan::SceneModel map_model;
+	clan::SceneObject map_object;
 
 	std::vector<SceneViewAttachment> attachments;
 

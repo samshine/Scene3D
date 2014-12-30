@@ -46,8 +46,10 @@ void SceneView::play_transition(const std::string &anim1, const std::string &ani
 		object1.play_transition(anim1, anim2, instant);
 }
 
-void SceneView::set_map_model(const std::string &map_model)
+void SceneView::set_map_model(const std::string &new_map_model)
 {
+	map_model_filename = new_map_model;
+	map_model_updated = true;
 }
 
 void SceneView::set_model_data(std::shared_ptr<ModelData> new_model_data)
@@ -78,6 +80,7 @@ void SceneView::render_content(Canvas &canvas)
 
 	setup_scene(gc);
 	sig_update_scene(scene, gc, ic);
+	update_map(gc);
 	update_model(gc);
 
 	camera.set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
@@ -128,6 +131,29 @@ void SceneView::render_content(Canvas &canvas)
 		}, scene_texture);
 
 	timer.start(10, false);
+}
+
+void SceneView::update_map(GraphicContext &gc)
+{
+	if (!map_model_updated) return;
+	map_model_updated = false;
+
+	map_model = SceneModel();
+	map_object = SceneObject();
+
+	try
+	{
+		FBXModelDesc model_desc = FBXModelDesc::load(map_model_filename);
+
+		FBXModel fbx_model(model_desc.fbx_filename);
+		auto attachment_model_data = fbx_model.convert(model_desc);
+
+		map_model = SceneModel(gc, scene, attachment_model_data);
+		map_object = SceneObject(scene, map_model);
+	}
+	catch (Exception &)
+	{
+	}
 }
 
 void SceneView::update_model(GraphicContext &gc)
