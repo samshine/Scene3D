@@ -52,6 +52,12 @@
     <Filter Include="Controllers\Environment">
       <UniqueIdentifier>{a99383e8-fef3-4713-96b3-5e23ac44170e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\EditorScene">
+      <UniqueIdentifier>{5a773d1a-9244-4e66-92a4-c872fcfef19b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\EditorScene\Edit">
+      <UniqueIdentifier>{414b1b82-7f6e-42dc-9f80-01aab70fcdc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -146,6 +152,12 @@
     <ClInclude Include="Model\Commands\set_map_model_command.h">
       <Filter>Model\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="Model\EditorScene\Edit\edit_scene.h">
+      <Filter>Model\EditorScene\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\EditorScene\editor_scene.h">
+      <Filter>Model\EditorScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -236,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="Model\Commands\set_map_model_command.cpp">
       <Filter>Model\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\EditorScene\Edit\edit_scene.cpp">
+      <Filter>Model\EditorScene\Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
