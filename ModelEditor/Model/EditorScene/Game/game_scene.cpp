@@ -118,7 +118,6 @@ void GameScene::update_model(Scene &scene, GraphicContext &gc)
 		if (model_data)
 		{
 			model_object = SceneObject(scene, SceneModel(gc, scene, model_data));
-			model_object.set_scale(Vec3f(0.125f));
 		}
 
 		for (auto &attachment : model_attachments)

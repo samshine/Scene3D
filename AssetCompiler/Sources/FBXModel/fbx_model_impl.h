@@ -19,6 +19,7 @@ namespace clan
 		void inspect_light(FbxNode *node);
 
 		void import_scene(const std::string &filename);
+		void scale_scene();
 		void triangulate_scene();
 		void bake_geometric_transforms(FbxNode *node = nullptr);
 

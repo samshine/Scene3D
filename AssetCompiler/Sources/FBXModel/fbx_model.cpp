@@ -47,6 +47,7 @@ namespace clan
 		try
 		{
 			import_scene(filename);
+			scale_scene();
 			triangulate_scene();
 			//bake_geometric_transforms();
 			inspect_node(scene->GetRootNode());
@@ -163,6 +164,21 @@ namespace clan
 	{
 		FbxGeometryConverter converter(manager);
 		converter.Triangulate(scene, true);
+	}
+
+	void FBXModelImpl::scale_scene()
+	{
+		/*
+		const FbxSystemUnit::ConversionOptions conversionOptions = {
+			false, // mConvertRrsNodes
+			true, // mConvertAllLimits
+			true, // mConvertClusters
+			true, // mConvertLightIntensity
+			true, // mConvertPhotometricLProperties
+			true  // mConvertCameraClipPlanes
+		};
+		*/
+		FbxSystemUnit::m.ConvertScene(scene, FbxSystemUnit::DefaultConversionOptions);
 	}
 
 	void FBXModelImpl::import_scene(const std::string &filename)
