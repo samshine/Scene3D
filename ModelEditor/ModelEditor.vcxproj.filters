@@ -58,6 +58,9 @@
     <Filter Include="Model\EditorScene\Edit">
       <UniqueIdentifier>{414b1b82-7f6e-42dc-9f80-01aab70fcdc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\EditorScene\Game">
+      <UniqueIdentifier>{5fbc2afd-f551-48b5-9f53-c702b86ea3df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\app_model.h">
@@ -158,6 +161,9 @@
     <ClInclude Include="Model\EditorScene\editor_scene.h">
       <Filter>Model\EditorScene</Filter>
     </ClInclude>
+    <ClInclude Include="Model\EditorScene\Game\game_scene.h">
+      <Filter>Model\EditorScene\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -251,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="Model\EditorScene\Edit\edit_scene.cpp">
       <Filter>Model\EditorScene\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\EditorScene\Game\game_scene.cpp">
+      <Filter>Model\EditorScene\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

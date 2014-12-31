@@ -3,6 +3,7 @@
 #include "scene_controller.h"
 #include "Model/app_model.h"
 #include "Model/EditorScene/Edit/edit_scene.h"
+#include "Model/EditorScene/Game/game_scene.h"
 #include "Views/Scene/scene_view.h"
 
 using namespace clan;
@@ -10,7 +11,7 @@ using namespace clan;
 SceneController::SceneController()
 {
 	view = std::make_shared<SceneView>();
-	editor_scene = std::make_shared<EditScene>();
+	editor_scene = std::make_shared<GameScene>();
 
 	slots.connect(AppModel::instance()->sig_model_data_updated, this, &SceneController::model_data_updated);
 	slots.connect(AppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);

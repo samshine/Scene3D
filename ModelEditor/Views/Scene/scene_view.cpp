@@ -74,6 +74,8 @@ void SceneView::setup_scene(GraphicContext &gc)
 
 	scene = Scene(gc, resources, "Resources/Scene3D");
 
+	scene.set_camera(SceneCamera(scene));
+
 	scene.show_skybox_stars(false);
 	std::vector<Colorf> gradient;
 	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
