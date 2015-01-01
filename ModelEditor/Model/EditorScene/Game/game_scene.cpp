@@ -4,7 +4,7 @@
 
 using namespace clan;
 
-GameScene::GameScene()
+GameScene::GameScene() : gametime(60), character_controller(collision_world)
 {
 }
 
@@ -31,6 +31,7 @@ void GameScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool 
 	gametime.update();
 	update_map(scene, gc);
 	update_input(ic, has_focus);
+	update_character_controller();
 	update_model(scene, gc);
 	update_camera(scene, gc);
 	scene.update(gc, gametime.get_time_elapsed());
@@ -41,27 +42,31 @@ void GameScene::update_input(InputContext &ic, bool has_focus)
 	if (!has_focus)
 		return;
 
+	EulerRotation rotation = character_controller.get_rotation();
+
 	float time_elapsed = gametime.get_time_elapsed();
 
 	float dir_speed = 50.0f;
 	if (ic.get_keyboard().get_keycode(keycode_left))
 	{
-		dir = std::fmod(dir - time_elapsed * dir_speed, 360.0f);
+		rotation.dir = std::fmod(rotation.dir - time_elapsed * dir_speed, 360.0f);
 	}
 	else if (ic.get_keyboard().get_keycode(keycode_right))
 	{
-		dir = std::fmod(dir + time_elapsed * dir_speed, 360.0f);
+		rotation.dir = std::fmod(rotation.dir + time_elapsed * dir_speed, 360.0f);
 	}
 
 	float up_speed = 50.0f;
 	if (ic.get_keyboard().get_keycode(keycode_up))
 	{
-		up = clamp(up - time_elapsed * up_speed, -90.0f, 90.0f);
+		rotation.up = clamp(rotation.up - time_elapsed * up_speed, -90.0f, 90.0f);
 	}
 	else if (ic.get_keyboard().get_keycode(keycode_down))
 	{
-		up = clamp(up + time_elapsed * up_speed, -90.0f, 90.0f);
+		rotation.up = clamp(rotation.up + time_elapsed * up_speed, -90.0f, 90.0f);
 	}
+
+	character_controller.look(rotation);
 }
 
 void GameScene::update_camera(Scene &scene, GraphicContext &gc)
@@ -69,10 +74,10 @@ void GameScene::update_camera(Scene &scene, GraphicContext &gc)
 	Physics3DSweepTest sweep_test(collision_world);
 	Physics3DShape sphere_shape = Physics3DShape::sphere(0.25f);
 
-	Quaternionf camera_orientation(up, dir, tilt, angle_degrees, order_YXZ);
+	Quaternionf camera_orientation = character_controller.get_rotation().to_quaternionf();
 
 	float zoom_out = 3.0f;
-	Vec3f camera_look_pos = /*controller.get_position() +*/ Vec3f(0.0f, 1.8f, 0.0f);
+	Vec3f camera_look_pos = character_controller.get_position() + Vec3f(0.0f, 1.8f, 0.0f);
 	Vec3f camera_pos = camera_look_pos + camera_orientation.rotate_vector(Vec3f(0.0f, 0.0f, -zoom_out));
 
 	if (sweep_test.test_first_hit(sphere_shape, camera_look_pos, Quaternionf(), camera_pos, Quaternionf()))
@@ -140,6 +145,12 @@ void GameScene::update_model(Scene &scene, GraphicContext &gc)
 
 	if (!model_object.is_null())
 	{
+		model_object.set_position(character_controller.get_position());
+		EulerRotation rotation = character_controller.get_rotation();
+		rotation.up = 0.0f;
+		rotation.dir += 180.0f;
+		model_object.set_orientation(rotation.to_quaternionf());
+
 		model_object.update(gametime.get_time_elapsed());
 		for (auto &attachment : model_attachments)
 		{
@@ -153,6 +164,22 @@ void GameScene::update_model(Scene &scene, GraphicContext &gc)
 			attachment.object.set_orientation(attach_orientation);
 			attachment.object.set_scale(attach_scale * attachment.model_scale);
 			attachment.object.update(gametime.get_time_elapsed());
+		}
+	}
+}
+
+void GameScene::update_character_controller()
+{
+	if (map_collision.is_null())
+	{
+		character_controller.warp(Vec3f(0.0f, 0.2f, 0.0f), character_controller.get_rotation(), Vec3f());
+	}
+	else
+	{
+		for (int tick = 0; tick < gametime.get_ticks_elapsed(); tick++)
+		{
+			character_controller.thrust(Vec2f(0.0f, 2.0f));
+			character_controller.update(gametime.get_tick_time_elapsed());
 		}
 	}
 }

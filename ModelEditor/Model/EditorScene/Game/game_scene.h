@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Model/EditorScene/editor_scene.h"
+#include "character_controller.h"
 
 class GameScene : public EditorScene
 {
@@ -19,9 +20,11 @@ private:
 	void update_model(clan::Scene &scene, clan::GraphicContext &gc);
 	void update_camera(clan::Scene &scene, clan::GraphicContext &gc);
 	void update_input(clan::InputContext &ic, bool has_focus);
+	void update_character_controller();
 
 	clan::GameTime gametime;
 	clan::Physics3DWorld collision_world;
+	CharacterController character_controller;
 
 	std::string map_filename;
 	bool map_updated = true;
@@ -32,8 +35,4 @@ private:
 	std::shared_ptr<clan::ModelData> model_data;
 	clan::SceneObject model_object;
 	std::vector<SceneModelAttachment> model_attachments;
-
-	float up = 30.0f;
-	float dir = 0.0f;
-	float tilt = 0.0f;
 };

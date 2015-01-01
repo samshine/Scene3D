@@ -164,6 +164,9 @@
     <ClInclude Include="Model\EditorScene\Game\game_scene.h">
       <Filter>Model\EditorScene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Model\EditorScene\Game\character_controller.h">
+      <Filter>Model\EditorScene\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -259,6 +262,9 @@
       <Filter>Model\EditorScene\Edit</Filter>
     </ClCompile>
     <ClCompile Include="Model\EditorScene\Game\game_scene.cpp">
+      <Filter>Model\EditorScene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\EditorScene\Game\character_controller.cpp">
       <Filter>Model\EditorScene\Game</Filter>
     </ClCompile>
   </ItemGroup>
