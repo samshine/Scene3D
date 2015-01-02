@@ -22,6 +22,9 @@ private:
 	void update_input(clan::InputContext &ic, bool has_focus);
 	void update_character_controller();
 
+	bool space_was_down = false;
+	std::string last_anim = "default";
+
 	clan::GameTime gametime;
 	clan::Physics3DWorld collision_world;
 	CharacterController character_controller;

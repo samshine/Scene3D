@@ -68,7 +68,7 @@ private:
 	float height = 1.8f;
 	float radius = 0.5f;
 	float max_speed = 2.0f;
-	float air_resistance = 0.4f;
+	float air_resistance = 0.98f;
 	float air_movement = 0.25f;
 	float gravity = 4.0f;
 

@@ -67,6 +67,53 @@ void GameScene::update_input(InputContext &ic, bool has_focus)
 	}
 
 	character_controller.look(rotation);
+
+	bool space_is_down = ic.get_keyboard().get_keycode(keycode_space);
+	if (space_is_down && !space_was_down)
+	{
+		character_controller.apply_impulse(Vec3f(0.0f, 4.0f, 0.0f));
+	}
+	space_was_down = space_is_down;
+
+	Vec2f thrust;
+	if (ic.get_keyboard().get_keycode(keycode_a))
+	{
+		thrust.x -= 1.0f;
+	}
+	else if (ic.get_keyboard().get_keycode(keycode_d))
+	{
+		thrust.x += 1.0f;
+	}
+	else if (ic.get_keyboard().get_keycode(keycode_w))
+	{
+		thrust.y += 1.0f;
+	}
+	else if (ic.get_keyboard().get_keycode(keycode_s))
+	{
+		thrust.y -= 1.0f;
+	}
+
+	std::string anim = "default";
+	if (thrust.x < -0.1f)
+		anim = "strafe-left";
+	else if (thrust.x > 0.1f)
+		anim = "strafe-right";
+	else if (thrust.y > 0.1f)
+		anim = "forward";
+	else if (thrust.y < -0.1f)
+		anim = "backward";
+
+	if (!model_object.is_null() && anim != last_anim)
+	{
+		model_object.play_animation(anim, false);
+		last_anim = anim;
+	}
+
+	float length = thrust.length();
+	if (length > 0.0f)
+		thrust /= length;
+
+	character_controller.thrust(thrust * 10.0f);
 }
 
 void GameScene::update_camera(Scene &scene, GraphicContext &gc)
@@ -146,12 +193,14 @@ void GameScene::update_model(Scene &scene, GraphicContext &gc)
 	if (!model_object.is_null())
 	{
 		model_object.set_position(character_controller.get_position());
+
 		EulerRotation rotation = character_controller.get_rotation();
 		rotation.up = 0.0f;
 		rotation.dir += 180.0f;
 		model_object.set_orientation(rotation.to_quaternionf());
 
 		model_object.update(gametime.get_time_elapsed());
+
 		for (auto &attachment : model_attachments)
 		{
 			if (attachment.object.is_null())
@@ -178,7 +227,6 @@ void GameScene::update_character_controller()
 	{
 		for (int tick = 0; tick < gametime.get_ticks_elapsed(); tick++)
 		{
-			character_controller.thrust(Vec2f(0.0f, 2.0f));
 			character_controller.update(gametime.get_tick_time_elapsed());
 		}
 	}
