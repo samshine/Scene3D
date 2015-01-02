@@ -34,12 +34,27 @@ public:
 	const clan::Vec3f &get_position() const { return position; }
 	const EulerRotation &get_rotation() const { return rotation; }
 
+	float get_gravity() const { return gravity; }
+	float get_height() const { return height; }
+	float get_radius() const { return radius; }
+	float get_mass() const { return mass; }
+	float get_acceleration() const { return acceleration; }
+	float get_run_speed() const { return run_speed; }
+	float get_friction() const { return friction; }
+	float get_air_resistance() const { return air_resistance; }
+	float get_air_movement() const { return air_movement; }
+	float get_bounce() const { return bounce; }
+
+	void set_gravity(float gravity);
+	void set_height(float height);
+	void set_radius(float radius);
 	void set_mass(float mass);
-	void set_size(float height, float radius);
-	void set_max_speed(float max_speed);
+	void set_acceleration(float acceleration);
+	void set_run_speed(float run_speed);
+	void set_friction(float friction);
 	void set_air_resistance(float air_resistance);
 	void set_air_movement(float air_movement);
-	void set_gravity(float gravity);
+	void set_bounce(float bounce);
 
 	void warp(const clan::Vec3f &position, const EulerRotation &rotation, const clan::Vec3f &velocity);
 
@@ -64,13 +79,16 @@ private:
 
 	float allowed_ccd = 0.001f; // 1 millimeter
 
-	float mass = 1.0f;
+	float gravity = 9.8f;
 	float height = 1.8f;
 	float radius = 0.5f;
-	float max_speed = 2.0f;
+	float mass = 1.0f;
+	float acceleration = 8.0f;
+	float run_speed = 2.0f;
+	float friction = 0.0f;
 	float air_resistance = 0.98f;
 	float air_movement = 0.25f;
-	float gravity = 4.0f;
+	float bounce = 0.15f;
 
 	clan::Vec3f position;
 	EulerRotation rotation;

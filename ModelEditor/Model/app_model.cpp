@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "app_model.h"
+#include "Model/EditorScene/Game/game_scene.h"
 #include <memory>
 
 using namespace clan;
@@ -9,6 +10,8 @@ AppModel::AppModel()
 {
 	if (instance_ptr) throw std::exception();
 	instance_ptr = this;
+
+	editor_scene = std::make_shared<GameScene>();
 }
 
 AppModel::~AppModel()

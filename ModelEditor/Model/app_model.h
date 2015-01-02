@@ -9,6 +9,8 @@
 #include "Commands/update_attachment_command.h"
 #include "Commands/update_material_command.h"
 
+class EditorScene;
+
 class AppModel
 {
 public:
@@ -23,6 +25,7 @@ public:
 	std::shared_ptr<clan::ModelData> model_data;
 
 	std::string map_model;
+	std::shared_ptr<EditorScene> editor_scene;
 
 	UndoSystem undo_system;
 

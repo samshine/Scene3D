@@ -1,12 +1,15 @@
 
 #pragma once
 
+class CharacterController;
 class SceneModelAttachment;
 
 class EditorScene
 {
 public:
 	virtual ~EditorScene() { }
+
+	virtual CharacterController *get_character_controller() = 0;
 
 	virtual void set_map_model(const std::string &map_model) = 0;
 	virtual void set_model_data(std::shared_ptr<clan::ModelData> model_data) = 0;

@@ -13,19 +13,37 @@ void CharacterController::set_mass(float new_mass)
 	mass = new_mass;
 }
 
-void CharacterController::set_size(float new_height, float new_radius)
+void CharacterController::set_height(float new_height)
 {
-	if (height != new_height || radius != new_radius)
+	if (height != new_height)
 	{
 		height = new_height;
+		shape_modified = true;
+	}
+}
+
+void CharacterController::set_radius(float new_radius)
+{
+	if (radius != new_radius)
+	{
 		radius = new_radius;
 		shape_modified = true;
 	}
 }
 
-void CharacterController::set_max_speed(float new_max_speed)
+void CharacterController::set_acceleration(float new_acceleration)
 {
-	max_speed = new_max_speed;
+	acceleration = new_acceleration;
+}
+
+void CharacterController::set_run_speed(float new_run_speed)
+{
+	run_speed = new_run_speed;
+}
+
+void CharacterController::set_friction(float new_friction)
+{
+	friction = new_friction;
 }
 
 void CharacterController::set_air_resistance(float new_air_resistance)
@@ -36,6 +54,11 @@ void CharacterController::set_air_resistance(float new_air_resistance)
 void CharacterController::set_air_movement(float new_air_movement)
 {
 	air_movement = new_air_movement;
+}
+
+void CharacterController::set_bounce(float new_bounce)
+{
+	bounce = new_bounce;
 }
 
 void CharacterController::set_gravity(float new_gravity)
@@ -119,7 +142,7 @@ void CharacterController::apply_velocity(float tick_elapsed)
 			//	continue;
 
 			position = sweep_test.get_hit_position(hit);
-			velocity = reflect(velocity, sweep_test.get_hit_normal(hit), 0.25f);
+			velocity = reflect(velocity, sweep_test.get_hit_normal(hit), bounce);
 
 			t = t + sweep_test.get_hit_fraction(hit) * (1.0f - t);
 

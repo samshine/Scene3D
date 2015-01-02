@@ -55,7 +55,7 @@ MainWindow::MainWindow()
 	environment_controller = std::make_shared<EnvironmentController>();
 
 	workspace_controller->set_center(scene_controller);
-	workspace_controller->set_docked(animations_controller);
+	workspace_controller->set_docked(environment_controller);
 }
 
 void MainWindow::create_layout()

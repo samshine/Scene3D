@@ -8,6 +8,8 @@ class EditScene : public EditorScene
 public:
 	EditScene();
 
+	CharacterController *get_character_controller() { return 0; }
+
 	void set_map_model(const std::string &map_model) override;
 	void set_model_data(std::shared_ptr<clan::ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;

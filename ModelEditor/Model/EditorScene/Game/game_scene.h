@@ -9,6 +9,8 @@ class GameScene : public EditorScene
 public:
 	GameScene();
 
+	CharacterController *get_character_controller() { return &character_controller; }
+
 	void set_map_model(const std::string &map_model) override;
 	void set_model_data(std::shared_ptr<clan::ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;
