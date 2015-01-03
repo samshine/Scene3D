@@ -77,21 +77,14 @@ void GameScene::update_input(InputContext &ic, bool has_focus)
 
 	Vec2f thrust;
 	if (ic.get_keyboard().get_keycode(keycode_a))
-	{
 		thrust.x -= 1.0f;
-	}
-	else if (ic.get_keyboard().get_keycode(keycode_d))
-	{
+	if (ic.get_keyboard().get_keycode(keycode_d))
 		thrust.x += 1.0f;
-	}
-	else if (ic.get_keyboard().get_keycode(keycode_w))
-	{
+	if (ic.get_keyboard().get_keycode(keycode_w))
 		thrust.y += 1.0f;
-	}
-	else if (ic.get_keyboard().get_keycode(keycode_s))
-	{
+	if (ic.get_keyboard().get_keycode(keycode_s))
 		thrust.y -= 1.0f;
-	}
+	thrust.normalize();
 
 	std::string anim = "default";
 	if (thrust.x < -0.1f)
@@ -109,11 +102,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus)
 		last_anim = anim;
 	}
 
-	float length = thrust.length();
-	if (length > 0.0f)
-		thrust /= length;
-
-	character_controller.thrust(thrust * 10.0f);
+	character_controller.thrust(thrust);
 }
 
 void GameScene::update_camera(Scene &scene, GraphicContext &gc)
