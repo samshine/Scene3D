@@ -24,6 +24,7 @@ EnvironmentController::EnvironmentController()
 	gravity_property = std::make_shared<RolloutTextFieldProperty>("GRAVITY");
 	height_property = std::make_shared<RolloutTextFieldProperty>("HEIGHT");
 	radius_property = std::make_shared<RolloutTextFieldProperty>("RADIUS");
+	step_height_property = std::make_shared<RolloutTextFieldProperty>("STEP HEIGHT");
 	mass_property = std::make_shared<RolloutTextFieldProperty>("MASS");
 	acceleration_property = std::make_shared<RolloutTextFieldProperty>("ACCELERATION");
 	run_speed_property = std::make_shared<RolloutTextFieldProperty>("RUN SPEED");
@@ -35,6 +36,7 @@ EnvironmentController::EnvironmentController()
 	character->content->add_subview(gravity_property);
 	character->content->add_subview(height_property);
 	character->content->add_subview(radius_property);
+	character->content->add_subview(step_height_property);
 	character->content->add_subview(mass_property);
 	character->content->add_subview(acceleration_property);
 	character->content->add_subview(run_speed_property);
@@ -51,6 +53,7 @@ EnvironmentController::EnvironmentController()
 	slots.connect(gravity_property->sig_value_changed(), this, &EnvironmentController::gravity_property_value_changed);
 	slots.connect(height_property->sig_value_changed(), this, &EnvironmentController::height_property_value_changed);
 	slots.connect(radius_property->sig_value_changed(), this, &EnvironmentController::radius_property_value_changed);
+	slots.connect(step_height_property->sig_value_changed(), this, &EnvironmentController::step_height_property_value_changed);
 	slots.connect(mass_property->sig_value_changed(), this, &EnvironmentController::mass_property_value_changed);
 	slots.connect(acceleration_property->sig_value_changed(), this, &EnvironmentController::acceleration_property_value_changed);
 	slots.connect(run_speed_property->sig_value_changed(), this, &EnvironmentController::run_speed_property_value_changed);
@@ -65,6 +68,7 @@ EnvironmentController::EnvironmentController()
 		gravity_property->text_field->set_text(StringHelp::float_to_text(cc->get_gravity()));
 		height_property->text_field->set_text(StringHelp::float_to_text(cc->get_height()));
 		radius_property->text_field->set_text(StringHelp::float_to_text(cc->get_radius()));
+		step_height_property->text_field->set_text(StringHelp::float_to_text(cc->get_step_height()));
 		mass_property->text_field->set_text(StringHelp::float_to_text(cc->get_mass()));
 		acceleration_property->text_field->set_text(StringHelp::float_to_text(cc->get_acceleration()));
 		run_speed_property->text_field->set_text(StringHelp::float_to_text(cc->get_run_speed()));
@@ -115,6 +119,12 @@ void EnvironmentController::radius_property_value_changed()
 {
 	float radius = radius_property->text_field->text_float();
 	AppModel::instance()->editor_scene->get_character_controller()->set_radius(radius);
+}
+
+void EnvironmentController::step_height_property_value_changed()
+{
+	float step_height = step_height_property->text_field->text_float();
+	AppModel::instance()->editor_scene->get_character_controller()->set_step_height(step_height);
 }
 
 void EnvironmentController::mass_property_value_changed()

@@ -17,6 +17,7 @@ private:
 	void gravity_property_value_changed();
 	void height_property_value_changed();
 	void radius_property_value_changed();
+	void step_height_property_value_changed();
 	void mass_property_value_changed();
 	void acceleration_property_value_changed();
 	void run_speed_property_value_changed();
@@ -32,6 +33,7 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> gravity_property;
 	std::shared_ptr<RolloutTextFieldProperty> height_property;
 	std::shared_ptr<RolloutTextFieldProperty> radius_property;
+	std::shared_ptr<RolloutTextFieldProperty> step_height_property;
 	std::shared_ptr<RolloutTextFieldProperty> mass_property;
 	std::shared_ptr<RolloutTextFieldProperty> acceleration_property;
 	std::shared_ptr<RolloutTextFieldProperty> run_speed_property;

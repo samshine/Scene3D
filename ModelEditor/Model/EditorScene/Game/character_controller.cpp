@@ -31,6 +31,11 @@ void CharacterController::set_radius(float new_radius)
 	}
 }
 
+void CharacterController::set_step_height(float new_step_height)
+{
+	step_height = new_step_height;
+}
+
 void CharacterController::set_acceleration(float new_acceleration)
 {
 	acceleration = new_acceleration;
@@ -91,10 +96,12 @@ void CharacterController::look(const EulerRotation &new_rotation)
 void CharacterController::update(float tick_elapsed)
 {
 	update_shape();
+	step_up();
 	apply_gravity(tick_elapsed);
 	apply_air_resistance(tick_elapsed);
 	apply_thrust(tick_elapsed);
 	apply_velocity(tick_elapsed);
+	step_down();
 }
 
 void CharacterController::update_shape()
@@ -103,6 +110,51 @@ void CharacterController::update_shape()
 	{
 		collision_shape = Physics3DShape::capsule(radius, height * 0.5f);
 		shape_modified = false;
+	}
+}
+
+void CharacterController::step_up()
+{
+	if (velocity.y <= 0.0f)
+	{
+		position.y += height * 0.5f;
+
+		Vec3f from_pos = position;
+		Vec3f to_pos = position + Vec3f(0.0f, step_height, 0.0f);
+		Quaternionf orientation;
+		if (sweep_test.test_first_hit(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd))
+		{
+			position = sweep_test.get_hit_position(0);
+		}
+		else
+		{
+			position = to_pos;
+		}
+
+		position.y -= height * 0.5f;
+	}
+}
+
+void CharacterController::step_down()
+{
+	if (velocity.y <= 0.0f)
+	{
+		position.y += height * 0.5f;
+
+		Vec3f from_pos = position;
+		Vec3f to_pos = position - Vec3f(0.0f, step_height * 2.0f, 0.0f);
+		Quaternionf orientation;
+		if (sweep_test.test_first_hit(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd))
+		{
+			position = sweep_test.get_hit_position(0);
+			velocity.y = 0;
+		}
+		else
+		{
+			position = from_pos - Vec3f(0.0f, step_height, 0.0f);
+		}
+
+		position.y -= height * 0.5f;
 	}
 }
 

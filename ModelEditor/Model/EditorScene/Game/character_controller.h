@@ -37,6 +37,7 @@ public:
 	float get_gravity() const { return gravity; }
 	float get_height() const { return height; }
 	float get_radius() const { return radius; }
+	float get_step_height() const { return step_height; }
 	float get_mass() const { return mass; }
 	float get_acceleration() const { return acceleration; }
 	float get_run_speed() const { return run_speed; }
@@ -48,6 +49,7 @@ public:
 	void set_gravity(float gravity);
 	void set_height(float height);
 	void set_radius(float radius);
+	void set_step_height(float step_height);
 	void set_mass(float mass);
 	void set_acceleration(float acceleration);
 	void set_run_speed(float run_speed);
@@ -66,6 +68,8 @@ public:
 
 private:
 	void update_shape();
+	void step_up();
+	void step_down();
 	void apply_gravity(float tick_elapsed);
 	void apply_air_resistance(float tick_elapsed);
 	void apply_velocity(float tick_elapsed);
@@ -89,6 +93,7 @@ private:
 	float air_resistance = 0.98f;
 	float air_movement = 0.25f;
 	float bounce = 0.15f;
+	float step_height = 0.30f;
 
 	clan::Vec3f position;
 	EulerRotation rotation;

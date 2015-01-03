@@ -86,6 +86,9 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		KeepAlive::process(250);
 	}
+
+	model.editor_scene.reset();
+
 	return 0;
 }
 
