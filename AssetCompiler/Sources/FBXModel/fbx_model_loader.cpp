@@ -726,7 +726,7 @@ namespace clan
 		model_light.color.set_single_value(to_vec3f(light->Color.Get()) * (float)(light->Intensity.Get() * 0.01));
 		//model_light.shadow_color.set_single_value(light->ShadowColor.Get());
 
-		model_light.attenuation_start.set_single_value((float)light->NearAttenuationStart.Get());
+		model_light.attenuation_start.set_single_value((float)light->FarAttenuationStart.Get());
 		model_light.attenuation_end.set_single_value((float)light->FarAttenuationEnd.Get());
 
 		model_light.aspect.set_single_value(1.0f);
