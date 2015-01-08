@@ -21,50 +21,45 @@ public:
 
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) override { throw Exception("Texture resources not supported"); }
 
-	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) override
+	Resource<Font> get_font(Canvas &canvas, const std::string &family_name, const FontDescription &desc) override
 	{
-		FontFace &font_face = font_faces[desc.get_typeface_name()];
-		if (font_face.is_null())
+		FontFamily &font_family = font_families[family_name];
+		if (font_family.is_null())
 		{
-			font_face = FontFace(desc.get_typeface_name());
-			if (font_face.get_family_name() == "Lato")
+			font_family = FontFamily(family_name);
+			if (font_family.get_family_name() == "Lato")
 			{
 				FontDescription regular;
-				regular.set_typeface_name("Lato");
-				font_face.add(regular, "Resources/Fonts/Lato/Lato-Regular.ttf");
+				font_family.add(regular, "Resources/Fonts/Lato/Lato-Regular.ttf");
 
 				FontDescription bold;
-				bold.set_typeface_name("Lato");
 				bold.set_weight(FontWeight::bold);
-				font_face.add(bold, "Resources/Fonts/Lato/Lato-Bold.ttf");
+				font_family.add(bold, "Resources/Fonts/Lato/Lato-Bold.ttf");
 
 				FontDescription italic;
-				italic.set_typeface_name("Lato");
 				italic.set_style(FontStyle::italic);
-				font_face.add(italic, "Resources/Fonts/Lato/Lato-Italic.ttf");
+				font_family.add(italic, "Resources/Fonts/Lato/Lato-Italic.ttf");
 
 				FontDescription light;
-				light.set_typeface_name("Lato");
 				light.set_weight(FontWeight::light);
-				font_face.add(light, "Resources/Fonts/Lato/Lato-Light.ttf");
+				font_family.add(light, "Resources/Fonts/Lato/Lato-Light.ttf");
 
 				FontDescription black;
-				black.set_typeface_name("Lato");
 				black.set_weight(FontWeight::heavy);
-				font_face.add(black, "Resources/Fonts/Lato/Lato-Black.ttf");
+				font_family.add(black, "Resources/Fonts/Lato/Lato-Black.ttf");
 			}
 			else
 			{
-				font_face.add(desc);
+				font_family.add(family_name, desc.get_height());
 			}
 		}
 
-		return Font(font_face, desc);
+		return Font(font_family, desc);
 	}
 
 private:
 	std::map<std::string, Resource<Image>> images;
-	std::map<std::string, FontFace> font_faces;
+	std::map<std::string, FontFamily> font_families;
 };
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
