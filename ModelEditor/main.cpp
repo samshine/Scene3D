@@ -77,10 +77,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto window = std::make_shared<MainWindow>();
 	window->window_view()->show();
 
-	while (!window->exit)
-	{
-		KeepAlive::process(250);
-	}
+	RunLoop::run();
 
 	model.editor_scene.reset();
 

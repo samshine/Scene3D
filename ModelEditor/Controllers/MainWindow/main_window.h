@@ -17,7 +17,6 @@ class MainWindow : public clan::ViewController
 public:
 	MainWindow();
 
-	bool exit = false;
 	std::shared_ptr<clan::WindowView> window_view() { return std::static_pointer_cast<clan::WindowView>(view); }
 
 private:

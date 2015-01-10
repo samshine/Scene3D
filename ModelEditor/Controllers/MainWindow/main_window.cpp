@@ -22,7 +22,7 @@ MainWindow::MainWindow()
 
 	slots.connect(view->sig_close(), [this](CloseEvent &e)
 	{
-		exit = true;
+		RunLoop::exit();
 	});
 
 	auto app_menu = header_view->add_left_menu("Editor", "Icons/App/AppIcon-32.png");
