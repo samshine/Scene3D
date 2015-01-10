@@ -62,7 +62,7 @@ void SceneView::render_content(Canvas &canvas)
 			Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f), Vec2f(viewport_size_i.width / 2.0f, viewport_size_i.height / 2.0f)
 		}, scene_texture);
 
-	timer.start(10, false);
+	timer.start(10, true);
 }
 
 void SceneView::setup_scene(GraphicContext &gc)
