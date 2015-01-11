@@ -73,13 +73,6 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 
 	character_controller.look(rotation);
 
-	bool space_is_down = ic.get_keyboard().get_keycode(keycode_space);
-	if (space_is_down && !space_was_down)
-	{
-		character_controller.apply_impulse(Vec3f(0.0f, 4.0f, 0.0f));
-	}
-	space_was_down = space_is_down;
-
 	Vec2f thrust;
 	if (ic.get_keyboard().get_keycode(keycode_a))
 		thrust.x -= 1.0f;
@@ -101,7 +94,48 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 	else if (thrust.y < -0.1f)
 		anim = "backward";
 
-	if (!model_object.is_null() && anim != last_anim)
+	bool flying = character_controller.is_flying();
+	bool space_is_down = ic.get_keyboard().get_keycode(keycode_space);
+	if (space_is_down && !space_was_down && !flying)
+	{
+		character_controller.apply_impulse(Vec3f(0.0f, 4.0f, 0.0f));
+		anim = "jump";
+	}
+	space_was_down = space_is_down;
+
+	if (ic.get_keyboard().get_keycode(keycode_q) && !flying)
+	{
+		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.42f, 0.90f) * 7.0f));
+		anim = "dodge-forward";
+	}
+
+	if (ic.get_keyboard().get_keycode(keycode_x) && !flying)
+	{
+		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.42f, -0.90f) * 7.0f));
+		anim = "dodge-backward";
+	}
+
+	if (ic.get_keyboard().get_keycode(keycode_z) && !flying)
+	{
+		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-0.90f, 0.42f, 0.0f) * 7.0f));
+		anim = "dodge-left";
+	}
+
+	if (ic.get_keyboard().get_keycode(keycode_c) && !flying)
+	{
+		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.90f, 0.42f, 0.0f) * 7.0f));
+		anim = "dodge-right";
+	}
+
+	if (!model_object.is_null() && anim != last_anim && !flying)
 	{
 		model_object.play_animation(anim, false);
 		last_anim = anim;
