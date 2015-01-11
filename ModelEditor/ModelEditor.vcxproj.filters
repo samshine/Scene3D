@@ -167,6 +167,9 @@
     <ClInclude Include="Model\EditorScene\Game\character_controller.h">
       <Filter>Model\EditorScene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Scene\mouse_movement.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\app_model.cpp">
@@ -266,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="Model\EditorScene\Game\character_controller.cpp">
       <Filter>Model\EditorScene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\mouse_movement.cpp">
+      <Filter>Views\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

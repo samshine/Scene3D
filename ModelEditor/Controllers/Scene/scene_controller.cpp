@@ -42,8 +42,8 @@ void SceneController::map_model_updated()
 	AppModel::instance()->editor_scene->set_map_model(AppModel::instance()->map_model);
 }
 
-void SceneController::update_scene(Scene &scene, GraphicContext &gc, InputContext &ic)
+void SceneController::update_scene(Scene &scene, GraphicContext &gc, InputContext &ic, const clan::Vec2i &mouse_delta)
 {
 	bool has_focus = view.get() == view->focus_view();
-	AppModel::instance()->editor_scene->update(scene, gc, ic, has_focus);
+	AppModel::instance()->editor_scene->update(scene, gc, ic, has_focus, mouse_delta);
 }

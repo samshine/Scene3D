@@ -12,16 +12,49 @@ SceneView::SceneView()
 
 	set_focus_policy(FocusPolicy::accept);
 
-	slots.connect(sig_pointer_press(), [this](PointerEvent &e)
-	{
-		set_focus();
-	});
+	slots.connect(sig_pointer_press(), this, &SceneView::pointer_press);
+	slots.connect(sig_pointer_release(), this, &SceneView::pointer_release);
+	slots.connect(sig_pointer_move(), this, &SceneView::pointer_move);
 
 	timer = Timer();
 	timer.func_expired() = [this]()
 	{
 		set_needs_render();
 	};
+}
+
+void SceneView::pointer_press(PointerEvent &e)
+{
+	set_focus();
+
+	if (!mouse_down)
+	{
+		WindowView *window_view = static_cast<WindowView*>(root_view());
+		window_view->get_display_window().hide_cursor();
+		mouse_down_pos = window_view->get_display_window().get_ic().get_mouse().get_position();
+		mouse_down = true;
+	}
+}
+
+void SceneView::pointer_release(PointerEvent &e)
+{
+	if (mouse_down)
+	{
+		WindowView *window_view = static_cast<WindowView*>(root_view());
+		window_view->get_display_window().get_ic().get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
+		window_view->get_display_window().show_cursor();
+		mouse_down = false;
+	}
+}
+
+void SceneView::pointer_move(PointerEvent &e)
+{
+	if (mouse_down)
+	{
+		WindowView *window_view = static_cast<WindowView*>(root_view());
+		Size size = window_view->get_display_window().get_geometry().get_size();
+		window_view->get_display_window().get_ic().get_mouse().set_position(size.width / 2, size.height / 2);
+	}
 }
 
 void SceneView::render_content(Canvas &canvas)
@@ -36,8 +69,17 @@ void SceneView::render_content(Canvas &canvas)
 	InputContext ic;
 	if (dynamic_cast<WindowView*>(root_view())) ic = static_cast<WindowView*>(root_view())->get_display_window().get_ic();
 
+	Point move = mouse_movement.pos();
+	Vec2i delta_mouse_move;
+	if (mouse_down)
+	{
+		delta_mouse_move = move - last_mouse_movement;
+	}
+	last_mouse_movement = move;
+
+
 	setup_scene(gc);
-	sig_update_scene(scene, gc, ic);
+	sig_update_scene(scene, gc, ic, delta_mouse_move);
 
 	if (scene_frame_buffer.is_null() || scene_texture.is_null() || scene_texture.get_size() != viewport_size_i)
 	{

@@ -26,18 +26,18 @@ void GameScene::set_attachments(std::vector<SceneModelAttachment> attachments)
 	model_updated = true;
 }
 
-void GameScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus)
+void GameScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
 {
 	gametime.update();
 	update_map(scene, gc);
-	update_input(ic, has_focus);
+	update_input(ic, has_focus, mouse_delta);
 	update_character_controller();
 	update_model(scene, gc);
 	update_camera(scene, gc);
 	scene.update(gc, gametime.get_time_elapsed());
 }
 
-void GameScene::update_input(InputContext &ic, bool has_focus)
+void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
 {
 	if (!has_focus)
 		return;
@@ -65,6 +65,11 @@ void GameScene::update_input(InputContext &ic, bool has_focus)
 	{
 		rotation.up = clamp(rotation.up + time_elapsed * up_speed, -90.0f, 90.0f);
 	}
+
+	float mouse_speed_x = 5.0f;
+	float mouse_speed_y = 5.0f;
+	rotation.dir = std::fmod(rotation.dir + mouse_delta.x * time_elapsed * mouse_speed_x, 360.0f);
+	rotation.up = clamp(rotation.up + mouse_delta.y * time_elapsed * mouse_speed_y, -90.0f, 90.0f);
 
 	character_controller.look(rotation);
 

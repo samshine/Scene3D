@@ -15,7 +15,7 @@ public:
 	virtual void set_model_data(std::shared_ptr<clan::ModelData> model_data) = 0;
 	virtual void set_attachments(std::vector<SceneModelAttachment> attachments) = 0;
 
-	virtual void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus) = 0;
+	virtual void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta) = 0;
 };
 
 class SceneModelAttachment

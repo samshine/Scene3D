@@ -14,7 +14,7 @@ public:
 	void set_model_data(std::shared_ptr<clan::ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;
 
-	void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus) override;
+	void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta) override;
 
 private:
 	void setup_default_scene(clan::Scene &scene, clan::GraphicContext &gc);

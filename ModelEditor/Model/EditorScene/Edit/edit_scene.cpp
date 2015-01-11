@@ -8,7 +8,7 @@ EditScene::EditScene()
 {
 }
 
-void EditScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus)
+void EditScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
 {
 	setup_default_scene(scene, gc);
 

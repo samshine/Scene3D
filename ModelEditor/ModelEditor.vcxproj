@@ -185,6 +185,7 @@
     <ClInclude Include="Views\Rollout\rollout_position_property.h" />
     <ClInclude Include="Views\Rollout\rollout_text_field_property.h" />
     <ClInclude Include="Views\Rollout\rollout_view.h" />
+    <ClInclude Include="Views\Scene\mouse_movement.h" />
     <ClInclude Include="Views\Scene\scene_view.h" />
     <ClInclude Include="Views\Scene\viewer_scene_cache.h" />
   </ItemGroup>
@@ -226,6 +227,7 @@
     <ClCompile Include="Views\Rollout\rollout_position_property.cpp" />
     <ClCompile Include="Views\Rollout\rollout_text_field_property.cpp" />
     <ClCompile Include="Views\Rollout\rollout_view.cpp" />
+    <ClCompile Include="Views\Scene\mouse_movement.cpp" />
     <ClCompile Include="Views\Scene\scene_view.cpp" />
     <ClCompile Include="Views\Scene\viewer_scene_cache.cpp" />
   </ItemGroup>
