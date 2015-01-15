@@ -26,7 +26,7 @@ private:
 
 	clan::Timer timer;
 	MouseMovement mouse_movement;
-	clan::Point mouse_down_pos;
+	clan::Pointf mouse_down_pos;
 	bool mouse_down = false;
 	clan::Point last_mouse_movement;
 

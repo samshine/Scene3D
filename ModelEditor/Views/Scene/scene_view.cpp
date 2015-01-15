@@ -52,8 +52,8 @@ void SceneView::pointer_move(PointerEvent &e)
 	if (mouse_down)
 	{
 		WindowView *window_view = static_cast<WindowView*>(root_view());
-		Size size = window_view->get_display_window().get_geometry().get_size();
-		window_view->get_display_window().get_ic().get_mouse().set_position(size.width / 2, size.height / 2);
+		Sizef size = window_view->get_display_window().get_geometry().get_size();
+		window_view->get_display_window().get_ic().get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
 	}
 }
 
@@ -63,6 +63,12 @@ void SceneView::render_content(Canvas &canvas)
 	Sizef viewport_size = geometry().content.get_size();
 	//Size viewport_size_i = Size(2400*2 + rand() % 160 * 2, 1300*2 + rand() % 160 * 2);
 	Size viewport_size_i = Size(viewport_size) * 2;
+	bool supersampling = true;
+	/*if (viewport_size_i.width > 3000) // Disable multisample for high resolutions
+	{
+		viewport_size_i = Size(viewport_size);
+		supersampling = false;
+	}*/
 
 	canvas.flush();
 	GraphicContext gc = canvas.get_gc();
@@ -98,11 +104,22 @@ void SceneView::render_content(Canvas &canvas)
 
 	gc.set_viewport(gc.get_size());
 
-	canvas.fill_triangles(
+	if (supersampling)
+	{
+		canvas.fill_triangles(
 		{
 			Vec2f(0.0f, 0.0f), Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f),
 			Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f), Vec2f(viewport_size_i.width / 2.0f, viewport_size_i.height / 2.0f)
 		}, scene_texture);
+	}
+	else
+	{
+		canvas.fill_triangles(
+		{
+			Vec2f(0.0f, 0.0f), Vec2f(viewport_size_i.width, 0.0f), Vec2f(0.0f, viewport_size_i.height),
+			Vec2f(viewport_size_i.width, 0.0f), Vec2f(0.0f, viewport_size_i.height), Vec2f(viewport_size_i.width, viewport_size_i.height)
+		}, scene_texture);
+	}
 
 	timer.start(10, true);
 }
