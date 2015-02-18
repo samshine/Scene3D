@@ -7,8 +7,8 @@ using namespace clan;
 
 SceneView::SceneView()
 {
-	box_style.set_layout_hbox();
-	box_style.set_flex(1.0f, 1.0f);
+	style()->set("flex-direction: column");
+	style()->set("flex: 1 1 main-size");
 
 	set_focus_policy(FocusPolicy::accept);
 

@@ -6,48 +6,47 @@ using namespace clan;
 
 HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon, bool last)
 {
-	box_style.set_layout_hbox();
-	box_style.set_flex(0.0f, 0.0f);
-	box_style.set_padding(0.0f, 2.0f);
+	style()->set("flex-direction: column");
+	style()->set("flex: 0 0 main-size");
+	style()->set("padding: 2px 0");
 
 	button = std::make_shared<ButtonView>();
-	button->box_style.set_flex(0.0f, 0.0f);
-	button->box_style.set_margin_top_auto();
-	button->box_style.set_margin_bottom_auto();
-	button->box_style.set_padding(10.0f, 3.0f);
+	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("margin: auto 0");
+	button->style()->set("padding: 3px 10px");
 	if (!icon.empty())
 	{
 		if (!last)
-			button->image_view()->box_style.set_margin(0.0f, 0.0, 5.0f, 0.0f);
+			button->image_view()->style()->set("margin-right: 5px");
 		else
-			button->image_view()->box_style.set_margin(5.0f, 0.0, 0.0f, 0.0f);
+			button->image_view()->style()->set("margin-left: 5px");
 		button->image_view()->set_image(ImageSource::from_resource(icon));
 	}
 	button->label()->set_text(StringHelp::text_to_upper(text));
-	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
-	button->label()->text_style().set_color(Colorf(255, 255, 255));
+	button->label()->style()->set("font: 12px/18px 'Lato'");
+	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), bind_member(this, &HeaderMenuView::button_clicked));
 	add_subview(button);
 
 	items = std::make_shared<PopupView>();
-	items->box_style.set_layout_vbox();
-	items->box_style.set_absolute();
-	items->box_style.set_top(40.0f);
-	items->box_style.set_width(175.0f);
-	items->box_style.set_background(Colorf(15, 50, 77));
-	items->box_style.set_margin(0.0f, 0.0f, 10.0f, 10.0f);
-	items->box_style.set_box_shadow(Colorf(0.0f, 0.0f, 0.0f, 0.2f), 5.0f, 5.0f, 5.0f);
+	items->style()->set("flex-direction: row");
+	items->style()->set("position: absolute");
+	items->style()->set("top: 40px");
+	items->style()->set("width: 175px");
+	items->style()->set("background: rgb(15,50,77)");
+	items->style()->set("margin: 0 10px 10px 0");
+	items->style()->set("box-shadow: 5px 5px 5px rgba(0,0,0,0.2)");
 	items->set_hidden(true);
 	add_subview(items);
 
 	if (last)
 	{
 		button->move_label_before_image();
-		items->box_style.set_right(0.0f);
+		items->style()->set("right: 0");
 	}
 	else
 	{
-		items->box_style.set_left(0.0f);
+		items->style()->set("left: 0");
 	}
 }
 
@@ -56,23 +55,23 @@ void HeaderMenuView::button_clicked(PointerEvent &e)
 	e.stop_propagation();
 	items->set_hidden(!items->hidden());
 	if (!items->hidden())
-		box_style.set_background(Colorf(15, 50, 77));
+		style()->set("background: rgb(15,50,77)");
 	else
-		box_style.set_background_none();
+		style()->set("background: none");
 }
 
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
 {
 	auto button = std::make_shared<ButtonView>();
-	button->box_style.set_flex(0.0f, 0.0f);
-	button->box_style.set_padding(10.0f, 3.0f);
+	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("padding: 3px 10px");
 	button->label()->set_text(StringHelp::text_to_upper(text));
-	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
-	button->label()->text_style().set_color(Colorf(255, 255, 255));
+	button->label()->style()->set("font: 12px/18px 'Lato'");
+	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e)
 	{
 		e.stop_propagation();
-		box_style.set_background_none();
+		style()->set("background: none");
 		items->set_hidden(true);
 		click();
 	});

@@ -64,10 +64,7 @@ private:
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	SetupCore core;
-	SetupDisplay display;
-	SetupD3D d3d;
-
+	D3DTarget::set_current();
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<SimpleDisplayCache>());
 	UIThread ui_thread(resources);

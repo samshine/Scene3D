@@ -10,7 +10,7 @@ using namespace clan;
 
 AnimationsController::AnimationsController()
 {
-	view->box_style.set_layout_block();
+	view->style()->set("flex-direction: row");
 
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");

@@ -10,7 +10,7 @@ using namespace clan;
 
 CamerasController::CamerasController()
 {
-	view->box_style.set_layout_block();
+	view->style()->set("flex-direction: row");
 
 	cameras = std::make_shared<RolloutView>("CAMERAS");
 	camera = std::make_shared<RolloutView>("CAMERA");

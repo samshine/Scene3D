@@ -7,14 +7,14 @@ using namespace clan;
 
 RolloutView::RolloutView(const std::string &title)
 {
-	box_style.set_layout_block();
+	style()->set("flex-direction: row");
 
 	header = std::make_shared<RolloutHeader>();
 	header->set_text(title);
 	add_subview(header);
 
 	content = std::make_shared<View>();
-	content->box_style.set_margin(10.0f, 5.0f);
+	content->style()->set("margin: 5px 10px");
 	add_subview(content);
 }
 

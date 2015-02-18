@@ -13,7 +13,7 @@ using namespace clan;
 
 EnvironmentController::EnvironmentController()
 {
-	view->box_style.set_layout_block();
+	view->style()->set("flex-direction: row");
 
 	environment = std::make_shared<RolloutView>("ENVIRONMENT");
 	map_model_property = std::make_shared<RolloutBrowseFieldProperty>("MAP MODEL");

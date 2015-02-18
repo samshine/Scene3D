@@ -6,10 +6,8 @@ using namespace clan;
 
 RolloutList::RolloutList()
 {
-	box_style.set_layout_vbox();
-	//box_style.set_border(Colorf(200, 200, 200), 1.0f);
-	//box_style.set_background(Colorf(240, 240, 240));
-	box_style.set_padding(0.0f, 5.0f);
+	style()->set("flex-direction: row");
+	style()->set("padding: 5px 0");
 }
 
 std::shared_ptr<RolloutListItemView> RolloutList::selection()
@@ -42,19 +40,19 @@ std::shared_ptr<RolloutListItemView> RolloutList::add_item(const std::string &it
 
 RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 {
-	box_style.set_layout_vbox();
-	box_style.set_padding(3.0f);
-	box_style.set_border_radius(2.0f);
+	style()->set("flex-direction: row");
+	style()->set("padding: 3px");
+	style()->set("border-radius: 2px");
 
 	label = std::make_shared<LabelView>();
-	label->text_style().set_font("Lato", 12, 1.4f * 13);
-	label->text_style().set_color(Colorf(255, 255, 255));
+	label->style()->set("12px/18px 'Lato'");
+	label->style()->set("color: white");
 	add_subview(label);
 
 	textfield = std::make_shared<TextFieldView>();
 	textfield->set_hidden();
-	textfield->text_style().set_font("Lato", 12, 1.4f * 13);
-	textfield->text_style().set_color(Colorf(255, 255, 255));
+	textfield->style()->set("font: 12px/18px 'Lato'");
+	textfield->style()->set("color: white");
 	add_subview(textfield);
 
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
@@ -99,9 +97,9 @@ void RolloutListItemView::set_text(const std::string &text)
 void RolloutListItemView::set_bold(bool enable)
 {
 	if (enable)
-		label->text_style().set_weight(FontWeight::heavy);
+		label->style()->set("font-weight: 900");
 	else
-		label->text_style().set_weight_normal();
+		label->style()->set("font-weight: normal");
 }
 
 bool RolloutListItemView::selected() const
@@ -131,16 +129,16 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 		{
 			stop_animations();
 			if (value)
-				animate(0.0f, 255.0f, [this](float t) { box_style.set_background(Colorf(255, 255, 255, (int)(t * 0.3)));  }, 400, Easing::easeinout);
+				animate(0.0f, 0.3f, [this](float t) { style()->set(string_format("background-color: rgba(255,255,255,%1)", t)); }, 400, Easing::easeinout);
 			else
-				animate(255.0f, 0.0f, [this](float t) { box_style.set_background(Colorf(255, 255, 255, (int)(t * 0.3))); }, 400, Easing::easeinout, [this]() { box_style.set_background_none(); });
+				animate(0.3f, 0.0f, [this](float t) { style()->set(string_format("background-color: rgba(255,255,255,%1)", t)); }, 400, Easing::easeinout, [this]() { style()->set("background-color: none"); });
 		}
 		else
 		{
 			if (value)
-				box_style.set_background(Colorf(255, 255, 255, 76));
+				style()->set("background-color: rgba(255,255,255,0.3)");
 			else
-				box_style.set_background_none();
+				style()->set("background-color: none");
 		}
 
 		if (value)

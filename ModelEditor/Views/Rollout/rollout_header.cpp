@@ -6,14 +6,13 @@ using namespace clan;
 
 RolloutHeader::RolloutHeader()
 {
-	box_style.set_layout_block();
-	//box_style.set_margin(5.0f);
-	box_style.set_padding(10.0f, 2.0f);
-	box_style.set_background(Colorf(6, 31, 62));
+	style()->set("flex-direction: row");
+	style()->set("padding: 2px 10px");
+	style()->set("background: rgb(6,31,62)");
 
 	label = std::make_shared<LabelView>();
-	label->text_style().set_font("Lato", 12, 1.4f * 13);
-	label->text_style().set_color(Colorf(255, 255, 255));
+	label->style()->set("font: 12px/18px 'Lato'");
+	label->style()->set("color: white");
 	add_subview(label);
 }
 

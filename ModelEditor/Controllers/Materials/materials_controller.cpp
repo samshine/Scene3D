@@ -10,7 +10,7 @@ using namespace clan;
 
 MaterialsController::MaterialsController()
 {
-	view->box_style.set_layout_block();
+	view->style()->set("flex-direction: row");
 
 	materials = std::make_shared<RolloutView>("MATERIALS");
 	material = std::make_shared<RolloutView>("MATERIAL");

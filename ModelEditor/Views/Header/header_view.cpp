@@ -7,24 +7,23 @@ using namespace clan;
 
 HeaderView::HeaderView()
 {
-	box_style.set_layout_hbox();
-	box_style.set_flex(0.0f, 0.0f);
-	box_style.set_background(Colorf(240, 240, 240));
-	box_style.set_background_gradient_to_right(Colorf(15, 50, 77), Colorf(95, 128, 146));
-	box_style.set_border(Colorf(159, 184, 194), 0.0f, 0.0f, 0.0f, 1.0f);
+	style()->set("flex-direction: column");
+	style()->set("flex: 0 0 main-size");
+	style()->set("background: linear-gradient(to right, rgb(15,50,77), rgb(95,128,146))");
+	style()->set("border-bottom: 1px solid rgb(159,184,194)");
 
 	left_buttons = std::make_shared<View>();
-	left_buttons->box_style.set_flex(0.0f, 0.0f);
-	left_buttons->box_style.set_layout_hbox();
+	left_buttons->style()->set("flex: 0 0 main-size");
+	left_buttons->style()->set("flex-direction: column");
 	add_subview(left_buttons);
 
 	auto spacer = std::make_shared<View>();
-	spacer->box_style.set_flex(1.0f, 1.0f);
+	spacer->style()->set("flex: 1 1 main-size");
 	add_subview(spacer);
 
 	right_buttons = std::make_shared<View>();
-	right_buttons->box_style.set_flex(0.0f, 0.0f);
-	right_buttons->box_style.set_layout_hbox();
+	right_buttons->style()->set("flex: 0 0 main-size");
+	right_buttons->style()->set("flex-direction: column");
 	add_subview(right_buttons);
 }
 
@@ -65,25 +64,20 @@ std::shared_ptr<HeaderMenuView> HeaderView::add_right_menu(const std::string &te
 void HeaderView::create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last)
 {
 	auto button = std::make_shared<ButtonView>();
-	button->box_style.set_flex(0.0f, 0.0f);
-	//button->box_style.set_margin(5.0f);
-	button->box_style.set_margin_top_auto();
-	button->box_style.set_margin_bottom_auto();
-	//button->box_style.set_background(Colorf(240, 240, 240));
-	//button->box_style.set_border(Colorf(150, 150, 150), 1.0f);
-	//button->box_style.set_border_radius(3.0f);
-	button->box_style.set_padding(10.0f, 5.0f);
+	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("margin: auto 0");
+	button->style()->set("padding: 5px 10px");
 	if (!icon.empty())
 	{
 		if (!last)
-			button->image_view()->box_style.set_margin(0.0f, 0.0, 5.0f, 0.0f);
+			button->image_view()->style()->set("margin-right: 5px");
 		else
-			button->image_view()->box_style.set_margin(5.0f, 0.0, 0.0f, 0.0f);
+			button->image_view()->style()->set("margin-left: 5px");
 		button->image_view()->set_image(ImageSource::from_resource(icon));
 	}
 	button->label()->set_text(StringHelp::text_to_upper(text));
-	button->label()->text_style().set_font("Lato", 12, 1.4f * 13);
-	button->label()->text_style().set_color(Colorf(255, 255, 255));
+	button->label()->style()->set("font: 12px/18px 'Lato'");
+	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e) { click(); e.stop_propagation(); });
 	if (left)
 		left_buttons->add_subview(button);
