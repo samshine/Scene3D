@@ -7,14 +7,14 @@ using namespace clan;
 
 HeaderView::HeaderView()
 {
-	style()->set("flex-direction: column");
+	style()->set("flex-direction: row");
 	style()->set("flex: 0 0 main-size");
 	style()->set("background: linear-gradient(to right, rgb(15,50,77), rgb(95,128,146))");
 	style()->set("border-bottom: 1px solid rgb(159,184,194)");
 
 	left_buttons = std::make_shared<View>();
 	left_buttons->style()->set("flex: 0 0 main-size");
-	left_buttons->style()->set("flex-direction: column");
+	left_buttons->style()->set("flex-direction: row");
 	add_subview(left_buttons);
 
 	auto spacer = std::make_shared<View>();
@@ -23,7 +23,7 @@ HeaderView::HeaderView()
 
 	right_buttons = std::make_shared<View>();
 	right_buttons->style()->set("flex: 0 0 main-size");
-	right_buttons->style()->set("flex-direction: column");
+	right_buttons->style()->set("flex-direction: row");
 	add_subview(right_buttons);
 }
 

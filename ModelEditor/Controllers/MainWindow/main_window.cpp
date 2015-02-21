@@ -69,7 +69,7 @@ void MainWindow::create_layout()
 	window_view()->get_display_window().set_large_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-256.png"));
 	window_view()->get_display_window().set_small_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-16.png"));
 
-	view->style()->set("flex-direction: row");
+	view->style()->set("flex-direction: column");
 	view->style()->set("background: rgb(240,240,240)");
 
 	header_view = std::make_shared<HeaderView>();

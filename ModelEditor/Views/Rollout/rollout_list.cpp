@@ -6,7 +6,7 @@ using namespace clan;
 
 RolloutList::RolloutList()
 {
-	style()->set("flex-direction: row");
+	style()->set("flex-direction: column");
 	style()->set("padding: 5px 0");
 }
 
@@ -40,7 +40,7 @@ std::shared_ptr<RolloutListItemView> RolloutList::add_item(const std::string &it
 
 RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 {
-	style()->set("flex-direction: row");
+	style()->set("flex-direction: column");
 	style()->set("padding: 3px");
 	style()->set("border-radius: 2px");
 

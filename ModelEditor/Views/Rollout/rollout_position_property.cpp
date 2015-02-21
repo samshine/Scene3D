@@ -7,7 +7,7 @@ using namespace clan;
 
 RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 {
-	style()->set("flex-direction: column");
+	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
 	label = std::make_shared<LabelView>();
@@ -21,14 +21,14 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 	add_subview(label);
 
 	auto value_group = std::make_shared<View>();
-	value_group->style()->set("flex-direction: row");
+	value_group->style()->set("flex-direction: column");
 	add_subview(value_group);
 
 	char *label_texts[] = { "X:", "Y:", "Z:" };
 	for (int i = 0; i < 3; i++)
 	{
 		auto row = std::make_shared<View>();
-		row->style()->set("flex-direction: column");
+		row->style()->set("flex-direction: row");
 		if (i > 0)
 			row->style()->set("padding-top: 5px");
 

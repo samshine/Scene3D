@@ -12,7 +12,7 @@ using namespace clan;
 
 AttachmentsController::AttachmentsController()
 {
-	view->style()->set("flex-direction: row");
+	view->style()->set("flex-direction: column");
 
 	attachments = std::make_shared<RolloutView>("ATTACHMENTS");
 	attachment = std::make_shared<RolloutView>("ATTACHMENT");

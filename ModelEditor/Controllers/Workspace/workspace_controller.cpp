@@ -6,20 +6,21 @@ using namespace clan;
 
 WorkspaceController::WorkspaceController()
 {
-	view->style()->set("flex-direction: column");
+	view->style()->set("flex-direction: row");
 	view->style()->set("flex: 1 0 main-size");
 
 	center_view = std::make_shared<View>();
-	center_view->style()->set("flex-direction: row");
+	center_view->style()->set("flex: 1 1");
+	center_view->style()->set("flex-direction: column");
 	center_view->style()->set("background: rgb(236,240,243)");
 	//center_view->style()->set("padding: 5px");
 
 	dock_view = std::make_shared<View>();
-	dock_view->style()->set("flex-direction: row");
-	dock_view->style()->set("width: 250px");
 	dock_view->style()->set("flex: 0 0 main-size");
+	dock_view->style()->set("width: 250px");
 	dock_view->style()->set("background: rgb(47,75,99)");
 	dock_view->style()->set("border-left: 1px solid rgb(109,109,109)");
+	dock_view->style()->set("flex-direction: column");
 	dock_view->set_hidden(true);
 
 	view->add_subview(center_view);

@@ -10,7 +10,7 @@ using namespace clan;
 
 BonesController::BonesController()
 {
-	view->style()->set("flex-direction: row");
+	view->style()->set("flex-direction: column");
 
 	bones = std::make_shared<RolloutView>("BONES");
 	bone = std::make_shared<RolloutView>("BONE");

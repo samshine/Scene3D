@@ -10,7 +10,7 @@ using namespace clan;
 
 AnimationsController::AnimationsController()
 {
-	view->style()->set("flex-direction: row");
+	view->style()->set("flex-direction: column");
 
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");

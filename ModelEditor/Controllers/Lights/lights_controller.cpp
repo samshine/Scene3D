@@ -10,7 +10,7 @@ using namespace clan;
 
 LightsController::LightsController()
 {
-	view->style()->set("flex-direction: row");
+	view->style()->set("flex-direction: column");
 
 	lights = std::make_shared<RolloutView>("LIGHTS");
 	light = std::make_shared<RolloutView>("LIGHT");

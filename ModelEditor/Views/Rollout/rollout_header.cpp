@@ -6,7 +6,7 @@ using namespace clan;
 
 RolloutHeader::RolloutHeader()
 {
-	style()->set("flex-direction: row");
+	style()->set("flex-direction: column");
 	style()->set("padding: 2px 10px");
 	style()->set("background: rgb(6,31,62)");
 

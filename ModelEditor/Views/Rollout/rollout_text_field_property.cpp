@@ -7,7 +7,7 @@ using namespace clan;
 
 RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text)
 {
-	style()->set("flex-direction: column");
+	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
 	label = std::make_shared<LabelView>();

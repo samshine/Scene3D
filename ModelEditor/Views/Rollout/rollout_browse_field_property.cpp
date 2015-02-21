@@ -7,7 +7,7 @@ using namespace clan;
 
 RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_text)
 {
-	style()->set("flex-direction: column");
+	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
 	label = std::make_shared<LabelView>();
@@ -21,7 +21,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 
 	browse_field = std::make_shared<LabelView>();
 	browse_field->style()->set("flex: 1 1 main-size");
-	browse_field->style()->set("background: rgba(255,255,255,0.7843)");
+	browse_field->style()->set("background: rgba(255,255,255,0.07843)");
 	browse_field->style()->set("border-radius: 3px");
 	browse_field->style()->set("padding: 2px 5px");
 	browse_field->style()->set("font: 12px/18px 'Lato'");

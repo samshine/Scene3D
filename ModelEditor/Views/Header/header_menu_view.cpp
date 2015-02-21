@@ -6,7 +6,7 @@ using namespace clan;
 
 HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon, bool last)
 {
-	style()->set("flex-direction: column");
+	style()->set("flex-direction: row");
 	style()->set("flex: 0 0 main-size");
 	style()->set("padding: 2px 0");
 
@@ -29,7 +29,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	add_subview(button);
 
 	items = std::make_shared<PopupView>();
-	items->style()->set("flex-direction: row");
+	items->style()->set("flex-direction: column");
 	items->style()->set("position: absolute");
 	items->style()->set("top: 40px");
 	items->style()->set("width: 175px");
