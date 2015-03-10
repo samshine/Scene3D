@@ -78,7 +78,7 @@ void HeaderView::create_button(const std::string &text, const std::string &icon,
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
-	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e) { click(); e.stop_propagation(); });
+	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e) { click(); e.stop_propagation(); });
 	if (left)
 		left_buttons->add_subview(button);
 	else

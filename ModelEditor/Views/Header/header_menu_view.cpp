@@ -25,7 +25,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
-	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), bind_member(this, &HeaderMenuView::button_clicked));
+	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
 	add_subview(button);
 
 	items = std::make_shared<PopupView>();
@@ -68,7 +68,7 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
-	slots.connect(button->sig_pointer_release(EventUIPhase::bubbling), [=](PointerEvent &e)
+	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e)
 	{
 		e.stop_propagation();
 		style()->set("background: none");
