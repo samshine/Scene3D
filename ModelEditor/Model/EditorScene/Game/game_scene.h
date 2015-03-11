@@ -30,6 +30,15 @@ private:
 	clan::GameTime gametime;
 	clan::Physics3DWorld collision_world;
 	CharacterController character_controller;
+	float dodge_cooldown = 0;
+	float double_tap_left_elapsed = 1;
+	float double_tap_right_elapsed = 1;
+	float double_tap_up_elapsed = 1;
+	float double_tap_down_elapsed = 1;
+	bool was_down_left = false;
+	bool was_down_right = false;
+	bool was_down_up = false;
+	bool was_down_down = false;
 
 	std::string map_filename;
 	bool map_updated = true;

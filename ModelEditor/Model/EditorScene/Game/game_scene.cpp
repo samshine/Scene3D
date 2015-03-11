@@ -74,11 +74,11 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 	character_controller.look(rotation);
 
 	Vec2f thrust;
-	if (ic.get_keyboard().get_keycode(keycode_a))
+	if (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q))
 		thrust.x -= 1.0f;
 	if (ic.get_keyboard().get_keycode(keycode_d))
 		thrust.x += 1.0f;
-	if (ic.get_keyboard().get_keycode(keycode_w))
+	if (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z))
 		thrust.y += 1.0f;
 	if (ic.get_keyboard().get_keycode(keycode_s))
 		thrust.y -= 1.0f;
@@ -103,37 +103,60 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 	}
 	space_was_down = space_is_down;
 
-	if (ic.get_keyboard().get_keycode(keycode_q) && !flying)
-	{
-		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+	dodge_cooldown = std::max(dodge_cooldown - gametime.get_time_elapsed(), 0.0f);
+	double_tap_left_elapsed += gametime.get_time_elapsed();
+	double_tap_right_elapsed += gametime.get_time_elapsed();
+	double_tap_up_elapsed += gametime.get_time_elapsed();
+	double_tap_down_elapsed += gametime.get_time_elapsed();
 
-		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.42f, 0.90f) * 7.0f));
-		anim = "dodge-forward";
+	if (dodge_cooldown == 0.0f)
+	{
+		if (double_tap_up_elapsed < 0.3f && (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z)) && !was_down_up && !flying)
+		{
+			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.32f, 1.20f) * 7.0f));
+			dodge_cooldown = 0.75f;
+			anim = "dodge-forward";
+		}
+
+		if (double_tap_down_elapsed < 0.3f && ic.get_keyboard().get_keycode(keycode_s) && !was_down_down && !flying)
+		{
+			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.32f, -1.20f) * 7.0f));
+			dodge_cooldown = 0.75f;
+			anim = "dodge-backward";
+		}
+
+		if (double_tap_left_elapsed < 0.3f && (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q)) && !was_down_left && !flying)
+		{
+			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-1.20f, 0.32f, 0.0f) * 7.0f));
+			dodge_cooldown = 0.75f;
+			anim = "dodge-left";
+		}
+
+		if (double_tap_right_elapsed < 0.3f && ic.get_keyboard().get_keycode(keycode_d) && !was_down_right && !flying)
+		{
+			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(1.20f, 0.32f, 0.0f) * 7.0f));
+			dodge_cooldown = 0.75f;
+			anim = "dodge-right";
+		}
 	}
 
-	if (ic.get_keyboard().get_keycode(keycode_x) && !flying)
-	{
-		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+	if ((ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q)) && !was_down_left) double_tap_left_elapsed = 0.0f;
+	if (ic.get_keyboard().get_keycode(keycode_d) && !was_down_right) double_tap_right_elapsed = 0.0f;
+	if ((ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z)) && !was_down_up) double_tap_up_elapsed = 0.0f;
+	if (ic.get_keyboard().get_keycode(keycode_s) && !was_down_down) double_tap_down_elapsed = 0.0f;
 
-		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.42f, -0.90f) * 7.0f));
-		anim = "dodge-backward";
-	}
-
-	if (ic.get_keyboard().get_keycode(keycode_z) && !flying)
-	{
-		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
-
-		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-0.90f, 0.42f, 0.0f) * 7.0f));
-		anim = "dodge-left";
-	}
-
-	if (ic.get_keyboard().get_keycode(keycode_c) && !flying)
-	{
-		Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
-
-		character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.90f, 0.42f, 0.0f) * 7.0f));
-		anim = "dodge-right";
-	}
+	was_down_left = (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q));
+	was_down_right = ic.get_keyboard().get_keycode(keycode_d);
+	was_down_up = (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z));
+	was_down_down = ic.get_keyboard().get_keycode(keycode_s);
 
 	if (!model_object.is_null() && anim != last_anim && !flying)
 	{

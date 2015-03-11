@@ -92,7 +92,7 @@ private:
 	float run_speed = 6.0f;
 	float friction = 0.0f;
 	float air_resistance = 1.0f;
-	float air_movement = 0.25f;
+	float air_movement = 0.35f;
 	float bounce = 0.15f;
 	float step_height = 0.25f;
 	float step_bounce = 0.25f;
