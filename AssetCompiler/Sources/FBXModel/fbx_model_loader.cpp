@@ -111,7 +111,7 @@ namespace clan
 		{
 			for (VertexMapping *mapping = vertices[i]; mapping != nullptr; mapping = mapping->next)
 			{
-				mapping->vertex_index = model_mesh.vertices.size();
+				mapping->vertex_index = (int)model_mesh.vertices.size();
 
 				model_mesh.vertices.push_back(mapping->position);
 				//model_mesh.colors.push_back(mapping->color);
@@ -169,15 +169,15 @@ namespace clan
 				model_mesh.elements.push_back(material_elements[material_index][i]->vertex_index);
 			}
 
-			model_mesh.draw_ranges.push_back(create_draw_range(start_element, num_elements, node->GetMaterial(material_index)));
+			model_mesh.draw_ranges.push_back(create_draw_range(start_element, num_elements, node->GetMaterial((int)material_index)));
 		}
 	}
 
 	ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_t num_elements, FbxSurfaceMaterial *material)
 	{
 		ModelDataDrawRange range;
-		range.start_element = start_element;
-		range.num_elements = num_elements;
+		range.start_element = (int)start_element;
+		range.num_elements = (int)num_elements;
 		range.two_sided = false;
 		range.transparent = false;
 		range.alpha_test = false;
@@ -311,7 +311,7 @@ namespace clan
 
 			Vec3f scale = to_vec3f(texture->Scaling.Get());
 
-			map.texture = model_data->textures.size();
+			map.texture = (int)model_data->textures.size();
 
 			map.channel = channel;
 			map.wrap_x = texture->WrapModeU.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
@@ -457,7 +457,7 @@ namespace clan
 				cluster->GetTransformLinkMatrix(bone.bind_bone_to_world);
 				bones.push_back(bone);
 
-				int bone_selector = bones.size() - 1;
+				int bone_selector = ((int)bones.size()) - 1;
 
 				int num_indices = cluster->GetControlPointIndicesCount();
 				int *indices = cluster->GetControlPointIndices();

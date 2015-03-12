@@ -11,20 +11,20 @@ namespace clan
 
 		VertexMapping *next;
 
-		clan::Vec3f position;
-		clan::Vec3f normal;
-		clan::Vec3f tangent;
-		clan::Vec3f bitangent;
+		Vec3f position;
+		Vec3f normal;
+		Vec3f tangent;
+		Vec3f bitangent;
 
-		clan::Vec4ub color;
+		Vec4ub color;
 
-		clan::Vec2f diffuse_uv;
-		clan::Vec2f specular_uv;
-		clan::Vec2f normal_uv;
-		clan::Vec2f emission_uv;
+		Vec2f diffuse_uv;
+		Vec2f specular_uv;
+		Vec2f normal_uv;
+		Vec2f emission_uv;
 
-		clan::Vec4ub bone_selectors;
-		clan::Vec4ub bone_weights;
+		Vec4ub bone_selectors;
+		Vec4ub bone_weights;
 
 		int vertex_index;
 	};

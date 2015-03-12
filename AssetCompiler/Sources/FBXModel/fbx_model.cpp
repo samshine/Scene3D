@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
+#include "Lightmap/lightmap_uv.h"
 #include "fbx_model_loader.h"
 #include "fbx_model_impl.h"
 #include <ClanLib/core.h>
@@ -33,10 +34,17 @@ namespace clan
 		return impl->camera_names;
 	}
 
-	std::shared_ptr<ModelData> FBXModel::convert(const FBXModelDesc &desc)
+	std::shared_ptr<ModelData> FBXModel::convert(const FBXModelDesc &desc, bool bake_light)
 	{
 		FBXModelLoader loader(impl.get(), desc);
-		return loader.model_data;
+		std::shared_ptr<ModelData> data = loader.model_data;
+		if (bake_light)
+		{
+			LightmapUV lightmap;
+			lightmap.generate(data);
+			data->lights.clear();
+		}
+		return data;
 	}
 
 	/////////////////////////////////////////////////////////////////////////

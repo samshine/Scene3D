@@ -22,6 +22,9 @@
     <Filter Include="Sources\FBXModel">
       <UniqueIdentifier>{03eb5988-4d60-4ae8-9c8a-4cef098320a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Lightmap">
+      <UniqueIdentifier>{b19f0218-9aca-428c-ae11-3848117b02bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp">
@@ -257,6 +260,12 @@
     </ClCompile>
     <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp">
       <Filter>Sources\FBXModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lightmap\lightmap_uv.cpp">
+      <Filter>Sources\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lightmap\texture_atlas.cpp">
+      <Filter>Sources\Lightmap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -601,6 +610,12 @@
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_material.h">
       <Filter>Include\FBXModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lightmap\lightmap_uv.h">
+      <Filter>Sources\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lightmap\texture_atlas.h">
+      <Filter>Sources\Lightmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

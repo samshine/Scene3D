@@ -21,7 +21,7 @@ namespace clan
 		const std::vector<std::string> &light_names() const;
 		const std::vector<std::string> &camera_names() const;
 
-		std::shared_ptr<ModelData> convert(const FBXModelDesc &desc);
+		std::shared_ptr<ModelData> convert(const FBXModelDesc &desc, bool bake_light = false);
 
 	private:
 		std::shared_ptr<FBXModelImpl> impl;
