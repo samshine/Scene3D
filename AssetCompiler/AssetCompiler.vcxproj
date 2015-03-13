@@ -132,6 +132,7 @@
     <ClInclude Include="Sources\FBXModel\fbx_model_loader.h" />
     <ClInclude Include="Sources\FBXModel\skinned_bone.h" />
     <ClInclude Include="Sources\FBXModel\vertex_mapping.h" />
+    <ClInclude Include="Sources\Lightmap\lightmap_texture.h" />
     <ClInclude Include="Sources\Lightmap\lightmap_uv.h" />
     <ClInclude Include="Sources\Lightmap\texture_atlas.h" />
     <ClInclude Include="Sources\precomp.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="Sources\FBXModel\fbx_model.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp" />
+    <ClCompile Include="Sources\Lightmap\lightmap_texture.cpp" />
     <ClCompile Include="Sources\Lightmap\lightmap_uv.cpp" />
     <ClCompile Include="Sources\Lightmap\texture_atlas.cpp" />
     <ClCompile Include="Sources\precomp.cpp">

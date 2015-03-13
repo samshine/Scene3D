@@ -1,0 +1,169 @@
+
+#include "precomp.h"
+#include "lightmap_texture.h"
+#include <array>
+#include <algorithm>
+
+namespace clan
+{
+	void LightmapTexture::generate(const std::shared_ptr<ModelData> &new_model_data)
+	{
+		model_data = new_model_data;
+		model_collision = Physics3DObject();
+		world = Physics3DWorld();
+		model_collision = Physics3DObject::collision_body(world, Physics3DShape::model(model_data));
+
+		for (auto &mesh : model_data->meshes)
+		{
+			for (auto &range : mesh.draw_ranges)
+			{
+				if (range.self_illumination_map.channel == -1 || range.self_illumination_map.texture == -1)
+					continue;
+
+				for (size_t element_index = range.start_element; element_index + 2 < range.start_element + range.num_elements; element_index += 3)
+				{
+					unsigned int indexes[3] =
+					{
+						mesh.elements[element_index],
+						mesh.elements[element_index + 1],
+						mesh.elements[element_index + 2]
+					};
+
+					Vec2f uv[3] =
+					{
+						mesh.channels[range.self_illumination_map.channel][indexes[0]] * 1024.0f,
+						mesh.channels[range.self_illumination_map.channel][indexes[1]] * 1024.0f,
+						mesh.channels[range.self_illumination_map.channel][indexes[2]] * 1024.0f
+					};
+
+					Vec3f vertices[3] =
+					{
+						mesh.vertices[indexes[0]],
+						mesh.vertices[indexes[1]],
+						mesh.vertices[indexes[2]]
+					};
+
+					raytrace_face(range.self_illumination_map.texture, uv, vertices);
+				}
+			}
+		}
+
+		for (auto &it : lightmaps)
+		{
+			auto &texture = model_data->textures[it.first];
+			auto &buffer = it.second;
+
+			auto pixelbuffer = PixelBuffer(buffer->width(), buffer->height(), tf_rgb32f, buffer->data(), true).to_format(tf_rgba8);
+			PNGProvider::save(pixelbuffer, texture.name);
+		}
+	}
+
+	void LightmapTexture::raytrace_face(int target_texture, const Vec2f *points, const Vec3f *vertices)
+	{
+		static int debug_counter = 0;
+		static std::vector<Vec4f> debug_colors
+		{
+			Colorf::aliceblue,
+			Colorf::blanchedalmond,
+			Colorf::burlywood,
+			Colorf::cadetblue,
+			Colorf::darkgoldenrod,
+			Colorf::deepskyblue,
+			Colorf::honeydew,
+			Colorf::mediumpurple,
+			Colorf::moccasin,
+			Colorf::mistyrose,
+			Colorf::mintcream,
+			Colorf::orangered
+		};
+		Vec3f face_debug_color(debug_colors[debug_counter++ % debug_colors.size()]);
+
+		auto &lightmap = lightmaps[target_texture];
+		if (!lightmap)
+			lightmap = std::make_shared<LightmapBuffer>(1024, 1024); // To do: it needs to read this from the mesh somehow
+
+		// To do: extend triangle by 0.5 in each direction
+
+		Vec2f sorted_points[3] = { points[0], points[1], points[2] };
+		if (sorted_points[0].y > sorted_points[1].y) std::swap(sorted_points[0], sorted_points[1]);
+		if (sorted_points[0].y > sorted_points[2].y) std::swap(sorted_points[0], sorted_points[2]);
+		if (sorted_points[1].y > sorted_points[2].y) std::swap(sorted_points[1], sorted_points[2]);
+
+		Vec2f dir[3] =
+		{
+			sorted_points[1] - sorted_points[0],
+			sorted_points[2] - sorted_points[1],
+			sorted_points[2] - sorted_points[0]
+		};
+
+		int start_y = (int)std::round(sorted_points[0].y);
+		int middle_y = (int)std::round(sorted_points[1].y);
+		int end_y = (int)std::round(sorted_points[2].y);
+
+		start_y = std::max(start_y, 0);
+		middle_y = std::min(middle_y, lightmap->height());
+		end_y = std::min(end_y, lightmap->height());
+
+		for (int y = start_y; y < middle_y; y++)
+		{
+			int x0 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[0].x / dir[0].y);
+			int x1 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[2].x / dir[2].y);
+			if (x0 > x1) std::swap(x0, x1);
+			x0 = std::max(x0, 0);
+			x1 = std::min(x1, lightmap->width());
+			for (int x = x0; x < x1; x++)
+				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, face_debug_color);
+		}
+
+		for (int y = middle_y; y < end_y; y++)
+		{
+			int x0 = (int)std::round(sorted_points[1].x + (y + 0.5f - sorted_points[1].y) * dir[1].x / dir[1].y);
+			int x1 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[2].x / dir[2].y);
+			if (x0 > x1) std::swap(x0, x1);
+			x0 = std::max(x0, 0);
+			x1 = std::min(x1, lightmap->width());
+			for (int x = x0; x < x1; x++)
+				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, face_debug_color);
+		}
+	}
+
+	Vec3f LightmapTexture::raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f &face_debug_color)
+	{
+		// Find barycentric coordinates for our position:
+
+		float det = ((uv[1].y - uv[2].y) * (uv[0].x - uv[2].x) + (uv[2].x - uv[1].x) * (uv[0].y - uv[2].y));
+		if (det == 0.0f || det == -0.0f) return Vec3f();
+		float a = (uv[1].y - uv[2].y) * (px - uv[2].x) + (uv[2].x - uv[1].x) * (py - uv[2].y) / det;
+		float b = (uv[2].y - uv[0].y) * (px - uv[2].x) + (uv[0].x - uv[2].x) * (py - uv[2].y) / det;
+		float c = 1.0f - a - b;
+
+		// To do: clamp position to stay within our face
+		// http://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside
+
+		Vec3f texel_in_world = a * vertices[0] + b * vertices[1] + c * vertices[2];
+
+		// To do: use vertex normals instead of face normal
+		Vec3f texel_normal_in_world = Vec3f::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
+		texel_normal_in_world.normalize();
+
+		Vec3f diffuse_contribution = face_debug_color;
+
+		Physics3DRayTest ray_test(world);
+		for (const auto &light : model_data->lights)
+		{
+			Vec3f light_pos_in_world = light.position.get_single_value();
+			Vec3f dir = Vec3f::normalize(light_pos_in_world - texel_in_world);
+			float margin = 0.01f;
+			if (!ray_test.test(texel_in_world + dir * margin, light_pos_in_world))
+			{
+				// To do: support more than just point lights
+				// To do: distance attenuation
+
+				float d = std::max(-Vec3f::dot(texel_normal_in_world, dir), 0.0f);
+				diffuse_contribution += light.color.get_single_value() * d;
+			}
+		}
+
+		return diffuse_contribution;
+	}
+}

@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "Lightmap/lightmap_uv.h"
+#include "Lightmap/lightmap_texture.h"
 #include "fbx_model_loader.h"
 #include "fbx_model_impl.h"
 #include <ClanLib/core.h>
@@ -40,8 +41,12 @@ namespace clan
 		std::shared_ptr<ModelData> data = loader.model_data;
 		if (bake_light)
 		{
-			LightmapUV lightmap;
-			lightmap.generate(data);
+			LightmapUV lightmap_uv;
+			lightmap_uv.generate(data);
+
+			LightmapTexture lightmap_texture;
+			lightmap_texture.generate(data);
+
 			data->lights.clear();
 		}
 		return data;

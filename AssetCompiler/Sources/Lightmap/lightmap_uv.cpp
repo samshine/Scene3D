@@ -6,13 +6,9 @@
 
 namespace clan
 {
-	LightmapUV::LightmapUV()
-	{
-	}
-
 	void LightmapUV::generate(const std::shared_ptr<ModelData> &model_data)
 	{
-		float density = 1.0f;
+		float density = 8.0f;
 
 		TextureAtlas atlas(Size(1024, 1024));
 
@@ -69,22 +65,19 @@ namespace clan
 				}
 
 				for (int i = 0; i < 3; i++)
-				{
-					uv[i].x = std::floor(uv[i].x * density);
-					uv[i].y = std::floor(uv[i].y * density);
-				}
+					uv[i] *= density;
 
-				Vec2f min_uv = Vec2f(std::min(std::min(uv[0].x, uv[1].x), uv[2].x), std::min(std::min(uv[0].y, uv[1].y), uv[2].y));
+				Vec2f min_uv = Vec2f(std::floor(std::min(std::min(uv[0].x, uv[1].x), uv[2].x)), std::floor(std::min(std::min(uv[0].y, uv[1].y), uv[2].y)));
 				for (int i = 0; i < 3; i++)
 					uv[i] -= min_uv;
 
-				Vec2f max_uv = Vec2f(std::max(std::max(uv[0].x, uv[1].x), uv[2].x), std::max(std::max(uv[0].y, uv[1].y), uv[2].y));
+				Vec2f max_uv = Vec2f(std::ceil(std::max(std::max(uv[0].x, uv[1].x), uv[2].x)), std::ceil(std::max(std::max(uv[0].y, uv[1].y), uv[2].y)));
 
 				TextureAtlasObject atlas_pos = atlas.add(Size((int)max_uv.x, (int)max_uv.y));
 
 				Vec2f offset((float)atlas_pos.box.left, (float)atlas_pos.box.top);
 				for (int i = 0; i < 3; i++)
-					uv[i] += offset;
+					uv[i] = (uv[i] + offset) / 1024.0f;
 
 				face_lightmap_texture_index[face_index] = atlas_pos.array_index;
 

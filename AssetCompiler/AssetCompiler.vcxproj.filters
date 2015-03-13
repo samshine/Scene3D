@@ -267,6 +267,9 @@
     <ClCompile Include="Sources\Lightmap\texture_atlas.cpp">
       <Filter>Sources\Lightmap</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Lightmap\lightmap_texture.cpp">
+      <Filter>Sources\Lightmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h">
@@ -615,6 +618,9 @@
       <Filter>Sources\Lightmap</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Lightmap\texture_atlas.h">
+      <Filter>Sources\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lightmap\lightmap_texture.h">
       <Filter>Sources\Lightmap</Filter>
     </ClInclude>
   </ItemGroup>
