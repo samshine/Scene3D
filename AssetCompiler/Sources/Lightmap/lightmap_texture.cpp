@@ -101,7 +101,7 @@ namespace clan
 		int end_y = (int)std::round(sorted_points[2].y);
 
 		start_y = std::max(start_y, 0);
-		middle_y = std::min(middle_y, lightmap->height());
+		middle_y = std::max(std::min(middle_y, lightmap->height()), start_y);
 		end_y = std::min(end_y, lightmap->height());
 
 		for (int y = start_y; y < middle_y; y++)
@@ -132,38 +132,45 @@ namespace clan
 		// Find barycentric coordinates for our position:
 
 		float det = ((uv[1].y - uv[2].y) * (uv[0].x - uv[2].x) + (uv[2].x - uv[1].x) * (uv[0].y - uv[2].y));
-		if (det == 0.0f || det == -0.0f) return Vec3f();
-		float a = (uv[1].y - uv[2].y) * (px - uv[2].x) + (uv[2].x - uv[1].x) * (py - uv[2].y) / det;
-		float b = (uv[2].y - uv[0].y) * (px - uv[2].x) + (uv[0].x - uv[2].x) * (py - uv[2].y) / det;
+		if (det == 0.0f || det == -0.0f)
+			return Vec3f();
+		float a = ((uv[1].y - uv[2].y) * (px - uv[2].x) + (uv[2].x - uv[1].x) * (py - uv[2].y)) / det;
+		float b = ((uv[2].y - uv[0].y) * (px - uv[2].x) + (uv[0].x - uv[2].x) * (py - uv[2].y)) / det;
 		float c = 1.0f - a - b;
 
 		// To do: clamp position to stay within our face
 		// http://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside
 
-		Vec3f texel_in_world = a * vertices[0] + b * vertices[1] + c * vertices[2];
+		Vec3f fragment_pos = a * vertices[0] + b * vertices[1] + c * vertices[2];
 
 		// To do: use vertex normals instead of face normal
-		Vec3f texel_normal_in_world = Vec3f::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
-		texel_normal_in_world.normalize();
+		Vec3f fragment_normal = Vec3f::normalize(Vec3f::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
 
-		Vec3f diffuse_contribution = face_debug_color;
+		Vec3f diffuse_contribution;// = face_debug_color;
 
 		Physics3DRayTest ray_test(world);
 		for (const auto &light : model_data->lights)
 		{
-			Vec3f light_pos_in_world = light.position.get_single_value();
-			Vec3f dir = Vec3f::normalize(light_pos_in_world - texel_in_world);
-			float margin = 0.01f;
-			if (!ray_test.test(texel_in_world + dir * margin, light_pos_in_world))
-			{
-				// To do: support more than just point lights
-				// To do: distance attenuation
+			Vec3f light_pos = light.position.get_single_value();
 
-				float d = std::max(-Vec3f::dot(texel_normal_in_world, dir), 0.0f);
-				diffuse_contribution += light.color.get_single_value() * d;
+			float margin = 0.01f;
+			if (!ray_test.test(fragment_pos + fragment_normal * margin, light_pos))
+			{
+				Vec3f fragment_to_light = light_pos - fragment_pos;
+				float distance_to_light = fragment_to_light.length();
+				Vec3f light_direction = (distance_to_light > 0.0f) ? fragment_to_light * (1.0f / distance_to_light) : Vec3f();
+
+				// To do: support more than just point lights
+
+				float attenuation_start = light.attenuation_start.get_single_value();
+				float rcp_attenuation_delta = 1.0f / (light.attenuation_end.get_single_value() - light.attenuation_start.get_single_value());
+				float distance_attenuation = clamp(1.0f - (distance_to_light - attenuation_start) * rcp_attenuation_delta, 0.0f, 1.0f);
+
+				float lambertian_diffuse_contribution = std::max(Vec3f::dot(fragment_normal, light_direction), 0.0f);
+				diffuse_contribution += (distance_attenuation * lambertian_diffuse_contribution) * light.color.get_single_value();
 			}
 		}
 
-		return diffuse_contribution;
+		return diffuse_contribution * 0.25f;
 	}
 }

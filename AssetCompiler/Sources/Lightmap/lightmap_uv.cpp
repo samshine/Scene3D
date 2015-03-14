@@ -14,8 +14,8 @@ namespace clan
 
 		for (auto &mesh : model_data->meshes)
 		{
-			mesh.channels.resize(std::max(mesh.channels.size(), (size_t)4));
-			auto &lightmap_channel = mesh.channels[3];
+			mesh.channels.resize(std::max(mesh.channels.size(), (size_t)lightmap_channel_index + 1));
+			auto &lightmap_channel = mesh.channels[lightmap_channel_index];
 
 			std::vector<bool> vertex_uv_used;
 			vertex_uv_used.resize(mesh.vertices.size());
@@ -137,7 +137,8 @@ namespace clan
 					start_offset += new_range.num_elements;
 
 					new_range.self_illumination_map.texture = (int)model_data->textures.size() + it.first;
-					new_range.self_illumination_map.channel = 3;
+					new_range.self_illumination_map.channel = lightmap_channel_index;
+					new_range.self_illumination_map.uvw_scale.set_single_value(Vec3f(1.0f));
 
 					new_elements.insert(new_elements.end(), it.second.begin(), it.second.end());
 					new_draw_ranges.push_back(new_range);
