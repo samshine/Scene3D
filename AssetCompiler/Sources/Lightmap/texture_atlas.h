@@ -37,13 +37,12 @@ namespace clan
 	public:
 		TextureAtlasNode(const Rect &rect) : node_rect(rect) { }
 
-		std::shared_ptr<TextureAtlasNode> insert(const Size &texture_size, int texture_id);
-		std::shared_ptr<TextureAtlasNode> find_image_rect(const Rect &new_rect);
+		TextureAtlasNode *insert(const Size &texture_size, int texture_id);
 
 		Rect image_rect;
 
 	private:
-		std::shared_ptr<TextureAtlasNode> child[2];
+		std::unique_ptr<TextureAtlasNode> child[2];
 		Rect node_rect;
 
 		int id = 0;

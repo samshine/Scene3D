@@ -15,6 +15,8 @@ namespace clan
 
 		for (auto &mesh : model_data->meshes)
 		{
+			triangle_mesh = std::make_shared<TriangleMeshShape>(mesh.vertices.data(), (int)mesh.vertices.size(), mesh.elements.data(), (int)mesh.elements.size());
+
 			for (auto &range : mesh.draw_ranges)
 			{
 				if (range.self_illumination_map.channel == -1 || range.self_illumination_map.texture == -1)
@@ -148,16 +150,20 @@ namespace clan
 
 		Vec3f diffuse_contribution;// = face_debug_color;
 
-		Physics3DRayTest ray_test(world);
+		//Physics3DRayTest ray_test(world);
 		for (const auto &light : model_data->lights)
 		{
 			Vec3f light_pos = light.position.get_single_value();
+			Vec3f fragment_to_light = light_pos - fragment_pos;
+			float distance_to_light = fragment_to_light.length();
+
+			if (distance_to_light > light.attenuation_end.get_single_value())
+				continue;
 
 			float margin = 0.01f;
-			if (!ray_test.test(fragment_pos + fragment_normal * margin, light_pos))
+			//if (!ray_test.test(fragment_pos + fragment_normal * margin, light_pos))
+			if (!TriangleMeshShape::find_any_hit(triangle_mesh.get(), fragment_pos + fragment_normal * margin, light_pos))
 			{
-				Vec3f fragment_to_light = light_pos - fragment_pos;
-				float distance_to_light = fragment_to_light.length();
 				Vec3f light_direction = (distance_to_light > 0.0f) ? fragment_to_light * (1.0f / distance_to_light) : Vec3f();
 
 				// To do: support more than just point lights

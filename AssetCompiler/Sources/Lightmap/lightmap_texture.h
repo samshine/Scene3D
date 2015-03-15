@@ -2,6 +2,7 @@
 #pragma once
 
 #include <physics3d.h>
+#include <Collision3D/triangle_mesh_shape.h>
 
 namespace clan
 {
@@ -39,6 +40,7 @@ namespace clan
 		std::map<int, std::shared_ptr<LightmapBuffer>> lightmaps;
 
 		std::shared_ptr<ModelData> model_data;
+		std::shared_ptr<TriangleMeshShape> triangle_mesh;
 		Physics3DWorld world;
 		Physics3DObject model_collision;
 	};

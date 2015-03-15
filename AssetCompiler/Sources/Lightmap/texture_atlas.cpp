@@ -13,7 +13,7 @@ namespace clan
 		// Try inserting in current active texture
 		int array_index = (int)roots.size() - 1;
 
-		std::shared_ptr<TextureAtlasNode> node;
+		TextureAtlasNode *node = 0;
 		if (!roots.empty())
 		{
 			node = roots.back()->insert(texture_size, next_id);
@@ -71,13 +71,13 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	std::shared_ptr<TextureAtlasNode> TextureAtlasNode::insert(const Size &texture_size, int texture_id)
+	TextureAtlasNode *TextureAtlasNode::insert(const Size &texture_size, int texture_id)
 	{
 		// If we're not a leaf
 		if (child[0] && child[1])
 		{
 			// Try inserting into first child
-			auto new_node = child[0]->insert(texture_size, texture_id);
+			TextureAtlasNode *new_node = child[0]->insert(texture_size, texture_id);
 			if (new_node)
 				return new_node;
 
@@ -99,7 +99,7 @@ namespace clan
 			{
 				id = texture_id;
 				image_rect = node_rect;
-				return shared_from_this();
+				return this;
 			}
 
 			// Otherwise, decide which way to split
@@ -108,43 +108,17 @@ namespace clan
 
 			if (dw > dh)
 			{
-				child[0] = std::make_shared<TextureAtlasNode>(Rect(node_rect.left, node_rect.top, node_rect.left + texture_size.width, node_rect.bottom));
-				child[1] = std::make_shared<TextureAtlasNode>(Rect(node_rect.left + texture_size.width, node_rect.top, node_rect.right, node_rect.bottom));
+				child[0].reset(new TextureAtlasNode(Rect(node_rect.left, node_rect.top, node_rect.left + texture_size.width, node_rect.bottom)));
+				child[1].reset(new TextureAtlasNode(Rect(node_rect.left + texture_size.width, node_rect.top, node_rect.right, node_rect.bottom)));
 			}
 			else
 			{
-				child[0] = std::make_shared<TextureAtlasNode>(Rect(node_rect.left, node_rect.top, node_rect.right, node_rect.top + texture_size.height));
-				child[1] = std::make_shared<TextureAtlasNode>(Rect(node_rect.left, node_rect.top + texture_size.height, node_rect.right, node_rect.bottom));
+				child[0].reset(new TextureAtlasNode(Rect(node_rect.left, node_rect.top, node_rect.right, node_rect.top + texture_size.height)));
+				child[1].reset(new TextureAtlasNode(Rect(node_rect.left, node_rect.top + texture_size.height, node_rect.right, node_rect.bottom)));
 			}
 
 			// Insert into first child we created
 			return child[0]->insert(texture_size, texture_id);
 		}
-	}
-
-	std::shared_ptr<TextureAtlasNode> TextureAtlasNode::find_image_rect(const Rect &new_rect)
-	{
-		// Check leaf
-		if (child[0])
-		{
-			auto node = child[0]->find_image_rect(new_rect);
-			if (node)
-				return node;
-		}
-
-		if (child[1])
-		{
-			auto node = child[1]->find_image_rect(new_rect);
-			if (node)
-				return node;
-		}
-
-		if (id == 0)
-			return nullptr;
-
-		if (image_rect == new_rect)
-			return shared_from_this();
-
-		return nullptr;
 	}
 }

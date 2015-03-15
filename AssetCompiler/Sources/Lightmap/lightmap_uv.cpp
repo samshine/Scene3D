@@ -71,7 +71,7 @@ namespace clan
 				for (int i = 0; i < 3; i++)
 					uv[i] -= min_uv;
 
-				Vec2f max_uv = Vec2f(std::ceil(std::max(std::max(uv[0].x, uv[1].x), uv[2].x)), std::ceil(std::max(std::max(uv[0].y, uv[1].y), uv[2].y)));
+				Vec2f max_uv = Vec2f(std::floor(std::max(std::max(uv[0].x, uv[1].x), uv[2].x)), std::floor(std::max(std::max(uv[0].y, uv[1].y), uv[2].y))) + 1.0f;
 
 				TextureAtlasObject atlas_pos = atlas.add(Size((int)max_uv.x, (int)max_uv.y));
 

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Collision3D\sphere_shape.h" />
+    <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
     <ClInclude Include="Include\Physics3D\physics3d_contact_pair_test.h" />
@@ -331,6 +333,7 @@
     <ClInclude Include="Sources\Scene3D\scene_pass_impl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvt.cpp" />

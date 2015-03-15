@@ -160,6 +160,12 @@
     <Filter Include="Sources\Scene3D\ModelData">
       <UniqueIdentifier>{29011300-d8a1-4378-976f-a07db1d33374}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Collision3D">
+      <UniqueIdentifier>{4df37e9b-77c2-4604-8a9e-a074898ffbc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Collision3D">
+      <UniqueIdentifier>{59c00bf9-026f-4f2e-bb34-1f563d537b62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1092,6 +1098,12 @@
     <ClInclude Include="Sources\Scene3D\Framework\mapped_buffer.h">
       <Filter>Sources\Scene3D\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Collision3D\sphere_shape.h">
+      <Filter>Include\Collision3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h">
+      <Filter>Include\Collision3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1630,6 +1642,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp">
       <Filter>Sources\Scene3D\ModelData</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp">
+      <Filter>Sources\Collision3D</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
