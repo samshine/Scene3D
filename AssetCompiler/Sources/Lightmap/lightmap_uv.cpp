@@ -8,7 +8,7 @@ namespace clan
 {
 	void LightmapUV::generate(const std::shared_ptr<ModelData> &model_data)
 	{
-		float density = 8.0f;
+		float density = 20.0f;
 
 		TextureAtlas atlas(Size(1024, 1024));
 
@@ -121,8 +121,9 @@ namespace clan
 
 				for (int i = 0; i < range.num_elements; i++)
 				{
+					int face_index = (range.start_element + i) / 3;
 					auto element = mesh.elements[range.start_element + i];
-					int array_index = face_lightmap_texture_index[element / 3];
+					int array_index = face_lightmap_texture_index[face_index];
 					grouped_elements[array_index].push_back(element);
 				}
 
