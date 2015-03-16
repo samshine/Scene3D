@@ -34,8 +34,8 @@ namespace clan
 		void generate(const std::shared_ptr<ModelData> &model_data);
 
 	private:
-		void raytrace_face(int target_texture, const Vec2f *uv, const Vec3f *vertices);
-		Vec3f raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f &face_debug_color);
+		void raytrace_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
+		Vec3f raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals);
 	
 		std::map<int, std::shared_ptr<LightmapBuffer>> lightmaps;
 

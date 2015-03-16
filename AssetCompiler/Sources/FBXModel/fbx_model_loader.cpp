@@ -692,6 +692,10 @@ namespace clan
 		FbxAMatrix inverseZ = FbxAMatrix(FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(1.0, 1.0, -1.0, 1.0));
 		FbxAMatrix light_to_world = inverseZ * (node->EvaluateGlobalTransform() * FbxAMatrix(node->GetGeometricTranslation(FbxNode::eSourcePivot), node->GetGeometricRotation(FbxNode::eSourcePivot), node->GetGeometricScaling(FbxNode::eSourcePivot)));
 
+		// light_to_world.GetS() returns a negative value(!!), so maybe the above calculations are not valid. If only the FBX SDK had been more clear about its math..
+		auto scale_vector = node->EvaluateGlobalTransform().GetS() * node->GetGeometricScaling(FbxNode::eSourcePivot);
+		float scale = std::max({ scale_vector[0], scale_vector[1], scale_vector[2] });
+
 		Vec3f position = Vec3f(to_vec4f(light_to_world.GetT()));
 		Quaternionf orientation = to_quaternionf(light_to_world.GetQ()) * directionRotation;
 
@@ -726,8 +730,8 @@ namespace clan
 		model_light.color.set_single_value(to_vec3f(light->Color.Get()) * (float)(light->Intensity.Get() * 0.01));
 		//model_light.shadow_color.set_single_value(light->ShadowColor.Get());
 
-		model_light.attenuation_start.set_single_value((float)light->FarAttenuationStart.Get());
-		model_light.attenuation_end.set_single_value((float)light->FarAttenuationEnd.Get());
+		model_light.attenuation_start.set_single_value((float)light->FarAttenuationStart.Get() * scale);
+		model_light.attenuation_end.set_single_value((float)light->FarAttenuationEnd.Get() * scale);
 
 		model_light.aspect.set_single_value(1.0f);
 		model_light.ambient_illumination.set_single_value(0.0f);

@@ -45,7 +45,14 @@ namespace clan
 						mesh.vertices[indexes[2]]
 					};
 
-					raytrace_face(range.self_illumination_map.texture, uv, vertices);
+					Vec3f normals[3] =
+					{
+						mesh.normals[indexes[0]],
+						mesh.normals[indexes[1]],
+						mesh.normals[indexes[2]]
+					};
+
+					raytrace_face(range.self_illumination_map.texture, uv, vertices, normals);
 				}
 			}
 		}
@@ -60,31 +67,11 @@ namespace clan
 		}
 	}
 
-	void LightmapTexture::raytrace_face(int target_texture, const Vec2f *points, const Vec3f *vertices)
+	void LightmapTexture::raytrace_face(int target_texture, const Vec2f *points, const Vec3f *vertices, const Vec3f *normals)
 	{
-		static int debug_counter = 0;
-		static std::vector<Vec4f> debug_colors
-		{
-			Colorf::aliceblue,
-			Colorf::blanchedalmond,
-			Colorf::burlywood,
-			Colorf::cadetblue,
-			Colorf::darkgoldenrod,
-			Colorf::deepskyblue,
-			Colorf::honeydew,
-			Colorf::mediumpurple,
-			Colorf::moccasin,
-			Colorf::mistyrose,
-			Colorf::mintcream,
-			Colorf::orangered
-		};
-		Vec3f face_debug_color(debug_colors[debug_counter++ % debug_colors.size()]);
-
 		auto &lightmap = lightmaps[target_texture];
 		if (!lightmap)
 			lightmap = std::make_shared<LightmapBuffer>(1024, 1024); // To do: it needs to read this from the mesh somehow
-
-		// To do: extend triangle by 0.5 in each direction
 
 		Vec2f sorted_points[3] = { points[0], points[1], points[2] };
 		if (sorted_points[0].y > sorted_points[1].y) std::swap(sorted_points[0], sorted_points[1]);
@@ -114,7 +101,7 @@ namespace clan
 			x0 = std::max(x0, 0);
 			x1 = std::min(x1, lightmap->width());
 			for (int x = x0; x < x1; x++)
-				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, face_debug_color);
+				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, normals);
 		}
 
 		for (int y = middle_y; y < end_y; y++)
@@ -125,11 +112,11 @@ namespace clan
 			x0 = std::max(x0, 0);
 			x1 = std::min(x1, lightmap->width());
 			for (int x = x0; x < x1; x++)
-				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, face_debug_color);
+				lightmap->at(x, y) = raytrace_face_point(target_texture, points, x + 0.5f, y + 0.5f, vertices, normals);
 		}
 	}
 
-	Vec3f LightmapTexture::raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f &face_debug_color)
+	Vec3f LightmapTexture::raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals)
 	{
 		// Find barycentric coordinates for our position:
 
@@ -146,9 +133,10 @@ namespace clan
 		Vec3f fragment_pos = a * vertices[0] + b * vertices[1] + c * vertices[2];
 
 		// To do: use vertex normals instead of face normal
-		Vec3f fragment_normal = Vec3f::normalize(Vec3f::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
+		//Vec3f fragment_normal = Vec3f::normalize(Vec3f::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
+		Vec3f fragment_normal = Vec3f::normalize(a * normals[0] + b * normals[1] + c * normals[2]);
 
-		Vec3f diffuse_contribution;// = face_debug_color;
+		Vec3f diffuse_contribution;
 
 		//Physics3DRayTest ray_test(world);
 		for (const auto &light : model_data->lights)

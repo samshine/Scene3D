@@ -89,6 +89,7 @@ namespace clan
 						unsigned int new_index = (unsigned int)mesh.vertices.size();
 
 						if (!mesh.vertices.empty()) { auto value = mesh.vertices[src_index]; mesh.vertices.push_back(value); }
+						if (!mesh.normals.empty()) { auto value = mesh.normals[src_index]; mesh.normals.push_back(value); }
 						if (!mesh.tangents.empty()) { auto value = mesh.tangents[src_index]; mesh.tangents.push_back(value); }
 						if (!mesh.bitangents.empty()) { auto value = mesh.bitangents[src_index]; mesh.bitangents.push_back(value); }
 						if (!mesh.bone_weights.empty()) { auto value = mesh.bone_weights[src_index]; mesh.bone_weights.push_back(value); }
