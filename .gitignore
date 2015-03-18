@@ -20,3 +20,5 @@ ipch
 /Editors/x64
 /ModelEditor/x64
 /ModelEditor/*.aps
+/MapEditor/x64
+/MapEditor/*.aps
