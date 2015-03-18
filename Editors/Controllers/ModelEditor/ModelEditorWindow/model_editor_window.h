@@ -12,10 +12,10 @@ class BonesController;
 class CamerasController;
 class EnvironmentController;
 
-class MainWindow : public clan::ViewController
+class ModelEditorWindow : public clan::ViewController
 {
 public:
-	MainWindow();
+	ModelEditorWindow();
 
 	std::shared_ptr<clan::WindowView> window_view() { return std::static_pointer_cast<clan::WindowView>(view); }
 

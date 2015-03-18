@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controllers\MainWindow\main_window.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Animations\animations_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Attachments\attachments_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Bones\bones_controller.cpp" />
@@ -27,6 +26,7 @@
     <ClCompile Include="Controllers\ModelEditor\Environment\environment_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Lights\lights_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Materials\materials_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp" />
@@ -60,7 +60,6 @@
     <ClCompile Include="Views\Scene\viewer_scene_cache.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controllers\MainWindow\main_window.h" />
     <ClInclude Include="Controllers\ModelEditor\Animations\animations_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\Attachments\attachments_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\Bones\bones_controller.h" />
@@ -68,8 +67,10 @@
     <ClInclude Include="Controllers\ModelEditor\Environment\environment_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\Lights\lights_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\Materials\materials_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.h" />
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
+    <ClInclude Include="editor_resources.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_material_command.h" />

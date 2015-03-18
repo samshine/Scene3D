@@ -4,9 +4,6 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{d8b0d133-fbe8-4cee-b98e-747fd346f28a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controllers\MainWindow">
-      <UniqueIdentifier>{35b7110a-6633-4b0b-b130-8576b6b74188}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controllers\ModelEditor">
       <UniqueIdentifier>{6825712c-60b8-4274-9ca6-2d2db48ba325}</UniqueIdentifier>
     </Filter>
@@ -70,11 +67,11 @@
     <Filter Include="Views\Scene">
       <UniqueIdentifier>{4a6df7fe-4a10-439d-8448-4b0651287fe1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\ModelEditor\ModelEditorWindow">
+      <UniqueIdentifier>{2db6148d-5dc6-4602-9fb2-2562e8341e88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controllers\MainWindow\main_window.cpp">
-      <Filter>Controllers\MainWindow</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\ModelEditor\Animations\animations_controller.cpp">
       <Filter>Controllers\ModelEditor\Animations</Filter>
     </ClCompile>
@@ -172,11 +169,11 @@
       <Filter>Views\Rollout</Filter>
     </ClCompile>
     <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.cpp">
+      <Filter>Controllers\ModelEditor\ModelEditorWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controllers\MainWindow\main_window.h">
-      <Filter>Controllers\MainWindow</Filter>
-    </ClInclude>
     <ClInclude Include="Controllers\ModelEditor\Animations\animations_controller.h">
       <Filter>Controllers\ModelEditor\Animations</Filter>
     </ClInclude>
@@ -280,5 +277,9 @@
     <ClInclude Include="Model\UndoSystem\model_command.h">
       <Filter>Model\UndoSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.h">
+      <Filter>Controllers\ModelEditor\ModelEditorWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_resources.h" />
   </ItemGroup>
 </Project>

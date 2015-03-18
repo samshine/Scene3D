@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "main_window.h"
+#include "model_editor_window.h"
 #include "Model/ModelEditor/model_app_model.h"
 #include "Views/Header/header_view.h"
 #include "Views/Header/header_menu_view.h"
@@ -16,7 +16,7 @@
 
 using namespace clan;
 
-MainWindow::MainWindow()
+ModelEditorWindow::ModelEditorWindow()
 {
 	create_layout();
 
@@ -27,23 +27,23 @@ MainWindow::MainWindow()
 
 	auto app_menu = header_view->add_left_menu("Editor", "Icons/App/AppIcon-32.png");
 
-	app_menu->add_item("Open", bind_member(this, &MainWindow::on_open));
-	app_menu->add_item("Save", bind_member(this, &MainWindow::on_save));
-	app_menu->add_item("Save As", bind_member(this, &MainWindow::on_save_as));
+	app_menu->add_item("Open", bind_member(this, &ModelEditorWindow::on_open));
+	app_menu->add_item("Save", bind_member(this, &ModelEditorWindow::on_save));
+	app_menu->add_item("Save As", bind_member(this, &ModelEditorWindow::on_save_as));
 	
 	header_view->add_right_button("Undo", "Icons/Undo/undo-24.png", []() {});
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
 	
-	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &MainWindow::on_change_model));
+	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &ModelEditorWindow::on_change_model));
 
 	auto options = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
-	options->add_item("Attachments", bind_member(this, &MainWindow::on_show_attachments));
-	options->add_item("Animations", bind_member(this, &MainWindow::on_show_animations));
-	options->add_item("Materials", bind_member(this, &MainWindow::on_show_materials));
-	options->add_item("Lights", bind_member(this, &MainWindow::on_show_lights));
-	options->add_item("Bones", bind_member(this, &MainWindow::on_show_bones));
-	options->add_item("Cameras", bind_member(this, &MainWindow::on_show_cameras));
-	options->add_item("Environment", bind_member(this, &MainWindow::on_show_environment));
+	options->add_item("Attachments", bind_member(this, &ModelEditorWindow::on_show_attachments));
+	options->add_item("Animations", bind_member(this, &ModelEditorWindow::on_show_animations));
+	options->add_item("Materials", bind_member(this, &ModelEditorWindow::on_show_materials));
+	options->add_item("Lights", bind_member(this, &ModelEditorWindow::on_show_lights));
+	options->add_item("Bones", bind_member(this, &ModelEditorWindow::on_show_bones));
+	options->add_item("Cameras", bind_member(this, &ModelEditorWindow::on_show_cameras));
+	options->add_item("Environment", bind_member(this, &ModelEditorWindow::on_show_environment));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
@@ -58,7 +58,7 @@ MainWindow::MainWindow()
 	workspace_controller->set_docked(environment_controller);
 }
 
-void MainWindow::create_layout()
+void ModelEditorWindow::create_layout()
 {
 	DisplayWindowDescription desc;
 	desc.set_size(Size(1280, 768), false);
@@ -79,7 +79,7 @@ void MainWindow::create_layout()
 	add_child_controller(workspace_controller);
 }
 
-void MainWindow::update_window_title()
+void ModelEditorWindow::update_window_title()
 {
 	if (!AppModel::instance()->open_filename.empty())
 		window_view()->get_display_window().set_title(PathHelp::get_basename(AppModel::instance()->open_filename) + " - Model Editor");
@@ -87,7 +87,7 @@ void MainWindow::update_window_title()
 		window_view()->get_display_window().set_title("Model Editor");
 }
 
-void MainWindow::on_open()
+void ModelEditorWindow::on_open()
 {
 	OpenFileDialog dialog(view.get());
 	dialog.set_title("Select Model");
@@ -101,7 +101,7 @@ void MainWindow::on_open()
 	}
 }
 
-void MainWindow::on_save()
+void ModelEditorWindow::on_save()
 {
 	if (AppModel::instance()->open_filename.empty())
 	{
@@ -113,7 +113,7 @@ void MainWindow::on_save()
 	}
 }
 
-void MainWindow::on_save_as()
+void ModelEditorWindow::on_save_as()
 {
 	SaveFileDialog dialog(view.get());
 	dialog.set_title("Save Model Description");
@@ -130,7 +130,7 @@ void MainWindow::on_save_as()
 	}
 }
 
-void MainWindow::on_change_model()
+void ModelEditorWindow::on_change_model()
 {
 	OpenFileDialog dialog(view.get());
 	dialog.set_title("Select Model");
@@ -143,37 +143,37 @@ void MainWindow::on_change_model()
 	}
 }
 
-void MainWindow::on_show_attachments()
+void ModelEditorWindow::on_show_attachments()
 {
 	workspace_controller->set_docked(attachments_controller);
 }
 
-void MainWindow::on_show_animations()
+void ModelEditorWindow::on_show_animations()
 {
 	workspace_controller->set_docked(animations_controller);
 }
 
-void MainWindow::on_show_materials()
+void ModelEditorWindow::on_show_materials()
 {
 	workspace_controller->set_docked(materials_controller);
 }
 
-void MainWindow::on_show_lights()
+void ModelEditorWindow::on_show_lights()
 {
 	workspace_controller->set_docked(lights_controller);
 }
 
-void MainWindow::on_show_bones()
+void ModelEditorWindow::on_show_bones()
 {
 	workspace_controller->set_docked(bones_controller);
 }
 
-void MainWindow::on_show_cameras()
+void ModelEditorWindow::on_show_cameras()
 {
 	workspace_controller->set_docked(cameras_controller);
 }
 
-void MainWindow::on_show_environment()
+void ModelEditorWindow::on_show_environment()
 {
 	workspace_controller->set_docked(environment_controller);
 }
