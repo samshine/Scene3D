@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "set_map_model_command.h"
-#include "../app_model.h"
+#include "../model_app_model.h"
 
 SetMapModelCommand::SetMapModelCommand(std::string map_model) : new_map_model(std::move(map_model))
 {

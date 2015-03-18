@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "model_command.h"
+#include "Model/UndoSystem/model_command.h"
 
 class UpdateMaterialCommand : public ModelCommand
 {

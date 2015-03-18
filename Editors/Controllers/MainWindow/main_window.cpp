@@ -1,18 +1,18 @@
 
 #include "precomp.h"
 #include "main_window.h"
-#include "Model/app_model.h"
+#include "Model/ModelEditor/model_app_model.h"
 #include "Views/Header/header_view.h"
 #include "Views/Header/header_menu_view.h"
 #include "Controllers/Workspace/workspace_controller.h"
-#include "Controllers/Scene/scene_controller.h"
-#include "Controllers/Animations/animations_controller.h"
-#include "Controllers/Attachments/attachments_controller.h"
-#include "Controllers/Materials/materials_controller.h"
-#include "Controllers/Lights/lights_controller.h"
-#include "Controllers/Bones/bones_controller.h"
-#include "Controllers/Cameras/cameras_controller.h"
-#include "Controllers/Environment/environment_controller.h"
+#include "Controllers/ModelEditor/Scene/scene_controller.h"
+#include "Controllers/ModelEditor/Animations/animations_controller.h"
+#include "Controllers/ModelEditor/Attachments/attachments_controller.h"
+#include "Controllers/ModelEditor/Materials/materials_controller.h"
+#include "Controllers/ModelEditor/Lights/lights_controller.h"
+#include "Controllers/ModelEditor/Bones/bones_controller.h"
+#include "Controllers/ModelEditor/Cameras/cameras_controller.h"
+#include "Controllers/ModelEditor/Environment/environment_controller.h"
 
 using namespace clan;
 

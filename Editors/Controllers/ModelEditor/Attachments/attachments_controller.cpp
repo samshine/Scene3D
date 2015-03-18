@@ -6,7 +6,7 @@
 #include "Views/Rollout/rollout_position_property.h"
 #include "Views/Rollout/rollout_text_field_property.h"
 #include "Views/Rollout/rollout_browse_field_property.h"
-#include "Model/app_model.h"
+#include "Model/ModelEditor/model_app_model.h"
 
 using namespace clan;
 

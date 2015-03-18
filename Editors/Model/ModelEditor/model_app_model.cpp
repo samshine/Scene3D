@@ -1,7 +1,7 @@
 
 #include "precomp.h"
-#include "app_model.h"
-#include "Model/EditorScene/Game/game_scene.h"
+#include "model_app_model.h"
+#include "Model/ModelEditor/EditorScene/Game/game_scene.h"
 #include <memory>
 
 using namespace clan;

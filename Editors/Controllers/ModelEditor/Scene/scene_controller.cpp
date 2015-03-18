@@ -1,9 +1,9 @@
 
 #include "precomp.h"
 #include "scene_controller.h"
-#include "Model/app_model.h"
-#include "Model/EditorScene/Edit/edit_scene.h"
-#include "Model/EditorScene/Game/game_scene.h"
+#include "Model/ModelEditor/model_app_model.h"
+#include "Model/ModelEditor/EditorScene/Edit/edit_scene.h"
+#include "Model/ModelEditor/EditorScene/Game/game_scene.h"
 #include "Views/Scene/scene_view.h"
 
 using namespace clan;

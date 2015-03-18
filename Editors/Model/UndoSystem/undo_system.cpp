@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "undo_system.h"
-#include "Commands/model_command.h"
+#include "model_command.h"
 
 bool UndoSystem::can_undo() const
 {

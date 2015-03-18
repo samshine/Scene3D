@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Model/EditorScene/editor_scene.h"
+#include "Model/ModelEditor/EditorScene/editor_scene.h"
 
 class EditScene : public EditorScene
 {

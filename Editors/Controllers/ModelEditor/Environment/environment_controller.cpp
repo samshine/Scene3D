@@ -4,10 +4,10 @@
 #include "Views/Rollout/rollout_view.h"
 #include "Views/Rollout/rollout_text_field_property.h"
 #include "Views/Rollout/rollout_browse_field_property.h"
-#include "Model/app_model.h"
-#include "Model/Commands/set_map_model_command.h"
-#include "Model/EditorScene/editor_scene.h"
-#include "Model/EditorScene/Game/character_controller.h"
+#include "Model/ModelEditor/model_app_model.h"
+#include "Model/ModelEditor/Commands/set_map_model_command.h"
+#include "Model/ModelEditor/EditorScene/editor_scene.h"
+#include "Model/ModelEditor/EditorScene/Game/character_controller.h"
 
 using namespace clan;
 

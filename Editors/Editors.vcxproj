@@ -41,6 +41,12 @@
     <ClCompile Include="Model\ModelEditor\EditorScene\Game\game_scene.cpp" />
     <ClCompile Include="Model\ModelEditor\model_app_model.cpp" />
     <ClCompile Include="Model\UndoSystem\undo_system.cpp" />
+    <ClCompile Include="precomp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Views\Header\header_menu_view.cpp" />
     <ClCompile Include="Views\Header\header_view.cpp" />
     <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp" />
@@ -67,7 +73,6 @@
     <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_material_command.h" />
-    <ClInclude Include="Model\ModelEditor\Commands\model_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\set_map_model_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\update_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\update_attachment_command.h" />
@@ -77,7 +82,9 @@
     <ClInclude Include="Model\ModelEditor\EditorScene\Game\character_controller.h" />
     <ClInclude Include="Model\ModelEditor\EditorScene\Game\game_scene.h" />
     <ClInclude Include="Model\ModelEditor\model_app_model.h" />
+    <ClInclude Include="Model\UndoSystem\model_command.h" />
     <ClInclude Include="Model\UndoSystem\undo_system.h" />
+    <ClInclude Include="precomp.h" />
     <ClInclude Include="Views\Header\header_menu_view.h" />
     <ClInclude Include="Views\Header\header_view.h" />
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h" />
@@ -141,11 +148,13 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\Scene3D\Include;$(SolutionDir)\AssetCompiler\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,11 +163,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\Scene3D\Include;$(SolutionDir)\AssetCompiler\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,12 +179,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\Scene3D\Include;$(SolutionDir)\AssetCompiler\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -185,12 +198,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\Scene3D\Include;$(SolutionDir)\AssetCompiler\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

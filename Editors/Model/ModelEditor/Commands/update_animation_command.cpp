@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "update_animation_command.h"
-#include "../app_model.h"
+#include "../model_app_model.h"
 
 using namespace clan;
 

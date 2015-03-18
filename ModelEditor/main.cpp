@@ -1,7 +1,7 @@
 
 #include "precomp.h"
-#include "Controllers/MainWindow/main_window.h"
-#include "Model/app_model.h"
+#include "../Editors/Controllers/MainWindow/main_window.h"
+#include "../Editors/Model/ModelEditor/model_app_model.h"
 
 using namespace clan;
 

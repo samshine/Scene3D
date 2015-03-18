@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Model/EditorScene/editor_scene.h"
+#include "Model/ModelEditor/EditorScene/editor_scene.h"
 #include "character_controller.h"
 
 class GameScene : public EditorScene
