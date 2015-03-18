@@ -34,14 +34,22 @@ namespace clan
 		void generate(const std::shared_ptr<ModelData> &model_data);
 
 	private:
+		void create_collision_mesh();
+		void shooting_rays();
+
 		void raytrace_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
 		Vec3f raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals);
 	
 		std::map<int, std::shared_ptr<LightmapBuffer>> lightmaps;
 
 		std::shared_ptr<ModelData> model_data;
+
 		std::shared_ptr<TriangleMeshShape> triangle_mesh;
+		std::vector<unsigned int> triangle_elements;
+
 		Physics3DWorld world;
 		Physics3DObject model_collision;
+
+		const float margin = 0.01f;
 	};
 }

@@ -13,10 +13,12 @@ namespace clan
 		world = Physics3DWorld();
 		model_collision = Physics3DObject::collision_body(world, Physics3DShape::model(model_data));
 
+		create_collision_mesh();
+
+		// shooting_rays();
+
 		for (auto &mesh : model_data->meshes)
 		{
-			triangle_mesh = std::make_shared<TriangleMeshShape>(mesh.vertices.data(), (int)mesh.vertices.size(), mesh.elements.data(), (int)mesh.elements.size());
-
 			for (auto &range : mesh.draw_ranges)
 			{
 				if (range.self_illumination_map.channel == -1 || range.self_illumination_map.texture == -1)
@@ -65,6 +67,70 @@ namespace clan
 			auto pixelbuffer = PixelBuffer(buffer->width(), buffer->height(), tf_rgb32f, buffer->data(), true).to_format(tf_rgba8);
 			PNGProvider::save(pixelbuffer, texture.name);
 		}
+	}
+
+	void LightmapTexture::create_collision_mesh()
+	{
+		if (model_data->meshes.empty())
+			return;
+
+		auto &mesh = model_data->meshes.front();
+
+		triangle_mesh = std::make_shared<TriangleMeshShape>(mesh.vertices.data(), (int)mesh.vertices.size(), mesh.elements.data(), (int)mesh.elements.size());
+
+		for (auto &range : mesh.draw_ranges)
+		{
+			if (range.transparent || range.alpha_test)
+				continue;
+
+			triangle_elements.insert(triangle_elements.end(), mesh.elements.begin() + range.start_element, mesh.elements.begin() + (range.start_element + range.num_elements));
+		}
+	}
+
+	void LightmapTexture::shooting_rays()
+	{
+		std::vector<ModelDataLight> new_lights;
+
+		for (auto &light : model_data->lights)
+		{
+			new_lights.push_back(light);
+
+			Vec3f pos = light.position.get_single_value();
+			float attenuation_end = light.attenuation_end.get_single_value();
+
+			for (int i = 0; i < 10; i++)
+			{
+				Vec3f dir;
+				while (dir == Vec3f())
+				{
+					float x = rand() / (float)RAND_MAX * 2.0f - 1.0f;
+					float y = rand() / (float)RAND_MAX * 2.0f - 1.0f;
+					float z = rand() / (float)RAND_MAX * 2.0f - 1.0f;
+					dir = Vec3f(x, y, z);
+				}
+				dir.normalize();
+
+				Physics3DRayTest ray_test(world);
+				if (ray_test.test(pos, pos + dir * attenuation_end))
+				{
+					float length_travelled = ray_test.get_hit_fraction() * attenuation_end;
+
+					Vec3f new_pos = ray_test.get_hit_position() + ray_test.get_hit_normal() * margin;
+					float lambertian_diffuse_contribution = std::max(Vec3f::dot(ray_test.get_hit_normal(), -dir), 0.0f);
+
+					float radian_emittance = 0.5f;
+
+					ModelDataLight new_light = light;
+					new_light.position.set_single_value(new_pos);
+					new_light.color.set_single_value(light.color.get_single_value() * lambertian_diffuse_contribution * radian_emittance);
+					new_light.attenuation_start.set_single_value(std::max(light.attenuation_start.get_single_value() - length_travelled, 0.0f));
+					new_light.attenuation_end.set_single_value(std::max(light.attenuation_end.get_single_value() - length_travelled, 0.0f));
+					new_lights.push_back(new_light);
+				}
+			}
+		}
+
+		model_data->lights = new_lights;
 	}
 
 	void LightmapTexture::raytrace_face(int target_texture, const Vec2f *points, const Vec3f *vertices, const Vec3f *normals)
@@ -148,7 +214,6 @@ namespace clan
 			if (distance_to_light > light.attenuation_end.get_single_value())
 				continue;
 
-			float margin = 0.01f;
 			//if (!ray_test.test(fragment_pos + fragment_normal * margin, light_pos))
 			if (!TriangleMeshShape::find_any_hit(triangle_mesh.get(), fragment_pos + fragment_normal * margin, light_pos))
 			{
@@ -165,6 +230,6 @@ namespace clan
 			}
 		}
 
-		return diffuse_contribution * 0.25f;
+		return diffuse_contribution * 0.25f * (1.0f/40.0f);
 	}
 }
