@@ -6,13 +6,13 @@
 #include "Views/Header/header_menu_view.h"
 #include "Controllers/Workspace/workspace_controller.h"
 #include "Controllers/ModelEditor/Scene/scene_controller.h"
-#include "Controllers/ModelEditor/Animations/animations_controller.h"
-#include "Controllers/ModelEditor/Attachments/attachments_controller.h"
-#include "Controllers/ModelEditor/Materials/materials_controller.h"
-#include "Controllers/ModelEditor/Lights/lights_controller.h"
-#include "Controllers/ModelEditor/Bones/bones_controller.h"
-#include "Controllers/ModelEditor/Cameras/cameras_controller.h"
-#include "Controllers/ModelEditor/Environment/environment_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Animations/animations_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Attachments/attachments_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Materials/materials_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Lights/lights_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Bones/bones_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Cameras/cameras_controller.h"
+#include "Controllers/ModelEditor/SidePanels/Environment/environment_controller.h"
 
 using namespace clan;
 

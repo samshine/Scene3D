@@ -7,27 +7,6 @@
     <Filter Include="Controllers\ModelEditor">
       <UniqueIdentifier>{6825712c-60b8-4274-9ca6-2d2db48ba325}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controllers\ModelEditor\Animations">
-      <UniqueIdentifier>{1b515219-88d2-4d07-8e33-649183b0a8a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Attachments">
-      <UniqueIdentifier>{2ba72ad2-6243-4830-8957-4620541360dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Bones">
-      <UniqueIdentifier>{56595a38-d6a2-4a90-847c-c95c0d4d0519}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Cameras">
-      <UniqueIdentifier>{f00a7897-1874-482f-ad5a-40a2eea58188}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Environment">
-      <UniqueIdentifier>{6914a323-ed33-4633-a121-da565dbbd62a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Lights">
-      <UniqueIdentifier>{7a761781-3c33-41a7-907a-2df5ae60783c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\ModelEditor\Materials">
-      <UniqueIdentifier>{5b260bc6-c1fb-49de-a40d-88fb48b4ce9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controllers\ModelEditor\Scene">
       <UniqueIdentifier>{a24219b0-2a1f-489d-a1a3-f0cbe486bac5}</UniqueIdentifier>
     </Filter>
@@ -70,29 +49,32 @@
     <Filter Include="Controllers\ModelEditor\ModelEditorWindow">
       <UniqueIdentifier>{2db6148d-5dc6-4602-9fb2-2562e8341e88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels">
+      <UniqueIdentifier>{4de6191b-ca30-437e-96c7-7a70fc50e9fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Animations">
+      <UniqueIdentifier>{1b515219-88d2-4d07-8e33-649183b0a8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Attachments">
+      <UniqueIdentifier>{2ba72ad2-6243-4830-8957-4620541360dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Bones">
+      <UniqueIdentifier>{56595a38-d6a2-4a90-847c-c95c0d4d0519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Cameras">
+      <UniqueIdentifier>{f00a7897-1874-482f-ad5a-40a2eea58188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Environment">
+      <UniqueIdentifier>{6914a323-ed33-4633-a121-da565dbbd62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Lights">
+      <UniqueIdentifier>{7a761781-3c33-41a7-907a-2df5ae60783c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\SidePanels\Materials">
+      <UniqueIdentifier>{5b260bc6-c1fb-49de-a40d-88fb48b4ce9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controllers\ModelEditor\Animations\animations_controller.cpp">
-      <Filter>Controllers\ModelEditor\Animations</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Attachments\attachments_controller.cpp">
-      <Filter>Controllers\ModelEditor\Attachments</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Bones\bones_controller.cpp">
-      <Filter>Controllers\ModelEditor\Bones</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Cameras\cameras_controller.cpp">
-      <Filter>Controllers\ModelEditor\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Environment\environment_controller.cpp">
-      <Filter>Controllers\ModelEditor\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Lights\lights_controller.cpp">
-      <Filter>Controllers\ModelEditor\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\ModelEditor\Materials\materials_controller.cpp">
-      <Filter>Controllers\ModelEditor\Materials</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
       <Filter>Controllers\ModelEditor\Scene</Filter>
     </ClCompile>
@@ -172,29 +154,29 @@
     <ClCompile Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.cpp">
       <Filter>Controllers\ModelEditor\ModelEditorWindow</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Animations\animations_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Attachments\attachments_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Attachments</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Bones\bones_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Bones</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Cameras\cameras_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Environment\environment_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Lights\lights_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.cpp">
+      <Filter>Controllers\ModelEditor\SidePanels\Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controllers\ModelEditor\Animations\animations_controller.h">
-      <Filter>Controllers\ModelEditor\Animations</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Attachments\attachments_controller.h">
-      <Filter>Controllers\ModelEditor\Attachments</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Bones\bones_controller.h">
-      <Filter>Controllers\ModelEditor\Bones</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Cameras\cameras_controller.h">
-      <Filter>Controllers\ModelEditor\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Environment\environment_controller.h">
-      <Filter>Controllers\ModelEditor\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Lights\lights_controller.h">
-      <Filter>Controllers\ModelEditor\Lights</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\ModelEditor\Materials\materials_controller.h">
-      <Filter>Controllers\ModelEditor\Materials</Filter>
-    </ClInclude>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
       <Filter>Controllers\ModelEditor\Scene</Filter>
     </ClInclude>
@@ -281,5 +263,26 @@
       <Filter>Controllers\ModelEditor\ModelEditorWindow</Filter>
     </ClInclude>
     <ClInclude Include="editor_resources.h" />
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Animations\animations_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Attachments\attachments_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Attachments</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Bones\bones_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Bones</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Cameras\cameras_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Environment\environment_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Lights\lights_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.h">
+      <Filter>Controllers\ModelEditor\SidePanels\Materials</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
