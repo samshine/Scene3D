@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{d8b0d133-fbe8-4cee-b98e-747fd346f28a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MainWindow">
+      <UniqueIdentifier>{35b7110a-6633-4b0b-b130-8576b6b74188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor">
+      <UniqueIdentifier>{6825712c-60b8-4274-9ca6-2d2db48ba325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Animations">
+      <UniqueIdentifier>{1b515219-88d2-4d07-8e33-649183b0a8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Attachments">
+      <UniqueIdentifier>{2ba72ad2-6243-4830-8957-4620541360dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Bones">
+      <UniqueIdentifier>{56595a38-d6a2-4a90-847c-c95c0d4d0519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Cameras">
+      <UniqueIdentifier>{f00a7897-1874-482f-ad5a-40a2eea58188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Environment">
+      <UniqueIdentifier>{6914a323-ed33-4633-a121-da565dbbd62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Lights">
+      <UniqueIdentifier>{7a761781-3c33-41a7-907a-2df5ae60783c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Materials">
+      <UniqueIdentifier>{5b260bc6-c1fb-49de-a40d-88fb48b4ce9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\ModelEditor\Scene">
+      <UniqueIdentifier>{a24219b0-2a1f-489d-a1a3-f0cbe486bac5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Workspace">
+      <UniqueIdentifier>{19904000-0685-479b-8c00-829c78e43018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{6ecc33c4-1276-40b0-ad95-448a5d139679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelEditor">
+      <UniqueIdentifier>{21ca5dec-c36a-421b-92ac-9ae26a6741ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelEditor\Commands">
+      <UniqueIdentifier>{6c891090-10fa-4e32-b473-b1ee26f22bd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelEditor\EditorScene">
+      <UniqueIdentifier>{61dc37af-280f-4b3d-85f1-647adc042111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelEditor\EditorScene\Edit">
+      <UniqueIdentifier>{6e75c48c-b9b0-4ac6-9308-92a844c3bbde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ModelEditor\EditorScene\Game">
+      <UniqueIdentifier>{f6c06aed-e647-4993-9882-b5053f388103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\UndoSystem">
+      <UniqueIdentifier>{cbe3f131-ce45-4150-bb35-49f421c106ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views">
+      <UniqueIdentifier>{6e14bfff-662d-4afb-84be-4b1dfd9f1cbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Header">
+      <UniqueIdentifier>{0928b522-0aba-4a00-b212-17832ac0d22b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Rollout">
+      <UniqueIdentifier>{4a3cdf66-cc7b-4de1-8940-c18718c31434}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\Scene">
+      <UniqueIdentifier>{4a6df7fe-4a10-439d-8448-4b0651287fe1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Controllers\MainWindow\main_window.cpp">
+      <Filter>Controllers\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Animations\animations_controller.cpp">
+      <Filter>Controllers\ModelEditor\Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Attachments\attachments_controller.cpp">
+      <Filter>Controllers\ModelEditor\Attachments</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Bones\bones_controller.cpp">
+      <Filter>Controllers\ModelEditor\Bones</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Cameras\cameras_controller.cpp">
+      <Filter>Controllers\ModelEditor\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Environment\environment_controller.cpp">
+      <Filter>Controllers\ModelEditor\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Lights\lights_controller.cpp">
+      <Filter>Controllers\ModelEditor\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Materials\materials_controller.cpp">
+      <Filter>Controllers\ModelEditor\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
+      <Filter>Controllers\ModelEditor\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Workspace\workspace_controller.cpp">
+      <Filter>Controllers\Workspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\model_app_model.cpp">
+      <Filter>Model\ModelEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\add_attachment_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\add_material_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\set_map_model_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\update_animation_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\update_attachment_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\update_material_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\EditorScene\Edit\edit_scene.cpp">
+      <Filter>Model\ModelEditor\EditorScene\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\EditorScene\Game\character_controller.cpp">
+      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\EditorScene\Game\game_scene.cpp">
+      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\UndoSystem\undo_system.cpp">
+      <Filter>Model\UndoSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Header\header_menu_view.cpp">
+      <Filter>Views\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Header\header_view.cpp">
+      <Filter>Views\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\mouse_movement.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\scene_view.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\viewer_scene_cache.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_header.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_list.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_position_property.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_text_field_property.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Rollout\rollout_view.cpp">
+      <Filter>Views\Rollout</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Controllers\MainWindow\main_window.h">
+      <Filter>Controllers\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Animations\animations_controller.h">
+      <Filter>Controllers\ModelEditor\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Attachments\attachments_controller.h">
+      <Filter>Controllers\ModelEditor\Attachments</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Bones\bones_controller.h">
+      <Filter>Controllers\ModelEditor\Bones</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Cameras\cameras_controller.h">
+      <Filter>Controllers\ModelEditor\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Environment\environment_controller.h">
+      <Filter>Controllers\ModelEditor\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Lights\lights_controller.h">
+      <Filter>Controllers\ModelEditor\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Materials\materials_controller.h">
+      <Filter>Controllers\ModelEditor\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
+      <Filter>Controllers\ModelEditor\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Workspace\workspace_controller.h">
+      <Filter>Controllers\Workspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\model_app_model.h">
+      <Filter>Model\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\add_material_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\model_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\set_map_model_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\update_animation_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\update_attachment_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\update_material_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\EditorScene\editor_scene.h">
+      <Filter>Model\ModelEditor\EditorScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\EditorScene\Edit\edit_scene.h">
+      <Filter>Model\ModelEditor\EditorScene\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\EditorScene\Game\character_controller.h">
+      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\EditorScene\Game\game_scene.h">
+      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\UndoSystem\undo_system.h">
+      <Filter>Model\UndoSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Header\header_menu_view.h">
+      <Filter>Views\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Header\header_view.h">
+      <Filter>Views\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\mouse_movement.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\scene_view.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\viewer_scene_cache.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_browse_field_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_header.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_list.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_position_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_text_field_property.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Rollout\rollout_view.h">
+      <Filter>Views\Rollout</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

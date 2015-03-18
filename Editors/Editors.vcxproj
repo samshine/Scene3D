@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Controllers\MainWindow\main_window.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Animations\animations_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Attachments\attachments_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Bones\bones_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Cameras\cameras_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Environment\environment_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Lights\lights_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Materials\materials_controller.cpp" />
+    <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp" />
+    <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\add_attachment_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\add_material_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\set_map_model_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\update_animation_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\update_attachment_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\Commands\update_material_command.cpp" />
+    <ClCompile Include="Model\ModelEditor\EditorScene\Edit\edit_scene.cpp" />
+    <ClCompile Include="Model\ModelEditor\EditorScene\Game\character_controller.cpp" />
+    <ClCompile Include="Model\ModelEditor\EditorScene\Game\game_scene.cpp" />
+    <ClCompile Include="Model\ModelEditor\model_app_model.cpp" />
+    <ClCompile Include="Model\UndoSystem\undo_system.cpp" />
+    <ClCompile Include="Views\Header\header_menu_view.cpp" />
+    <ClCompile Include="Views\Header\header_view.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_header.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_list.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_position_property.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_text_field_property.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_view.cpp" />
+    <ClCompile Include="Views\Scene\mouse_movement.cpp" />
+    <ClCompile Include="Views\Scene\scene_view.cpp" />
+    <ClCompile Include="Views\Scene\viewer_scene_cache.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Controllers\MainWindow\main_window.h" />
+    <ClInclude Include="Controllers\ModelEditor\Animations\animations_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Attachments\attachments_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Bones\bones_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Cameras\cameras_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Environment\environment_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Lights\lights_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Materials\materials_controller.h" />
+    <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h" />
+    <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\add_material_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\model_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\set_map_model_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\update_animation_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\update_attachment_command.h" />
+    <ClInclude Include="Model\ModelEditor\Commands\update_material_command.h" />
+    <ClInclude Include="Model\ModelEditor\EditorScene\editor_scene.h" />
+    <ClInclude Include="Model\ModelEditor\EditorScene\Edit\edit_scene.h" />
+    <ClInclude Include="Model\ModelEditor\EditorScene\Game\character_controller.h" />
+    <ClInclude Include="Model\ModelEditor\EditorScene\Game\game_scene.h" />
+    <ClInclude Include="Model\ModelEditor\model_app_model.h" />
+    <ClInclude Include="Model\UndoSystem\undo_system.h" />
+    <ClInclude Include="Views\Header\header_menu_view.h" />
+    <ClInclude Include="Views\Header\header_view.h" />
+    <ClInclude Include="Views\Rollout\rollout_browse_field_property.h" />
+    <ClInclude Include="Views\Rollout\rollout_header.h" />
+    <ClInclude Include="Views\Rollout\rollout_list.h" />
+    <ClInclude Include="Views\Rollout\rollout_position_property.h" />
+    <ClInclude Include="Views\Rollout\rollout_text_field_property.h" />
+    <ClInclude Include="Views\Rollout\rollout_view.h" />
+    <ClInclude Include="Views\Scene\mouse_movement.h" />
+    <ClInclude Include="Views\Scene\scene_view.h" />
+    <ClInclude Include="Views\Scene\viewer_scene_cache.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A8588D01-1C50-44CB-92CD-707B951D1AA9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Editors</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
