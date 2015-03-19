@@ -28,14 +28,14 @@
     <Filter Include="Include\MapDescription">
       <UniqueIdentifier>{2fa5d4ce-4a63-43c9-a761-ea706ab99233}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\ModelDescrption">
-      <UniqueIdentifier>{63d189db-33b2-4320-be15-bd4f2c90fefc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\ModelDesc">
       <UniqueIdentifier>{d220007b-62ec-430d-ab05-91ada033f717}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\MapDesc">
       <UniqueIdentifier>{c6bd3124-6b04-42ec-9f4d-b93c77b19283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\ModelDescription">
+      <UniqueIdentifier>{63d189db-33b2-4320-be15-bd4f2c90fefc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -624,21 +624,42 @@
       <Filter>Sources\Lightmap</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc.h">
-      <Filter>Include\ModelDescrption</Filter>
+      <Filter>Include\ModelDescription</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_animation.h">
-      <Filter>Include\ModelDescrption</Filter>
+      <Filter>Include\ModelDescription</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_attachment_point.h">
-      <Filter>Include\ModelDescrption</Filter>
+      <Filter>Include\ModelDescription</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_material.h">
-      <Filter>Include\ModelDescrption</Filter>
+      <Filter>Include\ModelDescription</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_particle_emitter.h">
-      <Filter>Include\ModelDescrption</Filter>
+      <Filter>Include\ModelDescription</Filter>
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_light.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_light_probe.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_particle_emitter.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_material.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_object.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_trigger.h">
+      <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_path_node.h">
       <Filter>Include\MapDescription</Filter>
     </ClInclude>
   </ItemGroup>

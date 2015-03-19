@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <ClanLib/core.h>
-
 namespace clan
 {
 	class ModelDescMaterial
@@ -12,5 +10,7 @@ namespace clan
 		bool two_sided = false;
 		bool alpha_test = false;
 		bool transparent = false;
+		bool no_collision = false;
+		bool no_render = false;
 	};
 }
