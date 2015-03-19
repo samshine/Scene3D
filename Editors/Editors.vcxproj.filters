@@ -73,6 +73,27 @@
     <Filter Include="Controllers\ModelEditor\SidePanels\Materials">
       <UniqueIdentifier>{5b260bc6-c1fb-49de-a40d-88fb48b4ce9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\MapEditor">
+      <UniqueIdentifier>{716b5e73-d431-4347-88b5-52b42c8fac5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\MapEditor\Commands">
+      <UniqueIdentifier>{ea492ecf-d787-4668-aee5-35798bd43412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor">
+      <UniqueIdentifier>{1991a2bf-a1de-4794-a6c2-5463d1d96cd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\MapEditorWindow">
+      <UniqueIdentifier>{f053de50-85df-4e46-8c65-baac5124babb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels">
+      <UniqueIdentifier>{c904a413-60b8-47f1-a0a0-5b0705a469c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\MapScene">
+      <UniqueIdentifier>{37cef7f1-21a3-4789-b945-14f360d319c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\Objects">
+      <UniqueIdentifier>{5d7ef0e7-a9f5-4dbb-b83d-85dcef3abe2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -174,6 +195,18 @@
     </ClCompile>
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.cpp">
       <Filter>Controllers\ModelEditor\SidePanels\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\MapEditor\map_app_model.cpp">
+      <Filter>Model\MapEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.cpp">
+      <Filter>Controllers\MapEditor\MapEditorWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_controller.cpp">
+      <Filter>Controllers\MapEditor\MapScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +316,18 @@
     </ClInclude>
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.h">
       <Filter>Controllers\ModelEditor\SidePanels\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MapEditor\map_app_model.h">
+      <Filter>Model\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.h">
+      <Filter>Controllers\MapEditor\MapEditorWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_controller.h">
+      <Filter>Controllers\MapEditor\MapScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -37,7 +37,7 @@ MaterialsController::MaterialsController()
 	slots.connect(alpha_test_property->sig_value_changed(), this, &MaterialsController::alpha_test_property_value_changed);
 	slots.connect(transparent_property->sig_value_changed(), this, &MaterialsController::transparent_property_value_changed);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_materials(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_materials(); });
 
 	update_materials();
 }
@@ -49,9 +49,9 @@ void MaterialsController::update_materials()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	if (AppModel::instance()->fbx)
+	if (ModelAppModel::instance()->fbx)
 	{
-		for (const auto &mesh_mat : AppModel::instance()->fbx->material_names())
+		for (const auto &mesh_mat : ModelAppModel::instance()->fbx->material_names())
 		{
 			auto item = materials_list->add_item(mesh_mat);
 			if (first)
@@ -63,7 +63,7 @@ void MaterialsController::update_materials()
 		}
 	}
 
-	for (const auto &material : AppModel::instance()->desc.materials)
+	for (const auto &material : ModelAppModel::instance()->desc.materials)
 	{
 		auto &item = items[material.mesh_material];
 		if (!item)
@@ -89,7 +89,7 @@ int MaterialsController::get_select_item_index()
 	{
 		std::string name = selection->text();
 
-		const auto &materials = AppModel::instance()->desc.materials;
+		const auto &materials = ModelAppModel::instance()->desc.materials;
 		for (size_t i = 0; i < materials.size(); i++)
 		{
 			if (materials[i].mesh_material == name)
@@ -107,7 +107,7 @@ void MaterialsController::update_material_fields()
 	{
 		material->set_hidden(false);
 
-		const auto &material = AppModel::instance()->desc.materials[index];
+		const auto &material = ModelAppModel::instance()->desc.materials[index];
 		two_sided_property->text_field->set_text(material.two_sided ? "1" : "0");
 		alpha_test_property->text_field->set_text(material.alpha_test ? "1" : "0");
 		transparent_property->text_field->set_text(material.transparent ? "1" : "0");
@@ -133,7 +133,7 @@ void MaterialsController::materials_list_selection_clicked()
 		{
 			FBXMaterial material;
 			material.mesh_material = selection->text();
-			AppModel::instance()->undo_system.execute<AddMaterialCommand>(material);
+			ModelAppModel::instance()->undo_system.execute<AddMaterialCommand>(material);
 
 			selection->set_bold(true);
 			update_material_fields();
@@ -146,7 +146,7 @@ void MaterialsController::two_sided_property_value_changed()
 	auto selection = materials_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto material = app_model->desc.materials.at(selection->index);
 		material.two_sided = two_sided_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateMaterialCommand>(selection->index, material);
@@ -158,7 +158,7 @@ void MaterialsController::alpha_test_property_value_changed()
 	auto selection = materials_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto material = app_model->desc.materials.at(selection->index);
 		material.alpha_test = alpha_test_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateMaterialCommand>(selection->index, material);
@@ -170,7 +170,7 @@ void MaterialsController::transparent_property_value_changed()
 	auto selection = materials_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto material = app_model->desc.materials.at(selection->index);
 		material.transparent = alpha_test_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateMaterialCommand>(selection->index, material);

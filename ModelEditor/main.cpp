@@ -13,7 +13,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	DisplayCache::set(resources, std::make_shared<SimpleDisplayCache>());
 	UIThread ui_thread(resources);
 
-	AppModel model;
+	ModelAppModel model;
 
 	auto window = std::make_shared<ModelEditorWindow>();
 	window->window_view()->show();

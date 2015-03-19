@@ -1,25 +1,22 @@
 
 #include "precomp.h"
-#include "model_app_model.h"
-#include "Model/ModelEditor/EditorScene/Game/game_scene.h"
+#include "map_app_model.h"
 #include <memory>
 
 using namespace clan;
 
-ModelAppModel::ModelAppModel()
+MapAppModel::MapAppModel()
 {
 	if (instance_ptr) throw std::exception();
 	instance_ptr = this;
-
-	editor_scene = std::make_shared<GameScene>();
 }
 
-ModelAppModel::~ModelAppModel()
+MapAppModel::~MapAppModel()
 {
 	instance_ptr = 0;
 }
 
-void ModelAppModel::open(const std::string &filename)
+void MapAppModel::open(const std::string &filename)
 {
 	desc = FBXModelDesc::load(filename);
 	open_filename = filename;
@@ -27,20 +24,20 @@ void ModelAppModel::open(const std::string &filename)
 	sig_load_finished();
 }
 
-void ModelAppModel::save(const std::string &filename)
+void MapAppModel::save(const std::string &filename)
 {
 	desc.save(filename);
 	open_filename = filename;
 }
 
-void ModelAppModel::set_fbx_model(const std::string &filename)
+void MapAppModel::set_fbx_model(const std::string &filename)
 {
 	desc.fbx_filename = filename;
 	fbx = std::make_shared<FBXModel>(desc.fbx_filename);
 	update_scene_model();
 }
 
-void ModelAppModel::update_scene_model()
+void MapAppModel::update_scene_model()
 {
 	if (fbx)
 		model_data = fbx->convert(desc);
@@ -50,9 +47,9 @@ void ModelAppModel::update_scene_model()
 	sig_model_data_updated();
 }
 
-ModelAppModel *ModelAppModel::instance()
+MapAppModel *MapAppModel::instance()
 {
 	return instance_ptr;
 }
 
-ModelAppModel *ModelAppModel::instance_ptr = 0;
+MapAppModel *MapAppModel::instance_ptr = 0;

@@ -26,7 +26,7 @@ BonesController::BonesController()
 	slots.connect(bones_list->sig_selection_changed(), this, &BonesController::bones_list_selection_changed);
 	slots.connect(bones_list->sig_selection_clicked(), this, &BonesController::bones_list_selection_clicked);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_bones(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_bones(); });
 
 	update_bones();
 }
@@ -38,9 +38,9 @@ void BonesController::update_bones()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	if (AppModel::instance()->fbx)
+	if (ModelAppModel::instance()->fbx)
 	{
-		for (const auto &bone_name : AppModel::instance()->fbx->bone_names())
+		for (const auto &bone_name : ModelAppModel::instance()->fbx->bone_names())
 		{
 			auto item = bones_list->add_item(bone_name);
 			if (first)
@@ -52,7 +52,7 @@ void BonesController::update_bones()
 		}
 	}
 	/*
-	for (const auto &bone : AppModel::instance()->desc.bones)
+	for (const auto &bone : ModelAppModel::instance()->desc.bones)
 	{
 		auto &item = items[bone.mesh_bone];
 		if (!item)
@@ -79,7 +79,7 @@ int BonesController::get_select_item_index()
 	{
 		std::string name = selection->text();
 
-		const auto &bones = AppModel::instance()->desc.bones;
+		const auto &bones = ModelAppModel::instance()->desc.bones;
 		for (size_t i = 0; i < bones.size(); i++)
 		{
 			if (bones[i].mesh_bone == name)
@@ -97,7 +97,7 @@ void BonesController::update_bone_fields()
 	{
 		bone->set_hidden(false);
 
-		//const auto &bone = AppModel::instance()->desc.bones[index];
+		//const auto &bone = ModelAppModel::instance()->desc.bones[index];
 	}
 	else
 	{
@@ -116,13 +116,13 @@ void BonesController::bones_list_selection_clicked()
 	if (selection)
 	{
 		/*
-		if (selection->index >= AppModel::instance()->desc.bones.size())
+		if (selection->index >= ModelAppModel::instance()->desc.bones.size())
 		{
-			AppModel::instance()->desc.bones.resize(selection->index + 1);
+			ModelAppModel::instance()->desc.bones.resize(selection->index + 1);
 			bones_list->add_item("");
 		}
 
-		auto &bone = AppModel::instance()->desc.bones[selection->index];
+		auto &bone = ModelAppModel::instance()->desc.bones[selection->index];
 		bone.name = selection->text();
 
 		update_bone_fields();

@@ -2,22 +2,16 @@
 #pragma once
 
 #include "Model/UndoSystem/undo_system.h"
-#include "Commands/add_animation_command.h"
-#include "Commands/add_attachment_command.h"
-#include "Commands/add_material_command.h"
-#include "Commands/update_animation_command.h"
-#include "Commands/update_attachment_command.h"
-#include "Commands/update_material_command.h"
 
 class EditorScene;
 
-class ModelAppModel
+class MapAppModel
 {
 public:
-	ModelAppModel();
-	~ModelAppModel();
+	MapAppModel();
+	~MapAppModel();
 
-	static ModelAppModel *instance();
+	static MapAppModel *instance();
 
 	std::string open_filename;
 	clan::FBXModelDesc desc;
@@ -25,7 +19,6 @@ public:
 	std::shared_ptr<clan::ModelData> model_data;
 
 	std::string map_model;
-	std::shared_ptr<EditorScene> editor_scene;
 
 	UndoSystem undo_system;
 
@@ -39,5 +32,5 @@ public:
 	void update_scene_model();
 
 private:
-	static ModelAppModel *instance_ptr;
+	static MapAppModel *instance_ptr;
 };

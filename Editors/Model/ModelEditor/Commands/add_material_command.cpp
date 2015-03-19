@@ -11,12 +11,12 @@ AddMaterialCommand::AddMaterialCommand(FBXMaterial material) : new_material(mate
 
 void AddMaterialCommand::execute()
 {
-	AppModel::instance()->desc.materials.push_back(new_material);
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.materials.push_back(new_material);
+	ModelAppModel::instance()->update_scene_model();
 }
 
 void AddMaterialCommand::rollback()
 {
-	AppModel::instance()->desc.materials.pop_back();
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.materials.pop_back();
+	ModelAppModel::instance()->update_scene_model();
 }

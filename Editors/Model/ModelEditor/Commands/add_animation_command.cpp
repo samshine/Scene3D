@@ -11,12 +11,12 @@ AddAnimationCommand::AddAnimationCommand(FBXAnimation animation) : new_animation
 
 void AddAnimationCommand::execute()
 {
-	AppModel::instance()->desc.animations.push_back(new_animation);
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.animations.push_back(new_animation);
+	ModelAppModel::instance()->update_scene_model();
 }
 
 void AddAnimationCommand::rollback()
 {
-	AppModel::instance()->desc.animations.pop_back();
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.animations.pop_back();
+	ModelAppModel::instance()->update_scene_model();
 }

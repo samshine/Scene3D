@@ -43,7 +43,7 @@ AttachmentsController::AttachmentsController()
 	slots.connect(test_model_property->sig_browse(), this, &AttachmentsController::test_model_property_browse);
 	slots.connect(test_scale_property->sig_value_changed(), this, &AttachmentsController::test_scale_property_value_changed);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_attachments(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_attachments(); });
 
 	update_attachments();
 }
@@ -52,7 +52,7 @@ void AttachmentsController::update_attachments()
 {
 	attachments_list->clear();
 	bool first = true;
-	for (const auto &attachment : AppModel::instance()->desc.attachment_points)
+	for (const auto &attachment : ModelAppModel::instance()->desc.attachment_points)
 	{
 		auto item = attachments_list->add_item(attachment.name);
 		if (first)
@@ -69,11 +69,11 @@ void AttachmentsController::update_attachments()
 void AttachmentsController::update_attachment_fields()
 {
 	auto selection = attachments_list->selection();
-	if (selection && selection->index < AppModel::instance()->desc.attachment_points.size())
+	if (selection && selection->index < ModelAppModel::instance()->desc.attachment_points.size())
 	{
 		attachment->set_hidden(false);
 
-		const auto &attachment = AppModel::instance()->desc.attachment_points[selection->index];
+		const auto &attachment = ModelAppModel::instance()->desc.attachment_points[selection->index];
 		position_property->input_x->set_text(StringHelp::float_to_text(attachment.position.x));
 		position_property->input_y->set_text(StringHelp::float_to_text(attachment.position.y));
 		position_property->input_z->set_text(StringHelp::float_to_text(attachment.position.z));
@@ -106,19 +106,19 @@ void AttachmentsController::attachments_list_edit_saved()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		if (selection->index >= AppModel::instance()->desc.attachment_points.size())
+		if (selection->index >= ModelAppModel::instance()->desc.attachment_points.size())
 		{
 			FBXAttachmentPoint attachment;
 			attachment.name = selection->text();
-			AppModel::instance()->undo_system.execute<AddAttachmentCommand>(attachment);
+			ModelAppModel::instance()->undo_system.execute<AddAttachmentCommand>(attachment);
 
 			attachments_list->add_item("");
 		}
 		else
 		{
-			FBXAttachmentPoint attachment = AppModel::instance()->desc.attachment_points[selection->index];
+			FBXAttachmentPoint attachment = ModelAppModel::instance()->desc.attachment_points[selection->index];
 			attachment.name = selection->text();
-			AppModel::instance()->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
+			ModelAppModel::instance()->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
 		}
 
 		update_attachment_fields();
@@ -130,7 +130,7 @@ void AttachmentsController::position_property_value_changed()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 		attachment.position.x = position_property->input_x->text_float();
 		attachment.position.y = position_property->input_y->text_float();
@@ -144,7 +144,7 @@ void AttachmentsController::orientation_property_value_changed()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 
 		Vec3f rotation;
@@ -162,7 +162,7 @@ void AttachmentsController::bone_name_property_value_changed()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 		attachment.bone_name = bone_name_property->text_field->text();
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
@@ -174,7 +174,7 @@ void AttachmentsController::test_model_property_browse()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 
 		OpenFileDialog dialog(view.get());
@@ -197,7 +197,7 @@ void AttachmentsController::test_scale_property_value_changed()
 	auto selection = attachments_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto attachment = app_model->desc.attachment_points.at(selection->index);
 		attachment.test_scale = test_scale_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);

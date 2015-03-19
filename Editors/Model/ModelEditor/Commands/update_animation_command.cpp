@@ -11,13 +11,13 @@ UpdateAnimationCommand::UpdateAnimationCommand(size_t index, FBXAnimation animat
 
 void UpdateAnimationCommand::execute()
 {
-	old_animation = AppModel::instance()->desc.animations.at(index);
-	AppModel::instance()->desc.animations.at(index) = new_animation;
-	AppModel::instance()->update_scene_model();
+	old_animation = ModelAppModel::instance()->desc.animations.at(index);
+	ModelAppModel::instance()->desc.animations.at(index) = new_animation;
+	ModelAppModel::instance()->update_scene_model();
 }
 
 void UpdateAnimationCommand::rollback()
 {
-	AppModel::instance()->desc.animations.at(index) = old_animation;
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.animations.at(index) = old_animation;
+	ModelAppModel::instance()->update_scene_model();
 }

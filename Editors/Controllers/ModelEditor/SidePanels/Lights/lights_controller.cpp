@@ -26,7 +26,7 @@ LightsController::LightsController()
 	slots.connect(lights_list->sig_selection_changed(), this, &LightsController::lights_list_selection_changed);
 	slots.connect(lights_list->sig_selection_clicked(), this, &LightsController::lights_list_selection_clicked);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_lights(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_lights(); });
 
 	update_lights();
 }
@@ -38,9 +38,9 @@ void LightsController::update_lights()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	if (AppModel::instance()->fbx)
+	if (ModelAppModel::instance()->fbx)
 	{
-		for (const auto &light_name : AppModel::instance()->fbx->light_names())
+		for (const auto &light_name : ModelAppModel::instance()->fbx->light_names())
 		{
 			auto item = lights_list->add_item(light_name);
 			if (first)
@@ -52,7 +52,7 @@ void LightsController::update_lights()
 		}
 	}
 	/*
-	for (const auto &light : AppModel::instance()->desc.lights)
+	for (const auto &light : ModelAppModel::instance()->desc.lights)
 	{
 		auto &item = items[light.mesh_light];
 		if (!item)
@@ -79,7 +79,7 @@ int LightsController::get_select_item_index()
 	{
 		std::string name = selection->text();
 
-		const auto &lights = AppModel::instance()->desc.lights;
+		const auto &lights = ModelAppModel::instance()->desc.lights;
 		for (size_t i = 0; i < lights.size(); i++)
 		{
 			if (lights[i].mesh_light == name)
@@ -97,7 +97,7 @@ void LightsController::update_light_fields()
 	{
 		light->set_hidden(false);
 
-		//const auto &light = AppModel::instance()->desc.lights[index];
+		//const auto &light = ModelAppModel::instance()->desc.lights[index];
 	}
 	else
 	{
@@ -116,13 +116,13 @@ void LightsController::lights_list_selection_clicked()
 	if (selection)
 	{
 		/*
-		if (selection->index >= AppModel::instance()->desc.lights.size())
+		if (selection->index >= ModelAppModel::instance()->desc.lights.size())
 		{
-			AppModel::instance()->desc.lights.resize(selection->index + 1);
+			ModelAppModel::instance()->desc.lights.resize(selection->index + 1);
 			lights_list->add_item("");
 		}
 
-		auto &light = AppModel::instance()->desc.lights[selection->index];
+		auto &light = ModelAppModel::instance()->desc.lights[selection->index];
 		light.name = selection->text();
 
 		update_light_fields();

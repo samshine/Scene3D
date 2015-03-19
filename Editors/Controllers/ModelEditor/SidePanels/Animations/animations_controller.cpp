@@ -44,7 +44,7 @@ AnimationsController::AnimationsController()
 	slots.connect(loop_property->sig_value_changed(), this, &AnimationsController::loop_property_value_changed);
 	slots.connect(rarity_property->sig_value_changed(), this, &AnimationsController::rarity_property_value_changed);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_animations(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_animations(); });
 
 	update_animations();
 }
@@ -53,7 +53,7 @@ void AnimationsController::update_animations()
 {
 	animations_list->clear();
 	bool first = true;
-	for (const auto &anim : AppModel::instance()->desc.animations)
+	for (const auto &anim : ModelAppModel::instance()->desc.animations)
 	{
 		auto item = animations_list->add_item(anim.name);
 		if (first)
@@ -71,11 +71,11 @@ void AnimationsController::update_animations()
 void AnimationsController::update_animation_fields()
 {
 	auto selection = animations_list->selection();
-	if (selection && selection->index < AppModel::instance()->desc.animations.size())
+	if (selection && selection->index < ModelAppModel::instance()->desc.animations.size())
 	{
 		animation->set_hidden(false);
 
-		const auto &anim = AppModel::instance()->desc.animations[selection->index];
+		const auto &anim = ModelAppModel::instance()->desc.animations[selection->index];
 		start_property->text_field->set_text(StringHelp::int_to_text(anim.start_frame));
 		end_property->text_field->set_text(StringHelp::int_to_text(anim.end_frame));
 		play_property->text_field->set_text(StringHelp::float_to_text(anim.play_speed));
@@ -99,19 +99,19 @@ void AnimationsController::animations_list_edit_saved()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		if (selection->index >= AppModel::instance()->desc.animations.size())
+		if (selection->index >= ModelAppModel::instance()->desc.animations.size())
 		{
 			FBXAnimation anim;
 			anim.name = selection->text();
-			AppModel::instance()->undo_system.execute<AddAnimationCommand>(anim);
+			ModelAppModel::instance()->undo_system.execute<AddAnimationCommand>(anim);
 
 			animations_list->add_item("");
 		}
 		else
 		{
-			FBXAnimation anim = AppModel::instance()->desc.animations[selection->index];
+			FBXAnimation anim = ModelAppModel::instance()->desc.animations[selection->index];
 			anim.name = selection->text();
-			AppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection->index, anim);
+			ModelAppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection->index, anim);
 		}
 
 		update_animation_fields();
@@ -123,7 +123,7 @@ void AnimationsController::start_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.start_frame = start_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
@@ -135,7 +135,7 @@ void AnimationsController::end_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.end_frame = end_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
@@ -147,7 +147,7 @@ void AnimationsController::play_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.play_speed = play_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
@@ -159,7 +159,7 @@ void AnimationsController::move_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.move_speed = move_property->text_field->text_float();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
@@ -171,7 +171,7 @@ void AnimationsController::loop_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.loop = loop_property->text_field->text_int() == 1;
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
@@ -183,7 +183,7 @@ void AnimationsController::rarity_property_value_changed()
 	auto selection = animations_list->selection();
 	if (selection)
 	{
-		auto app_model = AppModel::instance();
+		auto app_model = ModelAppModel::instance();
 		auto animation = app_model->desc.animations.at(selection->index);
 		animation.rarity = rarity_property->text_field->text_int();
 		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);

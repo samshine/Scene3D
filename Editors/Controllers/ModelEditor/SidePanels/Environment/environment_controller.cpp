@@ -48,7 +48,7 @@ EnvironmentController::EnvironmentController()
 	view->add_subview(environment);
 	view->add_subview(character);
 
-	slots.connect(AppModel::instance()->sig_map_model_updated, this, &EnvironmentController::map_model_updated);
+	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &EnvironmentController::map_model_updated);
 	slots.connect(map_model_property->sig_browse(), this, &EnvironmentController::map_model_property_browse);
 	slots.connect(gravity_property->sig_value_changed(), this, &EnvironmentController::gravity_property_value_changed);
 	slots.connect(height_property->sig_value_changed(), this, &EnvironmentController::height_property_value_changed);
@@ -62,7 +62,7 @@ EnvironmentController::EnvironmentController()
 	slots.connect(air_movement_property->sig_value_changed(), this, &EnvironmentController::air_movement_property_value_changed);
 	slots.connect(bounce_property->sig_value_changed(), this, &EnvironmentController::bounce_property_value_changed);
 
-	CharacterController *cc = AppModel::instance()->editor_scene->get_character_controller();
+	CharacterController *cc = ModelAppModel::instance()->editor_scene->get_character_controller();
 	if (cc)
 	{
 		gravity_property->text_field->set_text(StringHelp::float_to_text(cc->get_gravity()));
@@ -87,7 +87,7 @@ EnvironmentController::EnvironmentController()
 
 void EnvironmentController::map_model_updated()
 {
-	map_model_property->browse_field->set_text(PathHelp::get_basename(AppModel::instance()->map_model));
+	map_model_property->browse_field->set_text(PathHelp::get_basename(ModelAppModel::instance()->map_model));
 }
 
 void EnvironmentController::map_model_property_browse()
@@ -96,75 +96,75 @@ void EnvironmentController::map_model_property_browse()
 	dialog.set_title("Select Map Model");
 	dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
 	dialog.add_filter("All files (*.*)", "*.*", false);
-	dialog.set_filename(AppModel::instance()->map_model);
+	dialog.set_filename(ModelAppModel::instance()->map_model);
 	if (dialog.show())
 	{
-		AppModel::instance()->undo_system.execute<SetMapModelCommand>(dialog.get_filename());
+		ModelAppModel::instance()->undo_system.execute<SetMapModelCommand>(dialog.get_filename());
 	}
 }
 
 void EnvironmentController::gravity_property_value_changed()
 {
 	float gravity = gravity_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_gravity(gravity);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_gravity(gravity);
 }
 
 void EnvironmentController::height_property_value_changed()
 {
 	float height = height_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_height(height);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_height(height);
 }
 
 void EnvironmentController::radius_property_value_changed()
 {
 	float radius = radius_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_radius(radius);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_radius(radius);
 }
 
 void EnvironmentController::step_height_property_value_changed()
 {
 	float step_height = step_height_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_step_height(step_height);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_step_height(step_height);
 }
 
 void EnvironmentController::mass_property_value_changed()
 {
 	float mass = mass_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_mass(mass);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_mass(mass);
 }
 
 void EnvironmentController::acceleration_property_value_changed()
 {
 	float acceleration = acceleration_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_acceleration(acceleration);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_acceleration(acceleration);
 }
 
 void EnvironmentController::run_speed_property_value_changed()
 {
 	float run_speed = run_speed_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_run_speed(run_speed);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_run_speed(run_speed);
 }
 
 void EnvironmentController::friction_property_value_changed()
 {
 	float friction = friction_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_friction(friction);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_friction(friction);
 }
 
 void EnvironmentController::air_resistance_property_value_changed()
 {
 	float air_resistance = air_resistance_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_air_resistance(air_resistance);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_resistance(air_resistance);
 }
 
 void EnvironmentController::air_movement_property_value_changed()
 {
 	float air_movement = air_movement_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_air_movement(air_movement);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_movement(air_movement);
 }
 
 void EnvironmentController::bounce_property_value_changed()
 {
 	float bounce = bounce_property->text_field->text_float();
-	AppModel::instance()->editor_scene->get_character_controller()->set_bounce(bounce);
+	ModelAppModel::instance()->editor_scene->get_character_controller()->set_bounce(bounce);
 }

@@ -26,7 +26,7 @@ CamerasController::CamerasController()
 	slots.connect(cameras_list->sig_selection_changed(), this, &CamerasController::cameras_list_selection_changed);
 	slots.connect(cameras_list->sig_selection_clicked(), this, &CamerasController::cameras_list_selection_clicked);
 
-	slots.connect(AppModel::instance()->sig_load_finished, [this]() { update_cameras(); });
+	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_cameras(); });
 
 	update_cameras();
 }
@@ -38,9 +38,9 @@ void CamerasController::update_cameras()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	if (AppModel::instance()->fbx)
+	if (ModelAppModel::instance()->fbx)
 	{
-		for (const auto &camera_name : AppModel::instance()->fbx->camera_names())
+		for (const auto &camera_name : ModelAppModel::instance()->fbx->camera_names())
 		{
 			auto item = cameras_list->add_item(camera_name);
 			if (first)
@@ -52,7 +52,7 @@ void CamerasController::update_cameras()
 		}
 	}
 	/*
-	for (const auto &camera : AppModel::instance()->desc.cameras)
+	for (const auto &camera : ModelAppModel::instance()->desc.cameras)
 	{
 		auto &item = items[camera.mesh_camera];
 		if (!item)
@@ -79,7 +79,7 @@ int CamerasController::get_select_item_index()
 	{
 		std::string name = selection->text();
 
-		const auto &cameras = AppModel::instance()->desc.cameras;
+		const auto &cameras = ModelAppModel::instance()->desc.cameras;
 		for (size_t i = 0; i < cameras.size(); i++)
 		{
 			if (cameras[i].mesh_camera == name)
@@ -97,7 +97,7 @@ void CamerasController::update_camera_fields()
 	{
 		camera->set_hidden(false);
 
-		//const auto &camera = AppModel::instance()->desc.cameras[index];
+		//const auto &camera = ModelAppModel::instance()->desc.cameras[index];
 	}
 	else
 	{
@@ -116,13 +116,13 @@ void CamerasController::cameras_list_selection_clicked()
 	if (selection)
 	{
 		/*
-		if (selection->index >= AppModel::instance()->desc.cameras.size())
+		if (selection->index >= ModelAppModel::instance()->desc.cameras.size())
 		{
-			AppModel::instance()->desc.cameras.resize(selection->index + 1);
+			ModelAppModel::instance()->desc.cameras.resize(selection->index + 1);
 			cameras_list->add_item("");
 		}
 
-		auto &camera = AppModel::instance()->desc.cameras[selection->index];
+		auto &camera = ModelAppModel::instance()->desc.cameras[selection->index];
 		camera.name = selection->text();
 
 		update_camera_fields();

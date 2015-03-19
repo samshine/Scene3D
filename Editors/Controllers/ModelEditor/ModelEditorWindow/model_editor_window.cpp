@@ -62,7 +62,7 @@ void ModelEditorWindow::create_layout()
 {
 	DisplayWindowDescription desc;
 	desc.set_size(Size(1280, 768), false);
-	desc.set_title("Model Editor");
+	desc.set_title("Scene3D Model Editor");
 	desc.set_allow_resize(true);
 	view = std::make_shared<WindowView>(desc);
 
@@ -81,8 +81,8 @@ void ModelEditorWindow::create_layout()
 
 void ModelEditorWindow::update_window_title()
 {
-	if (!AppModel::instance()->open_filename.empty())
-		window_view()->get_display_window().set_title(PathHelp::get_basename(AppModel::instance()->open_filename) + " - Model Editor");
+	if (!ModelAppModel::instance()->open_filename.empty())
+		window_view()->get_display_window().set_title(PathHelp::get_basename(ModelAppModel::instance()->open_filename) + " - Scene3D Model Editor");
 	else
 		window_view()->get_display_window().set_title("Model Editor");
 }
@@ -93,23 +93,23 @@ void ModelEditorWindow::on_open()
 	dialog.set_title("Select Model");
 	dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
 	dialog.add_filter("All files (*.*)", "*.*", false);
-	dialog.set_filename(AppModel::instance()->open_filename);
+	dialog.set_filename(ModelAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
-		AppModel::instance()->open(dialog.get_filename());
+		ModelAppModel::instance()->open(dialog.get_filename());
 		update_window_title();
 	}
 }
 
 void ModelEditorWindow::on_save()
 {
-	if (AppModel::instance()->open_filename.empty())
+	if (ModelAppModel::instance()->open_filename.empty())
 	{
 		on_save_as();
 	}
 	else
 	{
-		AppModel::instance()->save(AppModel::instance()->open_filename);
+		ModelAppModel::instance()->save(ModelAppModel::instance()->open_filename);
 	}
 }
 
@@ -119,13 +119,13 @@ void ModelEditorWindow::on_save_as()
 	dialog.set_title("Save Model Description");
 	dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
 	dialog.add_filter("All files (*.*)", "*.*", false);
-	dialog.set_filename(AppModel::instance()->open_filename);
+	dialog.set_filename(ModelAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
 		std::string filename = dialog.get_filename();
 		if (PathHelp::get_extension(filename).empty())
 			filename += ".modeldesc";
-		AppModel::instance()->save(filename);
+		ModelAppModel::instance()->save(filename);
 		update_window_title();
 	}
 }
@@ -136,10 +136,10 @@ void ModelEditorWindow::on_change_model()
 	dialog.set_title("Select Model");
 	dialog.add_filter("Autodesk FBX files (*.fbx)", "*.fbx", true);
 	dialog.add_filter("All files (*.*)", "*.*", false);
-	dialog.set_filename(AppModel::instance()->desc.fbx_filename);
+	dialog.set_filename(ModelAppModel::instance()->desc.fbx_filename);
 	if (dialog.show())
 	{
-		AppModel::instance()->set_fbx_model(dialog.get_filename());
+		ModelAppModel::instance()->set_fbx_model(dialog.get_filename());
 	}
 }
 

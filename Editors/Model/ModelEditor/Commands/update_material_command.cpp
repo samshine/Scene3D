@@ -11,13 +11,13 @@ UpdateMaterialCommand::UpdateMaterialCommand(size_t index, FBXMaterial material)
 
 void UpdateMaterialCommand::execute()
 {
-	old_material = AppModel::instance()->desc.materials.at(index);
-	AppModel::instance()->desc.materials.at(index) = new_material;
-	AppModel::instance()->update_scene_model();
+	old_material = ModelAppModel::instance()->desc.materials.at(index);
+	ModelAppModel::instance()->desc.materials.at(index) = new_material;
+	ModelAppModel::instance()->update_scene_model();
 }
 
 void UpdateMaterialCommand::rollback()
 {
-	AppModel::instance()->desc.materials.at(index) = old_material;
-	AppModel::instance()->update_scene_model();
+	ModelAppModel::instance()->desc.materials.at(index) = old_material;
+	ModelAppModel::instance()->update_scene_model();
 }
