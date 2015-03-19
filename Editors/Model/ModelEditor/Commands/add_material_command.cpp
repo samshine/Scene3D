@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-AddMaterialCommand::AddMaterialCommand(FBXMaterial material) : new_material(material)
+AddMaterialCommand::AddMaterialCommand(ModelDescMaterial material) : new_material(material)
 {
 }
 

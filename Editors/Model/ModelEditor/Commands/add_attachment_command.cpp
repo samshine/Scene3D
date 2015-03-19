@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-AddAttachmentCommand::AddAttachmentCommand(FBXAttachmentPoint attachment) : new_attachment(attachment)
+AddAttachmentCommand::AddAttachmentCommand(ModelDescAttachmentPoint attachment) : new_attachment(attachment)
 {
 }
 

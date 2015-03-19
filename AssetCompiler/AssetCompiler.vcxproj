@@ -20,12 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\AssetCompiler\AssetCompiler\asset_compiler.h" />
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h" />
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h" />
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_material.h" />
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h" />
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model_desc.h" />
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h" />
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_animation.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_attachment_point.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_material.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_particle_emitter.h" />
     <ClInclude Include="Include\asset_compiler.h" />
     <ClInclude Include="Sources\AssetCompiler\asset_compiler_impl.h" />
     <ClInclude Include="Sources\Crunch\crnlib.h" />
@@ -213,11 +214,12 @@
     <ClCompile Include="Sources\Crunch\lzma_LzmaLib.cpp" />
     <ClCompile Include="Sources\Crunch\lzma_Threads.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model.cpp" />
-    <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp" />
     <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp" />
     <ClCompile Include="Sources\Lightmap\lightmap_texture.cpp" />
     <ClCompile Include="Sources\Lightmap\lightmap_uv.cpp" />
     <ClCompile Include="Sources\Lightmap\texture_atlas.cpp" />
+    <ClCompile Include="Sources\MapDesc\map_desc.cpp" />
+    <ClCompile Include="Sources\ModelDesc\model_desc.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

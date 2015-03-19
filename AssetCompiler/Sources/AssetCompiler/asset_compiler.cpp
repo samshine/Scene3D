@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "AssetCompiler/AssetCompiler/asset_compiler.h"
-#include "AssetCompiler/FBXModel/fbx_model_desc.h"
+#include "AssetCompiler/ModelDescription/model_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "asset_compiler_impl.h"
 
@@ -15,7 +15,7 @@ namespace clan
 	{
 		try
 		{
-			FBXModelDesc desc = FBXModelDesc::load(filename);
+			ModelDesc desc = ModelDesc::load(filename);
 
 			std::string output_filename = PathHelp::combine(PathHelp::get_fullpath(filename), PathHelp::get_filename(filename) + ".cmodel");
 

@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-UpdateMaterialCommand::UpdateMaterialCommand(size_t index, FBXMaterial material) : index(index), new_material(material)
+UpdateMaterialCommand::UpdateMaterialCommand(size_t index, ModelDescMaterial material) : index(index), new_material(material)
 {
 }
 

@@ -5,7 +5,7 @@
 
 namespace clan
 {
-	class FBXMaterial
+	class ModelDescMaterial
 	{
 	public:
 		std::string mesh_material;

@@ -1,18 +1,18 @@
 
 #include "precomp.h"
-#include "AssetCompiler/FBXModel/fbx_model_desc.h"
+#include "AssetCompiler/ModelDescription/model_desc.h"
 
 namespace clan
 {
-	FBXModelDesc::FBXModelDesc()
+	ModelDesc::ModelDesc()
 	{
-		animations.push_back(FBXAnimation());
+		animations.push_back(ModelDescAnimation());
 		animations[0].name = "default";
 	}
 
-	FBXModelDesc FBXModelDesc::load(const std::string &filename)
+	ModelDesc ModelDesc::load(const std::string &filename)
 	{
-		FBXModelDesc desc;
+		ModelDesc desc;
 		desc.animations.clear();
 
 		JsonValue json = JsonValue::from_json(File::read_text(filename));
@@ -25,7 +25,7 @@ namespace clan
 
 		for (const auto &json_animation : json["animations"].get_items())
 		{
-			FBXAnimation animation;
+			ModelDescAnimation animation;
 			animation.name = json_animation["name"];
 			animation.start_frame = json_animation["start_frame"];
 			animation.end_frame = json_animation["end_frame"];
@@ -38,7 +38,7 @@ namespace clan
 
 		for (const auto &json_attachment : json["attachment_points"].get_items())
 		{
-			FBXAttachmentPoint attachment;
+			ModelDescAttachmentPoint attachment;
 			attachment.bone_name = json_attachment["bone_name"];
 			attachment.name = json_attachment["name"];
 			attachment.orientation = Quaternionf(json_attachment["orientation"]["w"], json_attachment["orientation"]["x"], json_attachment["orientation"]["y"], json_attachment["orientation"]["z"]);
@@ -55,7 +55,7 @@ namespace clan
 		{
 			for (const auto &json_material : json["materials"].get_items())
 			{
-				FBXMaterial material;
+				ModelDescMaterial material;
 				if (json_material.get_members().find("transparent") != json_material.get_members().end())
 					material.transparent = json_material["transparent"].to_boolean();
 				material.two_sided = json_material["two_sided"].to_boolean();
@@ -67,7 +67,7 @@ namespace clan
 
 		for (const auto &json_emitter : json["emitters"].get_items())
 		{
-			FBXParticleEmitter emitter;
+			ModelDescParticleEmitter emitter;
 			emitter.position = Vec3f(json_emitter["position"]["x"], json_emitter["position"]["y"], json_emitter["position"]["z"]);
 			emitter.bone_selector = json_emitter["bone_selector"];
 			emitter.size = json_emitter["size"];
@@ -84,7 +84,7 @@ namespace clan
 		return desc;
 	}
 
-	void FBXModelDesc::save(const std::string &filename)
+	void ModelDesc::save(const std::string &filename)
 	{
 		JsonValue json_animations = JsonValue::array();
 		for (const auto &animation : animations)

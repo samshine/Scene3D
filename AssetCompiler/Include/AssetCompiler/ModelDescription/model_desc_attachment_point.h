@@ -5,7 +5,7 @@
 
 namespace clan
 {
-	class FBXAttachmentPoint
+	class ModelDescAttachmentPoint
 	{
 	public:
 		std::string name;

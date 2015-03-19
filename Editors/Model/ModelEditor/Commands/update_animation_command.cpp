@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-UpdateAnimationCommand::UpdateAnimationCommand(size_t index, FBXAnimation animation) : index(index), new_animation(animation)
+UpdateAnimationCommand::UpdateAnimationCommand(size_t index, ModelDescAnimation animation) : index(index), new_animation(animation)
 {
 }
 

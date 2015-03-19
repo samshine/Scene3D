@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-AddAnimationCommand::AddAnimationCommand(FBXAnimation animation) : new_animation(animation)
+AddAnimationCommand::AddAnimationCommand(ModelDescAnimation animation) : new_animation(animation)
 {
 }
 

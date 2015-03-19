@@ -10,15 +10,15 @@
 namespace clan
 {
 	class FBXModelImpl;
-	class FBXAnimation;
-	class FBXAttachmentPoint;
-	class FBXParticleEmitter;
-	class FBXModelDesc;
+	class ModelDescAnimation;
+	class ModelDescAttachmentPoint;
+	class ModelDescParticleEmitter;
+	class ModelDesc;
 
 	class FBXModelLoader
 	{
 	public:
-		FBXModelLoader(FBXModelImpl *model, const FBXModelDesc &desc);
+		FBXModelLoader(FBXModelImpl *model, const ModelDesc &desc);
 
 		std::shared_ptr<ModelData> model_data;
 
@@ -36,7 +36,7 @@ namespace clan
 
 		void convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &elements, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world);
 		void convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices);
-		void convert_bones(const FBXAnimation &animation);
+		void convert_bones(const ModelDescAnimation &animation);
 
 		ModelDataDrawRange create_draw_range(size_t start_element, size_t num_elements, FbxSurfaceMaterial *material);
 		ModelDataTextureMap create_texture_channel(int channel, const char *property_name, FbxSurfaceMaterial *material, float gamma);
@@ -55,7 +55,7 @@ namespace clan
 		static Mat4f to_mat4f(const FbxAMatrix &m);
 		static Quaternionf to_quaternionf(const FbxQuaternion &q);
 
-		const FBXModelDesc &model_desc;
+		const ModelDesc &model_desc;
 		FBXModelImpl *model;
 		std::vector<SkinnedBone> bones;
 	};

@@ -21,7 +21,7 @@ ModelAppModel::~ModelAppModel()
 
 void ModelAppModel::open(const std::string &filename)
 {
-	desc = FBXModelDesc::load(filename);
+	desc = ModelDesc::load(filename);
 	open_filename = filename;
 	set_fbx_model(desc.fbx_filename);
 	sig_load_finished();

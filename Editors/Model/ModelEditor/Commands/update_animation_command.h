@@ -6,13 +6,13 @@
 class UpdateAnimationCommand : public ModelCommand
 {
 public:
-	UpdateAnimationCommand(size_t index, clan::FBXAnimation animation);
+	UpdateAnimationCommand(size_t index, clan::ModelDescAnimation animation);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	clan::FBXAnimation old_animation;
-	clan::FBXAnimation new_animation;
+	clan::ModelDescAnimation old_animation;
+	clan::ModelDescAnimation new_animation;
 };

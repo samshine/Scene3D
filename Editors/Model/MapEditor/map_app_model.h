@@ -14,7 +14,7 @@ public:
 	static MapAppModel *instance();
 
 	std::string open_filename;
-	clan::FBXModelDesc desc;
+	clan::ModelDesc desc;
 	std::shared_ptr<clan::FBXModel> fbx;
 	std::shared_ptr<clan::ModelData> model_data;
 

@@ -25,6 +25,18 @@
     <Filter Include="Sources\Lightmap">
       <UniqueIdentifier>{b19f0218-9aca-428c-ae11-3848117b02bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\MapDescription">
+      <UniqueIdentifier>{2fa5d4ce-4a63-43c9-a761-ea706ab99233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\ModelDescrption">
+      <UniqueIdentifier>{63d189db-33b2-4320-be15-bd4f2c90fefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ModelDesc">
+      <UniqueIdentifier>{d220007b-62ec-430d-ab05-91ada033f717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MapDesc">
+      <UniqueIdentifier>{c6bd3124-6b04-42ec-9f4d-b93c77b19283}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp">
@@ -258,9 +270,6 @@
     <ClCompile Include="Sources\FBXModel\fbx_model_loader.cpp">
       <Filter>Sources\FBXModel</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\FBXModel\fbx_model_desc.cpp">
-      <Filter>Sources\FBXModel</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Lightmap\lightmap_uv.cpp">
       <Filter>Sources\Lightmap</Filter>
     </ClCompile>
@@ -269,6 +278,12 @@
     </ClCompile>
     <ClCompile Include="Sources\Lightmap\lightmap_texture.cpp">
       <Filter>Sources\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ModelDesc\model_desc.cpp">
+      <Filter>Sources\ModelDesc</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MapDesc\map_desc.cpp">
+      <Filter>Sources\MapDesc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -599,21 +614,6 @@
     <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model.h">
       <Filter>Include\FBXModel</Filter>
     </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_animation.h">
-      <Filter>Include\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_attachment_point.h">
-      <Filter>Include\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_particle_emitter.h">
-      <Filter>Include\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_model_desc.h">
-      <Filter>Include\FBXModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\AssetCompiler\FBXModel\fbx_material.h">
-      <Filter>Include\FBXModel</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Lightmap\lightmap_uv.h">
       <Filter>Sources\Lightmap</Filter>
     </ClInclude>
@@ -622,6 +622,24 @@
     </ClInclude>
     <ClInclude Include="Sources\Lightmap\lightmap_texture.h">
       <Filter>Sources\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc.h">
+      <Filter>Include\ModelDescrption</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_animation.h">
+      <Filter>Include\ModelDescrption</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_attachment_point.h">
+      <Filter>Include\ModelDescrption</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_material.h">
+      <Filter>Include\ModelDescrption</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_particle_emitter.h">
+      <Filter>Include\ModelDescrption</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc.h">
+      <Filter>Include\MapDescription</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

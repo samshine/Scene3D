@@ -131,7 +131,7 @@ void MaterialsController::materials_list_selection_clicked()
 		int index = get_select_item_index();
 		if (index == -1)
 		{
-			FBXMaterial material;
+			ModelDescMaterial material;
 			material.mesh_material = selection->text();
 			ModelAppModel::instance()->undo_system.execute<AddMaterialCommand>(material);
 

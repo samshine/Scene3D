@@ -2,12 +2,13 @@
 #pragma once
 
 #include "AssetCompiler/AssetCompiler/asset_compiler.h"
-#include "AssetCompiler/FBXModel/fbx_model_desc.h"
+#include "AssetCompiler/ModelDescription/model_desc.h"
+#include "AssetCompiler/ModelDescription/model_desc_animation.h"
+#include "AssetCompiler/ModelDescription/model_desc_attachment_point.h"
+#include "AssetCompiler/ModelDescription/model_desc_particle_emitter.h"
+#include "AssetCompiler/ModelDescription/model_desc_material.h"
+#include "AssetCompiler/MapDescription/map_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
-#include "AssetCompiler/FBXModel/fbx_animation.h"
-#include "AssetCompiler/FBXModel/fbx_attachment_point.h"
-#include "AssetCompiler/FBXModel/fbx_particle_emitter.h"
-#include "AssetCompiler/FBXModel/fbx_material.h"
 
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)

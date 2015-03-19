@@ -6,11 +6,11 @@
 class AddMaterialCommand : public ModelCommand
 {
 public:
-	AddMaterialCommand(clan::FBXMaterial material);
+	AddMaterialCommand(clan::ModelDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	clan::FBXMaterial new_material;
+	clan::ModelDescMaterial new_material;
 };

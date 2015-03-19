@@ -2,11 +2,11 @@
 #include "precomp.h"
 #include "fbx_model_loader.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
-#include "AssetCompiler/FBXModel/fbx_model_desc.h"
-#include "AssetCompiler/FBXModel/fbx_animation.h"
-#include "AssetCompiler/FBXModel/fbx_attachment_point.h"
-#include "AssetCompiler/FBXModel/fbx_particle_emitter.h"
-#include "AssetCompiler/FBXModel/fbx_material.h"
+#include "AssetCompiler/ModelDescription/model_desc.h"
+#include "AssetCompiler/ModelDescription/model_desc_animation.h"
+#include "AssetCompiler/ModelDescription/model_desc_attachment_point.h"
+#include "AssetCompiler/ModelDescription/model_desc_particle_emitter.h"
+#include "AssetCompiler/ModelDescription/model_desc_material.h"
 #include "fbx_model_impl.h"
 #include <algorithm>
 
@@ -14,7 +14,7 @@
 
 namespace clan
 {
-	FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const FBXModelDesc &desc)
+	FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const ModelDesc &desc)
 		: model_desc(desc), model(model), model_data(std::make_shared<ModelData>())
 	{
 		convert_node(model->scene->GetRootNode());
@@ -749,7 +749,7 @@ namespace clan
 		model_data->lights.push_back(model_light);
 	}
 
-	void FBXModelLoader::convert_bones(const FBXAnimation &animation_desc)
+	void FBXModelLoader::convert_bones(const ModelDescAnimation &animation_desc)
 	{
 		model_data->bones.resize(bones.size());
 

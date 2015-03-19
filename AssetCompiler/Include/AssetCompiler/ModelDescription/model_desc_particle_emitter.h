@@ -5,7 +5,7 @@
 
 namespace clan
 {
-	class FBXParticleEmitter
+	class ModelDescParticleEmitter
 	{
 	public:
 		clan::Vec3f position;

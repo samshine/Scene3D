@@ -5,7 +5,7 @@
 
 using namespace clan;
 
-UpdateAttachmentCommand::UpdateAttachmentCommand(size_t index, FBXAttachmentPoint attachment) : index(index), new_attachment(attachment)
+UpdateAttachmentCommand::UpdateAttachmentCommand(size_t index, ModelDescAttachmentPoint attachment) : index(index), new_attachment(attachment)
 {
 }
 

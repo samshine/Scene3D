@@ -198,7 +198,7 @@ void GameScene::update_map(Scene &scene, GraphicContext &gc)
 
 		try
 		{
-			FBXModelDesc model_desc = FBXModelDesc::load(map_filename);
+			ModelDesc model_desc = ModelDesc::load(map_filename);
 			FBXModel fbx_model(model_desc.fbx_filename);
 			auto model_data = fbx_model.convert(model_desc, true);
 
@@ -227,7 +227,7 @@ void GameScene::update_model(Scene &scene, GraphicContext &gc)
 		{
 			try
 			{
-				FBXModelDesc model_desc = FBXModelDesc::load(attachment.model_name);
+				ModelDesc model_desc = ModelDesc::load(attachment.model_name);
 
 				FBXModel fbx_model(model_desc.fbx_filename);
 				auto attachment_model_data = fbx_model.convert(model_desc);

@@ -6,11 +6,11 @@
 class AddAnimationCommand : public ModelCommand
 {
 public:
-	AddAnimationCommand(clan::FBXAnimation animation);
+	AddAnimationCommand(clan::ModelDescAnimation animation);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	clan::FBXAnimation new_animation;
+	clan::ModelDescAnimation new_animation;
 };

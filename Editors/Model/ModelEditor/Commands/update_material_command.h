@@ -6,13 +6,13 @@
 class UpdateMaterialCommand : public ModelCommand
 {
 public:
-	UpdateMaterialCommand(size_t index, clan::FBXMaterial material);
+	UpdateMaterialCommand(size_t index, clan::ModelDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	clan::FBXMaterial old_material;
-	clan::FBXMaterial new_material;
+	clan::ModelDescMaterial old_material;
+	clan::ModelDescMaterial new_material;
 };

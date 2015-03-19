@@ -158,7 +158,7 @@ void EditScene::update_map(clan::Scene &scene, GraphicContext &gc)
 
 	try
 	{
-		FBXModelDesc model_desc = FBXModelDesc::load(map_model_filename);
+		ModelDesc model_desc = ModelDesc::load(map_model_filename);
 
 		FBXModel fbx_model(model_desc.fbx_filename);
 		auto attachment_model_data = fbx_model.convert(model_desc);
@@ -189,7 +189,7 @@ void EditScene::update_model(clan::Scene &scene, GraphicContext &gc)
 		{
 			try
 			{
-				FBXModelDesc model_desc = FBXModelDesc::load(attachment.model_name);
+				ModelDesc model_desc = ModelDesc::load(attachment.model_name);
 
 				FBXModel fbx_model(model_desc.fbx_filename);
 				auto attachment_model_data = fbx_model.convert(model_desc);

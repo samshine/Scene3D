@@ -35,7 +35,7 @@ namespace clan
 		return impl->camera_names;
 	}
 
-	std::shared_ptr<ModelData> FBXModel::convert(const FBXModelDesc &desc, bool bake_light)
+	std::shared_ptr<ModelData> FBXModel::convert(const ModelDesc &desc, bool bake_light)
 	{
 		FBXModelLoader loader(impl.get(), desc);
 		std::shared_ptr<ModelData> data = loader.model_data;

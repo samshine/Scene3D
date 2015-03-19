@@ -108,7 +108,7 @@ void AttachmentsController::attachments_list_edit_saved()
 	{
 		if (selection->index >= ModelAppModel::instance()->desc.attachment_points.size())
 		{
-			FBXAttachmentPoint attachment;
+			ModelDescAttachmentPoint attachment;
 			attachment.name = selection->text();
 			ModelAppModel::instance()->undo_system.execute<AddAttachmentCommand>(attachment);
 
@@ -116,7 +116,7 @@ void AttachmentsController::attachments_list_edit_saved()
 		}
 		else
 		{
-			FBXAttachmentPoint attachment = ModelAppModel::instance()->desc.attachment_points[selection->index];
+			ModelDescAttachmentPoint attachment = ModelAppModel::instance()->desc.attachment_points[selection->index];
 			attachment.name = selection->text();
 			ModelAppModel::instance()->undo_system.execute<UpdateAttachmentCommand>(selection->index, attachment);
 		}

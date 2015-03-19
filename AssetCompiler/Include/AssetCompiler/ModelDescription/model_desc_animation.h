@@ -5,7 +5,7 @@
 
 namespace clan
 {
-	class FBXAnimation
+	class ModelDescAnimation
 	{
 	public:
 		std::string name;

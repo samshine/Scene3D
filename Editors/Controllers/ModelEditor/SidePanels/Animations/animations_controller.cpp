@@ -101,7 +101,7 @@ void AnimationsController::animations_list_edit_saved()
 	{
 		if (selection->index >= ModelAppModel::instance()->desc.animations.size())
 		{
-			FBXAnimation anim;
+			ModelDescAnimation anim;
 			anim.name = selection->text();
 			ModelAppModel::instance()->undo_system.execute<AddAnimationCommand>(anim);
 
@@ -109,7 +109,7 @@ void AnimationsController::animations_list_edit_saved()
 		}
 		else
 		{
-			FBXAnimation anim = ModelAppModel::instance()->desc.animations[selection->index];
+			ModelDescAnimation anim = ModelAppModel::instance()->desc.animations[selection->index];
 			anim.name = selection->text();
 			ModelAppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection->index, anim);
 		}
