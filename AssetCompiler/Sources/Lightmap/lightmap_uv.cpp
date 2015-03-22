@@ -73,9 +73,9 @@ namespace clan
 
 				Vec2f max_uv = Vec2f(std::floor(std::max(std::max(uv[0].x, uv[1].x), uv[2].x)), std::floor(std::max(std::max(uv[0].y, uv[1].y), uv[2].y))) + 1.0f;
 
-				TextureAtlasObject atlas_pos = atlas.add(Size((int)max_uv.x, (int)max_uv.y));
+				TextureAtlasObject atlas_pos = atlas.add(Size((int)max_uv.x + 2, (int)max_uv.y + 2));
 
-				Vec2f offset((float)atlas_pos.box.left, (float)atlas_pos.box.top);
+				Vec2f offset((float)atlas_pos.box.left + 1.0f, (float)atlas_pos.box.top + 1.0f);
 				for (int i = 0; i < 3; i++)
 					uv[i] = (uv[i] + offset) / 1024.0f;
 

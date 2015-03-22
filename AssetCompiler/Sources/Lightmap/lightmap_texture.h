@@ -6,6 +6,7 @@
 
 namespace clan
 {
+	template<typename T>
 	class LightmapBuffer
 	{
 	public:
@@ -17,15 +18,25 @@ namespace clan
 		int width() const { return _width; }
 		int height() const { return _height; }
 
-		Vec3f &at(int x, int y) { return _values.at(x + y * _width); }
-		const Vec3f &at(int x, int y) const { return _values.at(x + y * _width); }
+		T &at(int x, int y) { return _values.at(x + y * _width); }
+		const T &at(int x, int y) const { return _values.at(x + y * _width); }
 
-		const Vec3f *data() const { return _values.data(); }
+		const T *data() const { return _values.data(); }
 
 	private:
 		int _width;
 		int _height;
-		std::vector<Vec3f> _values;
+		std::vector<T> _values;
+	};
+
+	class LightmapBuffers
+	{
+	public:
+		LightmapBuffers(int width, int height) : light(width, height), position(width, height), normal(width, height) { }
+
+		LightmapBuffer<Vec3f> light;
+		LightmapBuffer<Vec3f> position;
+		LightmapBuffer<Vec3f> normal;
 	};
 
 	class LightmapTexture
@@ -34,13 +45,26 @@ namespace clan
 		void generate(const std::shared_ptr<ModelData> &model_data);
 
 	private:
-		void create_collision_mesh();
-		void shooting_rays();
+		void create_light_maps();
+		void generate_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
+		void generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals);
 
-		void raytrace_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
-		Vec3f raytrace_face_point(int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals);
+		void create_collision_mesh();
+
+		Vec3f uniform_sample_hemisphere(float random1, float random2);
+		Vec3f cosine_sample_hemisphere(float random1, float random2);
+
+		void raytrace();
+		void shooting_rays();
+		void ambient_occulusion(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y);
+		void raytrace_visible_lights(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y);
+
+		void outline_extend();
+		void blur();
+
+		void save_lightmaps();
 	
-		std::map<int, std::shared_ptr<LightmapBuffer>> lightmaps;
+		std::map<int, std::shared_ptr<LightmapBuffers>> lightmaps;
 
 		std::shared_ptr<ModelData> model_data;
 
