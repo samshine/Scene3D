@@ -97,6 +97,11 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 				out_list.commands.push_back(new ModelRenderCommand_BindTexture(5, model->textures[material_range.specular_map.texture], to_wrap_mode(material_range.specular_map.wrap_x), to_wrap_mode(material_range.specular_map.wrap_y)));
 			}
 
+			if (material_range.light_map.texture != -1)
+			{
+				out_list.commands.push_back(new ModelRenderCommand_BindTexture(6, model->textures[material_range.light_map.texture], to_wrap_mode(material_range.light_map.wrap_x), to_wrap_mode(material_range.light_map.wrap_y)));
+			}
+
 			if (is_two_sided != material_range.two_sided)
 			{
 				is_two_sided = material_range.two_sided;
@@ -181,6 +186,11 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 			if (material_range.specular_map.texture != -1)
 			{
 				out_list.commands.push_back(new ModelRenderCommand_BindTexture(5, model->textures[material_range.specular_map.texture], to_wrap_mode(material_range.specular_map.wrap_x), to_wrap_mode(material_range.specular_map.wrap_y)));
+			}
+
+			if (material_range.light_map.texture != -1)
+			{
+				out_list.commands.push_back(new ModelRenderCommand_BindTexture(6, model->textures[material_range.light_map.texture], to_wrap_mode(material_range.light_map.wrap_x), to_wrap_mode(material_range.light_map.wrap_y)));
 			}
 
 			if (is_two_sided != material_range.two_sided)
@@ -296,6 +306,8 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 		defines += " BUMPMAP_UV";
 	if (description.self_illumination_channel)
 		defines += " SI_UV";
+	if (description.lightmap_channel)
+		defines += " LIGHTMAP_UV";
 	if (description.bones)
 		defines += " USE_BONES";
 	if (description.color_channel)
@@ -332,6 +344,8 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 		gbuffer.bind_attribute_location(9, "AttrUVMapC");
 	if (description.specular_channel)
 		gbuffer.bind_attribute_location(10, "AttrUVMapD");
+	if (description.lightmap_channel)
+		gbuffer.bind_attribute_location(11, "AttrUVMapE");
 
 	ShaderSetup::link(gbuffer, "gbuffer program");
 
@@ -345,6 +359,8 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 	gbuffer.set_uniform1i("SelfIlluminationSampler", 4);
 	gbuffer.set_uniform1i("SpecularTexture", 5);
 	gbuffer.set_uniform1i("SpecularSampler", 5);
+	gbuffer.set_uniform1i("LightMapTexture", 6);
+	gbuffer.set_uniform1i("LightMapSampler", 6);
 	gbuffer.set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	return gbuffer;
@@ -361,6 +377,8 @@ ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, 
 		defines += " BUMPMAP_UV";
 	if (description.self_illumination_channel)
 		defines += " SI_UV";
+	if (description.lightmap_channel)
+		defines += " LIGHTMAP_UV";
 	if (description.bones)
 		defines += " USE_BONES";
 	if (description.color_channel)
@@ -397,6 +415,8 @@ ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, 
 		transparency.bind_attribute_location(9, "AttrUVMapC");
 	if (description.specular_channel)
 		transparency.bind_attribute_location(10, "AttrUVMapD");
+	if (description.lightmap_channel)
+		transparency.bind_attribute_location(11, "AttrUVMapE");
 
 	ShaderSetup::link(transparency, "transparency program");
 

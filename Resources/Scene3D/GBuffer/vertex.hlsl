@@ -36,6 +36,9 @@ struct VertexIn
 #if defined(SPECULAR_UV)
 	float2 AttrUVMap3 : AttrUVMapD;
 #endif
+#if defined(LIGHTMAP_UV)
+	float2 AttrUVMap4 : AttrUVMapE;
+#endif
 };
 
 struct VertexOut
@@ -57,6 +60,9 @@ struct VertexOut
 #endif
 #if defined(SPECULAR_UV)
 	float2 UVMap3 : UVMap3;
+#endif
+#if defined(LIGHTMAP_UV)
+	float2 UVMap4 : UVMap4;
 #endif
 	float ArrayTextureIndex : ArrayTextureIndex;
 	float4 SelfIllumination : SelfIllumination;
@@ -143,6 +149,9 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 #if defined(SPECULAR_UV)
 	float3x4 UVTextureMatrix3 = loadMat3x4(vectorsOffset + MaterialOffset + 11);
 	output.UVMap3 = mul(UVTextureMatrix3, float4(input.AttrUVMap3, 0, 1)).xy;
+#endif
+#if defined(LIGHTMAP_UV)
+	output.UVMap4 = input.AttrUVMap4.xy;
 #endif
 	output.PositionInWorld = mul(ObjectToWorld, bonesResult.PositionInObject);
 	output.PositionInEye = mul(WorldToEye, output.PositionInWorld);

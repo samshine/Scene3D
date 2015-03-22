@@ -73,7 +73,7 @@ namespace clan
 
 	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data)
 	{
-		file.write_uint32(11); // version number
+		file.write_uint32(12); // version number
 		file.write("ModelCaramba", 13); // file magic
 
 		file.write_uint32(data->textures.size());
@@ -175,6 +175,14 @@ namespace clan
 				write_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation);
 				write_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale);
 
+				file.write_int32(data->meshes[j].draw_ranges[k].light_map.texture);
+				file.write_int32(data->meshes[j].draw_ranges[k].light_map.channel);
+				file.write_uint32(data->meshes[j].draw_ranges[k].light_map.wrap_x);
+				file.write_uint32(data->meshes[j].draw_ranges[k].light_map.wrap_y);
+				write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_offset);
+				write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_rotation);
+				write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_scale);
+
 				file.write_uint32(data->meshes[j].draw_ranges[k].start_element);
 				file.write_uint32(data->meshes[j].draw_ranges[k].num_elements);
 			}
@@ -263,7 +271,7 @@ namespace clan
 		if (memcmp(magic, "ModelCaramba", 12) != 0)
 			throw clan::Exception("Not a Caramba Model file");
 
-		if (version < 6 || version > 12)
+		if (version < 6 || version > 13)
 			throw clan::Exception("Unsupported file version");
 
 		std::shared_ptr<clan::ModelData> data(new clan::ModelData());
@@ -526,6 +534,18 @@ namespace clan
 					read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset);
 					read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation);
 					read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale);
+				}
+
+				if (version > 12)
+				{
+					data->meshes[j].draw_ranges[k].light_map.texture = file.read_uint32();
+					data->meshes[j].draw_ranges[k].light_map.channel = file.read_uint32();
+					data->meshes[j].draw_ranges[k].light_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+					data->meshes[j].draw_ranges[k].light_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+
+					read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_offset);
+					read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_rotation);
+					read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_scale);
 				}
 
 				data->meshes[j].draw_ranges[k].start_element = file.read_uint32();

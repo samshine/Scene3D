@@ -50,6 +50,7 @@ public:
 		specular_channel = (description.specular_map.texture != -1);
 		bumpmap_channel = (description.bumpmap_map.texture != -1);
 		self_illumination_channel = (description.self_illumination_map.texture != -1);
+		lightmap_channel = (description.light_map.texture != -1);
 	}
 
 	bool operator<(const ModelShaderDescription &other) const
@@ -64,6 +65,8 @@ public:
 			return specular_channel < other.specular_channel;
 		else if (bumpmap_channel != other.bumpmap_channel)
 			return bumpmap_channel < other.bumpmap_channel;
+		else if (lightmap_channel != other.lightmap_channel)
+			return lightmap_channel < other.lightmap_channel;
 		else
 			return self_illumination_channel < other.self_illumination_channel;
 	}
@@ -73,6 +76,7 @@ public:
 	bool specular_channel;
 	bool bumpmap_channel;
 	bool self_illumination_channel;
+	bool lightmap_channel;
 	bool bones;
 };
 

@@ -67,6 +67,7 @@ public:
 	ModelDataTextureMap specular_map;
 	ModelDataTextureMap bumpmap_map;
 	ModelDataTextureMap self_illumination_map;
+	ModelDataTextureMap light_map;
 };
 
 }

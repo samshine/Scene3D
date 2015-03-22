@@ -118,7 +118,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 #else
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
-	float3 color = material_self_illumination * 4;
+	float3 color = material_self_illumination * 2;
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;

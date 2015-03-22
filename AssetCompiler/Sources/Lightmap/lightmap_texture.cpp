@@ -22,7 +22,7 @@ namespace clan
 	{
 		// shooting_rays();
 
-		for (auto it : lightmaps)
+		for (auto &it : lightmaps)
 		{
 			int target_texture = it.first;
 			auto &lightmap = it.second;
@@ -38,7 +38,7 @@ namespace clan
 						for (int x = 0; x < lightmap->light.width(); x++)
 						{
 							ambient_occulusion(lightmap, x, y);
-							//raytrace_visible_lights(lightmap, x, y);
+							raytrace_visible_lights(lightmap, x, y);
 						}
 					}
 				}, core));
@@ -62,11 +62,11 @@ namespace clan
 
 		Vec3f up = Vec3f::cross(fragment_normal, side);
 
-		Vec3f ambient_color(0.5f, 0.5f, 0.5f);
+		Vec3f ambient_color(0.02f, 0.02f, 0.02f);
 
 		Vec3f ambient_contribution;
 
-		int sqr_samples = 4;// 16;
+		int sqr_samples = 16;
 		int num_samples = sqr_samples * sqr_samples;
 		for (int i = 0; i < num_samples; i++)
 		{
@@ -85,7 +85,7 @@ namespace clan
 			}
 		}
 
-		lightmap->light.at(x, y) = ambient_contribution / (float)num_samples * 0.25f;
+		lightmap->light.at(x, y) += ambient_contribution / (float)num_samples * 0.25f;
 	}
 
 	Vec3f LightmapTexture::uniform_sample_hemisphere(float random1, float random2)
@@ -140,7 +140,7 @@ namespace clan
 			}
 		}
 
-		lightmap->light.at(x, y) = diffuse_contribution * 0.25f;
+		lightmap->light.at(x, y) += diffuse_contribution * 0.25f;
 	}
 
 	void LightmapTexture::shooting_rays()
@@ -191,34 +191,37 @@ namespace clan
 
 	void LightmapTexture::outline_extend()
 	{
-		for (auto it : lightmaps)
+		for (auto &it : lightmaps)
 		{
 			int target_texture = it.first;
 			auto &lightmap = it.second;
 
-			for (int y = 0; y < lightmap->light.height(); y++)
+			for (int i = 0; i < 2; i++)
 			{
-				for (int x = 0; x < lightmap->light.width(); x++)
+				for (int y = 0; y < lightmap->light.height(); y++)
 				{
-					if (lightmap->normal.at(x, y) == Vec3f())
+					for (int x = 0; x < lightmap->light.width(); x++)
 					{
-						Vec3f light;
-						int count = 0;
-						for (int dy = -1; dy < 2; dy++)
+						if (lightmap->light.at(x, y) == Vec3f())
 						{
-							for (int dx = -1; dx < 2; dx++)
+							Vec3f light;
+							int count = 0;
+							for (int dy = -1; dy < 2; dy++)
 							{
-								if (x + dx > 0 && x + dx < lightmap->light.width() &&
-									y + dy > 0 && y + dy < lightmap->light.height() &&
-									lightmap->normal.at(x + dx, y + dy) != Vec3f())
+								for (int dx = -1; dx < 2; dx++)
 								{
-									light += lightmap->light.at(x + dx, y + dy);
-									count++;
+									if (x + dx > 0 && x + dx < lightmap->light.width() &&
+										y + dy > 0 && y + dy < lightmap->light.height() &&
+										lightmap->light.at(x + dx, y + dy) != Vec3f())
+									{
+										light += lightmap->light.at(x + dx, y + dy);
+										count++;
+									}
 								}
 							}
+							if (count > 0)
+								lightmap->light.at(x, y) = light / (float)count;
 						}
-						if (count > 0)
-							lightmap->light.at(x, y) = light / (float)count;
 					}
 				}
 			}
@@ -227,7 +230,7 @@ namespace clan
 
 	void LightmapTexture::blur()
 	{
-		for (auto it : lightmaps)
+		for (auto &it : lightmaps)
 		{
 			int target_texture = it.first;
 			auto &lightmap = it.second;
@@ -289,7 +292,7 @@ namespace clan
 		{
 			for (auto &range : mesh.draw_ranges)
 			{
-				if (range.self_illumination_map.channel == -1 || range.self_illumination_map.texture == -1)
+				if (range.light_map.channel == -1 || range.light_map.texture == -1)
 					continue;
 
 				for (size_t element_index = range.start_element; element_index + 2 < range.start_element + range.num_elements; element_index += 3)
@@ -303,9 +306,9 @@ namespace clan
 
 					Vec2f uv[3] =
 					{
-						mesh.channels[range.self_illumination_map.channel][indexes[0]] * 1024.0f,
-						mesh.channels[range.self_illumination_map.channel][indexes[1]] * 1024.0f,
-						mesh.channels[range.self_illumination_map.channel][indexes[2]] * 1024.0f
+						mesh.channels[range.light_map.channel][indexes[0]] * 1024.0f,
+						mesh.channels[range.light_map.channel][indexes[1]] * 1024.0f,
+						mesh.channels[range.light_map.channel][indexes[2]] * 1024.0f
 					};
 
 					Vec3f vertices[3] =
@@ -322,7 +325,7 @@ namespace clan
 						mesh.normals[indexes[2]]
 					};
 
-					generate_face(range.self_illumination_map.texture, uv, vertices, normals);
+					generate_face(range.light_map.texture, uv, vertices, normals);
 				}
 			}
 		}
@@ -405,7 +408,7 @@ namespace clan
 			auto &texture = model_data->textures[it.first];
 			auto &buffer = it.second;
 
-			auto pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true).to_format(tf_rgba8);
+			PixelBuffer pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true).to_format(tf_rgba8);
 			PNGProvider::save(pixelbuffer, texture.name);
 		}
 	}

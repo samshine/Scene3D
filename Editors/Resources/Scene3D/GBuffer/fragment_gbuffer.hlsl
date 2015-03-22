@@ -3,6 +3,7 @@
 #define BumpMapUV UVMap1
 #define SelfIlluminationUV UVMap2
 #define SpecularUV UVMap3
+#define LightMapUV UVMap4
 
 cbuffer ModelMaterialUniforms
 {
@@ -36,6 +37,9 @@ struct PixelIn
 #if defined(SPECULAR_UV)
 	float2 UVMap3 : UVMap3;
 #endif
+#if defined(LIGHTMAP_UV)
+	float2 UVMap4 : UVMap4;
+#endif
 	float ArrayTextureIndex : ArrayTextureIndex;
 	float4 SelfIllumination : SelfIllumination;
 #if defined(USE_COLORS)
@@ -61,16 +65,19 @@ Texture2D DiffuseTexture;
 Texture2D BumpMapTexture;
 Texture2D SelfIlluminationTexture;
 Texture2D SpecularTexture;
+Texture2D LightMapTexture;
 
 SamplerState DiffuseSampler;
 SamplerState BumpMapSampler;
 SamplerState SelfIlluminationSampler;
 SamplerState SpecularSampler;
+SamplerState LightMapSampler;
 
 float3 ApplyNormalMap(PixelIn input, bool frontFacing);
 float3 DiffuseColor(PixelIn input);
 float3 SpecularColor(PixelIn input);
 float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor);
+float3 LightMapAndProbe(PixelIn input, float4 diffuseColor);
 
 PixelOut main(PixelIn input, bool frontFacing : SV_IsFrontFace)
 {
@@ -79,7 +86,7 @@ PixelOut main(PixelIn input, bool frontFacing : SV_IsFrontFace)
 	output.FragDiffuseColor = float4(DiffuseColor(input), 1);
 	output.FragSpecularColor = float4(SpecularColor(input), 1);
 	output.FragSpecularLevel = float2(MaterialGlossiness, MaterialSpecularLevel);
-	output.FragSelfIllumination = float4(output.FragDiffuseColor.rgb * input.LightProbeColor.rgb + SelfIlluminationColor(input, output.FragDiffuseColor), 1);
+	output.FragSelfIllumination = float4(LightMapAndProbe(input, output.FragDiffuseColor) + SelfIlluminationColor(input, output.FragDiffuseColor), 1);
 	output.FragNormal = float4(normalInEyeNormalized, input.PositionInEye.z);
 	return output;
 }
@@ -180,3 +187,12 @@ float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 }
 
 #endif
+
+float3 LightMapAndProbe(PixelIn input, float4 diffuseColor)
+{
+#if defined(LIGHTMAP_UV)
+	return diffuseColor.rgb * (input.LightProbeColor.rgb + LightMapTexture.Sample(LightMapSampler, input.LightMapUV).rgb);
+#else
+	return diffuseColor.rgb * input.LightProbeColor.rgb;
+#endif
+}
