@@ -62,7 +62,7 @@ namespace clan
 
 		Vec3f up = Vec3f::cross(fragment_normal, side);
 
-		Vec3f ambient_color(0.04f, 0.04f, 0.046f);
+		Vec3f ambient_color(0.01f, 0.01f, 0.011f);
 
 		Vec3f ambient_contribution;
 
@@ -393,17 +393,6 @@ namespace clan
 
 	void LightmapTexture::generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, float a, float b, float c, const Vec3f *vertices, const Vec3f *normals)
 	{
-		/*
-		// Find barycentric coordinates for our position:
-
-		float det = ((uv[1].y - uv[2].y) * (uv[0].x - uv[2].x) + (uv[2].x - uv[1].x) * (uv[0].y - uv[2].y));
-		if (det == 0.0f || det == -0.0f)
-			return;
-		float a = ((uv[1].y - uv[2].y) * (px - uv[2].x) + (uv[2].x - uv[1].x) * (py - uv[2].y)) / det;
-		float b = ((uv[2].y - uv[0].y) * (px - uv[2].x) + (uv[0].x - uv[2].x) * (py - uv[2].y)) / det;
-		float c = 1.0f - a - b;
-		*/
-
 		// To do: clamp position to stay within our face
 		// http://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside
 
