@@ -47,7 +47,8 @@ namespace clan
 	private:
 		void create_light_maps();
 		void generate_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
-		void generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals);
+		void generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, float a, float b, float c, const Vec3f *vertices, const Vec3f *normals);
+		static float orient_2d(const Vec2f &a, const Vec2f &b, const Vec2f &c);
 
 		void create_collision_mesh();
 

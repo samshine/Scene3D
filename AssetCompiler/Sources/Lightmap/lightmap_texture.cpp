@@ -62,7 +62,7 @@ namespace clan
 
 		Vec3f up = Vec3f::cross(fragment_normal, side);
 
-		Vec3f ambient_color(0.02f, 0.02f, 0.02f);
+		Vec3f ambient_color(0.04f, 0.04f, 0.046f);
 
 		Vec3f ambient_contribution;
 
@@ -210,8 +210,8 @@ namespace clan
 							{
 								for (int dx = -1; dx < 2; dx++)
 								{
-									if (x + dx > 0 && x + dx < lightmap->light.width() &&
-										y + dy > 0 && y + dy < lightmap->light.height() &&
+									if (x + dx >= 0 && x + dx < lightmap->light.width() &&
+										y + dy >= 0 && y + dy < lightmap->light.height() &&
 										lightmap->light.at(x + dx, y + dy) != Vec3f())
 									{
 										light += lightmap->light.at(x + dx, y + dy);
@@ -331,57 +331,69 @@ namespace clan
 		}
 	}
 
+	float LightmapTexture::orient_2d(const Vec2f &a, const Vec2f &b, const Vec2f &c)
+	{
+		return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
+	}
+
 	void LightmapTexture::generate_face(int target_texture, const Vec2f *points, const Vec3f *vertices, const Vec3f *normals)
 	{
 		auto &lightmap = lightmaps[target_texture];
 		if (!lightmap)
 			lightmap = std::make_shared<LightmapBuffers>(1024, 1024); // To do: it needs to read this from the mesh somehow
 
-		Vec2f sorted_points[3] = { points[0], points[1], points[2] };
-		if (sorted_points[0].y > sorted_points[1].y) std::swap(sorted_points[0], sorted_points[1]);
-		if (sorted_points[0].y > sorted_points[2].y) std::swap(sorted_points[0], sorted_points[2]);
-		if (sorted_points[1].y > sorted_points[2].y) std::swap(sorted_points[1], sorted_points[2]);
+		// Triangle rasterization using edge functions
+		// See https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ for details
 
-		Vec2f dir[3] =
+		// wsum is 2x the signed summed area of the triangle
+		float wsum = orient_2d(points[0], points[1], points[2]);
+
+		// Triangle is clockwise if the sum is negative
+		float sign = (wsum < 0.0f) ? -1.0f : 1.0f;
+		wsum *= sign;
+
+		// Find bounding box
+		int min_x = (int)std::floor(std::min({ points[0].x, points[1].x, points[2].x }));
+		int min_y = (int)std::floor(std::min({ points[0].y, points[1].y, points[2].y }));
+		int max_x = (int)std::floor(std::max({ points[0].x, points[1].x, points[2].x })) + 1;
+		int max_y = (int)std::floor(std::max({ points[0].y, points[1].y, points[2].y })) + 1;
+
+		// Clip
+		min_x = std::max(min_x, 0);
+		min_y = std::max(min_y, 0);
+		max_x = std::min(max_x, 1024);
+		max_y = std::min(max_y, 1024);
+
+		// Rasterize
+		for (int y = min_y; y < max_y; y++)
 		{
-			sorted_points[1] - sorted_points[0],
-			sorted_points[2] - sorted_points[1],
-			sorted_points[2] - sorted_points[0]
-		};
+			for (int x = min_x; x < max_x; x++)
+			{
+				Vec2f p(x + 0.5f, y + 0.5f);
 
-		int start_y = (int)std::round(sorted_points[0].y);
-		int middle_y = (int)std::round(sorted_points[1].y);
-		int end_y = (int)std::round(sorted_points[2].y);
+				// Determine barycentric coordinates
+				float w0 = sign * orient_2d(points[1], points[2], p);
+				float w1 = sign * orient_2d(points[2], points[0], p);
+				float w2 = sign * orient_2d(points[0], points[1], p);
 
-		start_y = std::max(start_y, 0);
-		middle_y = std::max(std::min(middle_y, lightmap->light.height()), start_y);
-		end_y = std::min(end_y, lightmap->light.height());
+				// If p is on or inside all edges, render pixel
+				if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
+				{
+					// Normalize barycentric coordinates
+					float alpha = w0 / wsum;
+					float beta = w1 / wsum;
+					float gamma = 1.0f - alpha - beta;
 
-		for (int y = start_y; y < middle_y; y++)
-		{
-			int x0 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[0].x / dir[0].y);
-			int x1 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[2].x / dir[2].y);
-			if (x0 > x1) std::swap(x0, x1);
-			x0 = std::max(x0, 0);
-			x1 = std::min(x1, lightmap->light.width());
-			for (int x = x0; x < x1; x++)
-				generate_face_fragment(lightmap, x, y, target_texture, points, x + 0.5f, y + 0.5f, vertices, normals);
-		}
-
-		for (int y = middle_y; y < end_y; y++)
-		{
-			int x0 = (int)std::round(sorted_points[1].x + (y + 0.5f - sorted_points[1].y) * dir[1].x / dir[1].y);
-			int x1 = (int)std::round(sorted_points[0].x + (y + 0.5f - sorted_points[0].y) * dir[2].x / dir[2].y);
-			if (x0 > x1) std::swap(x0, x1);
-			x0 = std::max(x0, 0);
-			x1 = std::min(x1, lightmap->light.width());
-			for (int x = x0; x < x1; x++)
-				generate_face_fragment(lightmap, x, y, target_texture, points, x + 0.5f, y + 0.5f, vertices, normals);
+					// Render pixel
+					generate_face_fragment(lightmap, x, y, target_texture, alpha, beta, gamma, vertices, normals);
+				}
+			}
 		}
 	}
 
-	void LightmapTexture::generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, const Vec2f *uv, float px, float py, const Vec3f *vertices, const Vec3f *normals)
+	void LightmapTexture::generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, float a, float b, float c, const Vec3f *vertices, const Vec3f *normals)
 	{
+		/*
 		// Find barycentric coordinates for our position:
 
 		float det = ((uv[1].y - uv[2].y) * (uv[0].x - uv[2].x) + (uv[2].x - uv[1].x) * (uv[0].y - uv[2].y));
@@ -390,6 +402,7 @@ namespace clan
 		float a = ((uv[1].y - uv[2].y) * (px - uv[2].x) + (uv[2].x - uv[1].x) * (py - uv[2].y)) / det;
 		float b = ((uv[2].y - uv[0].y) * (px - uv[2].x) + (uv[0].x - uv[2].x) * (py - uv[2].y)) / det;
 		float c = 1.0f - a - b;
+		*/
 
 		// To do: clamp position to stay within our face
 		// http://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside
