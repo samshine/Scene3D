@@ -13,7 +13,7 @@ namespace clan
 		create_light_maps();
 		create_collision_mesh();
 		raytrace();
-		//outline_extend();
+		outline_extend();
 		//blur();
 		save_lightmaps();
 	}
@@ -378,9 +378,21 @@ namespace clan
 			for (int x = min_x; x < max_x; x++)
 			{
 				// Check if the pixel bounding box includes the triangle
-				bool edge12_inside = (edge12_tl.value >= 0.0f) || (edge12_tl.value + edge12_tl.step_x + edge12_tl.step_y >= 0.0f);
-				bool edge20_inside = (edge20_tl.value >= 0.0f) || (edge20_tl.value + edge20_tl.step_x + edge20_tl.step_y >= 0.0f);
-				bool edge01_inside = (edge01_tl.value >= 0.0f) || (edge01_tl.value + edge01_tl.step_x + edge01_tl.step_y >= 0.0f);
+				bool edge12_inside =
+					(edge12_tl.value >= 0.0f) ||
+					(edge12_tl.value + edge12_tl.step_x >= 0.0f) ||
+					(edge12_tl.value + edge12_tl.step_y >= 0.0f) ||
+					(edge12_tl.value + edge12_tl.step_x + edge12_tl.step_y >= 0.0f);
+				bool edge20_inside =
+					(edge20_tl.value >= 0.0f) ||
+					(edge20_tl.value + edge20_tl.step_x >= 0.0f) ||
+					(edge20_tl.value + edge20_tl.step_y >= 0.0f) ||
+					(edge20_tl.value + edge20_tl.step_x + edge20_tl.step_y >= 0.0f);
+				bool edge01_inside =
+					(edge01_tl.value >= 0.0f) ||
+					(edge01_tl.value + edge01_tl.step_x >= 0.0f) ||
+					(edge01_tl.value + edge01_tl.step_y >= 0.0f) ||
+					(edge01_tl.value + edge01_tl.step_x + edge01_tl.step_y >= 0.0f);
 				bool bbox_included = edge12_inside && edge20_inside && edge01_inside;
 
 				// Determine barycentric coordinates
