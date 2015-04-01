@@ -78,7 +78,7 @@ PixelOut main(PixelIn input)
 	float3 color = float3(0,0,0);
 #if defined(RECT_PASS)
 	if (input.InstanceId == 0)
-		color = material_self_illumination * 2;
+		color = material_self_illumination;
 #endif
 
 	float3 fragment_to_light = input.PositionInEye.xyz - position_in_eye;

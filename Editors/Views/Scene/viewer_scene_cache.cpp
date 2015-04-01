@@ -32,7 +32,7 @@ Resource<Texture> ViewerSceneCache::get_texture(GraphicContext &gc, const std::s
 
 		Texture2D loaded_texture = Texture2D(gc, image.get_width(), image.get_height(), image.get_format(), has_mipmaps ? 0 : 1);
 		loaded_texture.set_image(gc, image);
-
+#ifndef DEBUG_FILTER_NEAREST
 		if (has_mipmaps)
 		{
 			loaded_texture.set_min_filter(filter_linear_mipmap_linear);
@@ -45,6 +45,10 @@ Resource<Texture> ViewerSceneCache::get_texture(GraphicContext &gc, const std::s
 			loaded_texture.set_min_filter(filter_linear);
 			loaded_texture.set_mag_filter(filter_linear);
 		}
+#else
+		loaded_texture.set_min_filter(filter_nearest);
+		loaded_texture.set_mag_filter(filter_nearest);
+#endif
 
 		loaded_texture.set_wrap_mode(wrap_repeat, wrap_repeat);
 

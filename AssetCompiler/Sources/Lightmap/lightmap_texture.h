@@ -39,6 +39,43 @@ namespace clan
 		LightmapBuffer<Vec3f> normal;
 	};
 
+	class EdgeFunction
+	{
+	public:
+		EdgeFunction(const Vec2f &v0, const Vec2f &v1, const Vec2f &origin, float sign = 1.0f) : value_at_origin(orient_2d(v0, v1, origin) * sign), step_x((v0.y - v1.y) * sign), step_y((v1.x - v0.x) * sign)
+		{
+			reset();
+		}
+
+		void reset()
+		{
+			value_row = value_at_origin;
+			value = value_row;
+		}
+
+		void next_row()
+		{
+			value_row += step_y;
+			value = value_row;
+		}
+
+		void next_x()
+		{
+			value += step_x;
+		}
+
+		static float orient_2d(const Vec2f &a, const Vec2f &b, const Vec2f &c)
+		{
+			return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
+		}
+
+		const float value_at_origin;
+		const float step_x;
+		const float step_y;
+		float value_row;
+		float value;
+	};
+
 	class LightmapTexture
 	{
 	public:
@@ -48,7 +85,6 @@ namespace clan
 		void create_light_maps();
 		void generate_face(int target_texture, const Vec2f *uv, const Vec3f *vertices, const Vec3f *normals);
 		void generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, float a, float b, float c, const Vec3f *vertices, const Vec3f *normals);
-		static float orient_2d(const Vec2f &a, const Vec2f &b, const Vec2f &c);
 
 		void create_collision_mesh();
 

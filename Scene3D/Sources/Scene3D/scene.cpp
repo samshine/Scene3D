@@ -179,7 +179,7 @@ void Scene::set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors)
 
 	for (size_t i = 0; i < colors.size(); i++)
 	{
-		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a * 0.25f);
+		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
 	}
 
 	Texture2D texture(gc, pb.get_size(), tf_rgba32f);

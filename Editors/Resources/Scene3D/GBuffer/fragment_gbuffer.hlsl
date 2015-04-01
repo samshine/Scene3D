@@ -169,9 +169,9 @@ float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 {
 #if defined(USE_COLORS)
 	float3 siColor = input.SelfIllumination.rgb + input.VertexColor.rgb * diffuseColor.rgb;
-	return lerp(siColor, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w);
+	return lerp(siColor, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w) * 2;
 #else
-	return lerp(input.SelfIllumination.rgb, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w);
+	return lerp(input.SelfIllumination.rgb, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w) * 2;
 #endif
 }
 
@@ -180,9 +180,9 @@ float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 {
 #if defined(USE_COLORS)
-	return input.SelfIllumination.rgb + input.VertexColor.rgb * diffuseColor.rgb;
+	return input.SelfIllumination.rgb * 2 + input.VertexColor.rgb * diffuseColor.rgb;
 #else
-	return input.SelfIllumination.rgb;
+	return input.SelfIllumination.rgb * 2;
 #endif
 }
 

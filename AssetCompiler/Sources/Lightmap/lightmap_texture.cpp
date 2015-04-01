@@ -13,7 +13,7 @@ namespace clan
 		create_light_maps();
 		create_collision_mesh();
 		raytrace();
-		outline_extend();
+		//outline_extend();
 		//blur();
 		save_lightmaps();
 	}
@@ -62,7 +62,7 @@ namespace clan
 
 		Vec3f up = Vec3f::cross(fragment_normal, side);
 
-		Vec3f ambient_color(0.01f, 0.01f, 0.011f);
+		Vec3f ambient_color(0.02f, 0.02f, 0.022f);
 
 		Vec3f ambient_contribution;
 
@@ -85,7 +85,7 @@ namespace clan
 			}
 		}
 
-		lightmap->light.at(x, y) += ambient_contribution / (float)num_samples * 0.25f;
+		lightmap->light.at(x, y) += ambient_contribution / (float)num_samples;
 	}
 
 	Vec3f LightmapTexture::uniform_sample_hemisphere(float random1, float random2)
@@ -140,7 +140,7 @@ namespace clan
 			}
 		}
 
-		lightmap->light.at(x, y) += diffuse_contribution * 0.25f;
+		lightmap->light.at(x, y) += diffuse_contribution;
 	}
 
 	void LightmapTexture::shooting_rays()
@@ -331,11 +331,6 @@ namespace clan
 		}
 	}
 
-	float LightmapTexture::orient_2d(const Vec2f &a, const Vec2f &b, const Vec2f &c)
-	{
-		return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
-	}
-
 	void LightmapTexture::generate_face(int target_texture, const Vec2f *points, const Vec3f *vertices, const Vec3f *normals)
 	{
 		auto &lightmap = lightmaps[target_texture];
@@ -346,11 +341,13 @@ namespace clan
 		// See https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ for details
 
 		// wsum is 2x the signed summed area of the triangle
-		float wsum = orient_2d(points[0], points[1], points[2]);
+		float wsum = EdgeFunction::orient_2d(points[0], points[1], points[2]);
 
 		// Triangle is clockwise if the sum is negative
-		float sign = (wsum < 0.0f) ? -1.0f : 1.0f;
+		float sign = (wsum >= 0.0f) ? 1.0f : -1.0f;
 		wsum *= sign;
+
+		float rcp_wsum = 1.0f / wsum;
 
 		// Find bounding box
 		int min_x = (int)std::floor(std::min({ points[0].x, points[1].x, points[2].x }));
@@ -364,38 +361,87 @@ namespace clan
 		max_x = std::min(max_x, 1024);
 		max_y = std::min(max_y, 1024);
 
+		// Edge functions
+		Vec2f origin(min_x + 0.5f, min_y + 0.5f);
+		EdgeFunction edge12(points[1], points[2], origin, sign);
+		EdgeFunction edge20(points[2], points[0], origin, sign);
+		EdgeFunction edge01(points[0], points[1], origin, sign);
+
+		Vec2f origin_tl((float)min_x, (float)min_y);
+		EdgeFunction edge12_tl(points[1], points[2], origin_tl, sign);
+		EdgeFunction edge20_tl(points[2], points[0], origin_tl, sign);
+		EdgeFunction edge01_tl(points[0], points[1], origin_tl, sign);
+
 		// Rasterize
 		for (int y = min_y; y < max_y; y++)
 		{
 			for (int x = min_x; x < max_x; x++)
 			{
-				Vec2f p(x + 0.5f, y + 0.5f);
+				// Check if the pixel bounding box includes the triangle
+				bool edge12_inside = (edge12_tl.value >= 0.0f) || (edge12_tl.value + edge12_tl.step_x + edge12_tl.step_y >= 0.0f);
+				bool edge20_inside = (edge20_tl.value >= 0.0f) || (edge20_tl.value + edge20_tl.step_x + edge20_tl.step_y >= 0.0f);
+				bool edge01_inside = (edge01_tl.value >= 0.0f) || (edge01_tl.value + edge01_tl.step_x + edge01_tl.step_y >= 0.0f);
+				bool bbox_included = edge12_inside && edge20_inside && edge01_inside;
 
 				// Determine barycentric coordinates
-				float w0 = sign * orient_2d(points[1], points[2], p);
-				float w1 = sign * orient_2d(points[2], points[0], p);
-				float w2 = sign * orient_2d(points[0], points[1], p);
+				float w0 = edge12.value;
+				float w1 = edge20.value;
+				float w2 = edge01.value;
 
 				// If p is on or inside all edges, render pixel
-				if (w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f)
+				//if ((w0 >= 0.0f && w1 >= 0.0f && w2 >= 0.0f))
+				if (bbox_included)
 				{
 					// Normalize barycentric coordinates
-					float alpha = w0 / wsum;
-					float beta = w1 / wsum;
+					float alpha = w0 * rcp_wsum;
+					float beta = w1 * rcp_wsum;
 					float gamma = 1.0f - alpha - beta;
+
+					// Clamp barycentric coordinates to stay within our face
+					if (alpha < 0.0f)
+					{
+						beta += alpha * 0.5f;
+						gamma += alpha * 0.5f;
+						alpha = 0.0f;
+					}
+					if (beta < 0.0f)
+					{
+						alpha += beta * 0.5f;
+						gamma += beta * 0.5f;
+						beta = 0.0f;
+					}
+					if (gamma < 0.0f)
+					{
+						alpha += gamma * 0.5f;
+						beta += gamma * 0.5f;
+						gamma = 0.0f;
+					}
 
 					// Render pixel
 					generate_face_fragment(lightmap, x, y, target_texture, alpha, beta, gamma, vertices, normals);
 				}
+
+				edge12.next_x();
+				edge20.next_x();
+				edge01.next_x();
+
+				edge12_tl.next_x();
+				edge20_tl.next_x();
+				edge01_tl.next_x();
 			}
+
+			edge12.next_row();
+			edge20.next_row();
+			edge01.next_row();
+
+			edge12_tl.next_row();
+			edge20_tl.next_row();
+			edge01_tl.next_row();
 		}
 	}
 
 	void LightmapTexture::generate_face_fragment(std::shared_ptr<LightmapBuffers> &lightmap, int x, int y, int target_texture, float a, float b, float c, const Vec3f *vertices, const Vec3f *normals)
 	{
-		// To do: clamp position to stay within our face
-		// http://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside
-
 		Vec3f fragment_pos = a * vertices[0] + b * vertices[1] + c * vertices[2];
 		Vec3f fragment_normal = Vec3f::normalize(a * normals[0] + b * normals[1] + c * normals[2]);
 
