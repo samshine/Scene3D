@@ -468,7 +468,7 @@ namespace clan
 			auto &texture = model_data->textures[it.first];
 			auto &buffer = it.second;
 
-			PixelBuffer pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true).to_format(tf_rgba8);
+			PixelBuffer pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true);
 			PNGProvider::save(pixelbuffer, texture.name);
 		}
 	}
