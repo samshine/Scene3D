@@ -7,11 +7,11 @@ using namespace clan;
 HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon, bool last)
 {
 	style()->set("flex-direction: row");
-	style()->set("flex: 0 0 main-size");
+	style()->set("flex: none");
 	style()->set("padding: 2px 0");
 
 	button = std::make_shared<ButtonView>();
-	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("flex: none");
 	button->style()->set("margin: auto 0");
 	button->style()->set("padding: 3px 10px");
 	if (!icon.empty())
@@ -63,7 +63,7 @@ void HeaderMenuView::button_clicked(PointerEvent &e)
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
 {
 	auto button = std::make_shared<ButtonView>();
-	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("flex: none");
 	button->style()->set("padding: 3px 10px");
 	button->label()->set_text(StringHelp::text_to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");

@@ -8,21 +8,21 @@ using namespace clan;
 HeaderView::HeaderView()
 {
 	style()->set("flex-direction: row");
-	style()->set("flex: 0 0 main-size");
+	style()->set("flex: none");
 	style()->set("background: linear-gradient(to right, rgb(15,50,77), rgb(95,128,146))");
 	style()->set("border-bottom: 1px solid rgb(159,184,194)");
 
 	left_buttons = std::make_shared<View>();
-	left_buttons->style()->set("flex: 0 0 main-size");
+	left_buttons->style()->set("flex: none");
 	left_buttons->style()->set("flex-direction: row");
 	add_subview(left_buttons);
 
 	auto spacer = std::make_shared<View>();
-	spacer->style()->set("flex: 1 1 main-size");
+	spacer->style()->set("flex: auto");
 	add_subview(spacer);
 
 	right_buttons = std::make_shared<View>();
-	right_buttons->style()->set("flex: 0 0 main-size");
+	right_buttons->style()->set("flex: none");
 	right_buttons->style()->set("flex-direction: row");
 	add_subview(right_buttons);
 }
@@ -64,7 +64,7 @@ std::shared_ptr<HeaderMenuView> HeaderView::add_right_menu(const std::string &te
 void HeaderView::create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last)
 {
 	auto button = std::make_shared<ButtonView>();
-	button->style()->set("flex: 0 0 main-size");
+	button->style()->set("flex: none");
 	button->style()->set("margin: auto 0");
 	button->style()->set("padding: 5px 10px");
 	if (!icon.empty())

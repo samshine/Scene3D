@@ -8,7 +8,7 @@ using namespace clan;
 SceneView::SceneView()
 {
 	style()->set("flex-direction: row");
-	style()->set("flex: 1 1 main-size");
+	style()->set("flex: auto");
 
 	set_focus_policy(FocusPolicy::accept);
 

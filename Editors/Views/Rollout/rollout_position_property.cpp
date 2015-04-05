@@ -12,7 +12,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 
 	label = std::make_shared<LabelView>();
 	label->style()->set("margin-right: 5px");
-	label->style()->set("flex: 0 0 main-size");
+	label->style()->set("flex: none");
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
 	label->style()->set("padding: 2px 0");
 	label->style()->set("font: 12px/18px 'Lato'");
@@ -34,7 +34,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 
 		std::shared_ptr<LabelView> input_label = std::make_shared<LabelView>();
 		input_label->style()->set("margin-right: 5px");
-		input_label->style()->set("flex: 0 0 main-size");
+		input_label->style()->set("flex: none");
 		input_label->style()->set("padding: 2px 0");
 		input_label->style()->set("font: 12px/18px 'Lato'");
 		input_label->style()->set("color: rgb(153,180,198)");
@@ -42,7 +42,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 		row->add_subview(input_label);
 
 		std::shared_ptr<TextFieldView> input = std::make_shared<TextFieldView>();
-		input->style()->set("flex: 1 1 main-size");
+		input->style()->set("flex: auto");
 		input->style()->set("background: rgba(255,255,255,0.7843)");
 		input->style()->set("border-radius: 3px");
 		input->style()->set("padding: 2px");
