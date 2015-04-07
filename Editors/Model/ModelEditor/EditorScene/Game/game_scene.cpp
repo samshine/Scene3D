@@ -200,7 +200,7 @@ void GameScene::update_map(Scene &scene, GraphicContext &gc)
 		{
 			ModelDesc model_desc = ModelDesc::load(map_filename);
 			FBXModel fbx_model(model_desc.fbx_filename);
-			auto model_data = fbx_model.convert(model_desc, true);
+			auto model_data = fbx_model.convert(model_desc);
 
 			map_object = SceneObject(scene, SceneModel(gc, scene, model_data));
 			map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
