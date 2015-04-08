@@ -70,6 +70,9 @@ void SceneView::render_content(Canvas &canvas)
 		supersampling = false;
 	}*/
 
+	viewport_size_i.width = std::max(viewport_size_i.width, 16);
+	viewport_size_i.height = std::max(viewport_size_i.height, 16);
+
 	canvas.flush();
 	GraphicContext gc = canvas.get_gc();
 	InputContext ic;

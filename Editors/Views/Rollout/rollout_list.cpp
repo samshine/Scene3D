@@ -45,7 +45,7 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 	style()->set("border-radius: 2px");
 
 	label = std::make_shared<LabelView>();
-	label->style()->set("12px/18px 'Lato'");
+	label->style()->set("font: 12px/18px 'Lato'");
 	label->style()->set("color: white");
 	add_subview(label);
 
