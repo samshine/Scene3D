@@ -21,6 +21,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 	add_subview(label);
 
 	auto value_group = std::make_shared<View>();
+	value_group->style()->set("flex: auto");
 	value_group->style()->set("flex-direction: column");
 	add_subview(value_group);
 
@@ -43,7 +44,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 
 		std::shared_ptr<TextFieldView> input = std::make_shared<TextFieldView>();
 		input->style()->set("flex: auto");
-		input->style()->set("background: rgba(255,255,255,0.7843)");
+		input->style()->set("background: rgba(255,255,255,0.07843)");
 		input->style()->set("border-radius: 3px");
 		input->style()->set("padding: 2px");
 		input->style()->set("font: 12px/18px 'Lato'");
