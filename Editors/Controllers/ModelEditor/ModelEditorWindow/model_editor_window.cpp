@@ -25,7 +25,7 @@ ModelEditorWindow::ModelEditorWindow()
 		RunLoop::exit();
 	});
 
-	auto app_menu = header_view->add_left_menu("Editor", "Icons/App/AppIcon-32.png");
+	auto app_menu = header_view->add_left_menu("Model Editor", "Icons/App/AppIcon-32.png");
 
 	app_menu->add_item("Open", bind_member(this, &ModelEditorWindow::on_open));
 	app_menu->add_item("Save", bind_member(this, &ModelEditorWindow::on_save));

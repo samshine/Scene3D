@@ -5,6 +5,12 @@ class HeaderView;
 class WorkspaceController;
 class MapSceneController;
 class ObjectsController;
+class MapLightsController;
+class MapLightProbesController;
+class MapEmittersController;
+class MapMaterialsController;
+class TriggersController;
+class PathNodesController;
 
 class MapEditorWindow : public clan::ViewController
 {
@@ -20,6 +26,12 @@ private:
 	void on_save();
 	void on_save_as();
 	void on_show_objects();
+	void on_show_lights();
+	void on_show_light_probes();
+	void on_show_emitters();
+	void on_show_materials();
+	void on_show_triggers();
+	void on_show_path_nodes();
 	void on_change_model();
 
 	std::shared_ptr<HeaderView> header_view;
@@ -27,6 +39,12 @@ private:
 
 	std::shared_ptr<MapSceneController> scene_controller;
 	std::shared_ptr<ObjectsController> objects_controller;
+	std::shared_ptr<MapLightsController> lights_controller;
+	std::shared_ptr<MapLightProbesController> light_probes_controller;
+	std::shared_ptr<MapEmittersController> emitters_controller;
+	std::shared_ptr<MapMaterialsController> materials_controller;
+	std::shared_ptr<TriggersController> triggers_controller;
+	std::shared_ptr<PathNodesController> path_nodes_controller;
 
 	clan::SlotContainer slots;
 };

@@ -21,10 +21,11 @@ public:
 
 	std::string open_filename;
 	clan::ModelDesc desc;
+	std::string map_model;
+
 	std::shared_ptr<clan::FBXModel> fbx;
 	std::shared_ptr<clan::ModelData> model_data;
 
-	std::string map_model;
 	std::shared_ptr<EditorScene> editor_scene;
 
 	UndoSystem undo_system;

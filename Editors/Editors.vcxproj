@@ -21,7 +21,13 @@
   <ItemGroup>
     <ClCompile Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.cpp" />
     <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.cpp" />
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Animations\animations_controller.cpp" />
@@ -67,7 +73,13 @@
   <ItemGroup>
     <ClInclude Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.h" />
     <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.h" />
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Animations\animations_controller.h" />

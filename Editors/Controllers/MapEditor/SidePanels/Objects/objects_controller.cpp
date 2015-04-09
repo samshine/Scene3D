@@ -13,8 +13,8 @@ ObjectsController::ObjectsController()
 	objects = std::make_shared<RolloutView>("OBJECTS");
 	object = std::make_shared<RolloutView>("OBJECT");
 
-	view->add_subview(objects);
-	view->add_subview(object);
+	content_view()->add_subview(objects);
+	content_view()->add_subview(object);
 
 	objects_list = std::make_shared<RolloutList>();
 	objects_list->set_allow_edit(false);

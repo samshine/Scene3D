@@ -14,11 +14,10 @@ public:
 	static MapAppModel *instance();
 
 	std::string open_filename;
-	clan::ModelDesc desc;
+	clan::MapDesc desc;
+
 	std::shared_ptr<clan::FBXModel> fbx;
 	std::shared_ptr<clan::ModelData> model_data;
-
-	std::string map_model;
 
 	UndoSystem undo_system;
 

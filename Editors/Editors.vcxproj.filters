@@ -97,6 +97,24 @@
     <Filter Include="Controllers\SidePanel">
       <UniqueIdentifier>{a629c759-a44d-46f8-a207-30765c59dd82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\MapLights">
+      <UniqueIdentifier>{db27ec88-9cd1-471a-b273-caccf48fa043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\MapLightProbes">
+      <UniqueIdentifier>{c99c7606-63d2-4633-9408-080541bdadbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\MapEmitters">
+      <UniqueIdentifier>{87d5b44c-35aa-4b9f-b564-1873c674e70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\MapMaterials">
+      <UniqueIdentifier>{965cfdfe-8cb0-46cd-9bdc-f12698249070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\Triggers">
+      <UniqueIdentifier>{dc9dfb71-692a-44b6-8a2f-4b436ddcebe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\PathNodes">
+      <UniqueIdentifier>{7d3b79cd-3543-4c5d-8d4c-60dc5e8eea42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -213,6 +231,24 @@
     </ClCompile>
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp">
       <Filter>Controllers\SidePanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\MapLights</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\MapLightProbes</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\MapEmitters</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\MapMaterials</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\PathNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\Triggers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +373,24 @@
     </ClInclude>
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h">
       <Filter>Controllers\SidePanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\MapLights</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\MapLightProbes</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\MapEmitters</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\MapMaterials</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\PathNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\Triggers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
