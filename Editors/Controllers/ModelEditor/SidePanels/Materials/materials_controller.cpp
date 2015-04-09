@@ -10,13 +10,11 @@ using namespace clan;
 
 MaterialsController::MaterialsController()
 {
-	view->style()->set("flex-direction: column");
-
 	materials = std::make_shared<RolloutView>("MATERIALS");
 	material = std::make_shared<RolloutView>("MATERIAL");
 
-	view->add_subview(materials);
-	view->add_subview(material);
+	content_view()->add_subview(materials);
+	content_view()->add_subview(material);
 
 	materials_list = std::make_shared<RolloutList>();
 	two_sided_property = std::make_shared<RolloutTextFieldProperty>("TWO SIDED");

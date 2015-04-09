@@ -1,11 +1,13 @@
 
 #pragma once
 
+#include "Controllers/SidePanel/side_panel_controller.h"
+
 class RolloutView;
 class RolloutTextFieldProperty;
 class RolloutBrowseFieldProperty;
 
-class EnvironmentController : public clan::ViewController
+class EnvironmentController : public SidePanelController
 {
 public:
 	EnvironmentController();

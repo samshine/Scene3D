@@ -12,13 +12,11 @@ using namespace clan;
 
 AttachmentsController::AttachmentsController()
 {
-	view->style()->set("flex-direction: column");
-
 	attachments = std::make_shared<RolloutView>("ATTACHMENTS");
 	attachment = std::make_shared<RolloutView>("ATTACHMENT");
 
-	view->add_subview(attachments);
-	view->add_subview(attachment);
+	content_view()->add_subview(attachments);
+	content_view()->add_subview(attachment);
 
 	attachments_list = std::make_shared<RolloutList>();
 	position_property = std::make_shared<RolloutPositionProperty>("POSITION");

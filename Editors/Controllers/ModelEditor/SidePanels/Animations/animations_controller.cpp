@@ -10,13 +10,11 @@ using namespace clan;
 
 AnimationsController::AnimationsController()
 {
-	view->style()->set("flex-direction: column");
-
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");
 
-	view->add_subview(animations);
-	view->add_subview(animation);
+	content_view()->add_subview(animations);
+	content_view()->add_subview(animation);
 
 	animations_list = std::make_shared<RolloutList>();
 	start_property = std::make_shared<RolloutTextFieldProperty>("START FRAME");

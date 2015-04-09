@@ -13,8 +13,6 @@ using namespace clan;
 
 EnvironmentController::EnvironmentController()
 {
-	view->style()->set("flex-direction: column");
-
 	environment = std::make_shared<RolloutView>("ENVIRONMENT");
 	map_model_property = std::make_shared<RolloutBrowseFieldProperty>("MAP MODEL");
 
@@ -45,8 +43,8 @@ EnvironmentController::EnvironmentController()
 	character->content->add_subview(air_movement_property);
 	character->content->add_subview(bounce_property);
 
-	view->add_subview(environment);
-	view->add_subview(character);
+	content_view()->add_subview(environment);
+	content_view()->add_subview(character);
 
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &EnvironmentController::map_model_updated);
 	slots.connect(map_model_property->sig_browse(), this, &EnvironmentController::map_model_property_browse);

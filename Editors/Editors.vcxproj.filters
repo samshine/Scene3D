@@ -94,6 +94,9 @@
     <Filter Include="Controllers\MapEditor\SidePanels\Objects">
       <UniqueIdentifier>{5d7ef0e7-a9f5-4dbb-b83d-85dcef3abe2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\SidePanel">
+      <UniqueIdentifier>{a629c759-a44d-46f8-a207-30765c59dd82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -207,6 +210,9 @@
     </ClCompile>
     <ClCompile Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.cpp">
       <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp">
+      <Filter>Controllers\SidePanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +334,9 @@
     </ClInclude>
     <ClInclude Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.h">
       <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\SidePanel\side_panel_controller.h">
+      <Filter>Controllers\SidePanel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

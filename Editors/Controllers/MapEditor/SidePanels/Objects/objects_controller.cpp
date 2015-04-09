@@ -10,8 +10,6 @@ using namespace clan;
 
 ObjectsController::ObjectsController()
 {
-	view->style()->set("flex-direction: column");
-
 	objects = std::make_shared<RolloutView>("OBJECTS");
 	object = std::make_shared<RolloutView>("OBJECT");
 

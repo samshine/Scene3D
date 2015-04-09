@@ -1,12 +1,14 @@
 
 #pragma once
 
+#include "Controllers/SidePanel/side_panel_controller.h"
+
 class RolloutView;
 class RolloutTextFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
-class ObjectsController : public clan::ViewController
+class ObjectsController : public SidePanelController
 {
 public:
 	ObjectsController();

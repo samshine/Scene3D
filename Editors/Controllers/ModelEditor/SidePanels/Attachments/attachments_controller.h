@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "Controllers/SidePanel/side_panel_controller.h"
+
 class RolloutView;
 class RolloutPositionProperty;
 class RolloutTextFieldProperty;
@@ -8,7 +10,7 @@ class RolloutBrowseFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
-class AttachmentsController : public clan::ViewController
+class AttachmentsController : public SidePanelController
 {
 public:
 	AttachmentsController();

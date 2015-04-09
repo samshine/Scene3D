@@ -10,13 +10,11 @@ using namespace clan;
 
 BonesController::BonesController()
 {
-	view->style()->set("flex-direction: column");
-
 	bones = std::make_shared<RolloutView>("BONES");
 	bone = std::make_shared<RolloutView>("BONE");
 
-	view->add_subview(bones);
-	view->add_subview(bone);
+	content_view()->add_subview(bones);
+	content_view()->add_subview(bone);
 
 	bones_list = std::make_shared<RolloutList>();
 	bones_list->set_allow_edit(false);

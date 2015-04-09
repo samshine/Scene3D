@@ -10,13 +10,11 @@ using namespace clan;
 
 LightsController::LightsController()
 {
-	view->style()->set("flex-direction: column");
-
 	lights = std::make_shared<RolloutView>("LIGHTS");
 	light = std::make_shared<RolloutView>("LIGHT");
 
-	view->add_subview(lights);
-	view->add_subview(light);
+	content_view()->add_subview(lights);
+	content_view()->add_subview(light);
 
 	lights_list = std::make_shared<RolloutList>();
 	lights_list->set_allow_edit(false);
