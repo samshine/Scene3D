@@ -4,6 +4,7 @@
 #include "Views/Rollout/rollout_view.h"
 #include "Views/Rollout/rollout_list.h"
 #include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/Rollout/rollout_position_property.h"
 #include "Model/MapEditor/map_app_model.h"
 
 using namespace clan;
@@ -12,6 +13,8 @@ MapLightsController::MapLightsController()
 {
 	lights = std::make_shared<RolloutView>("LIGHTS");
 	light = std::make_shared<RolloutView>("LIGHT");
+	mesh_light = std::make_shared<RolloutTextFieldProperty>("MESH LIGHT");
+	bake = std::make_shared<RolloutTextFieldProperty>("BAKE");
 
 	content_view()->add_subview(lights);
 	content_view()->add_subview(light);
@@ -20,6 +23,9 @@ MapLightsController::MapLightsController()
 	lights_list->set_allow_edit(false);
 
 	lights->content->add_subview(lights_list);
+
+	light->content->add_subview(mesh_light);
+	light->content->add_subview(bake);
 
 	slots.connect(lights_list->sig_selection_changed(), this, &MapLightsController::lights_list_selection_changed);
 	slots.connect(lights_list->sig_selection_clicked(), this, &MapLightsController::lights_list_selection_clicked);
@@ -68,8 +74,8 @@ void MapLightsController::update_lights()
 	}
 	*/
 
-	if (!lights_list->selection())
-		light->set_hidden(true);
+	//if (!lights_list->selection())
+	//	light->set_hidden(true);
 }
 
 int MapLightsController::get_select_item_index()

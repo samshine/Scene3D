@@ -4,6 +4,7 @@
 #include "Controllers/SidePanel/side_panel_controller.h"
 
 class RolloutView;
+class RolloutPositionProperty;
 class RolloutTextFieldProperty;
 class RolloutList;
 class RolloutListItemView;
@@ -26,6 +27,7 @@ private:
 	std::shared_ptr<RolloutList> light_probes_list;
 
 	std::shared_ptr<RolloutView> light_probe;
+	std::shared_ptr<RolloutPositionProperty> position;
 
 	clan::SlotContainer slots;
 };

@@ -19,6 +19,9 @@ private:
 
 	void materials_list_selection_changed();
 	void materials_list_selection_clicked();
+	void two_sided_property_value_changed();
+	void alpha_test_property_value_changed();
+	void transparent_property_value_changed();
 
 	int get_select_item_index();
 
@@ -26,6 +29,9 @@ private:
 	std::shared_ptr<RolloutList> materials_list;
 
 	std::shared_ptr<RolloutView> material;
+	std::shared_ptr<RolloutTextFieldProperty> two_sided_property;
+	std::shared_ptr<RolloutTextFieldProperty> alpha_test_property;
+	std::shared_ptr<RolloutTextFieldProperty> transparent_property;
 
 	clan::SlotContainer slots;
 };

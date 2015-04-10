@@ -4,6 +4,7 @@
 #include "Views/Rollout/rollout_view.h"
 #include "Views/Rollout/rollout_list.h"
 #include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/Rollout/rollout_position_property.h"
 #include "Model/MapEditor/map_app_model.h"
 
 using namespace clan;
@@ -12,6 +13,7 @@ MapLightProbesController::MapLightProbesController()
 {
 	light_probes = std::make_shared<RolloutView>("LIGHT PROBES");
 	light_probe = std::make_shared<RolloutView>("LIGHT PROBE");
+	position = std::make_shared<RolloutPositionProperty>("POSITION");
 
 	content_view()->add_subview(light_probes);
 	content_view()->add_subview(light_probe);
@@ -20,6 +22,8 @@ MapLightProbesController::MapLightProbesController()
 	light_probes_list->set_allow_edit(false);
 
 	light_probes->content->add_subview(light_probes_list);
+
+	light_probe->content->add_subview(position);
 
 	slots.connect(light_probes_list->sig_selection_changed(), this, &MapLightProbesController::light_probes_list_selection_changed);
 	slots.connect(light_probes_list->sig_selection_clicked(), this, &MapLightProbesController::light_probes_list_selection_clicked);
@@ -68,8 +72,8 @@ void MapLightProbesController::update_light_probes()
 	}
 	*/
 
-	if (!light_probes_list->selection())
-		light_probe->set_hidden(true);
+	//if (!light_probes_list->selection())
+	//	light_probe->set_hidden(true);
 }
 
 int MapLightProbesController::get_select_item_index()

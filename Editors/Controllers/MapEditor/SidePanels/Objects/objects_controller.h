@@ -4,7 +4,9 @@
 #include "Controllers/SidePanel/side_panel_controller.h"
 
 class RolloutView;
+class RolloutPositionProperty;
 class RolloutTextFieldProperty;
+class RolloutBrowseFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
@@ -26,6 +28,13 @@ private:
 	std::shared_ptr<RolloutList> objects_list;
 
 	std::shared_ptr<RolloutView> object;
+	std::shared_ptr<RolloutTextFieldProperty> id;
+	std::shared_ptr<RolloutPositionProperty> position;
+	std::shared_ptr<RolloutTextFieldProperty> dir;
+	std::shared_ptr<RolloutTextFieldProperty> up;
+	std::shared_ptr<RolloutTextFieldProperty> tilt;
+	std::shared_ptr<RolloutTextFieldProperty> scale;
+	std::shared_ptr<RolloutBrowseFieldProperty> model_desc_filename;
 
 	clan::SlotContainer slots;
 };

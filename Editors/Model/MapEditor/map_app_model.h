@@ -2,6 +2,8 @@
 #pragma once
 
 #include "Model/UndoSystem/undo_system.h"
+#include "Commands/add_map_material_command.h"
+#include "Commands/update_map_material_command.h"
 
 class EditorScene;
 

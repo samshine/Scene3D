@@ -39,6 +39,8 @@
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.cpp" />
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp" />
     <ClCompile Include="Model\MapEditor\map_app_model.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_attachment_command.cpp" />
@@ -92,6 +94,8 @@
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
     <ClInclude Include="editor_resources.h" />
+    <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
+    <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h" />
     <ClInclude Include="Model\MapEditor\map_app_model.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h" />

@@ -17,12 +17,23 @@ MapMaterialsController::MapMaterialsController()
 	content_view()->add_subview(material);
 
 	materials_list = std::make_shared<RolloutList>();
+	two_sided_property = std::make_shared<RolloutTextFieldProperty>("TWO SIDED");
+	alpha_test_property = std::make_shared<RolloutTextFieldProperty>("ALPHA TEST");
+	transparent_property = std::make_shared<RolloutTextFieldProperty>("TRANSPARENT");
+
 	materials_list->set_allow_edit(false);
 
 	materials->content->add_subview(materials_list);
 
+	material->content->add_subview(two_sided_property);
+	material->content->add_subview(alpha_test_property);
+	material->content->add_subview(transparent_property);
+
 	slots.connect(materials_list->sig_selection_changed(), this, &MapMaterialsController::materials_list_selection_changed);
 	slots.connect(materials_list->sig_selection_clicked(), this, &MapMaterialsController::materials_list_selection_clicked);
+	slots.connect(two_sided_property->sig_value_changed(), this, &MapMaterialsController::two_sided_property_value_changed);
+	slots.connect(alpha_test_property->sig_value_changed(), this, &MapMaterialsController::alpha_test_property_value_changed);
+	slots.connect(transparent_property->sig_value_changed(), this, &MapMaterialsController::transparent_property_value_changed);
 
 	slots.connect(MapAppModel::instance()->sig_load_finished, [this]() { update_materials(); });
 
@@ -36,22 +47,20 @@ void MapMaterialsController::update_materials()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	/*
 	if (MapAppModel::instance()->fbx)
 	{
-		for (const auto &material_name : MapAppModel::instance()->fbx->material_names())
+		for (const auto &mesh_mat : MapAppModel::instance()->fbx->material_names())
 		{
-			auto item = materials_list->add_item(material_name);
+			auto item = materials_list->add_item(mesh_mat);
 			if (first)
 			{
 				item->set_selected(true, false);
 				first = false;
 			}
-			items[material_name] = item;
+			items[mesh_mat] = item;
 		}
 	}
-	*/
-	/*
+
 	for (const auto &material : MapAppModel::instance()->desc.materials)
 	{
 		auto &item = items[material.mesh_material];
@@ -66,7 +75,6 @@ void MapMaterialsController::update_materials()
 			first = false;
 		}
 	}
-	*/
 
 	if (!materials_list->selection())
 		material->set_hidden(true);
@@ -74,7 +82,7 @@ void MapMaterialsController::update_materials()
 
 int MapMaterialsController::get_select_item_index()
 {
-	/*auto selection = materials_list->selection();
+	auto selection = materials_list->selection();
 	if (selection)
 	{
 		std::string name = selection->text();
@@ -85,7 +93,7 @@ int MapMaterialsController::get_select_item_index()
 			if (materials[i].mesh_material == name)
 				return (int)i;
 		}
-	}*/
+	}
 	return -1;
 }
 
@@ -97,7 +105,10 @@ void MapMaterialsController::update_material_fields()
 	{
 		material->set_hidden(false);
 
-		//const auto &material = MapAppModel::instance()->desc.materials[index];
+		const auto &material = MapAppModel::instance()->desc.materials[index];
+		two_sided_property->text_field->set_text(material.two_sided ? "1" : "0");
+		alpha_test_property->text_field->set_text(material.alpha_test ? "1" : "0");
+		transparent_property->text_field->set_text(material.transparent ? "1" : "0");
 	}
 	else
 	{
@@ -115,17 +126,51 @@ void MapMaterialsController::materials_list_selection_clicked()
 	auto selection = materials_list->selection();
 	if (selection)
 	{
-		/*
-		if (selection->index >= MapAppModel::instance()->desc.materials.size())
+		int index = get_select_item_index();
+		if (index == -1)
 		{
-			MapAppModel::instance()->desc.materials.resize(selection->index + 1);
-			materials_list->add_item("");
+			ModelDescMaterial material;
+			material.mesh_material = selection->text();
+			MapAppModel::instance()->undo_system.execute<AddMapMaterialCommand>(material);
+
+			selection->set_bold(true);
+			update_material_fields();
 		}
+	}
+}
 
-		auto &material = MapAppModel::instance()->desc.materials[selection->index];
-		material.name = selection->text();
+void MapMaterialsController::two_sided_property_value_changed()
+{
+	auto selection = materials_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto material = app_model->desc.materials.at(selection->index);
+		material.two_sided = two_sided_property->text_field->text_int() == 1;
+		app_model->undo_system.execute<UpdateMapMaterialCommand>(selection->index, material);
+	}
+}
 
-		update_material_fields();
-		*/
+void MapMaterialsController::alpha_test_property_value_changed()
+{
+	auto selection = materials_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto material = app_model->desc.materials.at(selection->index);
+		material.alpha_test = alpha_test_property->text_field->text_int() == 1;
+		app_model->undo_system.execute<UpdateMapMaterialCommand>(selection->index, material);
+	}
+}
+
+void MapMaterialsController::transparent_property_value_changed()
+{
+	auto selection = materials_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto material = app_model->desc.materials.at(selection->index);
+		material.transparent = alpha_test_property->text_field->text_int() == 1;
+		app_model->undo_system.execute<UpdateMapMaterialCommand>(selection->index, material);
 	}
 }

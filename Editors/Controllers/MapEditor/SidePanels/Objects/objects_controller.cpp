@@ -4,6 +4,8 @@
 #include "Views/Rollout/rollout_view.h"
 #include "Views/Rollout/rollout_list.h"
 #include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/Rollout/rollout_position_property.h"
+#include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/MapEditor/map_app_model.h"
 
 using namespace clan;
@@ -12,6 +14,13 @@ ObjectsController::ObjectsController()
 {
 	objects = std::make_shared<RolloutView>("OBJECTS");
 	object = std::make_shared<RolloutView>("OBJECT");
+	id = std::make_shared<RolloutTextFieldProperty>("ID");
+	position = std::make_shared<RolloutPositionProperty>("POSITION");
+	dir = std::make_shared<RolloutTextFieldProperty>("DIR");
+	up = std::make_shared<RolloutTextFieldProperty>("UP");
+	tilt = std::make_shared<RolloutTextFieldProperty>("TILT");
+	scale = std::make_shared<RolloutTextFieldProperty>("SCALE");
+	model_desc_filename = std::make_shared<RolloutBrowseFieldProperty>("MODEL");
 
 	content_view()->add_subview(objects);
 	content_view()->add_subview(object);
@@ -20,6 +29,14 @@ ObjectsController::ObjectsController()
 	objects_list->set_allow_edit(false);
 
 	objects->content->add_subview(objects_list);
+
+	object->content->add_subview(id);
+	object->content->add_subview(position);
+	object->content->add_subview(dir);
+	object->content->add_subview(up);
+	object->content->add_subview(tilt);
+	object->content->add_subview(scale);
+	object->content->add_subview(model_desc_filename);
 
 	slots.connect(objects_list->sig_selection_changed(), this, &ObjectsController::objects_list_selection_changed);
 	slots.connect(objects_list->sig_selection_clicked(), this, &ObjectsController::objects_list_selection_clicked);
@@ -68,8 +85,8 @@ void ObjectsController::update_objects()
 	}
 	*/
 
-	if (!objects_list->selection())
-		object->set_hidden(true);
+	//if (!objects_list->selection())
+	//	object->set_hidden(true);
 }
 
 int ObjectsController::get_select_item_index()
