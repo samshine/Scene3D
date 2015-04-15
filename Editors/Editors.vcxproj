@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.cpp" />
     <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Create\create_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.cpp" />
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Modify\modify_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.cpp" />
@@ -40,6 +42,7 @@
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\set_map_fbx_filename_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp" />
     <ClCompile Include="Model\MapEditor\map_app_model.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp" />
@@ -63,6 +66,7 @@
     <ClCompile Include="Views\Header\header_menu_view.cpp" />
     <ClCompile Include="Views\Header\header_view.cpp" />
     <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp" />
+    <ClCompile Include="Views\Rollout\rollout_button.cpp" />
     <ClCompile Include="Views\Rollout\rollout_header.cpp" />
     <ClCompile Include="Views\Rollout\rollout_list.cpp" />
     <ClCompile Include="Views\Rollout\rollout_position_property.cpp" />
@@ -75,10 +79,12 @@
   <ItemGroup>
     <ClInclude Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.h" />
     <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Create\create_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.h" />
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Modify\modify_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.h" />
@@ -95,6 +101,7 @@
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
     <ClInclude Include="editor_resources.h" />
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
+    <ClInclude Include="Model\MapEditor\Commands\set_map_fbx_filename_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h" />
     <ClInclude Include="Model\MapEditor\map_app_model.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
@@ -115,6 +122,7 @@
     <ClInclude Include="Views\Header\header_menu_view.h" />
     <ClInclude Include="Views\Header\header_view.h" />
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h" />
+    <ClInclude Include="Views\Rollout\rollout_button.h" />
     <ClInclude Include="Views\Rollout\rollout_header.h" />
     <ClInclude Include="Views\Rollout\rollout_list.h" />
     <ClInclude Include="Views\Rollout\rollout_position_property.h" />

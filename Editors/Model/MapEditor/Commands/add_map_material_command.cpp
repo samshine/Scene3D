@@ -12,11 +12,11 @@ AddMapMaterialCommand::AddMapMaterialCommand(ModelDescMaterial material) : new_m
 void AddMapMaterialCommand::execute()
 {
 	MapAppModel::instance()->desc.materials.push_back(new_material);
-	MapAppModel::instance()->update_scene_model();
+	MapAppModel::instance()->update_map_model_data();
 }
 
 void AddMapMaterialCommand::rollback()
 {
 	MapAppModel::instance()->desc.materials.pop_back();
-	MapAppModel::instance()->update_scene_model();
+	MapAppModel::instance()->update_map_model_data();
 }

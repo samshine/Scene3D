@@ -4,6 +4,8 @@
 class HeaderView;
 class WorkspaceController;
 class MapSceneController;
+class CreateController;
+class ModifyController;
 class ObjectsController;
 class MapLightsController;
 class MapLightProbesController;
@@ -25,6 +27,8 @@ private:
 	void on_open();
 	void on_save();
 	void on_save_as();
+	void on_show_create();
+	void on_show_modify();
 	void on_show_objects();
 	void on_show_lights();
 	void on_show_light_probes();
@@ -38,6 +42,8 @@ private:
 	std::shared_ptr<WorkspaceController> workspace_controller;
 
 	std::shared_ptr<MapSceneController> scene_controller;
+	std::shared_ptr<CreateController> create_controller;
+	std::shared_ptr<ModifyController> modify_controller;
 	std::shared_ptr<ObjectsController> objects_controller;
 	std::shared_ptr<MapLightsController> lights_controller;
 	std::shared_ptr<MapLightProbesController> light_probes_controller;

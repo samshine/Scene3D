@@ -47,9 +47,9 @@ void MapMaterialsController::update_materials()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
-	if (MapAppModel::instance()->fbx)
+	if (MapAppModel::instance()->map_fbx)
 	{
-		for (const auto &mesh_mat : MapAppModel::instance()->fbx->material_names())
+		for (const auto &mesh_mat : MapAppModel::instance()->map_fbx->material_names())
 		{
 			auto item = materials_list->add_item(mesh_mat);
 			if (first)

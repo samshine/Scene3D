@@ -2,10 +2,23 @@
 #pragma once
 
 #include "Model/UndoSystem/undo_system.h"
+#include "Commands/set_map_fbx_filename_command.h"
 #include "Commands/add_map_material_command.h"
 #include "Commands/update_map_material_command.h"
 
 class EditorScene;
+
+enum class MapToolType
+{
+	select,
+	select_move,
+	select_rotate,
+	select_scale,
+	create_object,
+	create_trigger,
+	create_path_point,
+	create_light_probe
+};
 
 class MapAppModel
 {
@@ -18,19 +31,21 @@ public:
 	std::string open_filename;
 	clan::MapDesc desc;
 
-	std::shared_ptr<clan::FBXModel> fbx;
-	std::shared_ptr<clan::ModelData> model_data;
+	std::shared_ptr<clan::FBXModel> map_fbx;
+	std::shared_ptr<clan::ModelData> map_model_data;
 
 	UndoSystem undo_system;
 
+	MapToolType tool = MapToolType::select_move;
+
 	clan::Signal<void()> sig_load_finished;
-	clan::Signal<void()> sig_model_data_updated;
-	clan::Signal<void()> sig_map_model_updated;
+	clan::Signal<void()> sig_map_model_data_updated;
+	clan::Signal<void()> sig_map_tool_changed;
 
 	void open(const std::string &filename);
 	void save(const std::string &filename);
-	void set_fbx_model(const std::string &filename);
-	void update_scene_model();
+
+	void update_map_model_data();
 
 private:
 	static MapAppModel *instance_ptr;
