@@ -22,3 +22,5 @@ ipch
 /ModelEditor/*.aps
 /MapEditor/x64
 /MapEditor/*.aps
+/ShooterGame/*.aps
+/ShooterGame/x64
