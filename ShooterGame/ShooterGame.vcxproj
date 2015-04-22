@@ -164,12 +164,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssetCompiler\AssetCompiler.vcxproj">
-      <Project>{18b9d9f2-3ec8-4522-a20b-e399cd66bf24}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Editors\Editors.vcxproj">
-      <Project>{a8588d01-1c50-44cb-92cd-707b951d1aa9}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Scene3D\Scene3D.vcxproj">
       <Project>{4dccae36-0fe1-4d41-8e43-7dd7723e23d8}</Project>
     </ProjectReference>
