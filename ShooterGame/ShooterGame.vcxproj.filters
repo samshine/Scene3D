@@ -3,12 +3,32 @@
   <ItemGroup>
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceCaches\file_search_path.h">
+      <Filter>ResourceCaches</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCaches\game_scene_cache.h">
+      <Filter>ResourceCaches</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCaches\game_display_cache.h">
+      <Filter>ResourceCaches</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="ResourceCaches\game_scene_cache.cpp">
+      <Filter>ResourceCaches</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCaches\game_display_cache.cpp">
+      <Filter>ResourceCaches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ResourceCaches">
+      <UniqueIdentifier>{cc2b6109-6a69-48d3-bb57-2b970300eabd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
