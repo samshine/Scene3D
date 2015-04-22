@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CFB3642B-8B59-4257-812A-F17B2601DACE}</ProjectGuid>
+    <ProjectGuid>{C1D1BA03-9318-4439-96C4-911C531B75B6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MapEditor</RootNamespace>
+    <RootNamespace>ShooterGame</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

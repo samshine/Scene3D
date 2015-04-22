@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetCompiler", "AssetCompi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editors", "Editors\Editors.vcxproj", "{A8588D01-1C50-44CB-92CD-707B951D1AA9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShooterGame", "ShooterGame\ShooterGame.vcxproj", "{C1D1BA03-9318-4439-96C4-911C531B75B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -83,6 +85,18 @@ Global
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Release|Win32.Build.0 = Release|Win32
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Release|x64.ActiveCfg = Release|x64
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Release|x64.Build.0 = Release|x64
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|Win32.Build.0 = Debug|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|x64.ActiveCfg = Debug|x64
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Debug|x64.Build.0 = Debug|x64
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|Win32.ActiveCfg = Release|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|Win32.Build.0 = Release|Win32
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|x64.ActiveCfg = Release|x64
+		{C1D1BA03-9318-4439-96C4-911C531B75B6}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
