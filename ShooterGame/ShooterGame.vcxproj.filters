@@ -12,6 +12,15 @@
     <ClInclude Include="ResourceCaches\game_display_cache.h">
       <Filter>ResourceCaches</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Screens\game_screen_controller.h">
+      <Filter>Controllers\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Screens\menu_screen_controller.h">
+      <Filter>Controllers\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Screens\screen_view_controller.h">
+      <Filter>Controllers\Screens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -22,6 +31,15 @@
     <ClCompile Include="ResourceCaches\game_display_cache.cpp">
       <Filter>ResourceCaches</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\Screens\game_screen_controller.cpp">
+      <Filter>Controllers\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Screens\menu_screen_controller.cpp">
+      <Filter>Controllers\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Screens\screen_view_controller.cpp">
+      <Filter>Controllers\Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -29,6 +47,12 @@
   <ItemGroup>
     <Filter Include="ResourceCaches">
       <UniqueIdentifier>{cc2b6109-6a69-48d3-bb57-2b970300eabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{ff1660d2-e7ec-42f0-9c0b-9d0f4728c32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Screens">
+      <UniqueIdentifier>{78addfe7-7862-4ad7-bc3f-7dac5af93fc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

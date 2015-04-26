@@ -50,6 +50,11 @@ Resource<Font> GameDisplayCache::get_font(Canvas &canvas, const std::string &fam
 			black.set_weight(FontWeight::heavy);
 			font_family.add(black, "Resources/Fonts/Lato/Lato-Black.ttf");
 		}
+		else if (font_family.get_family_name() == "LuckiestGuy")
+		{
+			FontDescription regular;
+			font_family.add(regular, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
+		}
 		else
 		{
 			font_family.add(family_name, desc.get_height());

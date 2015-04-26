@@ -151,6 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Controllers\Screens\game_screen_controller.h" />
+    <ClInclude Include="Controllers\Screens\menu_screen_controller.h" />
+    <ClInclude Include="Controllers\Screens\screen_view_controller.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceCaches\file_search_path.h" />
@@ -158,6 +161,9 @@
     <ClInclude Include="ResourceCaches\game_scene_cache.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Controllers\Screens\game_screen_controller.cpp" />
+    <ClCompile Include="Controllers\Screens\menu_screen_controller.cpp" />
+    <ClCompile Include="Controllers\Screens\screen_view_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

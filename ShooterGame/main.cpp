@@ -2,6 +2,8 @@
 #include "precomp.h"
 #include "ResourceCaches/game_display_cache.h"
 #include "ResourceCaches/game_scene_cache.h"
+#include "Controllers/Screens/screen_view_controller.h"
+#include "Controllers/Screens/menu_screen_controller.h"
 
 using namespace clan;
 
@@ -33,16 +35,28 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
 	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
 
-	GameTime game_time(60);
+	UIThread ui_thread(resources);
 
-	while (RunLoop::process())
+	try
 	{
-		game_time.update();
+		Screen::set(std::make_shared<MenuScreenController>(canvas));
 
-		gc.clear();
+		while (RunLoop::process())
+		{
+			gc.clear();
+			Screen::get()->texture_view()->set_viewport(canvas.get_size());
+			Screen::get()->texture_view()->set_needs_render();
+			Screen::get()->texture_view()->update();
 
-		canvas.flush();
-		window.flip(1);
+			canvas.flush();
+			window.flip(1);
+		}
+
+		Screen::set(std::shared_ptr<ScreenViewController>());
+	}
+	catch (...)
+	{
+		ExceptionDialog::show(std::current_exception());
 	}
 
 	return 0;

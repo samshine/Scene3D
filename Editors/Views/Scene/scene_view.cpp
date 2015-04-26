@@ -60,7 +60,7 @@ void SceneView::pointer_move(PointerEvent &e)
 void SceneView::render_content(Canvas &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-	Sizef viewport_size = geometry().content.get_size();
+	Sizef viewport_size = geometry().content_size();
 	//Size viewport_size_i = Size(2400*2 + rand() % 160 * 2, 1300*2 + rand() % 160 * 2);
 	Size viewport_size_i = Size(viewport_size) * 2;
 	bool supersampling = true;
