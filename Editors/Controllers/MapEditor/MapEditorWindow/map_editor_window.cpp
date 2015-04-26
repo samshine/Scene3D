@@ -32,6 +32,7 @@ MapEditorWindow::MapEditorWindow()
 	app_menu->add_item("Open", bind_member(this, &MapEditorWindow::on_open));
 	app_menu->add_item("Save", bind_member(this, &MapEditorWindow::on_save));
 	app_menu->add_item("Save As", bind_member(this, &MapEditorWindow::on_save_as));
+	app_menu->add_item("Compile", bind_member(this, &MapEditorWindow::on_compile));
 
 	header_view->add_right_button("Undo", "Icons/Undo/undo-24.png", []() {});
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
@@ -134,6 +135,17 @@ void MapEditorWindow::on_save_as()
 		MapAppModel::instance()->save(filename);
 		update_window_title();
 	}
+}
+
+void MapEditorWindow::on_compile()
+{
+	if (MapAppModel::instance()->open_filename.empty())
+		return;
+
+	on_save();
+
+	AssetCompiler compiler;
+	compiler.compile(MapAppModel::instance()->open_filename, [](const CompilerMessage &msg) {});
 }
 
 void MapEditorWindow::on_change_model()
