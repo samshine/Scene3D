@@ -175,7 +175,7 @@ void GameScene::update_camera(Scene &scene, GraphicContext &gc)
 	Quaternionf camera_orientation = character_controller.get_rotation().to_quaternionf();
 
 	float zoom_out = 3.0f;
-	Vec3f camera_look_pos = character_controller.get_position() + Vec3f(0.0f, 1.8f, 0.0f);
+	Vec3f camera_look_pos = character_controller.get_position() + Vec3f(0.0f, 1.8f, 0.0f) + camera_orientation.rotate_vector(Vec3f(0.0f, 0.0f, -0.5f));
 	Vec3f camera_pos = camera_look_pos + camera_orientation.rotate_vector(Vec3f(0.0f, 0.0f, -zoom_out));
 
 	if (sweep_test.test_first_hit(sphere_shape, camera_look_pos, Quaternionf(), camera_pos, Quaternionf()))

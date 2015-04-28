@@ -71,6 +71,7 @@ private:
 	void begin_step_up();
 	void end_step_up();
 	void step_down();
+	bool step_move(clan::Vec3f move_vec);
 	void apply_gravity(float tick_elapsed);
 	void apply_velocity(float tick_elapsed);
 	void apply_thrust(float tick_elapsed);
@@ -83,27 +84,28 @@ private:
 
 	float allowed_ccd = 0.001f; // 1 millimeter
 	float acos_too_steep_slope = 0.70f; // cos(45 deg)
+	float shape_margin = 0.04f;
 
 	float gravity = 9.8f;
 	float height = 1.8f;
 	float radius = 0.5f;
 	float mass = 1.0f;
-	float acceleration = 30.0f;
-	float run_speed = 6.0f;
+	float acceleration = 38.0f;
+	float run_speed = 9.0f;
 	float friction = 0.0f;
-	float air_resistance = 1.0f;
+	float air_resistance = 0.01f;
 	float air_movement = 0.35f;
 	float bounce = 0.15f;
 	float step_height = 0.25f;
-	float step_bounce = 0.25f;
+	float step_bounce = 0.02f;
 
 	clan::Vec3f position;
 	EulerRotation rotation;
 
 	clan::Vec3f velocity;
 	bool flying = false;
-	clan::Vec2f ground_vec;
 	clan::Vec2f thrust_vec;
+	clan::Vec2f ground_vec;
 
 	bool shape_modified = true;
 };
