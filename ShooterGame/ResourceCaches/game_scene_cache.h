@@ -12,6 +12,8 @@ public:
 	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &name, bool linear) override;
 	void update_textures(clan::GraphicContext &gc, float time_elapsed) override;
 
+	void process_work_completed() { work_queue.process_work_completed(); }
+
 private:
 	static std::string to_key(const std::string &material_name, bool linear);
 	clan::Texture2D get_dummy_texture(clan::GraphicContext &gc);

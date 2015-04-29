@@ -7,6 +7,8 @@ public:
 	ScreenViewController(clan::Canvas &canvas);
 
 	std::shared_ptr<clan::TextureView> texture_view();
+
+	virtual void update_desktop(clan::Canvas &canvas) { }
 };
 
 class Screen

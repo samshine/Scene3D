@@ -43,7 +43,12 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		while (RunLoop::process())
 		{
+			static_cast<GameSceneCache*>(&SceneCache::get(resources))->process_work_completed();
+
 			gc.clear();
+
+			Screen::get()->update_desktop(canvas);
+
 			Screen::get()->texture_view()->set_viewport(canvas.get_size());
 			Screen::get()->texture_view()->set_needs_render();
 			Screen::get()->texture_view()->update();

@@ -29,7 +29,7 @@ namespace clan
 				File file(output_filename, File::create_always, File::access_read_write);
 				ModelData::save(file, model_data);
 			}
-			else if (StringHelp::compare(filetype, "modeldesc", true) == 0)
+			else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
 			{
 				MapDesc desc = MapDesc::load(filename);
 

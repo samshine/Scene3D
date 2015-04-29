@@ -8,6 +8,7 @@ ScreenViewController::ScreenViewController(Canvas &canvas)
 {
 	view = std::make_shared<TextureView>(canvas);
 	texture_view()->set_viewport(canvas.get_size());
+	texture_view()->set_clear_background(false);
 }
 
 std::shared_ptr<TextureView> ScreenViewController::texture_view()

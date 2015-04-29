@@ -11,17 +11,7 @@ GameSceneCache::GameSceneCache(GraphicContext &gc)
 
 std::shared_ptr<ModelData> GameSceneCache::get_model_data(const std::string &name)
 {
-	return std::shared_ptr<ModelData>();
-	/*
-	if (StringHelp::compare(PathHelp::get_extension(name), "cmodel", true) == 0)
-	{
-		return CModelFormat::load(PathHelp::combine("Resources/Baleout/Scene", name));
-	}
-	else
-	{
-		return FBXImporter::load(PathHelp::combine("Resources/Baleout/Scene", name));
-	}
-	*/
+	return ModelData::load(PathHelp::combine("/Development/Assets", name));
 }
 
 void GameSceneCache::update_textures(GraphicContext &gc, float time_elapsed)

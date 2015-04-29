@@ -73,8 +73,8 @@ namespace clan
 
 	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data)
 	{
-		file.write_uint32(12); // version number
-		file.write("ModelCaramba", 13); // file magic
+		file.write_uint32(13); // version number
+		file.write("ModelCaramba", 12); // file magic
 
 		file.write_uint32(data->textures.size());
 		file.write_uint32(data->bones.size());
@@ -556,7 +556,8 @@ namespace clan
 		for (size_t i = 0; i < data->textures.size(); i++)
 		{
 			data->textures[i].gamma = file.read_float();
-			data->textures[i].name = clan::PathHelp::combine(base_path, file.read_string_a());
+			//data->textures[i].name = clan::PathHelp::combine(base_path, file.read_string_a());
+			data->textures[i].name = file.read_string_a();
 		}
 
 		for (size_t i = 0; i < data->bones.size(); i++)
