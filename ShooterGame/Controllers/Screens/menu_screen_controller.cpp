@@ -77,4 +77,6 @@ void MenuScreenController::update_desktop(clan::Canvas &canvas)
 	scene.render(gc);
 
 	gc.set_viewport(gc.get_size());
+
+	canvas.reset_blend_state();
 }
