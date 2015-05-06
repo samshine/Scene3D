@@ -11,7 +11,7 @@ GameSceneCache::GameSceneCache(GraphicContext &gc)
 
 std::shared_ptr<ModelData> GameSceneCache::get_model_data(const std::string &name)
 {
-	return ModelData::load(PathHelp::combine("/Development/Assets", name));
+	return ModelData::load(PathHelp::combine("Resources/Assets", name));
 }
 
 void GameSceneCache::update_textures(GraphicContext &gc, float time_elapsed)

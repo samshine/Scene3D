@@ -21,6 +21,10 @@
     <ClInclude Include="Controllers\Screens\screen_view_controller.h">
       <Filter>Controllers\Screens</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Screens\character_controller.h">
+      <Filter>Controllers\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_movement.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -40,6 +44,10 @@
     <ClCompile Include="Controllers\Screens\screen_view_controller.cpp">
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\Screens\character_controller.cpp">
+      <Filter>Controllers\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_movement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

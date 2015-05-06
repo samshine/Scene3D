@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "menu_screen_controller.h"
+#include "game_screen_controller.h"
 
 using namespace clan;
 
@@ -24,10 +25,14 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 
 	for (auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit"})
 	{
-		auto item = std::make_shared<LabelView>();
-		item->style()->set("font: 30px/40px 'LuckiestGuy'; color: #ccc");
-		item->set_text_alignment(TextAlignment::center);
-		item->set_text(str);
+		auto item = std::make_shared<ButtonView>();
+		item->label()->style()->set("font: 30px/40px 'LuckiestGuy'; color: #ccc");
+		item->label()->set_text_alignment(TextAlignment::center);
+		item->label()->set_text(str);
+		item->func_clicked() = [this]()
+		{
+			Screen::set(std::make_shared<GameScreenController>(view->get_canvas()));
+		};
 		menu_box->add_subview(item);
 	}
 
@@ -35,8 +40,10 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 
 	GraphicContext gc = canvas.get_gc();
 
-	scene = Scene(gc, UIThread::get_resources(), "../Resources/Scene3D");
+	scene = create_scene(canvas);
 	scene.set_camera(SceneCamera(scene));
+	scene.get_camera().set_position(Vec3f(0.0f, 1.8f, -3.0f));
+	//scene.get_camera().set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
 
 	scene.show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -61,22 +68,18 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 	map_object = SceneObject(scene, model);
 }
 
-void MenuScreenController::update_desktop(clan::Canvas &canvas)
+void MenuScreenController::update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta)
 {
 	canvas.flush();
 
-	GraphicContext gc = canvas.get_gc();
+	game_time.update();
 
-	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-	Sizef viewport_size = gc.get_size();
-	Size viewport_size_i = Size(viewport_size) * 2;
+	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
 
-	scene.update(gc, 0.0f/*gametime.get_time_elapsed()*/);
+	float t2 = t > 1.0f ? 2.0f - t : t;
+	scene.get_camera().set_position(Vec3f(0.0f, 1.8f, -3.0f * t2));
 
-	scene.set_viewport(viewport_size_i);
-	scene.render(gc);
+	scene.update(canvas.get_gc(), game_time.get_time_elapsed());
 
-	gc.set_viewport(gc.get_size());
-
-	canvas.reset_blend_state();
+	render_scene(canvas, scene);
 }
