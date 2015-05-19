@@ -25,6 +25,99 @@
       <Filter>Controllers\Screens</Filter>
     </ClInclude>
     <ClInclude Include="mouse_movement.h" />
+    <ClInclude Include="Model\game.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\alarm_lights.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\bullet.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\character_controller.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\client_player_pawn.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\elevator.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\explosion.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\flag.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\game_object.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\game_object_collision.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\game_tick.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\game_world.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\player_list.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\player_pawn.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\player_ragdoll.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\powerup.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\server_player_pawn.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\spawn_point.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\team_list.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameWorld\weapon.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\game_network.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\game_network_client.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\game_network_server.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\lock_step_client_time.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\lock_step_server_time.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\lock_step_time.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\net_tick_timer.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\netevents.h">
+      <Filter>Model\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Audio\music_player.h">
+      <Filter>Model\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Audio\sound_cache_provider.h">
+      <Filter>Model\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Input\input_buttons.h">
+      <Filter>Model\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -48,6 +141,75 @@
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
     <ClCompile Include="mouse_movement.cpp" />
+    <ClCompile Include="Model\game.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\alarm_lights.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\bullet.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\character_controller.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\client_player_pawn.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\elevator.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\explosion.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\flag.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\game_object.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\game_world.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\player_pawn.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\player_ragdoll.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\powerup.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\server_player_pawn.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\spawn_point.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\weapon.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\game_network_client.cpp">
+      <Filter>Model\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\game_network_server.cpp">
+      <Filter>Model\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\lock_step_client_time.cpp">
+      <Filter>Model\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\lock_step_server_time.cpp">
+      <Filter>Model\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\net_tick_timer.cpp">
+      <Filter>Model\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Audio\music_player.cpp">
+      <Filter>Model\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Input\input_buttons.cpp">
+      <Filter>Model\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -61,6 +223,21 @@
     </Filter>
     <Filter Include="Controllers\Screens">
       <UniqueIdentifier>{78addfe7-7862-4ad7-bc3f-7dac5af93fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{a76bbdf7-da46-4c70-b5b4-0fb75a6d9632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\GameWorld">
+      <UniqueIdentifier>{8cca7bf5-8fa1-4285-a851-a2372530bb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Network">
+      <UniqueIdentifier>{2fc8d71d-0225-4a26-a055-83141c33c136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Audio">
+      <UniqueIdentifier>{46362776-b3d3-4973-8461-7c8c6bdd19bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Input">
+      <UniqueIdentifier>{021ec2b5-478e-4ab3-b0ac-c2407e42d296}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
