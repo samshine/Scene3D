@@ -12,6 +12,7 @@ using namespace clan;
 Game::Game(std::string hostname, std::string port, bool server)
 : server(server)
 {
+#if 0
 	map_basepath = "Resources/Baleout/Scene";
 	map_name = "scene";
 
@@ -87,8 +88,10 @@ Game::Game(std::string hostname, std::string port, bool server)
 		create_client_objects();
 
 	on_game_init(server);
+#endif
 }
 
+#if 0
 void Game::create_client_objects()
 {
 	ScreenInfo screen_info;
@@ -277,3 +280,4 @@ void Game::on_net_event_received(const std::string &sender, const clan::NetGameE
 {
 	game_world->net_event_received(sender, net_event);
 }
+#endif

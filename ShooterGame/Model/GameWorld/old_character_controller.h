@@ -1,10 +1,10 @@
 
 #pragma once
 
-class CharacterController
+class OldCharacterController
 {
 public:
-	CharacterController(clan::Physics3DWorld &world, float radius, float height, float step_height, float gravity);
+	OldCharacterController(clan::Physics3DWorld &world, float radius, float height, float step_height, float gravity);
 
 	clan::Physics3DShape get_shape() const { return shape; }
 	clan::Physics3DObject get_object() const { return object; }

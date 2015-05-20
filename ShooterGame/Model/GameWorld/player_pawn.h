@@ -2,7 +2,7 @@
 #pragma once
 
 #include "game_object.h"
-#include "character_controller.h"
+#include "old_character_controller.h"
 #include "weapon.h"
 
 class PlayerPawn : public GameObject
@@ -27,7 +27,7 @@ public:
 protected:
 	clan::Vec3f tick_controller_movement(float time_elapsed);
 
-	std::unique_ptr<CharacterController> controller;
+	std::unique_ptr<OldCharacterController> controller;
 
 	float health = 100.0f;
 

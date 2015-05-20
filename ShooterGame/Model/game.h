@@ -12,8 +12,10 @@ class Game
 public:
 	Game(std::string hostname, std::string port, bool server);
 
+#if 0
 	void run_client(Game *server = 0);
 	void run_server(clan::Event &stop_event);
+#endif
 
 	//std::unique_ptr<UIScreenManager> screen_manager;
 	//std::unique_ptr<GameScreen> game_screen;
@@ -45,6 +47,7 @@ public:
 
 	std::unique_ptr<GameWorld> game_world;
 
+#if 0
 private:
 	void create_client_objects();
 	void create_scene_objects();
@@ -62,9 +65,12 @@ private:
 
 	//	std::vector<ScriptValue> create_args(const std::string &sender, const clan::NetGameEvent &net_event, int start_argument);
 
+#endif
 	bool server;
+#if 0
 	//ElapsedTimer elapsed_timer;
 	//ScriptContext context;
 
 	clan::SlotContainer slots;
+#endif
 };

@@ -12,7 +12,7 @@ using namespace clan;
 PlayerPawn::PlayerPawn(GameWorld *world)
 : GameObject(world)
 {
-	controller.reset(new CharacterController(world->game()->collision, 1.0f, 2.89f, 0.5f, 58.0f));
+	controller.reset(new OldCharacterController(world->game()->collision, 1.0f, 2.89f, 0.5f, 58.0f));
 	controller->get_object().set_data(std::make_shared<GameObjectCollision>(this));
 
 	dir = 90.0f;

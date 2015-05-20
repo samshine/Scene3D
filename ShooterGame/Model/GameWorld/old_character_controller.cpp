@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "character_controller.h"
+#include "old_character_controller.h"
 #include "game_object.h"
 #include "game_object_collision.h"
 #include "player_pawn.h"
@@ -8,7 +8,7 @@
 
 using namespace clan;
 
-CharacterController::CharacterController(Physics3DWorld &world, float radius, float height, float step_height, float gravity)
+OldCharacterController::OldCharacterController(Physics3DWorld &world, float radius, float height, float step_height, float gravity)
 : height_offset(-height), step_height(step_height), gravity(gravity), flying(true), contact_test(world), sweep_test(world), allowed_ccd_penetration(0.01f), margin(0.01f)
 {
 	shape = Physics3DShape::capsule(radius, height);
@@ -18,18 +18,18 @@ CharacterController::CharacterController(Physics3DWorld &world, float radius, fl
 	object.set_character_object(true);
 }
 
-Vec3f CharacterController::get_position() const
+Vec3f OldCharacterController::get_position() const
 {
 	return position + Vec3f(0.0f, height_offset, 0.0f);
 }
 
-void CharacterController::set_position(const clan::Vec3f &new_position)
+void OldCharacterController::set_position(const clan::Vec3f &new_position)
 {
 	position = new_position - Vec3f(0.0f, height_offset, 0.0f);
 	object.set_position(position);
 }
 
-void CharacterController::move(const Vec3f &velocity, float time_elapsed)
+void OldCharacterController::move(const Vec3f &velocity, float time_elapsed)
 {
 	recover_from_penetration();
 
@@ -73,7 +73,7 @@ void CharacterController::move(const Vec3f &velocity, float time_elapsed)
 	object.set_position(position);
 }
 
-void CharacterController::recover_from_penetration()
+void OldCharacterController::recover_from_penetration()
 {
 	contact_test.test(object);
 
@@ -95,7 +95,7 @@ void CharacterController::recover_from_penetration()
 	position += touching_normal * (max_penetration - 0.02f);
 }
 
-void CharacterController::jump(const clan::Vec3f &jump_velocity)
+void OldCharacterController::jump(const clan::Vec3f &jump_velocity)
 {
 	if (!flying)
 	{
@@ -104,7 +104,7 @@ void CharacterController::jump(const clan::Vec3f &jump_velocity)
 	}
 }
 
-void CharacterController::move_forward(clan::Vec3f target)
+void OldCharacterController::move_forward(clan::Vec3f target)
 {
 	const int max_iterations = 4;
 
@@ -165,7 +165,7 @@ void CharacterController::move_forward(clan::Vec3f target)
 	}
 }
 
-bool CharacterController::move_vertical(clan::Vec3f target)
+bool OldCharacterController::move_vertical(clan::Vec3f target)
 {
 	const int max_iterations = 2;
 
@@ -239,18 +239,18 @@ bool CharacterController::move_vertical(clan::Vec3f target)
 	return false;
 }
 
-Vec3f CharacterController::reflect(const Vec3f &direction, const Vec3f &normal)
+Vec3f OldCharacterController::reflect(const Vec3f &direction, const Vec3f &normal)
 {
 	return direction - normal * (2.0f * direction.dot(normal));
 }
 
-Vec3f CharacterController::parallel_component(const Vec3f &direction, const Vec3f &normal)
+Vec3f OldCharacterController::parallel_component(const Vec3f &direction, const Vec3f &normal)
 {
 	float magnitude = direction.dot(normal);
 	return normal * magnitude;
 }
 
-Vec3f CharacterController::perpendicular_component(const Vec3f &direction, const Vec3f &normal)
+Vec3f OldCharacterController::perpendicular_component(const Vec3f &direction, const Vec3f &normal)
 {
 	return direction - parallel_component(direction, normal);
 }

@@ -34,9 +34,6 @@
     <ClInclude Include="Model\GameWorld\bullet.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Model\GameWorld\character_controller.h">
-      <Filter>Model\GameWorld</Filter>
-    </ClInclude>
     <ClInclude Include="Model\GameWorld\client_player_pawn.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
     <ClInclude Include="Model\Input\input_buttons.h">
       <Filter>Model\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Model\GameWorld\old_character_controller.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -148,9 +148,6 @@
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
     <ClCompile Include="Model\GameWorld\bullet.cpp">
-      <Filter>Model\GameWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\GameWorld\character_controller.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
     <ClCompile Include="Model\GameWorld\client_player_pawn.cpp">
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="Model\Input\input_buttons.cpp">
       <Filter>Model\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\old_character_controller.cpp">
+      <Filter>Model\GameWorld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
