@@ -97,7 +97,7 @@ namespace clan
 		VertexMappingVector vertices(mesh->GetControlPointsCount());
 		std::vector<VertexMapping *> elements;
 
-		convert_polygons(mesh, vertices, elements, mesh_to_world, normal_mesh_to_world);
+		convert_polygons(node, mesh, vertices, elements, mesh_to_world, normal_mesh_to_world);
 		convert_skins(node, mesh, vertices);
 
 		if (model_data->meshes.empty())
@@ -333,9 +333,12 @@ namespace clan
 		return map;
 	}
 
-	void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world)
+	void FBXModelLoader::convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world)
 	{
 		mesh->GenerateNormals();
+
+		auto scaling = node->EvaluateGlobalTransform().GetS() * node->GetGeometricScaling(FbxNode::eSourcePivot);
+		bool neg_scale = scale_dir(scaling[0]) * scale_dir(scaling[1]) * scale_dir(scaling[2]) < 0.0;
 
 		FbxVector4 *control_points = mesh->GetControlPoints();
 
@@ -359,11 +362,13 @@ namespace clan
 			bool ccw = Vec3f::dot(
 				Vec3f::cross(points[1] - points[0], points[2] - points[0]),
 				normal_mesh_to_world * get_normal(mesh, mesh->GetPolygonVertex(poly, 0), vertex_index))
-				>= 0.0f;
+				< 0.0f;
+			if (neg_scale)
+				ccw = !ccw;
 
 			for (int point = 0; point < num_points; point++)
 			{
-				int ccw_point = ccw ? point : num_points - point - 1;
+				int ccw_point = ccw ? num_points - point - 1 : point;
 				int control_index = mesh->GetPolygonVertex(poly, ccw_point);
 
 				Vec3f position = Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[control_index])), 1.0f));
@@ -694,7 +699,7 @@ namespace clan
 
 		// light_to_world.GetS() returns a negative value(!!), so maybe the above calculations are not valid. If only the FBX SDK had been more clear about its math..
 		auto scale_vector = node->EvaluateGlobalTransform().GetS() * node->GetGeometricScaling(FbxNode::eSourcePivot);
-		float scale = std::max({ scale_vector[0], scale_vector[1], scale_vector[2] });
+		float scale = (float)std::max({ scale_vector[0], scale_vector[1], scale_vector[2] });
 
 		Vec3f position = Vec3f(to_vec4f(light_to_world.GetT()));
 		Quaternionf orientation = to_quaternionf(light_to_world.GetQ()) * directionRotation;

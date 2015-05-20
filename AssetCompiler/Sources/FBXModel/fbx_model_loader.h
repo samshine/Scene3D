@@ -34,7 +34,7 @@ namespace clan
 		void convert_camera(FbxNode *node);
 		void convert_light(FbxNode *node);
 
-		void convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &elements, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world);
+		void convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &elements, const Mat4f &mesh_to_world, const Mat3f &normal_mesh_to_world);
 		void convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices);
 		void convert_bones(const ModelDescAnimation &animation);
 
@@ -54,6 +54,8 @@ namespace clan
 		static Vec4ub to_vec4ub(const FbxColor &c);
 		static Mat4f to_mat4f(const FbxAMatrix &m);
 		static Quaternionf to_quaternionf(const FbxQuaternion &q);
+
+		static double scale_dir(double v) { return v >= -0.0 ? 1.0 : -1.0; }
 
 		const ModelDesc &model_desc;
 		FBXModelImpl *model;
