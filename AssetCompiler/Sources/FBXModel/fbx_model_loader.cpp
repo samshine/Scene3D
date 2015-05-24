@@ -194,6 +194,8 @@ namespace clan
 			return range;
 		}
 
+		std::string material_name = material->GetName();
+
 		if (material->GetClassId().Is(FbxSurfaceLambert::ClassId) || material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
 			FbxSurfaceLambert *lambert = static_cast<FbxSurfaceLambert*>(material);
@@ -231,16 +233,14 @@ namespace clan
 				FbxSurfacePhong *phong = static_cast<FbxSurfacePhong*>(lambert);
 
 				FbxDouble3 specular = phong->Specular.Get();
-				float factor = (float)phong->SpecularFactor.Get();
-				float shininess = (float)phong->Shininess.Get();
-				FbxDouble3 reflection = phong->Reflection.Get();
-				float reflection_factor = (float)phong->ReflectionFactor.Get();
-
-				// To do: find the shader math (haha, good luck!) for Autodesk FBX phong and make sure this is correct:
+				float spec_level = (float)phong->SpecularFactor.Get();
+				float glossiness = (float)phong->Shininess.Get();
+				//FbxDouble3 reflection = phong->Reflection.Get();
+				//float reflection_factor = (float)phong->ReflectionFactor.Get();
 
 				range.specular.set_single_value(to_vec3f(specular));
-				range.specular_level.set_single_value(factor);
-				range.glossiness.set_single_value(shininess);
+				range.specular_level.set_single_value(spec_level);
+				range.glossiness.set_single_value(glossiness);
 			}
 			else
 			{
@@ -251,7 +251,7 @@ namespace clan
 
 			range.diffuse_map = create_texture_channel(0, FbxSurfaceMaterial::sDiffuse, material, 2.2f);
 			range.specular_map = create_texture_channel(1, FbxSurfaceMaterial::sSpecular, material, 1.0f);
-			range.bumpmap_map = create_texture_channel(2, FbxSurfaceMaterial::sBump, material, 1.0f);
+			range.bumpmap_map = create_texture_channel(2, FbxSurfaceMaterial::sNormalMap, material, 1.0f);
 			range.self_illumination_map = create_texture_channel(3, FbxSurfaceMaterial::sEmissive, material, 2.2f);
 		}
 		else
@@ -267,8 +267,6 @@ namespace clan
 			range.self_illumination.set_single_value(Vec3f(0.0f));
 		}
 
-
-		std::string material_name = material->GetName();
 		for (const auto &desc_material : model_desc.materials)
 		{
 			if (desc_material.mesh_material == material_name)

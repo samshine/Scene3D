@@ -65,8 +65,8 @@ float vsm_reduce_light_bleeding(float p_max, float amount);
 float vsm_attenuation(float2 moments, float t);
 
 float lambertian_diffuse_contribution(float3 light_direction_in_eye, float3 normal_in_eye);
-float phong_specular_contribution(float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level);
-float blinn_specular_contribution(float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level);
+float phong_specular_contribution(float lambertian, float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level);
+float blinn_specular_contribution(float lambertian, float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level);
 
 [numthreads(TILE_SIZE,TILE_SIZE,1)]
 void main(uint3 globalThreadID : SV_DispatchThreadID, uint3 groupThreadID : SV_GroupThreadID, uint localThreadIndex : SV_GroupIndex)
@@ -136,7 +136,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 
 		float3 light_direction_in_eye = normalize(fragment_to_light);
 		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
-		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
 		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
 		float3 specular_color = material_specular_color * light.color.xyz;
 		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
@@ -155,7 +155,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 
 		float3 light_direction_in_eye = normalize(fragment_to_light);
 		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
-		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
 		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
 		float3 specular_color = material_specular_color * light.color.xyz;
 		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
@@ -183,7 +183,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 
 		float3 light_direction_in_eye = normalize(fragment_to_light);
 		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
-		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
 		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
 		float3 specular_color = material_specular_color * light.color.xyz;
 		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
@@ -313,19 +313,34 @@ float lambertian_diffuse_contribution(float3 light_direction_in_eye, float3 norm
 	return max(dot(normal_in_eye, light_direction_in_eye), 0.0f);
 }
 
-float phong_specular_contribution(float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level)
+float phong_specular_contribution(float lambertian, float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level)
 {
-	float3 E = normalize(-position_in_eye);
-	float3 R = normalize(-reflect(light_direction_in_eye, normal_in_eye));
-	float x = max(dot(R, E), 0.0f);
-	float ph_exp = pow(2.0f, glossiness * 10.0f);
-	return specular_level * pow(x, ph_exp);
+	if (lambertian > 0.0f)
+	{
+		float3 view_dir = normalize(-position_in_eye);
+		float3 reflection_dir = normalize(-reflect(light_direction_in_eye, normal_in_eye));
+		float spec_angle = max(dot(reflection_dir, normal_in_eye), 0.0f);
+		float ph_exp = glossiness;
+		return specular_level * pow(spec_angle, ph_exp);
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
-float blinn_specular_contribution(float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level)
+float blinn_specular_contribution(float lambertian, float3 light_direction_in_eye, float3 position_in_eye, float3 normal_in_eye, float glossiness, float specular_level)
 {
-	float3 half_vector = normalize(light_direction_in_eye - position_in_eye);
-	float x = max(dot(normal_in_eye, half_vector), 0.0f);
-	float ph_exp = pow(2.0f, glossiness * 10.0f) * 4.0f;
-	return specular_level * pow(x, ph_exp);
+	if (lambertian > 0.0f)
+	{
+		float3 view_dir = normalize(-position_in_eye);
+		float3 half_dir = normalize(light_direction_in_eye + view_dir);
+		float spec_angle = max(dot(half_dir, normal_in_eye), 0.0f);
+		float ph_exp = glossiness * 4.0f;
+		return specular_level * pow(spec_angle, ph_exp);
+	}
+	else
+	{
+		return 0.0f;
+	}
 }

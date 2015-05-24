@@ -64,7 +64,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 	}
 	scene.set_skybox_gradient(gc, gradient);
 
-	SceneModel model(gc, scene, "Map3/map3.cmodel");
+	SceneModel model(gc, scene, "Liandri/liandri.cmodel");
 	map_object = SceneObject(scene, model);
 }
 
@@ -77,7 +77,7 @@ void MenuScreenController::update_desktop(clan::Canvas &canvas, clan::InputConte
 	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
-	scene.get_camera().set_position(Vec3f(0.0f, 1.8f, -3.0f * t2));
+	scene.get_camera().set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
 
 	scene.update(canvas.get_gc(), game_time.get_time_elapsed());
 
