@@ -13,8 +13,8 @@ Flag::Flag(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation, c
 {
 	if (!world->is_server)
 	{
-		SceneModel model(world->game()->gc, *world->game()->scene, model_name);
-		scene_object = SceneObject(*world->game()->scene, model, pos, orientation, Vec3f(scale));
+		SceneModel model(world->game()->gc, world->game()->scene, model_name);
+		scene_object = SceneObject(world->game()->scene, model, pos, orientation, Vec3f(scale));
 		scene_object.play_animation(animation, true);
 	}
 }

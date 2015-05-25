@@ -156,7 +156,6 @@
     <ClInclude Include="Controllers\Screens\menu_screen_controller.h" />
     <ClInclude Include="Controllers\Screens\screen_view_controller.h" />
     <ClInclude Include="Model\Audio\music_player.h" />
-    <ClInclude Include="Model\Audio\sound_cache_provider.h" />
     <ClInclude Include="Model\game.h" />
     <ClInclude Include="Model\GameWorld\alarm_lights.h" />
     <ClInclude Include="Model\GameWorld\bullet.h" />
@@ -192,6 +191,7 @@
     <ClInclude Include="ResourceCaches\file_search_path.h" />
     <ClInclude Include="ResourceCaches\game_display_cache.h" />
     <ClInclude Include="ResourceCaches\game_scene_cache.h" />
+    <ClInclude Include="ResourceCaches\game_sound_cache.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\Screens\character_controller.cpp" />

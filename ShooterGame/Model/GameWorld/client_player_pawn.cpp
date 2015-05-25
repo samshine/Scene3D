@@ -10,7 +10,7 @@ using namespace clan;
 
 ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
-	camera = SceneCamera(*world->game()->scene);
+	camera = SceneCamera(world->game()->scene);
 	camera_shape = Physics3DShape::sphere(1.0f);
 	camera_sweep_test = Physics3DSweepTest(world->game()->collision);
 }
@@ -25,7 +25,7 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const clan::NetGameEvent
 	net_update(tick, net_event);
 
 	if (is_owner)
-		world()->game()->scene->set_camera(camera);
+		world()->game()->scene.set_camera(camera);
 }
 
 void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent &net_event)
@@ -280,8 +280,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (scene_object.is_null())
 		{
-			SceneModel model(world()->game()->gc, *world()->game()->scene, "Thalania/Thalania.cmodel");
-			scene_object = SceneObject(*world()->game()->scene, model);
+			SceneModel model(world()->game()->gc, world()->game()->scene, "Thalania/Thalania.cmodel");
+			scene_object = SceneObject(world()->game()->scene, model);
 			scene_object.set_scale(Vec3f(0.15f));
 
 			if (animation_move_speed > 0.0f)

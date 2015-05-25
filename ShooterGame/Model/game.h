@@ -10,20 +10,16 @@
 class Game
 {
 public:
-	Game(std::string hostname, std::string port, bool server);
+	Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources = clan::ResourceManager(), clan::GraphicContext gc = clan::GraphicContext(), clan::InputContext ic = clan::InputContext());
 
-#if 0
-	void run_client(Game *server = 0);
-	void run_server(clan::Event &stop_event);
-#endif
+	void update();
 
-	//std::unique_ptr<UIScreenManager> screen_manager;
-	//std::unique_ptr<GameScreen> game_screen;
+	clan::ResourceManager resources;
 	clan::GraphicContext gc;
+	clan::InputContext ic;
 
-	std::unique_ptr<clan::Scene> scene;
+	clan::Scene scene;
 
-	clan::SoundOutput sound_output;
 	std::unique_ptr<clan::AudioWorld> audio;
 	std::unique_ptr<MusicPlayer> music_player;
 
@@ -47,14 +43,10 @@ public:
 
 	std::unique_ptr<GameWorld> game_world;
 
-#if 0
 private:
 	void create_client_objects();
 	void create_scene_objects();
 	void create_input_buttons();
-	//void init_script();
-	//void load_script_nodes(const std::string &xpath, const std::string &base_path);
-	void update();
 
 	void on_game_init(bool is_server);
 	void on_frame_update(float time_elapsed, float interpolated_time);
@@ -63,14 +55,7 @@ private:
 	void on_net_peer_disconnected(const std::string &id);
 	void on_net_event_received(const std::string &sender, const clan::NetGameEvent &net_event);
 
-	//	std::vector<ScriptValue> create_args(const std::string &sender, const clan::NetGameEvent &net_event, int start_argument);
-
-#endif
 	bool server;
-#if 0
-	//ElapsedTimer elapsed_timer;
-	//ScriptContext context;
-
+	clan::GameTime elapsed_timer;
 	clan::SlotContainer slots;
-#endif
 };

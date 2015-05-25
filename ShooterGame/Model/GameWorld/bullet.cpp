@@ -32,8 +32,8 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const clan::Vec3f &ini
 
 	if (!world->is_server)
 	{
-		SceneModel model(world->game()->gc, *world->game()->scene, model_name);
-		scene_object = SceneObject(*world->game()->scene, model, pos, orientation, Vec3f(scale));
+		SceneModel model(world->game()->gc, world->game()->scene, model_name);
+		scene_object = SceneObject(world->game()->scene, model, pos, orientation, Vec3f(scale));
 
 		if (desc.get_members().find("fireSound") != desc.get_members().end())
 		{
@@ -48,7 +48,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const clan::Vec3f &ini
 
 		if (desc.get_members().find("particleEmitter") != desc.get_members().end())
 		{
-			emitter = SceneParticleEmitter(*world->game()->scene);
+			emitter = SceneParticleEmitter(world->game()->scene);
 			emitter.set_type(SceneParticleEmitter::type_omni);
 			emitter.set_position(pos);
 			emitter.set_orientation(orientation);

@@ -1,7 +1,6 @@
 
 #include "precomp.h"
 #include "game.h"
-#include "Model/Audio/sound_cache_provider.h"
 #include "Model/Network/game_network_client.h"
 #include "Model/Network/game_network_server.h"
 #include "Model/Network/lock_step_client_time.h"
@@ -9,10 +8,8 @@
 
 using namespace clan;
 
-Game::Game(std::string hostname, std::string port, bool server)
-: server(server)
+Game::Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources, clan::GraphicContext gc, clan::InputContext ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
-#if 0
 	map_basepath = "Resources/Baleout/Scene";
 	map_name = "scene";
 
@@ -88,37 +85,14 @@ Game::Game(std::string hostname, std::string port, bool server)
 		create_client_objects();
 
 	on_game_init(server);
-#endif
 }
 
-#if 0
 void Game::create_client_objects()
 {
-	ScreenInfo screen_info;
-	int primary_screen_index = 0;
-	std::vector<Rectf> screen_boxes = screen_info.get_screen_geometries(primary_screen_index);
-
-	DisplayWindowDescription desc;
-	desc.set_title("Baleout!");
-	desc.set_size(Sizef(screen_boxes[primary_screen_index].get_width() * 90 / 100, (screen_boxes[primary_screen_index].get_height() - 50) * 90 / 100), true);
-	desc.set_allow_resize(true);
-	desc.set_visible(false);
-
-	screen_manager.reset(new UIScreenManager(desc, "Resources/GameIDE/Icons/gameide-48.png", "Resources/GameIDE/Icons/gameide-16.png"));
-	screen_manager->hide_cursor();
-	screen_manager->maximize();
-
-	GraphicContext gc = screen_manager->get_window().get_gc();
-
-	ResourceManager resources;
-	SceneCache::set(resources, std::make_shared<CacheProvider>(gc));
-	SoundCache::set(resources, std::make_shared<SoundCacheProvider>());
-
-	sound_output = SoundOutput(44100);
 	audio.reset(new AudioWorld(resources));
 	music_player.reset(new MusicPlayer());
 
-	scene.reset(new Scene(gc, resources, "Resources/Scene3D"));
+	scene = Scene(gc, resources, "Resources/Scene3D");
 
 	std::vector<Colorf> colors;
 	colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
@@ -126,9 +100,7 @@ void Game::create_client_objects()
 	colors.push_back(Colorf(0.001f, 0.002f, 0.005f, 1.0f));
 	colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
 	colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
-	scene->set_skybox_gradient(gc, colors);
-
-	game_screen.reset(new GameScreen(this));
+	scene.set_skybox_gradient(gc, colors);
 
 	create_scene_objects();
 	create_input_buttons();
@@ -136,8 +108,6 @@ void Game::create_client_objects()
 
 void Game::create_scene_objects()
 {
-	GraphicContext gc = screen_manager->get_window().get_gc();
-
 	std::vector<DomNode> object_nodes = xml.select_nodes("/scene/object");
 	objects.reserve(object_nodes.size());
 	for (size_t i = 0; i < object_nodes.size(); i++)
@@ -156,61 +126,17 @@ void Game::create_scene_objects()
 			object_nodes[i].select_float("orientation/tilt/text()"));
 		std::string model_name = object_nodes[i].select_string("model/filename/text()");
 		std::string animation_name = object_nodes[i].select_string("animation/name/text()");
-		objects.push_back(SceneObject(*scene, SceneModel(gc, *scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
-		objects.back().play_animation(animation_name);
+		objects.push_back(SceneObject(scene, SceneModel(gc, scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		objects.back().play_animation(animation_name, true);
 	}
 
-	level_instance = SceneObject(*scene, SceneModel(gc, *scene, xml.select_string("/scene/level/model/filename/text()")), Vec3f(), Quaternionf(), Vec3f(xml.select_float("/scene/level/scale/text()")));
+	level_instance = SceneObject(scene, SceneModel(gc, scene, xml.select_string("/scene/level/model/filename/text()")), Vec3f(), Quaternionf(), Vec3f(xml.select_float("/scene/level/scale/text()")));
 }
 
 void Game::create_input_buttons()
 {
 	DomDocument xml(File("Resources/Baleout/Scene/input.xml"));
-
-	InputContext ic = screen_manager->get_window().get_ic();
 	buttons.load(ic, xml.select_node("/input/buttons"));
-}
-
-void Game::run_server(clan::Event &stop_event)
-{
-	srand((unsigned int)System::get_time());
-
-	ConsoleWindow window("Baleout server");
-	Console::write_line("Press Ctrl+C to stop the Baleout server");
-	while (!stop_event.wait(0))
-	{
-		update();
-		KeepAlive::process(5);
-	}
-}
-
-void Game::run_client(Game *server)
-{
-	try
-	{
-		bool exit = false;
-		Slot slot = screen_manager->get_window().sig_window_close().connect_functor([&exit] { exit = true; });
-
-		screen_manager->get_window().show();
-
-		game_screen->set_active();
-		game_screen->enable_mouse(false);
-
-		while (!exit)
-		{
-			if (server)
-				server->update();
-			update();
-			screen_manager->update();
-			KeepAlive::process();
-		}
-
-		screen_manager->get_window().hide();
-	}
-	catch (Exception &e)
-	{
-		ExceptionDialog::show(e/*, screen_manager->get_window().get_hwnd()*/);
-	}
 }
 
 void Game::update()
@@ -218,8 +144,9 @@ void Game::update()
 	ScopeTimeFunction();
 
 	lock_step_time->update();
+	elapsed_timer.update();
 
-	float time_elapsed = elapsed_timer.update();
+	float time_elapsed = elapsed_timer.get_time_elapsed();
 
 	int ticks = lock_step_time->get_ticks_elapsed();
 	for (int i = 0; i < ticks; i++)
@@ -246,7 +173,7 @@ void Game::update()
 		on_frame_update(time_elapsed, lock_step_time->get_tick_interpolation_time());
 
 		music_player->update();
-		audio->set_listener(scene->get_camera().get_position(), scene->get_camera().get_orientation());
+		audio->set_listener(scene.get_camera().get_position(), scene.get_camera().get_orientation());
 		audio->update();
 	}
 }
@@ -280,4 +207,3 @@ void Game::on_net_event_received(const std::string &sender, const clan::NetGameE
 {
 	game_world->net_event_received(sender, net_event);
 }
-#endif

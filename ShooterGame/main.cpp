@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "ResourceCaches/game_display_cache.h"
+#include "ResourceCaches/game_sound_cache.h"
 #include "ResourceCaches/game_scene_cache.h"
 #include "Controllers/Screens/screen_view_controller.h"
 #include "Controllers/Screens/menu_screen_controller.h"
@@ -33,11 +34,14 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	window.maximize();
 	window.show();
 
+	SoundOutput sound_output(44100);
+
 	MouseMovement mouse_movement;
 
 	ResourceManager resources;
 	DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
 	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
+	SoundCache::set(resources, std::make_shared<GameSoundCache>());
 
 	UIThread ui_thread(resources);
 

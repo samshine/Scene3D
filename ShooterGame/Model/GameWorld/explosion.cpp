@@ -24,8 +24,8 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const clan::Vec3
 			float scale = desc["model"]["scale"].to_float();
 			Vec3f offset(desc["model"]["offset"]["x"].to_float(), desc["model"]["offset"]["y"].to_float(), desc["model"]["offset"]["z"].to_float());
 
-			SceneModel model(world->game()->gc, *world->game()->scene, model_name);
-			scene_object = SceneObject(*world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
+			SceneModel model(world->game()->gc, world->game()->scene, model_name);
+			scene_object = SceneObject(world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
 		}
 
 		if (desc.get_members().find("sound") != desc.get_members().end())
@@ -41,7 +41,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const clan::Vec3
 
 		if (desc.get_members().find("particleEmitter") != desc.get_members().end())
 		{
-			emitter = SceneParticleEmitter(*world->game()->scene);
+			emitter = SceneParticleEmitter(world->game()->scene);
 			emitter.set_type(SceneParticleEmitter::type_omni);
 			emitter.set_position(pos);
 			emitter.set_orientation(orientation);

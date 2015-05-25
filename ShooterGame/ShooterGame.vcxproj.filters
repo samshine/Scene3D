@@ -109,14 +109,14 @@
     <ClInclude Include="Model\Audio\music_player.h">
       <Filter>Model\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Audio\sound_cache_provider.h">
-      <Filter>Model\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Input\input_buttons.h">
       <Filter>Model\Input</Filter>
     </ClInclude>
     <ClInclude Include="Model\GameWorld\old_character_controller.h">
       <Filter>Model\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCaches\game_sound_cache.h">
+      <Filter>ResourceCaches</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
