@@ -603,6 +603,18 @@ namespace clan
 					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
 				}
 			}
+			else if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+			{
+				if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+				{
+					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(control_index)));
+				}
+				else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+				{
+					int id = element->GetIndexArray().GetAt(control_index);
+					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
+				}
+			}
 			else
 			{
 				throw Exception("Unsupported tangent type");
@@ -625,6 +637,18 @@ namespace clan
 				else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 				{
 					int id = element->GetIndexArray().GetAt(vertex_index);
+					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
+				}
+			}
+			else if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+			{
+				if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+				{
+					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(control_index)));
+				}
+				else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+				{
+					int id = element->GetIndexArray().GetAt(control_index);
 					return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
 				}
 			}
