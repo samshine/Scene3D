@@ -21,6 +21,11 @@ void GameNetworkClient::stop()
 	netgame.disconnect();
 }
 
+void GameNetworkClient::update()
+{
+	netgame.process_events();
+}
+
 void GameNetworkClient::queue_event(const std::string &target, const NetGameEvent &netevent, int arrive_tick_time)
 {
 	NetGameEvent ticked_netevent(netevent.get_name());

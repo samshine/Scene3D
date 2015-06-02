@@ -12,7 +12,7 @@ class Game
 public:
 	Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources = clan::ResourceManager(), clan::GraphicContext gc = clan::GraphicContext(), clan::InputContext ic = clan::InputContext());
 
-	void update();
+	void update(clan::Vec2i mouse_movement);
 
 	clan::ResourceManager resources;
 	clan::GraphicContext gc;

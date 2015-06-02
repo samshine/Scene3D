@@ -12,6 +12,7 @@ public:
 
 	virtual void start(std::string hostname, std::string port) = 0;
 	virtual void stop() = 0;
+	virtual void update() = 0;
 
 	virtual void queue_event(const std::string &target, const clan::NetGameEvent &netevent, int arrive_tick_time = -1) = 0;
 	virtual void send_events() = 0;

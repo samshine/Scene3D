@@ -10,6 +10,7 @@ public:
 
 	void start(std::string hostname, std::string port) override;
 	void stop() override;
+	void update() override;
 
 	void queue_event(const std::string &target, const clan::NetGameEvent &netevent, int arrive_tick_time = -1) override;
 	void send_events() override;

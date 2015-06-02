@@ -17,7 +17,7 @@ using namespace clan;
 
 GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
 {
-	weapon_data = JsonValue::from_json(File::read_text("Resources/Baleout/Scene/weapon_data.json"));
+	weapon_data = JsonValue::from_json(File::read_text("Resources/Assets/Baleout/Scene/weapon_data.json"));
 	player_list.reset(new PlayerList());
 	team_list.reset(new TeamList());
 }

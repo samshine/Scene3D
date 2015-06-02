@@ -14,7 +14,7 @@ AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 
 		for (auto member : group.second.get_items())
 		{
-			SceneModel model(world->game()->gc, world->game()->scene, member["mesh"].to_string());
+			SceneModel model(world->game()->gc, world->game()->scene, "Baleout/Scene/" + member["mesh"].to_string());
 			SceneObject light(world->game()->scene, model);
 			light.set_scale(Vec3f(member["scale"].to_float()));
 			light.set_position(Vec3f(member["position"]["x"].to_float(), member["position"]["y"].to_float(), member["position"]["z"].to_float()));

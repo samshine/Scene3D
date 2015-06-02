@@ -2,6 +2,23 @@
 #pragma once
 
 #include "screen_view_controller.h"
+#include "Model/game.h"
+
+class GameScreenController : public ScreenViewController
+{
+public:
+	GameScreenController(clan::Canvas &canvas);
+	bool cursor_hidden() override { return true; }
+	void update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta) override;
+
+private:
+	std::unique_ptr<Game> client_game;
+	std::unique_ptr<Game> server_game;
+	bool desktop_exception_flag = false;
+};
+
+/*
+#include "screen_view_controller.h"
 #include "character_controller.h"
 
 class GameInputButton
@@ -92,3 +109,4 @@ private:
 	bool was_down_up = false;
 	bool was_down_down = false;
 };
+*/

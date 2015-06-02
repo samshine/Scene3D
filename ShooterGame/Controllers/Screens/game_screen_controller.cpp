@@ -4,6 +4,45 @@
 
 using namespace clan;
 
+GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewController(canvas)
+{
+}
+
+void GameScreenController::update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta)
+{
+	if (desktop_exception_flag)
+	{
+		canvas.clear();
+		return;
+	}
+
+	try
+	{
+		if (!client_game)
+		{
+			std::string hostname = "localhost";
+			std::string port = "5004";
+
+			GraphicContext gc = canvas.get_gc();
+
+			server_game = std::make_unique<Game>(hostname, port, true);
+			client_game = std::make_unique<Game>(hostname, port, false, clan::UIThread::get_resources(), gc, ic);
+		}
+
+		server_game->update(mouse_delta);
+		client_game->update(mouse_delta);
+
+		render_scene(canvas, client_game->scene);
+	}
+	catch (...)
+	{
+		desktop_exception_flag = true;
+		throw;
+	}
+}
+
+
+/*
 GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewController(canvas), game_time(60), character_controller(collision_world)
 {
 	GraphicContext gc = canvas.get_gc();
@@ -30,7 +69,7 @@ GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewControlle
 	}
 	scene.set_skybox_gradient(gc, gradient);
 
-	auto model_data = ModelData::load(PathHelp::combine("Resources/Assets", "Map3/map3.cmodel"));
+	auto model_data = ModelData::load(PathHelp::combine("Resources/Assets", "Liandri/liandri.cmodel"));
 
 	SceneModel model(gc, scene, model_data);
 	map_object = SceneObject(scene, model);
@@ -216,3 +255,4 @@ void GameScreenController::update_character_controller()
 		character_controller.update(game_time.get_tick_time_elapsed());
 	}
 }
+*/

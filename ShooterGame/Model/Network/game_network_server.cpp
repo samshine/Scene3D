@@ -24,6 +24,11 @@ void GameNetworkServer::stop()
 	netgame.stop();
 }
 
+void GameNetworkServer::update()
+{
+	netgame.process_events();
+}
+
 void GameNetworkServer::queue_event(const std::string &target, const NetGameEvent &netevent, int arrive_tick_time)
 {
 	NetGameEvent ticked_netevent(netevent.get_name());

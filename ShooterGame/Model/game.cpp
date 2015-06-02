@@ -10,7 +10,7 @@ using namespace clan;
 
 Game::Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources, clan::GraphicContext gc, clan::InputContext ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
-	map_basepath = "Resources/Baleout/Scene";
+	map_basepath = "Resources/Assets/Baleout/Scene";
 	map_name = "scene";
 
 	xml = DomDocument(File(PathHelp::combine(map_basepath, map_name + ".xml")));
@@ -126,22 +126,27 @@ void Game::create_scene_objects()
 			object_nodes[i].select_float("orientation/tilt/text()"));
 		std::string model_name = object_nodes[i].select_string("model/filename/text()");
 		std::string animation_name = object_nodes[i].select_string("animation/name/text()");
-		objects.push_back(SceneObject(scene, SceneModel(gc, scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		objects.push_back(SceneObject(scene, SceneModel(gc, scene, "Baleout/Scene/" + model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
 		objects.back().play_animation(animation_name, true);
 	}
 
-	level_instance = SceneObject(scene, SceneModel(gc, scene, xml.select_string("/scene/level/model/filename/text()")), Vec3f(), Quaternionf(), Vec3f(xml.select_float("/scene/level/scale/text()")));
+	level_instance = SceneObject(scene, SceneModel(gc, scene, "Baleout/Scene/" + xml.select_string("/scene/level/model/filename/text()")), Vec3f(), Quaternionf(), Vec3f(xml.select_float("/scene/level/scale/text()")));
 }
 
 void Game::create_input_buttons()
 {
-	DomDocument xml(File("Resources/Baleout/Scene/input.xml"));
+	DomDocument xml(File("Resources/Assets/Baleout/Scene/input.xml"));
 	buttons.load(ic, xml.select_node("/input/buttons"));
 }
 
-void Game::update()
+void Game::update(clan::Vec2i mouse_movement)
 {
 	ScopeTimeFunction();
+
+	game_world->mouse_movement = mouse_movement;
+	buttons.update(ic);
+
+	network->update();
 
 	lock_step_time->update();
 	elapsed_timer.update();
