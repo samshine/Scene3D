@@ -17,7 +17,7 @@ using namespace clan;
 
 GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
 {
-	weapon_data = JsonValue::from_json(File::read_text("Resources/Assets/Baleout/Scene/weapon_data.json"));
+	weapon_data = JsonValue::from_json(File::read_text("Resources/Config/weapon_data.json"));
 	player_list.reset(new PlayerList());
 	team_list.reset(new TeamList());
 }
@@ -38,55 +38,49 @@ void GameWorld::init(bool init_is_server)
 
 	int level_obj_id = 0;
 
-	for (auto objdesc : game()->level_data["objects"].get_items())
+	for (auto &objdesc : game()->level_data["objects"].get_items())
 	{
 		std::string type = objdesc["type"];
+		Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
+		float dir = objdesc["dir"].to_float();
+		float up = objdesc["up"].to_float();
+		float tilt = objdesc["tilt"].to_float();
+		Quaternionf orientation(up, dir, tilt, angle_degrees, order_YXZ);
+		std::string mesh = objdesc["mesh"];
+		std::string animation = objdesc["animation"];
+		float scale = objdesc["scale"].to_float();
+
+		auto &fields = objdesc["fields"];
+
 		if (type == "Elevator")
 		{
-			Vec3f pos1(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
-			Vec3f pos2(objdesc["endPosition"]["x"].to_float(), objdesc["endPosition"]["y"].to_float(), objdesc["endPosition"]["z"].to_float());
-			Quaternionf orientation(objdesc["orientation"]["up"].to_float(), objdesc["orientation"]["dir"].to_float(), objdesc["orientation"]["tilt"].to_float(), angle_degrees, order_YXZ);
-			std::string mesh = objdesc["mesh"];
+			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
 
-			Elevator *elevator = new Elevator(this, level_obj_id++, pos1, pos2, orientation, mesh);
+			Elevator *elevator = new Elevator(this, level_obj_id++, pos, pos2, orientation, mesh);
 			add(elevator);
 
 			elevators[elevator->level_obj_id] = elevator;
 		}
 		else if (type == "Powerup")
 		{
-			Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
-			Quaternionf orientation(objdesc["orientation"]["up"].to_float(), objdesc["orientation"]["dir"].to_float(), objdesc["orientation"]["tilt"].to_float(), angle_degrees, order_YXZ);
-			std::string powerup_type = objdesc["powerupType"];
-			std::string mesh = objdesc["mesh"];
-			std::string animation = objdesc["animation"];
-			float scale = objdesc["scale"].to_float();
-			Vec3f collision_box_size(objdesc["collisionBoxSize"]["x"].to_float(), objdesc["collisionBoxSize"]["y"].to_float(), objdesc["collisionBoxSize"]["z"].to_float());
-			float respawn_time = objdesc["respawnTime"].to_float();
+			std::string powerup_type = fields["powerupType"];
+			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
+			float respawn_time = fields["respawnTime"].to_float();
 
 			Powerup *powerup = new Powerup(this, pos, orientation, mesh, scale, animation, collision_box_size, respawn_time, powerup_type);
 			add(powerup);
 		}
 		else if (type == "Flag")
 		{
-			Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
-			Quaternionf orientation(objdesc["orientation"]["up"].to_float(), objdesc["orientation"]["dir"].to_float(), objdesc["orientation"]["tilt"].to_float(), angle_degrees, order_YXZ);
-			std::string mesh = objdesc["mesh"];
-			std::string animation = objdesc["animation"];
-			float scale = objdesc["scale"].to_float();
-			Vec3f collision_box_size(objdesc["collisionBoxSize"]["x"].to_float(), objdesc["collisionBoxSize"]["y"].to_float(), objdesc["collisionBoxSize"]["z"].to_float());
-			std::string team = objdesc["team"];
+			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
+			std::string team = fields["team"];
 
 			Flag *flag = new Flag(this, pos, orientation, mesh, scale, animation, collision_box_size, team);
 			add(flag);
 		}
 		else if (type == "SpawnPoint")
 		{
-			Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
-			float dir = objdesc["orientation"]["dir"].to_float();
-			float up = objdesc["orientation"]["up"].to_float();
-			float tilt = objdesc["orientation"]["tilt"].to_float();
-			std::string team = objdesc["team"];
+			std::string team = fields["team"];
 
 			SpawnPoint *spawn = new SpawnPoint(this, pos, dir, up, tilt, team);
 			add(spawn);

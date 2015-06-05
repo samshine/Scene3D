@@ -17,7 +17,8 @@ namespace clan
 		try
 		{
 			std::string filetype = PathHelp::get_extension(filename);
-			std::string output_filename = PathHelp::combine(PathHelp::get_fullpath(filename), PathHelp::get_filename(filename) + ".cmodel");
+			std::string base_path = PathHelp::get_fullpath(filename);
+			std::string output_filename = PathHelp::combine(base_path, PathHelp::get_basename(filename) + ".cmodel");
 
 			if (StringHelp::compare(filetype, "modeldesc", true) == 0)
 			{
@@ -27,7 +28,7 @@ namespace clan
 				std::shared_ptr<ModelData> model_data = model.convert(desc);
 
 				File file(output_filename, File::create_always, File::access_read_write);
-				ModelData::save(file, model_data);
+				ModelData::save(file, model_data, base_path);
 			}
 			else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
 			{
@@ -37,7 +38,7 @@ namespace clan
 				std::shared_ptr<ModelData> model_data = model.convert(desc);
 
 				File file(output_filename, File::create_always, File::access_read_write);
-				ModelData::save(file, model_data);
+				ModelData::save(file, model_data, base_path);
 			}
 			else
 			{

@@ -11,7 +11,7 @@ using namespace clan;
 ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
 	camera = SceneCamera(world->game()->scene);
-	camera_shape = Physics3DShape::sphere(1.0f);
+	camera_shape = Physics3DShape::sphere(0.5f);
 	camera_sweep_test = Physics3DSweepTest(world->game()->collision);
 }
 
@@ -131,7 +131,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent
 void ClientPlayerPawn::net_hit(const GameTick &tick, const clan::NetGameEvent &net_event)
 {
 	sound = AudioObject(*world()->game()->audio.get());
-	sound.set_sound("Resources/Assets/Baleout/Sound/shit01.wav");
+	sound.set_sound("Sound/shit01.wav");
 	sound.set_attenuation_begin(1.0f);
 	sound.set_attenuation_end(100.0f);
 	sound.set_volume(0.75f);
@@ -280,9 +280,9 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (scene_object.is_null())
 		{
-			SceneModel model(world()->game()->gc, world()->game()->scene, "Baleout/Scene/Thalania/Thalania.cmodel");
+			SceneModel model(world()->game()->gc, world()->game()->scene, "Models/Thalania/Thalania.cmodel");
 			scene_object = SceneObject(world()->game()->scene, model);
-			scene_object.set_scale(Vec3f(0.15f));
+			scene_object.set_scale(Vec3f(0.075f));
 
 			if (animation_move_speed > 0.0f)
 				scene_object.play_animation("run", true);

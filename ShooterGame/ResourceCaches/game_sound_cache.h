@@ -16,6 +16,6 @@ inline clan::Resource<clan::SoundBuffer> GameSoundCache::get_sound(const std::st
 	if (it != sounds.end())
 		return it->second;
 
-	sounds[id] = clan::Resource<clan::SoundBuffer>(clan::SoundBuffer(id));
+	sounds[id] = clan::Resource<clan::SoundBuffer>(clan::SoundBuffer(clan::PathHelp::combine("Resources", id)));
 	return sounds[id];
 }

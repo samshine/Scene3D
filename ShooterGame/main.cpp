@@ -5,6 +5,7 @@
 #include "ResourceCaches/game_scene_cache.h"
 #include "Controllers/Screens/screen_view_controller.h"
 #include "Controllers/Screens/menu_screen_controller.h"
+#include "Controllers/Screens/game_screen_controller.h"
 #include "mouse_movement.h"
 
 using namespace clan;
@@ -70,6 +71,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	try
 	{
 		Screen::set(std::make_shared<MenuScreenController>(canvas));
+		//Screen::set(std::make_shared<GameScreenController>(canvas));
 
 		Vec2i last_mouse_movement = mouse_movement.pos();
 		bool cursor_hidden = false;

@@ -6,7 +6,7 @@
 class Elevator : public GameObject
 {
 public:
-	Elevator(GameWorld *world, int level_obj_id, const clan::Vec3f &pos1, const clan::Vec3f &pos2, const clan::Quaternionf &orientation, const std::string &model_name, float scale = 0.1f);
+	Elevator(GameWorld *world, int level_obj_id, const clan::Vec3f &pos1, const clan::Vec3f &pos2, const clan::Quaternionf &orientation, const std::string &model_name, float scale = 0.05f);
 	~Elevator();
 
 	void tick(const GameTick &tick) override;

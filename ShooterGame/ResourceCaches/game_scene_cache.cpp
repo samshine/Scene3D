@@ -11,7 +11,7 @@ GameSceneCache::GameSceneCache(GraphicContext &gc)
 
 std::shared_ptr<ModelData> GameSceneCache::get_model_data(const std::string &name)
 {
-	return ModelData::load(PathHelp::combine("Resources/Assets", name));
+	return ModelData::load(PathHelp::combine("Resources", name));
 }
 
 void GameSceneCache::update_textures(GraphicContext &gc, float time_elapsed)
@@ -282,6 +282,10 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		import_desc.set_flip_vertical(true);
 		import_desc.set_srgb(true);*/
 		PixelBuffer image = ImageProviderFactory::load(material_name, std::string(), !linear);
+
+		if (image.get_width() > 1024 || image.get_height() > 1024)
+			return; // Limit textures to 1024 for now
+
 		image.flip_vertical();
 		image.premultiply_alpha();
 

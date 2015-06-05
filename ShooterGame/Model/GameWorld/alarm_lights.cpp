@@ -8,23 +8,20 @@ using namespace clan;
 
 AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {
-	for (auto group : world->game()->level_data["alarmLights"].get_members())
+	for (auto &item : world->game()->level_data["objects"].get_items())
 	{
-		std::vector<SceneObject> lights;
+		if (item["type"].to_string() != "alarmLights") continue;
 
-		for (auto member : group.second.get_items())
-		{
-			SceneModel model(world->game()->gc, world->game()->scene, "Baleout/Scene/" + member["mesh"].to_string());
-			SceneObject light(world->game()->scene, model);
-			light.set_scale(Vec3f(member["scale"].to_float()));
-			light.set_position(Vec3f(member["position"]["x"].to_float(), member["position"]["y"].to_float(), member["position"]["z"].to_float()));
-			light.set_orientation(Quaternionf(member["orientation"]["up"].to_float(), member["orientation"]["dir"].to_float(), member["orientation"]["tilt"].to_float(), angle_degrees, order_YXZ));
-			light.play_animation("blinking", true);
+		std::string group = item["fields"]["group"];
 
-			lights.push_back(light);
-		}
+		SceneModel model(world->game()->gc, world->game()->scene, item["mesh"].to_string());
+		SceneObject light(world->game()->scene, model);
+		light.set_scale(Vec3f(item["scale"].to_float()));
+		light.set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));
+		light.set_orientation(Quaternionf(item["up"].to_float(), item["dir"].to_float(), item["tilt"].to_float(), angle_degrees, order_YXZ));
+		light.play_animation("blinking", true);
 
-		groups[group.first] = lights;
+		groups[group].push_back(light);
 	}
 }
 

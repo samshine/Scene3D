@@ -30,10 +30,6 @@ public:
 
 	clan::Physics3DWorld collision;
 
-	std::string map_basepath;
-	std::string map_name;
-
-	clan::DomDocument xml;
 	clan::JsonValue level_data;
 
 	clan::SceneObject level_instance;
@@ -57,5 +53,6 @@ private:
 
 	bool server;
 	clan::GameTime elapsed_timer;
+	std::string map_cmodel_filename;
 	clan::SlotContainer slots;
 };

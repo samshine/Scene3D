@@ -51,6 +51,7 @@ namespace clan
 		{
 			MapDescObject object;
 			object.id = json_object["id"].to_string();
+			object.type = json_object["type"].to_string();
 			object.position.x = json_object["position"]["x"].to_float();
 			object.position.y = json_object["position"]["y"].to_float();
 			object.position.z = json_object["position"]["z"].to_float();
@@ -58,7 +59,9 @@ namespace clan
 			object.up = json_object["up"].to_float();
 			object.tilt = json_object["tilt"].to_float();
 			object.scale = json_object["scale"].to_float();
-			object.model_desc_filename = json_object["model_desc_filename"].to_string();
+			object.mesh = json_object["mesh"].to_string();
+			object.animation = json_object["animation"].to_string();
+			object.fields = json_object["fields"];
 			desc.objects.push_back(object);
 		}
 
@@ -148,6 +151,7 @@ namespace clan
 		{
 			JsonValue json_object = JsonValue::object();
 			json_object["id"] = object.id;
+			json_object["type"] = object.type;
 			json_object["position"] = JsonValue::object();
 			json_object["position"]["x"] = object.position.x;
 			json_object["position"]["y"] = object.position.y;
@@ -156,7 +160,9 @@ namespace clan
 			json_object["up"] = object.up;
 			json_object["tilt"] = object.tilt;
 			json_object["scale"] = object.scale;
-			json_object["model_desc_filename"] = object.model_desc_filename;
+			json_object["mesh"] = object.mesh;
+			json_object["animation"] = object.animation;
+			json_object["fields"] = object.fields;
 			json_objects.get_items().push_back(json_object);
 		}
 

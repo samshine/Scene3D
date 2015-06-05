@@ -10,46 +10,29 @@ using namespace clan;
 
 Game::Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources, clan::GraphicContext gc, clan::InputContext ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
-	map_basepath = "Resources/Assets/Baleout/Scene";
-	map_name = "scene";
+	std::string map_name = "Levels/Liandri/liandri";
 
-	xml = DomDocument(File(PathHelp::combine(map_basepath, map_name + ".xml")));
-	level_data = JsonValue::from_json(File::read_text(PathHelp::combine(map_basepath, map_name + ".json")));
+	level_data = JsonValue::from_json(File::read_text(PathHelp::combine("Resources", map_name + ".mapdesc")));
+	map_cmodel_filename = map_name + ".cmodel";
 
-	if (!xml.select_node("/scene/level").to_element().get_attribute_bool("no-collision"))
-		level_collision_objects.push_back(Physics3DObject::rigid_body(
-			collision,
-			Physics3DShape::scale_model(
-				Physics3DShape::model(
-					ModelData::load(
-						PathHelp::combine(
-						map_basepath,
-							xml.select_string("/scene/level/model/filename/text()")))),
-						Vec3f(xml.select_float("/scene/level/scale/text()")))));
+	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources", map_cmodel_filename)))));
 
 	std::map<std::string, Physics3DShape> level_shapes;
 
-	std::vector<DomNode> object_nodes = xml.select_nodes("/scene/object");
-	for (size_t i = 0; i < object_nodes.size(); i++)
+	for (auto &item : level_data["objects"].get_items())
 	{
-		if (object_nodes[i].to_element().get_attribute_bool("no-collision"))
+		if (item["type"].to_string() != "Static")
 			continue;
 
-		Vec3f position(
-			object_nodes[i].select_float("position/x/text()"),
-			object_nodes[i].select_float("position/y/text()"),
-			object_nodes[i].select_float("position/z/text()"));
-		Vec3f scale(object_nodes[i].select_float("scale/text()"));
-		Vec3f rotate(
-			object_nodes[i].select_float("orientation/direction/text()"),
-			object_nodes[i].select_float("orientation/up/text()"),
-			object_nodes[i].select_float("orientation/tilt/text()"));
-		std::string model_name = object_nodes[i].select_string("model/filename/text()");
+		Vec3f position(item["position"]["x"], item["position"]["y"], item["position"]["z"]);
+		Vec3f scale(item["scale"]);
+		Vec3f rotate(item["dir"], item["up"], item["tilt"]);
+		std::string model_name = item["mesh"];
 
 		auto it = level_shapes.find(model_name);
 		if (it == level_shapes.end())
 		{
-			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine(map_basepath, model_name));
+			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine("Resources", model_name));
 
 			level_shapes[model_name] = Physics3DShape::model(model_data);
 			it = level_shapes.find(model_name);
@@ -108,34 +91,26 @@ void Game::create_client_objects()
 
 void Game::create_scene_objects()
 {
-	std::vector<DomNode> object_nodes = xml.select_nodes("/scene/object");
-	objects.reserve(object_nodes.size());
-	for (size_t i = 0; i < object_nodes.size(); i++)
+	for (auto &item : level_data["objects"].get_items())
 	{
-		if (object_nodes[i].to_element().get_attribute_bool("no-render"))
+		if (item["type"].to_string() != "Static" || item["fields"]["no_render"])
 			continue;
 
-		Vec3f position(
-			object_nodes[i].select_float("position/x/text()"),
-			object_nodes[i].select_float("position/y/text()"),
-			object_nodes[i].select_float("position/z/text()"));
-		Vec3f scale(object_nodes[i].select_float("scale/text()"));
-		Vec3f rotate(
-			object_nodes[i].select_float("orientation/direction/text()"),
-			object_nodes[i].select_float("orientation/up/text()"),
-			object_nodes[i].select_float("orientation/tilt/text()"));
-		std::string model_name = object_nodes[i].select_string("model/filename/text()");
-		std::string animation_name = object_nodes[i].select_string("animation/name/text()");
-		objects.push_back(SceneObject(scene, SceneModel(gc, scene, "Baleout/Scene/" + model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		Vec3f position(item["position"]["x"], item["position"]["y"], item["position"]["z"]);
+		Vec3f scale(item["scale"]);
+		Vec3f rotate(item["dir"], item["up"], item["tilt"]);
+		std::string model_name = item["mesh"];
+		std::string animation_name = item["animation"];
+		objects.push_back(SceneObject(scene, SceneModel(gc, scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
 		objects.back().play_animation(animation_name, true);
 	}
 
-	level_instance = SceneObject(scene, SceneModel(gc, scene, "Baleout/Scene/" + xml.select_string("/scene/level/model/filename/text()")), Vec3f(), Quaternionf(), Vec3f(xml.select_float("/scene/level/scale/text()")));
+	level_instance = SceneObject(scene, SceneModel(gc, scene, map_cmodel_filename), Vec3f(), Quaternionf(), Vec3f(1.0f));
 }
 
 void Game::create_input_buttons()
 {
-	DomDocument xml(File("Resources/Assets/Baleout/Scene/input.xml"));
+	DomDocument xml(File("Resources/Config/input.xml"));
 	buttons.load(ic, xml.select_node("/input/buttons"));
 }
 

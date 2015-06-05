@@ -34,7 +34,7 @@ namespace clan
 	class CModelFormat
 	{
 	public:
-		static void save(clan::IODevice &device, std::shared_ptr<clan::ModelData> data);
+		static void save(clan::IODevice &device, std::shared_ptr<clan::ModelData> data, const std::string &base_path);
 		static std::shared_ptr<clan::ModelData> load(const std::string &filename);
 		static std::shared_ptr<clan::ModelData> load(clan::IODevice &device, const std::string &base_path);
 
@@ -54,9 +54,9 @@ namespace clan
 	
 	/////////////////////////////////////////////////////////////////////////
 
-	void ModelData::save(IODevice &device, std::shared_ptr<ModelData> data)
+	void ModelData::save(IODevice &device, std::shared_ptr<ModelData> data, const std::string &base_path)
 	{
-		CModelFormat::save(device, data);
+		CModelFormat::save(device, data, base_path);
 	}
 
 	std::shared_ptr<ModelData> ModelData::load(const std::string &filename)
@@ -71,7 +71,7 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data)
+	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data, const std::string &base_path)
 	{
 		file.write_uint32(13); // version number
 		file.write("ModelCaramba", 12); // file magic
@@ -191,7 +191,7 @@ namespace clan
 		for (size_t i = 0; i < data->textures.size(); i++)
 		{
 			file.write_float(data->textures[i].gamma);
-			file.write_string_a(data->textures[i].name);
+			file.write_string_a(PathHelp::make_relative(base_path, data->textures[i].name));
 		}
 
 		for (size_t i = 0; i < data->bones.size(); i++)
@@ -556,8 +556,7 @@ namespace clan
 		for (size_t i = 0; i < data->textures.size(); i++)
 		{
 			data->textures[i].gamma = file.read_float();
-			//data->textures[i].name = clan::PathHelp::combine(base_path, file.read_string_a());
-			data->textures[i].name = file.read_string_a();
+			data->textures[i].name = clan::PathHelp::combine(base_path, file.read_string_a());
 		}
 
 		for (size_t i = 0; i < data->bones.size(); i++)

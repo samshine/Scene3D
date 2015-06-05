@@ -131,7 +131,7 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 			float up = weapon_description["firstPersonView"]["orientation"]["up"].to_float();
 			float tilt = weapon_description["firstPersonView"]["orientation"]["tilt"].to_float();
 
-			SceneModel model(player->world()->game()->gc, player->world()->game()->scene, "Baleout/Scene/" + weapon_description["firstPersonView"]["mesh"].to_string());
+			SceneModel model(player->world()->game()->gc, player->world()->game()->scene, weapon_description["firstPersonView"]["mesh"].to_string());
 			weapon_object = SceneObject(player->world()->game()->scene, model);
 			weapon_object.set_scale(Vec3f(weapon_description["firstPersonView"]["scale"].to_float()));
 			/*

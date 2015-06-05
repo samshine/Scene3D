@@ -18,7 +18,7 @@ public:
 	clan::Vec3f get_position() { return controller->get_position(); }
 	clan::Quaternionf get_orientation() { return clan::Quaternionf(up, dir, tilt, clan::angle_degrees, clan::order_YXZ); }
 
-	const clan::Vec3f eye_offset = clan::Vec3f(0.0f, 4.0f, 0.0f);
+	const clan::Vec3f eye_offset = clan::Vec3f(0.0f, 1.8f, 0.0f);
 
 	virtual void apply_damage(const GameTick &tick, float damage) { }
 
