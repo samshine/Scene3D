@@ -33,6 +33,7 @@ public:
 	bool is_flying() const { return flying; }
 	const clan::Vec3f &get_position() const { return position; }
 	const EulerRotation &get_rotation() const { return rotation; }
+	const clan::Vec3f &get_velocity() const { return velocity; }
 
 	float get_gravity() const { return gravity; }
 	float get_height() const { return height; }

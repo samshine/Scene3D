@@ -31,8 +31,9 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const clan::NetGameEvent
 void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent &net_event)
 {
 	is_owner = net_event.get_argument(1).get_boolean();
+	/*
 
-	PastMovement past;
+	PlayerPawnMovement past;
 	past.tick_time = tick.receive_tick_time;
 	past.key_forward = net_event.get_argument(2).get_boolean();
 	past.key_back = net_event.get_argument(3).get_boolean();
@@ -47,14 +48,10 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent
 	past.pos.x = net_event.get_argument(12).get_number();
 	past.pos.y = net_event.get_argument(13).get_number();
 	past.pos.z = net_event.get_argument(14).get_number();
-	past.move_velocity.x = net_event.get_argument(15).get_number();
-	past.move_velocity.y = net_event.get_argument(16).get_number();
-	past.move_velocity.z = net_event.get_argument(17).get_number();
-	past.fly_velocity.x = net_event.get_argument(18).get_number();
-	past.fly_velocity.y = net_event.get_argument(19).get_number();
-	past.fly_velocity.z = net_event.get_argument(20).get_number();
-	past.is_flying = net_event.get_argument(21).get_boolean();
-	health = net_event.get_argument(22).get_number();
+	past.velocity.x = net_event.get_argument(15).get_number();
+	past.velocity.y = net_event.get_argument(16).get_number();
+	past.velocity.z = net_event.get_argument(17).get_number();
+	health = net_event.get_argument(18).get_number();
 
 	if (!is_owner)
 	{
@@ -126,6 +123,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent
 		dir = present_dir;
 		up = present_up;
 	}
+	*/
 }
 
 void ClientPlayerPawn::net_hit(const GameTick &tick, const clan::NetGameEvent &net_event)
@@ -134,7 +132,7 @@ void ClientPlayerPawn::net_hit(const GameTick &tick, const clan::NetGameEvent &n
 	sound.set_sound("Sound/shit01.wav");
 	sound.set_attenuation_begin(1.0f);
 	sound.set_attenuation_end(100.0f);
-	sound.set_volume(0.75f);
+	sound.set_volume(0.5f);
 	sound.set_position(get_position());
 	sound.play();
 }
@@ -143,49 +141,38 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 {
 	if (is_owner)
 	{
-		key_forward = world()->game()->buttons.buttons["move-forward"].down;
-		key_back = world()->game()->buttons.buttons["move-back"].down;
-		key_left = world()->game()->buttons.buttons["move-left"].down;
-		key_right = world()->game()->buttons.buttons["move-right"].down;
-		key_jump = world()->game()->buttons.buttons["jump"].down;
-		key_fire_primary = world()->game()->buttons.buttons["fire-primary"].down;
-		key_fire_secondary = world()->game()->buttons.buttons["fire-secondary"].down;
-		key_weapon = 0;
-		if (world()->game()->buttons.buttons["switch-to-icelauncher"].down) key_weapon = 1;
-		else if (world()->game()->buttons.buttons["switch-to-rocketlauncher"].down) key_weapon = 2;
-		else if (world()->game()->buttons.buttons["switch-to-dualguns"].down) key_weapon = 3;
-		else if (world()->game()->buttons.buttons["switch-to-sniperrifle"].down) key_weapon = 4;
-		else if (world()->game()->buttons.buttons["switch-to-tractorbeam"].down) key_weapon = 5;
+		cur_movement.key_forward.update(world()->game()->buttons.buttons["move-forward"].down, tick.time_elapsed);
+		cur_movement.key_back.update(world()->game()->buttons.buttons["move-back"].down, tick.time_elapsed);
+		cur_movement.key_left.update(world()->game()->buttons.buttons["move-left"].down, tick.time_elapsed);
+		cur_movement.key_right.update(world()->game()->buttons.buttons["move-right"].down, tick.time_elapsed);
+		cur_movement.key_jump.update(world()->game()->buttons.buttons["jump"].down, tick.time_elapsed);
+		cur_movement.key_fire_primary.update(world()->game()->buttons.buttons["fire-primary"].down, tick.time_elapsed);
+		cur_movement.key_fire_secondary.update(world()->game()->buttons.buttons["fire-secondary"].down, tick.time_elapsed);
+		cur_movement.key_weapon = 0;
+		if (world()->game()->buttons.buttons["switch-to-icelauncher"].down) cur_movement.key_weapon = 1;
+		else if (world()->game()->buttons.buttons["switch-to-rocketlauncher"].down) cur_movement.key_weapon = 2;
+		else if (world()->game()->buttons.buttons["switch-to-dualguns"].down) cur_movement.key_weapon = 3;
+		else if (world()->game()->buttons.buttons["switch-to-sniperrifle"].down) cur_movement.key_weapon = 4;
+		else if (world()->game()->buttons.buttons["switch-to-tractorbeam"].down) cur_movement.key_weapon = 5;
 
 		NetGameEvent netevent("player-pawn-input");
-		netevent.add_argument(NetGameEventValue(key_forward));
-		netevent.add_argument(NetGameEventValue(key_back));
-		netevent.add_argument(NetGameEventValue(key_left));
-		netevent.add_argument(NetGameEventValue(key_right));
-		netevent.add_argument(NetGameEventValue(key_jump));
-		netevent.add_argument(NetGameEventValue(key_fire_primary));
-		netevent.add_argument(NetGameEventValue(key_fire_secondary));
-		netevent.add_argument(key_weapon);
-		netevent.add_argument(dir);
-		netevent.add_argument(up);
+		netevent.add_argument(NetGameEventValue(cur_movement.key_forward.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_back.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_left.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_right.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_jump.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_fire_primary.pressed));
+		netevent.add_argument(NetGameEventValue(cur_movement.key_fire_secondary.pressed));
+		netevent.add_argument(cur_movement.key_weapon);
+		netevent.add_argument(cur_movement.dir);
+		netevent.add_argument(cur_movement.up);
 
 		world()->game()->network->queue_event("server", netevent, tick.arrival_tick_time);
 
-		PastMovement past;
+		PlayerPawnMovement past = cur_movement;
 		past.tick_time = tick.arrival_tick_time;
-		past.key_forward = key_forward;
-		past.key_back = key_back;
-		past.key_left = key_left;
-		past.key_right = key_right;
-		past.key_jump = key_jump;
-		past.key_fire_primary = key_fire_primary;
-		past.key_fire_secondary = key_fire_secondary;
-		past.key_weapon = key_weapon;
-		past.dir = dir;
-		past.up = up;
-		past.pos = controller->get_position();
-		past.move_velocity = move_velocity;
-		past.fly_velocity = controller->get_fly_velocity(past.is_flying);
+		past.pos = character_controller.get_position();
+		past.velocity = character_controller.get_velocity();
 		sent_movements.push_back(past);
 	}
 
@@ -206,28 +193,28 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 	if (last_position != Vec3f() || next_position != Vec3f())
 	{
 		last_position = next_position;
-		next_position = controller->get_position();
+		next_position = character_controller.get_position();
 	}
 	else
 	{
-		next_position = controller->get_position();
+		next_position = character_controller.get_position();
 		last_position = next_position;
 	}
 }
 
 void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
-	float mouse_speed = 0.05421f;
+	float mouse_speed_x = 5.0f;
+	float mouse_speed_y = 5.0f;
+
 	float mouse_speed_multiplier = 1.0f;
 
-	float speed = mouse_speed * mouse_speed_multiplier;
-
-	dir = std::remainder(dir + world()->mouse_movement.x * speed, 360.0f);
-	up = clamp(up + world()->mouse_movement.y * speed, -90.0f, 90.0f);
+	cur_movement.dir = std::remainder(cur_movement.dir + world()->mouse_movement.x * mouse_speed_x * mouse_speed_multiplier * time_elapsed, 360.0f);
+	cur_movement.up = clamp(cur_movement.up + world()->mouse_movement.y * mouse_speed_y * mouse_speed_multiplier * time_elapsed, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 
-	Quaternionf look_dir = Quaternionf(up, dir, tilt, angle_degrees, order_YXZ);
+	Quaternionf look_dir = Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, angle_degrees, order_YXZ);
 	Vec3f look_pos = mix(last_position, next_position, interpolated_time) + eye_offset;
 
 	float available_zoom_out = 0.0f;
@@ -291,7 +278,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		}
 
 		scene_object.set_position(mix(last_position, next_position, interpolated_time) + Vec3f(0.0f, 0.3f, 0.0f));
-		scene_object.set_orientation(Quaternionf(clamp(-up * 0.5f, -15.0f, 15.0f), 180.0f + dir, 0.0f, angle_degrees, order_YXZ));
+		scene_object.set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
 		//scene_object.update(time_elapsed);
 		scene_object.moved(animation_move_speed * time_elapsed);
 	}

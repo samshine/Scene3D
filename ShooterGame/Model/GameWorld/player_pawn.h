@@ -2,8 +2,60 @@
 #pragma once
 
 #include "game_object.h"
-#include "old_character_controller.h"
+#include "character_controller.h"
 #include "weapon.h"
+
+class PlayerPawnButtonState
+{
+public:
+	bool pressed = false;
+	bool clicked = false;
+	bool double_clicked = false;
+	float double_click_timer = 0.0f;
+
+	void update(bool new_pressed, float time_elapsed)
+	{
+		clicked = !pressed && new_pressed;
+		pressed = new_pressed;
+		double_clicked = false;
+
+		if (clicked && double_click_timer > 0.0f)
+		{
+			double_clicked = true;
+			double_click_timer = 0.0f;
+		}
+		else if (clicked)
+		{
+			double_click_timer = 0.3f;
+		}
+
+		double_click_timer = std::max(double_click_timer - time_elapsed, 0.0f);
+	}
+};
+
+class PlayerPawnMovement
+{
+public:
+	int tick_time = 0;
+
+	// Input state before move
+	PlayerPawnButtonState key_forward;
+	PlayerPawnButtonState key_back;
+	PlayerPawnButtonState key_left;
+	PlayerPawnButtonState key_right;
+	PlayerPawnButtonState key_jump;
+	PlayerPawnButtonState key_fire_primary;
+	PlayerPawnButtonState key_fire_secondary;
+	int key_weapon = 0;
+	float dir = 0.0f;
+	float up = 0.0f;
+
+	// Character controller state before move
+	clan::Vec3f pos;
+	clan::Vec3f velocity;
+
+	float dodge_cooldown = 0.0f;
+};
 
 class PlayerPawn : public GameObject
 {
@@ -15,8 +67,8 @@ public:
 
 	void ground_moved(const clan::Vec3f &offset);
 
-	clan::Vec3f get_position() { return controller->get_position(); }
-	clan::Quaternionf get_orientation() { return clan::Quaternionf(up, dir, tilt, clan::angle_degrees, clan::order_YXZ); }
+	clan::Vec3f get_position() { return character_controller.get_position(); }
+	clan::Quaternionf get_orientation() { return clan::Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, clan::angle_degrees, clan::order_YXZ); }
 
 	const clan::Vec3f eye_offset = clan::Vec3f(0.0f, 1.8f, 0.0f);
 
@@ -25,31 +77,14 @@ public:
 	Weapon *get_weapon() { return weapon.get(); }
 
 protected:
-	clan::Vec3f tick_controller_movement(float time_elapsed);
+	void update_character_controller(float time_elapsed);
 
-	std::unique_ptr<OldCharacterController> controller;
+	PlayerPawnMovement cur_movement;
+	CharacterController character_controller;
 
 	float health = 100.0f;
 
-	float up = 0.0f;
-	float dir = 0.0f;
-	float tilt = 0.0f;
-
-	bool key_forward = false;
-	bool key_back = false;
-	bool key_left = false;
-	bool key_right = false;
-	bool key_jump = false;
-	bool key_fire_primary = false;
-	bool key_fire_secondary = false;
-	int key_weapon = 0;
-
-	const float move_speed = 440.0f;
-	const float slide_speed = 320.0f;
-	const float move_resistance = 0.75f;
-
-	clan::Vec3f move_velocity;
-
+	std::string anim = "default";
 	float animation_move_speed = 0.0f;
 
 	std::unique_ptr<Weapon> weapon;

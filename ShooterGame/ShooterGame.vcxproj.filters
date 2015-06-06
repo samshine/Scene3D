@@ -21,9 +21,6 @@
     <ClInclude Include="Controllers\Screens\screen_view_controller.h">
       <Filter>Controllers\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="Controllers\Screens\character_controller.h">
-      <Filter>Controllers\Screens</Filter>
-    </ClInclude>
     <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="Model\game.h">
       <Filter>Model</Filter>
@@ -118,6 +115,9 @@
     <ClInclude Include="ResourceCaches\game_sound_cache.h">
       <Filter>ResourceCaches</Filter>
     </ClInclude>
+    <ClInclude Include="Model\GameWorld\character_controller.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -135,9 +135,6 @@
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
     <ClCompile Include="Controllers\Screens\screen_view_controller.cpp">
-      <Filter>Controllers\Screens</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\Screens\character_controller.cpp">
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
     <ClCompile Include="mouse_movement.cpp" />
@@ -208,6 +205,9 @@
       <Filter>Model\Input</Filter>
     </ClCompile>
     <ClCompile Include="Model\GameWorld\old_character_controller.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\character_controller.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
   </ItemGroup>

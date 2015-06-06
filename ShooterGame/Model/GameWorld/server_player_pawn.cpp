@@ -11,10 +11,10 @@ using namespace clan;
 
 ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn) : PlayerPawn(world), owner(owner)
 {
-	controller->set_position(spawn->pos);
-	dir = spawn->dir;
-	up = spawn->up;
-	tilt = spawn->tilt;
+	cur_movement.pos = spawn->pos;
+	cur_movement.dir = spawn->dir;
+	cur_movement.up = spawn->up;
+	character_controller.warp(cur_movement.pos, EulerRotation(cur_movement.dir, cur_movement.up), Vec3f());
 }
 
 ServerPlayerPawn::~ServerPlayerPawn()
@@ -47,16 +47,16 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 
 void ServerPlayerPawn::net_input(const GameTick &tick, const clan::NetGameEvent &net_event)
 {
-	key_forward = net_event.get_argument(0).get_boolean();
-	key_back = net_event.get_argument(1).get_boolean();
-	key_left = net_event.get_argument(2).get_boolean();
-	key_right = net_event.get_argument(3).get_boolean();
-	key_jump = net_event.get_argument(4).get_boolean();
-	key_fire_primary = net_event.get_argument(5).get_boolean();
-	key_fire_secondary = net_event.get_argument(6).get_boolean();
-	key_weapon = net_event.get_argument(7).get_integer();
-	dir = net_event.get_argument(8).get_number();
-	up = net_event.get_argument(9).get_number();
+	cur_movement.key_forward.update(net_event.get_argument(0).get_boolean(), tick.time_elapsed);
+	cur_movement.key_back.update(net_event.get_argument(1).get_boolean(), tick.time_elapsed);
+	cur_movement.key_left.update(net_event.get_argument(2).get_boolean(), tick.time_elapsed);
+	cur_movement.key_right.update(net_event.get_argument(3).get_boolean(), tick.time_elapsed);
+	cur_movement.key_jump.update(net_event.get_argument(4).get_boolean(), tick.time_elapsed);
+	cur_movement.key_fire_primary.update(net_event.get_argument(5).get_boolean(), tick.time_elapsed);
+	cur_movement.key_fire_secondary.update(net_event.get_argument(6).get_boolean(), tick.time_elapsed);
+	cur_movement.key_weapon = net_event.get_argument(7).get_integer();
+	cur_movement.dir = net_event.get_argument(8).get_number();
+	cur_movement.up = net_event.get_argument(9).get_number();
 }
 
 void ServerPlayerPawn::send_net_create(const GameTick &tick, const std::string &target)
@@ -107,31 +107,26 @@ void ServerPlayerPawn::send_net_destroy(const GameTick &tick)
 
 void ServerPlayerPawn::add_update_args(clan::NetGameEvent &net_event, const GameTick &tick, bool is_owner)
 {
-	Vec3f pos = controller->get_position();
-	bool is_flying = false;
-	Vec3f fly_velocity = controller->get_fly_velocity(is_flying);
+	Vec3f pos = character_controller.get_position();
+	Vec3f velocity = character_controller.get_velocity();
 
 	net_event.add_argument(id());
 	net_event.add_argument(NetGameEventValue(is_owner));
-	net_event.add_argument(NetGameEventValue(key_forward));
-	net_event.add_argument(NetGameEventValue(key_back));
-	net_event.add_argument(NetGameEventValue(key_left));
-	net_event.add_argument(NetGameEventValue(key_right));
-	net_event.add_argument(NetGameEventValue(key_jump));
-	net_event.add_argument(NetGameEventValue(key_fire_primary));
-	net_event.add_argument(NetGameEventValue(key_fire_secondary));
-	net_event.add_argument(key_weapon);
-	net_event.add_argument(dir);
-	net_event.add_argument(up);
+	net_event.add_argument(NetGameEventValue(cur_movement.key_forward.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_back.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_left.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_right.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_jump.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_primary.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_secondary.pressed));
+	net_event.add_argument(cur_movement.key_weapon);
+	net_event.add_argument(cur_movement.dir);
+	net_event.add_argument(cur_movement.up);
 	net_event.add_argument(pos.x);
 	net_event.add_argument(pos.y);
 	net_event.add_argument(pos.z);
-	net_event.add_argument(move_velocity.x);
-	net_event.add_argument(move_velocity.y);
-	net_event.add_argument(move_velocity.z);
-	net_event.add_argument(fly_velocity.x);
-	net_event.add_argument(fly_velocity.y);
-	net_event.add_argument(fly_velocity.z);
-	net_event.add_argument(NetGameEventValue(is_flying));
+	net_event.add_argument(velocity.x);
+	net_event.add_argument(velocity.y);
+	net_event.add_argument(velocity.z);
 	net_event.add_argument(health);
 }

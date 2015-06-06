@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Controllers\Screens\character_controller.h" />
     <ClInclude Include="Controllers\Screens\game_screen_controller.h" />
     <ClInclude Include="Controllers\Screens\menu_screen_controller.h" />
     <ClInclude Include="Controllers\Screens\screen_view_controller.h" />
@@ -159,6 +158,7 @@
     <ClInclude Include="Model\game.h" />
     <ClInclude Include="Model\GameWorld\alarm_lights.h" />
     <ClInclude Include="Model\GameWorld\bullet.h" />
+    <ClInclude Include="Model\GameWorld\character_controller.h" />
     <ClInclude Include="Model\GameWorld\client_player_pawn.h" />
     <ClInclude Include="Model\GameWorld\elevator.h" />
     <ClInclude Include="Model\GameWorld\explosion.h" />
@@ -194,7 +194,6 @@
     <ClInclude Include="ResourceCaches\game_sound_cache.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Controllers\Screens\character_controller.cpp" />
     <ClCompile Include="Controllers\Screens\game_screen_controller.cpp" />
     <ClCompile Include="Controllers\Screens\menu_screen_controller.cpp" />
     <ClCompile Include="Controllers\Screens\screen_view_controller.cpp" />
@@ -203,6 +202,7 @@
     <ClCompile Include="Model\game.cpp" />
     <ClCompile Include="Model\GameWorld\alarm_lights.cpp" />
     <ClCompile Include="Model\GameWorld\bullet.cpp" />
+    <ClCompile Include="Model\GameWorld\character_controller.cpp" />
     <ClCompile Include="Model\GameWorld\client_player_pawn.cpp" />
     <ClCompile Include="Model\GameWorld\elevator.cpp" />
     <ClCompile Include="Model\GameWorld\explosion.cpp" />
