@@ -82,7 +82,7 @@ void CharacterController::warp(const clan::Vec3f &new_position, const EulerRotat
 void CharacterController::apply_impulse(const clan::Vec3f &force)
 {
 	velocity += force / mass;
-	flying = true;
+	begin_flying();
 }
 
 void CharacterController::thrust(const clan::Vec2f &dir)
@@ -168,7 +168,7 @@ bool CharacterController::step_move(clan::Vec3f move_vec)
 void CharacterController::begin_step_up()
 {
 	if (velocity.y > 0.0f)
-		flying = true;
+		begin_flying();
 
 	step_move(Vec3f(0.0f, step_height, 0.0f));
 }
@@ -178,7 +178,7 @@ void CharacterController::end_step_up()
 	if (step_move(Vec3f(0.0f, -step_height, 0.0f)))
 	{
 		velocity.y = 0.0f;
-		flying = false;
+		end_flying();
 	}
 }
 
@@ -189,13 +189,23 @@ void CharacterController::step_down()
 		if (step_move(Vec3f(0.0f, -step_height, 0.0f)))
 		{
 			velocity.y = 0.0f;
-			flying = false;
+			end_flying();
 		}
 		else
 		{
-			flying = true;
+			begin_flying();
 		}
 	}
+}
+
+void CharacterController::begin_flying()
+{
+	flying = true;
+}
+
+void CharacterController::end_flying()
+{
+	flying = false;
 }
 
 void CharacterController::apply_gravity(float tick_elapsed)
@@ -248,34 +258,34 @@ void CharacterController::apply_velocity(float tick_elapsed)
 
 void CharacterController::apply_thrust(float tick_elapsed)
 {
+	Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+	Vec3f move_vector = move_direction.rotate_vector(Vec3f(thrust_vec.x, 0.0f, thrust_vec.y));
+
 	velocity -= velocity * air_resistance * tick_elapsed;
 
-	Vec2f delta = thrust_vec * run_speed - ground_vec;
-	float delta_length = delta.length();
-	if (delta_length > 0.0f)
-	{
-		ground_vec += delta * (std::min(delta_length, acceleration * tick_elapsed) / delta_length);
-	}
-
-	Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
-
-	Vec3f wanted_velocity = move_direction.rotate_vector(Vec3f(ground_vec.x, 0.0f, ground_vec.y));
-	float wanted_acceleration = acceleration;
 	if (flying)
 	{
-		wanted_acceleration *= air_movement;
+		move_vector *= air_movement;
 
-		if (wanted_velocity.length() < 0.001f)
-			wanted_velocity = velocity;
+		float fly_speed = velocity.length();
+
+		Vec3f new_velocity = velocity + move_vector * acceleration * tick_elapsed;
+		float new_speed = new_velocity.length();
+		new_velocity.normalize();
+
+		velocity = new_velocity * std::min(std::max(fly_speed, run_speed * air_movement), new_speed);
 	}
-
-	Vec3f change_vector = wanted_velocity - velocity;
-	float distance = change_vector.length();
-	if (distance > 0.0f)
+	else
 	{
-		change_vector *= 1.0f / distance;
-		velocity.x += change_vector.x * std::min(wanted_acceleration * tick_elapsed, distance);
-		velocity.z += change_vector.z * std::min(wanted_acceleration * tick_elapsed, distance);
+		float speed = velocity.length();
+		velocity.normalize();
+		velocity *= std::max(speed - acceleration * tick_elapsed, 0.0f);
+
+		velocity += move_vector * acceleration * 2.0f * tick_elapsed;
+
+		speed = std::min(velocity.length(), run_speed);
+		velocity.normalize();
+		velocity *= speed;
 	}
 }
 

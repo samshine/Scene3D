@@ -77,6 +77,9 @@ private:
 	void apply_velocity(float tick_elapsed);
 	void apply_thrust(float tick_elapsed);
 
+	void begin_flying();
+	void end_flying();
+
 	static clan::Vec3f reflect(const clan::Vec3f &ray, const clan::Vec3f &normal, float amount = 1.0f);
 
 	clan::Physics3DWorld collision_world;
@@ -87,14 +90,14 @@ private:
 	float acos_too_steep_slope = 0.70f; // cos(45 deg)
 	float shape_margin = 0.04f;
 
-	float gravity = 9.8f;
+	float gravity = 9.8f * 1.6f;
 	float height = 1.8f;
 	float radius = 0.5f;
-	float mass = 1.0f;
+	float mass = 78.0f;
 	float acceleration = 38.0f;
 	float run_speed = 9.0f;
 	float friction = 0.0f;
-	float air_resistance = 0.01f;
+	float air_resistance = 0.3f;
 	float air_movement = 0.35f;
 	float bounce = 0.15f;
 	float step_height = 0.25f;
@@ -104,9 +107,8 @@ private:
 	EulerRotation rotation;
 
 	clan::Vec3f velocity;
-	bool flying = false;
 	clan::Vec2f thrust_vec;
-	clan::Vec2f ground_vec;
+	bool flying = false;
 
 	bool shape_modified = true;
 };

@@ -98,7 +98,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 	bool space_is_down = ic.get_keyboard().get_keycode(keycode_space);
 	if (space_is_down && !space_was_down && !flying)
 	{
-		character_controller.apply_impulse(Vec3f(0.0f, 4.0f, 0.0f));
+		character_controller.apply_impulse(Vec3f(0.0f, 500.0f, 0.0f));
 		anim = "jump";
 	}
 	space_was_down = space_is_down;
@@ -115,7 +115,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
-			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.32f, 1.20f) * 7.0f));
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 35.0f, 94.0f) * 8.0f));
 			dodge_cooldown = 0.75f;
 			anim = "dodge-forward";
 		}
@@ -124,7 +124,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
-			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 0.32f, -1.20f) * 7.0f));
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 35.0f, -94.0f) * 8.0f));
 			dodge_cooldown = 0.75f;
 			anim = "dodge-backward";
 		}
@@ -133,7 +133,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
-			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-1.20f, 0.32f, 0.0f) * 7.0f));
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-94.0f, 35.0f, 0.0f) * 8.0f));
 			dodge_cooldown = 0.75f;
 			anim = "dodge-left";
 		}
@@ -142,7 +142,7 @@ void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
-			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(1.20f, 0.32f, 0.0f) * 7.0f));
+			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(94.0f, 35.0f, 0.0f) * 8.0f));
 			dodge_cooldown = 0.75f;
 			anim = "dodge-right";
 		}
