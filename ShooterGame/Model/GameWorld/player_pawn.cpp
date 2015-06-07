@@ -27,10 +27,6 @@ void PlayerPawn::tick(const GameTick &tick)
 
 	update_character_controller(tick.time_elapsed);
 
-	//Vec3f move_dir = tick_controller_movement(tick.time_elapsed);
-	//animation_move_speed = move_dir.length();
-	//bool is_moving = animation_move_speed > 0.0f;
-
 	switch (cur_movement.key_weapon)
 	{
 	case 1: weapon->try_switch_to_weapon("IceLauncher"); break;
@@ -57,41 +53,17 @@ void PlayerPawn::ground_moved(const Vec3f &offset)
 {
 	//controller->set_position(controller->get_position() + offset);
 }
-/*
-Vec3f PlayerPawn::tick_controller_movement(float time_elapsed)
-{
-	Vec3f move_circle;
-	if (key_forward)
-		move_circle.z += 1.0f;
-	if (key_back)
-		move_circle.z -= 1.0f;
-	if (key_left)
-		move_circle.x -= 1.0f;
-	if (key_right)
-		move_circle.x += 1.0f;
-	move_circle.normalize();
 
-	Vec3f move_oval = move_circle * Vec3f(slide_speed, 0.0f, move_speed); // Convert circle to an oval with the desired forward and slide speeds
-	if (move_oval.z < 0.0f) // Move slightly slower backwards
-		move_oval.z *= 0.8f;
-
-	Vec3f move_dir = Quaternionf(0.0f, dir, 0.0f, angle_degrees, order_YXZ).rotate_vector(move_oval);
-
-	move_velocity += move_dir * time_elapsed;
-	move_velocity = move_velocity * move_resistance;
-
-	if (Vec3f::dot(move_velocity, move_velocity) < 0.5f)
-		move_velocity = Vec3f();
-
-	controller->move(move_velocity, time_elapsed);
-	if (key_jump)
-		controller->jump(move_velocity + Vec3f(0.0f, 20.0f, 0.0f));
-
-	return move_velocity;
-}
-*/
 void PlayerPawn::update_character_controller(float time_elapsed)
 {
+	cur_movement.key_forward.update(time_elapsed);
+	cur_movement.key_back.update(time_elapsed);
+	cur_movement.key_left.update(time_elapsed);
+	cur_movement.key_right.update(time_elapsed);
+	cur_movement.key_jump.update(time_elapsed);
+	cur_movement.key_fire_primary.update(time_elapsed);
+	cur_movement.key_fire_secondary.update(time_elapsed);
+
 	EulerRotation rotation = character_controller.get_rotation();
 
 	Vec2f thrust;

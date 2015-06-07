@@ -72,11 +72,11 @@ void CharacterController::set_gravity(float new_gravity)
 	gravity = new_gravity;
 }
 
-void CharacterController::warp(const clan::Vec3f &new_position, const EulerRotation &new_rotation, const clan::Vec3f &new_velocity)
+void CharacterController::warp(const clan::Vec3f &new_position, const clan::Vec3f &new_velocity, bool new_is_flying)
 {
 	position = new_position;
-	rotation = new_rotation;
 	velocity = new_velocity;
+	flying = new_is_flying;
 }
 
 void CharacterController::apply_impulse(const clan::Vec3f &force)

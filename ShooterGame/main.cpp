@@ -68,6 +68,8 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		if (screen) screen->texture_view()->on_mouse_move(e);
 	});
 
+	//ConsoleWindow console("Debug");
+
 	try
 	{
 		Screen::set(std::make_shared<MenuScreenController>(canvas));

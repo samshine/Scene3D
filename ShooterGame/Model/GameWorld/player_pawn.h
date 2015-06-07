@@ -13,10 +13,12 @@ public:
 	bool double_clicked = false;
 	float double_click_timer = 0.0f;
 
-	void update(bool new_pressed, float time_elapsed)
+	bool next_pressed = false;
+
+	void update(float time_elapsed)
 	{
-		clicked = !pressed && new_pressed;
-		pressed = new_pressed;
+		clicked = !pressed && next_pressed;
+		pressed = next_pressed;
 		double_clicked = false;
 
 		if (clicked && double_click_timer > 0.0f)
@@ -49,10 +51,6 @@ public:
 	int key_weapon = 0;
 	float dir = 0.0f;
 	float up = 0.0f;
-
-	// Character controller state before move
-	clan::Vec3f pos;
-	clan::Vec3f velocity;
 
 	float dodge_cooldown = 0.0f;
 };

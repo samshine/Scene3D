@@ -11,10 +11,9 @@ using namespace clan;
 
 ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn) : PlayerPawn(world), owner(owner)
 {
-	cur_movement.pos = spawn->pos;
 	cur_movement.dir = spawn->dir;
 	cur_movement.up = spawn->up;
-	character_controller.warp(cur_movement.pos, EulerRotation(cur_movement.dir, cur_movement.up), Vec3f());
+	character_controller.warp(spawn->pos, Vec3f(), false);
 }
 
 ServerPlayerPawn::~ServerPlayerPawn()
@@ -47,13 +46,13 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 
 void ServerPlayerPawn::net_input(const GameTick &tick, const clan::NetGameEvent &net_event)
 {
-	cur_movement.key_forward.update(net_event.get_argument(0).get_boolean(), tick.time_elapsed);
-	cur_movement.key_back.update(net_event.get_argument(1).get_boolean(), tick.time_elapsed);
-	cur_movement.key_left.update(net_event.get_argument(2).get_boolean(), tick.time_elapsed);
-	cur_movement.key_right.update(net_event.get_argument(3).get_boolean(), tick.time_elapsed);
-	cur_movement.key_jump.update(net_event.get_argument(4).get_boolean(), tick.time_elapsed);
-	cur_movement.key_fire_primary.update(net_event.get_argument(5).get_boolean(), tick.time_elapsed);
-	cur_movement.key_fire_secondary.update(net_event.get_argument(6).get_boolean(), tick.time_elapsed);
+	cur_movement.key_forward.next_pressed = net_event.get_argument(0).get_boolean();
+	cur_movement.key_back.next_pressed = net_event.get_argument(1).get_boolean();
+	cur_movement.key_left.next_pressed = net_event.get_argument(2).get_boolean();
+	cur_movement.key_right.next_pressed = net_event.get_argument(3).get_boolean();
+	cur_movement.key_jump.next_pressed = net_event.get_argument(4).get_boolean();
+	cur_movement.key_fire_primary.next_pressed = net_event.get_argument(5).get_boolean();
+	cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(6).get_boolean();
 	cur_movement.key_weapon = net_event.get_argument(7).get_integer();
 	cur_movement.dir = net_event.get_argument(8).get_number();
 	cur_movement.up = net_event.get_argument(9).get_number();
@@ -109,16 +108,17 @@ void ServerPlayerPawn::add_update_args(clan::NetGameEvent &net_event, const Game
 {
 	Vec3f pos = character_controller.get_position();
 	Vec3f velocity = character_controller.get_velocity();
+	bool is_flying = character_controller.is_flying();
 
 	net_event.add_argument(id());
 	net_event.add_argument(NetGameEventValue(is_owner));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_forward.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_back.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_left.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_right.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_jump.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_primary.pressed));
-	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_secondary.pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_forward.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_back.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_left.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_right.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_jump.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_primary.next_pressed));
+	net_event.add_argument(NetGameEventValue(cur_movement.key_fire_secondary.next_pressed));
 	net_event.add_argument(cur_movement.key_weapon);
 	net_event.add_argument(cur_movement.dir);
 	net_event.add_argument(cur_movement.up);
@@ -128,5 +128,6 @@ void ServerPlayerPawn::add_update_args(clan::NetGameEvent &net_event, const Game
 	net_event.add_argument(velocity.x);
 	net_event.add_argument(velocity.y);
 	net_event.add_argument(velocity.z);
+	net_event.add_argument(NetGameEventValue(is_flying));
 	net_event.add_argument(health);
 }

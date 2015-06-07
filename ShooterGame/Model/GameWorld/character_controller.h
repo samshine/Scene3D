@@ -59,7 +59,7 @@ public:
 	void set_air_movement(float air_movement);
 	void set_bounce(float bounce);
 
-	void warp(const clan::Vec3f &position, const EulerRotation &rotation, const clan::Vec3f &velocity);
+	void warp(const clan::Vec3f &position, const clan::Vec3f &velocity, bool is_flying);
 
 	void apply_impulse(const clan::Vec3f &force);
 	void thrust(const clan::Vec2f &dir);
