@@ -27,6 +27,7 @@ void MusicPlayer::play(std::vector<std::string> new_playlist, bool looping)
 	shuffle();
 	current_song_index = 0;
 	current_song = SoundBuffer(playlist[current_song_index], true);
+	current_song.set_volume(volume);
 	current_session = current_song.play();
 #endif
 }
@@ -54,6 +55,7 @@ void MusicPlayer::update()
 				{
 					shuffle();
 					current_song = SoundBuffer(playlist[current_song_index], true);
+					current_song.set_volume(volume);
 					current_session = current_song.play();
 				}
 				else
@@ -65,6 +67,7 @@ void MusicPlayer::update()
 			else
 			{
 				current_song = SoundBuffer(playlist[current_song_index], true);
+				current_song.set_volume(volume);
 				current_session = current_song.play();
 			}
 		}

@@ -10,7 +10,9 @@ using namespace clan;
 
 Game::Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources, clan::GraphicContext gc, clan::InputContext ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
-	std::string map_name = "Levels/Liandri/liandri";
+	game_data = JsonValue::from_json(File::read_text("Resources/Config/game.json"));
+
+	std::string map_name = game_data["map"];
 
 	level_data = JsonValue::from_json(File::read_text(PathHelp::combine("Resources", map_name + ".mapdesc")));
 	map_cmodel_filename = map_name + ".cmodel";
@@ -74,6 +76,16 @@ void Game::create_client_objects()
 {
 	audio.reset(new AudioWorld(resources));
 	music_player.reset(new MusicPlayer());
+
+	if (game_data["music"].to_boolean())
+	{
+		music_player->play(
+		{
+			"Resources/Music/game1.ogg",
+			"Resources/Music/game2.ogg",
+			"Resources/Music/game3.ogg"
+		}, true);
+	}
 
 	scene = Scene(gc, resources, "Resources/Scene3D");
 

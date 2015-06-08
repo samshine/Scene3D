@@ -67,6 +67,8 @@ public:
 
 	void update(float tick_elapsed);
 
+	float get_land_impact() const { return land_impact; }
+
 private:
 	void update_shape();
 	void begin_step_up();
@@ -102,6 +104,8 @@ private:
 	float bounce = 0.15f;
 	float step_height = 0.25f;
 	float step_bounce = 0.02f;
+
+	float land_impact = 0.0f;
 
 	clan::Vec3f position;
 	EulerRotation rotation;

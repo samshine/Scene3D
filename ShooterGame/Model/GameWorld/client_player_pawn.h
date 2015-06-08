@@ -25,6 +25,10 @@ private:
 
 	clan::SceneObject scene_object;
 	clan::AudioObject sound;
+	float step_movement = 0.0f;
+	bool left_step = false;
+
+	std::string last_anim = "default";
 
 	clan::Physics3DSweepTest camera_sweep_test;
 	clan::Physics3DShape camera_shape;

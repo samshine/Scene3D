@@ -171,12 +171,14 @@ void CharacterController::begin_step_up()
 		begin_flying();
 
 	step_move(Vec3f(0.0f, step_height, 0.0f));
+	land_impact = 0.0f;
 }
 
 void CharacterController::end_step_up()
 {
 	if (step_move(Vec3f(0.0f, -step_height, 0.0f)))
 	{
+		land_impact = std::max(land_impact, -velocity.y);
 		velocity.y = 0.0f;
 		end_flying();
 	}
@@ -188,6 +190,7 @@ void CharacterController::step_down()
 	{
 		if (step_move(Vec3f(0.0f, -step_height, 0.0f)))
 		{
+			land_impact = std::max(land_impact, -velocity.y);
 			velocity.y = 0.0f;
 			end_flying();
 		}

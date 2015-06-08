@@ -134,14 +134,6 @@ void PlayerPawn::update_character_controller(float time_elapsed)
 		anim = "jump";
 	}
 
-	/*
-	if (anim != last_anim)
-	{
-		model_object.play_animation(anim, false);
-		last_anim = anim;
-	}
-	*/
-
 	character_controller.look(EulerRotation(cur_movement.dir, cur_movement.up));
 	character_controller.thrust(thrust);
 
@@ -150,5 +142,5 @@ void PlayerPawn::update_character_controller(float time_elapsed)
 	character_controller.update(time_elapsed);
 
 	Vec3f new_pos = character_controller.get_position();
-	animation_move_speed = (new_pos - old_pos).length();
+	animation_move_speed = (Vec2f(new_pos.x, new_pos.z) - Vec2f(old_pos.x, old_pos.z)).length();
 }

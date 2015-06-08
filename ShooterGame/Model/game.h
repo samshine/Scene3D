@@ -30,6 +30,7 @@ public:
 
 	clan::Physics3DWorld collision;
 
+	clan::JsonValue game_data;
 	clan::JsonValue level_data;
 
 	clan::SceneObject level_instance;

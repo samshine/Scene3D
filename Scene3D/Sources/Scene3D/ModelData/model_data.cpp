@@ -335,7 +335,10 @@ namespace clan
 				data->meshes[j].draw_ranges[k].diffuse.set_single_value(clan::Vec3f(file.read_float(), file.read_float(), file.read_float()));
 				data->meshes[j].draw_ranges[k].specular.set_single_value(clan::Vec3f(file.read_float(), file.read_float(), file.read_float()));
 
-				data->meshes[j].draw_ranges[k].glossiness.set_single_value(file.read_float());
+				if (version < 13)
+					data->meshes[j].draw_ranges[k].glossiness.set_single_value(std::pow(2.0f, file.read_float() * 10.0f));
+				else
+					data->meshes[j].draw_ranges[k].glossiness.set_single_value(file.read_float());
 				data->meshes[j].draw_ranges[k].specular_level.set_single_value(file.read_float());
 
 				if (version < 10)
