@@ -6,7 +6,7 @@
 #include "player_pawn.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 OldCharacterController::OldCharacterController(Physics3DWorld &world, float radius, float height, float step_height, float gravity)
 : height_offset(-height), step_height(step_height), gravity(gravity), flying(true), contact_test(world), sweep_test(world), allowed_ccd_penetration(0.01f), margin(0.01f)
@@ -23,7 +23,7 @@ Vec3f OldCharacterController::get_position() const
 	return position + Vec3f(0.0f, height_offset, 0.0f);
 }
 
-void OldCharacterController::set_position(const clan::Vec3f &new_position)
+void OldCharacterController::set_position(const uicore::Vec3f &new_position)
 {
 	position = new_position - Vec3f(0.0f, height_offset, 0.0f);
 	object.set_position(position);
@@ -95,7 +95,7 @@ void OldCharacterController::recover_from_penetration()
 	position += touching_normal * (max_penetration - 0.02f);
 }
 
-void OldCharacterController::jump(const clan::Vec3f &jump_velocity)
+void OldCharacterController::jump(const uicore::Vec3f &jump_velocity)
 {
 	if (!flying)
 	{
@@ -104,7 +104,7 @@ void OldCharacterController::jump(const clan::Vec3f &jump_velocity)
 	}
 }
 
-void OldCharacterController::move_forward(clan::Vec3f target)
+void OldCharacterController::move_forward(uicore::Vec3f target)
 {
 	const int max_iterations = 4;
 
@@ -165,7 +165,7 @@ void OldCharacterController::move_forward(clan::Vec3f target)
 	}
 }
 
-bool OldCharacterController::move_vertical(clan::Vec3f target)
+bool OldCharacterController::move_vertical(uicore::Vec3f target)
 {
 	const int max_iterations = 2;
 

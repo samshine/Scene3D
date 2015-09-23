@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "texture_atlas.h"
 
-namespace clan
+namespace uicore
 {
 	TextureAtlas::TextureAtlas(Size texture_size, bool search_previous_textures) : initial_texture_size(texture_size), search_previous_textures(search_previous_textures)
 	{

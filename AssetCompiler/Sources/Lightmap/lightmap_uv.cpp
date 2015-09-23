@@ -4,7 +4,7 @@
 #include "texture_atlas.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	void LightmapUV::generate(const std::shared_ptr<ModelData> &model_data)
 	{

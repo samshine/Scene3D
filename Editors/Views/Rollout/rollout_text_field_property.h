@@ -3,16 +3,16 @@
 
 class RolloutView;
 
-class RolloutTextFieldProperty : public clan::View
+class RolloutTextFieldProperty : public uicore::View
 {
 public:
 	RolloutTextFieldProperty(const std::string &label);
 
-	std::shared_ptr<clan::LabelView> label;
-	std::shared_ptr<clan::TextFieldView> text_field;
+	std::shared_ptr<uicore::LabelView> label;
+	std::shared_ptr<uicore::TextFieldView> text_field;
 
-	clan::Signal<void()> &sig_value_changed() { return _sig_value_changed; }
+	uicore::Signal<void()> &sig_value_changed() { return _sig_value_changed; }
 
 private:
-	clan::Signal<void()> _sig_value_changed;
+	uicore::Signal<void()> _sig_value_changed;
 };

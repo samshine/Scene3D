@@ -63,12 +63,12 @@ public:
 
 	void tick(const GameTick &tick) override;
 
-	void ground_moved(const clan::Vec3f &offset);
+	void ground_moved(const uicore::Vec3f &offset);
 
-	clan::Vec3f get_position() { return character_controller.get_position(); }
-	clan::Quaternionf get_orientation() { return clan::Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, clan::angle_degrees, clan::order_YXZ); }
+	uicore::Vec3f get_position() { return character_controller.get_position(); }
+	uicore::Quaternionf get_orientation() { return uicore::Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, uicore::angle_degrees, uicore::order_YXZ); }
 
-	const clan::Vec3f eye_offset = clan::Vec3f(0.0f, 1.8f, 0.0f);
+	const uicore::Vec3f eye_offset = uicore::Vec3f(0.0f, 1.8f, 0.0f);
 
 	virtual void apply_damage(const GameTick &tick, float damage) { }
 

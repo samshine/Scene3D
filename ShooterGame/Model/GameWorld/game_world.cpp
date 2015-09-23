@@ -13,7 +13,7 @@
 #include "spawn_point.h"
 #include "player_ragdoll.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
 {
@@ -190,7 +190,7 @@ void GameWorld::net_peer_disconnected(const std::string &peer_id)
 	}
 }
 
-void GameWorld::net_event_received(const std::string &sender, const clan::NetGameEvent &net_event)
+void GameWorld::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
 	if (is_server)
 	{

@@ -1,8 +1,9 @@
 
 #include "precomp.h"
 #include "AssetCompiler/ModelDescription/model_desc.h"
+#include "JsonValue/json_value.h"
 
-namespace clan
+namespace uicore
 {
 	ModelDesc::ModelDesc()
 	{

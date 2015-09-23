@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include "Model/Network/NetGame/event.h"
 
 class Game;
 class GameWorld;

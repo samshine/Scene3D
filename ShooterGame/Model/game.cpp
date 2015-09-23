@@ -6,9 +6,9 @@
 #include "Model/Network/lock_step_client_time.h"
 #include "Model/Network/lock_step_server_time.h"
 
-using namespace clan;
+using namespace uicore;
 
-Game::Game(std::string hostname, std::string port, bool server, clan::ResourceManager resources, clan::GraphicContext gc, clan::InputContext ic) : server(server), resources(resources), gc(gc), ic(ic)
+Game::Game(std::string hostname, std::string port, bool server, uicore::ResourceManager resources, uicore::GraphicContext gc, uicore::DisplayWindow ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
 	game_data = JsonValue::from_json(File::read_text("Resources/Config/game.json"));
 
@@ -126,7 +126,7 @@ void Game::create_input_buttons()
 	buttons.load(ic, xml.select_node("/input/buttons"));
 }
 
-void Game::update(clan::Vec2i mouse_movement)
+void Game::update(uicore::Vec2i mouse_movement)
 {
 	ScopeTimeFunction();
 
@@ -195,7 +195,7 @@ void Game::on_net_peer_disconnected(const std::string &id)
 	game_world->net_peer_disconnected(id);
 }
 
-void Game::on_net_event_received(const std::string &sender, const clan::NetGameEvent &net_event)
+void Game::on_net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
 	game_world->net_event_received(sender, net_event);
 }

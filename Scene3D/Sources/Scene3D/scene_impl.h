@@ -46,9 +46,10 @@
 #include "Scene3D/Passes/Final/final_pass.h"
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
+#include "Scene3D/Resources/resource_manager.h"
 #include <list>
 
-namespace clan
+namespace uicore
 {
 
 class ModelMeshVisitor;

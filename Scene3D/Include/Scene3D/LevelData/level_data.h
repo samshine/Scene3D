@@ -32,7 +32,7 @@
 #include "level_data_sector.h"
 #include "level_data_object.h"
 #include "level_data_light.h"
-namespace clan
+namespace uicore
 {
 
 class LevelData

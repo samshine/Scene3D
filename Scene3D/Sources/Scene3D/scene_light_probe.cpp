@@ -32,7 +32,7 @@
 #include "scene_light_probe_impl.h"
 #include "scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneLightProbe::SceneLightProbe()

@@ -1,7 +1,9 @@
 
 #pragma once
 
-namespace clan
+#include "JsonValue/json_value.h"
+
+namespace uicore
 {
 	class MapDescObject
 	{

@@ -32,7 +32,7 @@
 #include "scene_pass_impl.h"
 #include "scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 ScenePass::ScenePass()

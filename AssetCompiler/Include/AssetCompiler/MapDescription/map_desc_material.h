@@ -3,7 +3,7 @@
 
 #include "../ModelDescription/model_desc_material.h"
 
-namespace clan
+namespace uicore
 {
 	typedef ModelDescMaterial MapDescMaterial;
 }

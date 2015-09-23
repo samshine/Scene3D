@@ -6,7 +6,7 @@
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "asset_compiler_impl.h"
 
-namespace clan
+namespace uicore
 {
 	AssetCompiler::AssetCompiler() : impl(std::make_shared<AssetCompilerImpl>())
 	{

@@ -3,7 +3,7 @@
 #include "header_view.h"
 #include "header_menu_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 HeaderView::HeaderView()
 {

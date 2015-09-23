@@ -3,7 +3,7 @@
 #include "update_animation_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 UpdateAnimationCommand::UpdateAnimationCommand(size_t index, ModelDescAnimation animation) : index(index), new_animation(animation)
 {

@@ -37,7 +37,7 @@
 #include "model_data_animation.h"
 #include "model_data_texture.h"
 
-namespace clan
+namespace uicore
 {
 	class IODevice;
 

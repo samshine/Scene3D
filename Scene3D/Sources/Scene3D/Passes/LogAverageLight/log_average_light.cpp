@@ -30,7 +30,7 @@
 #include "log_average_light.h"
 #include "Scene3D/Framework/shader_setup.h"
 
-namespace clan
+namespace uicore
 {
 
 

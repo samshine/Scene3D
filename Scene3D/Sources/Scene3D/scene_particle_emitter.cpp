@@ -33,7 +33,7 @@
 #include "Scene3D/scene_particle_emitter_impl.h"
 #include "Scene3D/scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneParticleEmitter::SceneParticleEmitter()

@@ -29,10 +29,11 @@
 #pragma once
 
 #include "Scene3D/scene_particle_emitter.h"
+#include "Scene3D/Resources/resource.h"
 #include "particle.h"
 #include "particle_uniforms.h"
 
-namespace clan
+namespace uicore
 {
 
 class ParticleEmitterPassData

@@ -27,5 +27,5 @@ private:
 
 	std::shared_ptr<RolloutView> trigger;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

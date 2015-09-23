@@ -30,7 +30,7 @@
 
 #include "Scene3D/ModelData/model_data_draw_range.h"
 
-namespace clan
+namespace uicore
 {
 
 class ModelDataDrawRange;

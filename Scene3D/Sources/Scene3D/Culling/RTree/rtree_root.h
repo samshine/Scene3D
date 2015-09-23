@@ -43,7 +43,7 @@
 
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 #define ASSERT assert // RTreeRoot uses ASSERT( condition )

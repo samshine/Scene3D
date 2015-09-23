@@ -22,7 +22,7 @@ private:
 	void create_path_point_clicked();
 	void create_light_probe_clicked();
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 
 	std::shared_ptr<RolloutView> select;
 	std::shared_ptr<RolloutView> create;

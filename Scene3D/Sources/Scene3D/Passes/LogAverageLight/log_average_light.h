@@ -28,7 +28,10 @@
 
 #pragma once
 
-namespace clan
+#include "Scene3D/Resources/resource_container.h"
+#include "Scene3D/Resources/resource.h"
+
+namespace uicore
 {
 
 class LogAverageLight

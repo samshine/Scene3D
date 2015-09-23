@@ -8,7 +8,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
 : GameObject(world), level_obj_id(level_obj_id), pos1(pos1), pos2(pos2), orientation(orientation)
@@ -32,7 +32,7 @@ Elevator::~Elevator()
 {
 }
 
-void Elevator::net_update(const GameTick &net_tick, const clan::NetGameEvent &net_event)
+void Elevator::net_update(const GameTick &net_tick, const uicore::NetGameEvent &net_event)
 {
 	if (!world()->is_server)
 	{

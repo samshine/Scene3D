@@ -29,11 +29,12 @@
 
 #pragma once
 
+#include "resource.h"
 #include "../ModelData/model_data.h"
 #include <memory>
 #include <string>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanScene_Scene clanScene Scene
 /// \{

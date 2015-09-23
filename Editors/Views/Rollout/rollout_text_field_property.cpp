@@ -3,7 +3,7 @@
 #include "rollout_text_field_property.h"
 #include "rollout_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text)
 {

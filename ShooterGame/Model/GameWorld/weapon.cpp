@@ -7,7 +7,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 Weapon::Weapon(PlayerPawn *player) : player(player)
 {

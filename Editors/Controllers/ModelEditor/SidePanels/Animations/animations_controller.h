@@ -37,5 +37,5 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> loop_property;
 	std::shared_ptr<RolloutTextFieldProperty> rarity_property;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

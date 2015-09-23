@@ -20,19 +20,19 @@ public:
 	static ModelAppModel *instance();
 
 	std::string open_filename;
-	clan::ModelDesc desc;
+	uicore::ModelDesc desc;
 	std::string map_model;
 
-	std::shared_ptr<clan::FBXModel> fbx;
-	std::shared_ptr<clan::ModelData> model_data;
+	std::shared_ptr<uicore::FBXModel> fbx;
+	std::shared_ptr<uicore::ModelData> model_data;
 
 	std::shared_ptr<EditorScene> editor_scene;
 
 	UndoSystem undo_system;
 
-	clan::Signal<void()> sig_load_finished;
-	clan::Signal<void()> sig_model_data_updated;
-	clan::Signal<void()> sig_map_model_updated;
+	uicore::Signal<void()> sig_load_finished;
+	uicore::Signal<void()> sig_model_data_updated;
+	uicore::Signal<void()> sig_map_model_updated;
 
 	void open(const std::string &filename);
 	void save(const std::string &filename);

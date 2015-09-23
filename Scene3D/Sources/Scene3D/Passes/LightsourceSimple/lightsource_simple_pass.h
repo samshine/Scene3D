@@ -30,9 +30,11 @@
 
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
+#include "Scene3D/Resources/resource_container.h"
+#include "Scene3D/Resources/resource.h"
 #include "icosahedron.h"
 
-namespace clan
+namespace uicore
 {
 
 class GPUTimer;

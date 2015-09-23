@@ -9,7 +9,7 @@
 #include "Model/ModelEditor/EditorScene/editor_scene.h"
 #include "Model/ModelEditor/EditorScene/Game/character_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 EnvironmentController::EnvironmentController()
 {

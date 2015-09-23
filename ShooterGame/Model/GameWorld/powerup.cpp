@@ -6,7 +6,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 Powerup::Powerup(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation, const std::string &model_name, float scale, const std::string &animation, const Vec3f &collision_box_size, float respawn_time, const std::string &powerup_type)
 : GameObject(world)

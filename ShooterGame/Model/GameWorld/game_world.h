@@ -6,6 +6,7 @@
 #include "player_list.h"
 #include "team_list.h"
 #include "game_tick.h"
+#include "Model/Network/NetGame/event.h"
 
 class Game;
 class GameTick;
@@ -27,7 +28,7 @@ public:
 	Game *game() { return _game; }
 	GameObject *get(int id);
 
-	clan::JsonValue weapon_data;
+	uicore::JsonValue weapon_data;
 
 	std::unique_ptr<PlayerList> player_list;
 	std::unique_ptr<TeamList> team_list;
@@ -38,7 +39,7 @@ public:
 	std::map<std::string, ServerPlayerPawn *> server_player_pawns;
 	std::vector<SpawnPoint *> spawn_points;
 
-	clan::Point mouse_movement;
+	uicore::Point mouse_movement;
 
 	bool is_server = false;
 
@@ -49,7 +50,7 @@ public:
 
 	void net_peer_connected(const std::string &peer_id);
 	void net_peer_disconnected(const std::string &peer_id);
-	void net_event_received(const std::string &sender, const clan::NetGameEvent &net_event);
+	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
 	void add(GameObject *obj);
 	void remove(GameObject *obj);

@@ -7,7 +7,7 @@
 #include "model_desc_particle_emitter.h"
 #include "model_desc_material.h"
 
-namespace clan
+namespace uicore
 {
 	class ModelDesc
 	{

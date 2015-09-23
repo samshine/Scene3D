@@ -30,7 +30,7 @@
 
 #include "model_data_animation_data.h"
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Bone data.

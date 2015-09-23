@@ -3,7 +3,7 @@
 #include "rollout_view.h"
 #include "rollout_header.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutView::RolloutView(const std::string &title)
 {

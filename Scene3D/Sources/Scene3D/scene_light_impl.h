@@ -31,7 +31,7 @@
 #include "Scene3D/scene_cull_provider.h"
 #include <list>
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

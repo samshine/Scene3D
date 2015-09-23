@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "workspace_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 WorkspaceController::WorkspaceController()
 {
@@ -27,7 +27,7 @@ WorkspaceController::WorkspaceController()
 	view->add_subview(dock_view);
 }
 
-void WorkspaceController::set_center(const std::shared_ptr<clan::ViewController> &view_controller)
+void WorkspaceController::set_center(const std::shared_ptr<uicore::ViewController> &view_controller)
 {
 	if (center == view_controller) return;
 
@@ -46,7 +46,7 @@ void WorkspaceController::set_center(const std::shared_ptr<clan::ViewController>
 	center = view_controller;
 }
 
-void WorkspaceController::set_docked(const std::shared_ptr<clan::ViewController> &view_controller)
+void WorkspaceController::set_docked(const std::shared_ptr<uicore::ViewController> &view_controller)
 {
 	if (docked == view_controller) return;
 
@@ -66,11 +66,11 @@ void WorkspaceController::set_docked(const std::shared_ptr<clan::ViewController>
 	dock_view->set_hidden(!docked);
 }
 
-void WorkspaceController::child_controller_added(const std::shared_ptr<clan::ViewController> &view_controller)
+void WorkspaceController::child_controller_added(const std::shared_ptr<uicore::ViewController> &view_controller)
 {
 }
 
-void WorkspaceController::child_controller_removed(const std::shared_ptr<clan::ViewController> &view_controller)
+void WorkspaceController::child_controller_removed(const std::shared_ptr<uicore::ViewController> &view_controller)
 {
 	if (docked == view_controller)
 	{

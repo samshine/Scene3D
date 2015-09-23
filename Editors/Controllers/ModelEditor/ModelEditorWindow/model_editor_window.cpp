@@ -14,7 +14,7 @@
 #include "Controllers/ModelEditor/SidePanels/Cameras/cameras_controller.h"
 #include "Controllers/ModelEditor/SidePanels/Environment/environment_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 ModelEditorWindow::ModelEditorWindow()
 {

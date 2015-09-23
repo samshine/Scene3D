@@ -33,7 +33,7 @@
 #include "portal_clipping.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 PortalMap::PortalMap()

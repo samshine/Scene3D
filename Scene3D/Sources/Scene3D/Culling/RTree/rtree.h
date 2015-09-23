@@ -31,7 +31,7 @@
 #include "Scene3D/scene_cull_provider.h"
 #include "rtree_root.h"
 
-namespace clan
+namespace uicore
 {
 
 class AxisAlignedBoundingBox;

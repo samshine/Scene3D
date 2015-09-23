@@ -7,9 +7,9 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
-Explosion::Explosion(GameWorld *world, const std::string &type, const clan::Vec3f &init_pos, const clan::Quaternionf &init_orientation)
+Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation)
 : GameObject(world), pos(init_pos), orientation(init_orientation)
 {
 	JsonValue desc = world->weapon_data["explosions"][type];

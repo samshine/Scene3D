@@ -32,7 +32,7 @@
 #include <memory>
 #include <string>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanScene_Scene clanScene Scene
 /// \{

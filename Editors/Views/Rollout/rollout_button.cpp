@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "rollout_button.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutButton::RolloutButton(const std::string &label)
 {

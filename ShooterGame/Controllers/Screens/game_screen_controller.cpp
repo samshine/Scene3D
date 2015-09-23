@@ -2,13 +2,13 @@
 #include "precomp.h"
 #include "game_screen_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewController(canvas)
 {
 }
 
-void GameScreenController::update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta)
+void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
 {
 	if (desktop_exception_flag)
 	{
@@ -26,7 +26,7 @@ void GameScreenController::update_desktop(clan::Canvas &canvas, clan::InputConte
 			GraphicContext gc = canvas.get_gc();
 
 			server_game = std::make_unique<Game>(hostname, port, true);
-			client_game = std::make_unique<Game>(hostname, port, false, clan::UIThread::get_resources(), gc, ic);
+			client_game = std::make_unique<Game>(hostname, port, false, uicore::UIThread::get_resources(), gc, ic);
 		}
 
 		server_game->update(mouse_delta);
@@ -77,7 +77,7 @@ GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewControlle
 	map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
 }
 
-void GameScreenController::update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta)
+void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
 {
 	update_look_dir(mouse_delta);
 	update_game(ic);
@@ -85,7 +85,7 @@ void GameScreenController::update_desktop(clan::Canvas &canvas, clan::InputConte
 	render_scene(canvas, scene);
 }
 
-void GameScreenController::update_game(clan::InputContext &ic)
+void GameScreenController::update_game(uicore::DisplayWindow &ic)
 {
 	game_time.update();
 
@@ -96,7 +96,7 @@ void GameScreenController::update_game(clan::InputContext &ic)
 	}
 }
 
-void GameScreenController::update_look_dir(const clan::Vec2i &mouse_delta)
+void GameScreenController::update_look_dir(const uicore::Vec2i &mouse_delta)
 {
 	EulerRotation rotation = character_controller.get_rotation();
 	float time_elapsed = game_time.get_time_elapsed();

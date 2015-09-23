@@ -30,9 +30,10 @@
 #pragma once
 
 #include "Performance/gpu_timer.h"
+#include "Resources/resource_container.h"
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanScene_Scene clanScene Scene
 /// \{

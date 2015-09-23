@@ -49,5 +49,5 @@ private:
 	std::string weapon_subtype = "primary";
 	bool should_stop_fire = false;
 
-	clan::SceneObject weapon_object;
+	uicore::SceneObject weapon_object;
 };

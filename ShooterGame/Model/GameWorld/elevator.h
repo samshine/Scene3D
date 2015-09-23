@@ -6,12 +6,12 @@
 class Elevator : public GameObject
 {
 public:
-	Elevator(GameWorld *world, int level_obj_id, const clan::Vec3f &pos1, const clan::Vec3f &pos2, const clan::Quaternionf &orientation, const std::string &model_name, float scale = 0.05f);
+	Elevator(GameWorld *world, int level_obj_id, const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale = 0.05f);
 	~Elevator();
 
 	void tick(const GameTick &tick) override;
 
-	void net_update(const GameTick &tick, const clan::NetGameEvent &net_event);
+	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event);
 
 	void send_net_update(const GameTick &tick, const std::string &target);
 
@@ -26,14 +26,14 @@ protected:
 
 	bool test_start_trigger();
 
-	clan::Vec3f pos1, pos2;
-	clan::Quaternionf orientation;
+	uicore::Vec3f pos1, pos2;
+	uicore::Quaternionf orientation;
 
-	clan::Vec3f box_size = clan::Vec3f(7.0f, 0.2f, 9.0f);
-	clan::Physics3DShape box_shape;
-	clan::Physics3DObject body;
+	uicore::Vec3f box_size = uicore::Vec3f(7.0f, 0.2f, 9.0f);
+	uicore::Physics3DShape box_shape;
+	uicore::Physics3DObject body;
 
-	clan::SceneObject scene_object;
+	uicore::SceneObject scene_object;
 
 	enum State
 	{
@@ -50,5 +50,5 @@ protected:
 	float speed = 1.0f;
 	float wait_time = 5.0f;
 
-	std::shared_ptr<clan::ModelData> create_box();
+	std::shared_ptr<uicore::ModelData> create_box();
 };

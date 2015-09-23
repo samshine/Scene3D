@@ -34,7 +34,7 @@
 #include "model.h"
 #include "model_lod.h"
 
-namespace clan
+namespace uicore
 {
 
 ModelShaderCache::ModelShaderCache(const std::string &shader_path)

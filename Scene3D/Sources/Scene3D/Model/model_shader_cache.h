@@ -30,7 +30,7 @@
 
 #include "model_shader_description.h"
 #include "Scene3D/ModelData/model_data.h"
-namespace clan
+namespace uicore
 {
 
 class Model;

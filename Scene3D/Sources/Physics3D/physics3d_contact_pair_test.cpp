@@ -33,7 +33,7 @@
 #include "physics3d_contact_pair_test_impl.h"
 #include "physics3d_world_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DContactPairTest::Physics3DContactPairTest()

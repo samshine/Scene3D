@@ -6,7 +6,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
@@ -20,7 +20,7 @@ ClientPlayerPawn::~ClientPlayerPawn()
 
 }
 
-void ClientPlayerPawn::net_create(const GameTick &tick, const clan::NetGameEvent &net_event)
+void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
 	net_update(tick, net_event);
 
@@ -28,7 +28,7 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const clan::NetGameEvent
 		world()->game()->scene.set_camera(camera);
 }
 
-void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent &net_event)
+void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
 	is_owner = net_event.get_argument(1).get_boolean();
 	health = net_event.get_argument(19).get_number();
@@ -130,7 +130,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const clan::NetGameEvent
 	}
 }
 
-void ClientPlayerPawn::net_hit(const GameTick &tick, const clan::NetGameEvent &net_event)
+void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
 	sound = AudioObject(*world()->game()->audio.get());
 	sound.set_sound("Sound/Character/hurt1.ogg");

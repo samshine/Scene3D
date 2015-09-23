@@ -32,7 +32,7 @@
 #include <vector>
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 
 class Physics3DConstraint_Impl

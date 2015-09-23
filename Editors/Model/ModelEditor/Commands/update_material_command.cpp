@@ -3,7 +3,7 @@
 #include "update_material_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 UpdateMaterialCommand::UpdateMaterialCommand(size_t index, ModelDescMaterial material) : index(index), new_material(material)
 {

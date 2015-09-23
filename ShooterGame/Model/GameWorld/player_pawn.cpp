@@ -7,7 +7,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 PlayerPawn::PlayerPawn(GameWorld *world) : GameObject(world), character_controller(world->game()->collision)
 {

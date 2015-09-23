@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "viewer_scene_cache.h"
 
-using namespace clan;
+using namespace uicore;
 
 ViewerSceneCache::ViewerSceneCache()
 {
@@ -21,7 +21,7 @@ Resource<Texture> ViewerSceneCache::get_texture(GraphicContext &gc, const std::s
 
 	try
 	{
-		PixelBuffer image = ImageProviderFactory::load(name, std::string(), !linear);
+		PixelBuffer image = ImageFile::load(name, std::string(), !linear);
 		image.premultiply_alpha();
 
 		// Convert sRGB 16 bit image to linear:
@@ -69,7 +69,7 @@ void ViewerSceneCache::update_textures(GraphicContext &gc, float time_elapsed)
 {
 }
 
-Texture2D ViewerSceneCache::get_dummy_texture(clan::GraphicContext &gc)
+Texture2D ViewerSceneCache::get_dummy_texture(uicore::GraphicContext &gc)
 {
 	if (dummy_texture.is_null())
 	{

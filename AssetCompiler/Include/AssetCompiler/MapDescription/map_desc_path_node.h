@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 	class MapDescPathNode
 	{

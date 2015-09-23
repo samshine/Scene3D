@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "shader_setup.h"
 
-namespace clan
+namespace uicore
 {
 
 ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)

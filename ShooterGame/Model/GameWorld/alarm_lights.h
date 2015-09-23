@@ -15,5 +15,5 @@ public:
 	void play_group_animation(const std::string &group_id, const std::string &animation_name);
 
 private:
-	std::map<std::string, std::vector<clan::SceneObject>> groups;
+	std::map<std::string, std::vector<uicore::SceneObject>> groups;
 };

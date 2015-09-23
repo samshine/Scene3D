@@ -3,16 +3,16 @@
 
 class RolloutListItemView;
 
-class RolloutList : public clan::View
+class RolloutList : public uicore::View
 {
 public:
 	RolloutList();
 
 	std::shared_ptr<RolloutListItemView> selection();
 
-	clan::Signal<void()> &sig_selection_changed() { return selection_changed; }
-	clan::Signal<void()> &sig_edit_saved() { return edit_saved; }
-	clan::Signal<void()> &sig_selection_clicked() { return selection_clicked; }
+	uicore::Signal<void()> &sig_selection_changed() { return selection_changed; }
+	uicore::Signal<void()> &sig_edit_saved() { return edit_saved; }
+	uicore::Signal<void()> &sig_selection_clicked() { return selection_clicked; }
 
 	void clear();
 	std::shared_ptr<RolloutListItemView> add_item(const std::string &item_name);
@@ -21,13 +21,13 @@ public:
 	void set_allow_edit(bool enable) { allow_edit = enable; }
 
 private:
-	clan::Signal<void()> selection_changed;
-	clan::Signal<void()> selection_clicked;
-	clan::Signal<void()> edit_saved;
+	uicore::Signal<void()> selection_changed;
+	uicore::Signal<void()> selection_clicked;
+	uicore::Signal<void()> edit_saved;
 	bool allow_edit = true;
 };
 
-class RolloutListItemView : public clan::View
+class RolloutListItemView : public uicore::View
 {
 public:
 	RolloutListItemView(size_t index);
@@ -47,6 +47,6 @@ private:
 	void cancel_edit();
 
 	bool is_selected = false;
-	std::shared_ptr<clan::LabelView> label;
-	std::shared_ptr<clan::TextFieldView> textfield;
+	std::shared_ptr<uicore::LabelView> label;
+	std::shared_ptr<uicore::TextFieldView> textfield;
 };

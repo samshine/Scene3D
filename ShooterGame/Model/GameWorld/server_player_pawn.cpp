@@ -7,7 +7,7 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn) : PlayerPawn(world), owner(owner)
 {
@@ -44,7 +44,7 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 	}
 }
 
-void ServerPlayerPawn::net_input(const GameTick &tick, const clan::NetGameEvent &net_event)
+void ServerPlayerPawn::net_input(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
 	cur_movement.key_forward.next_pressed = net_event.get_argument(0).get_boolean();
 	cur_movement.key_back.next_pressed = net_event.get_argument(1).get_boolean();
@@ -104,7 +104,7 @@ void ServerPlayerPawn::send_net_destroy(const GameTick &tick)
 	world()->game()->network->queue_event("all", net_event, tick.arrival_tick_time);
 }
 
-void ServerPlayerPawn::add_update_args(clan::NetGameEvent &net_event, const GameTick &tick, bool is_owner)
+void ServerPlayerPawn::add_update_args(uicore::NetGameEvent &net_event, const GameTick &tick, bool is_owner)
 {
 	Vec3f pos = character_controller.get_position();
 	Vec3f velocity = character_controller.get_velocity();

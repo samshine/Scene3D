@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "level.h"
 
-namespace clan
+namespace uicore
 {
 
 

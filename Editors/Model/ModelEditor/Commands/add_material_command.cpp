@@ -3,7 +3,7 @@
 #include "add_material_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 AddMaterialCommand::AddMaterialCommand(ModelDescMaterial material) : new_material(material)
 {

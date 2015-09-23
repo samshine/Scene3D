@@ -32,7 +32,7 @@
 #include <string>
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanPhysics3D_World clanPhysics3D World
 /// \{

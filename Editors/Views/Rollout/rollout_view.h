@@ -3,7 +3,7 @@
 
 class RolloutHeader;
 
-class RolloutView : public clan::View
+class RolloutView : public uicore::View
 {
 public:
 	RolloutView(const std::string &title);

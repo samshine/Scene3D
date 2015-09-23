@@ -32,9 +32,7 @@
 #include <d3d11.h>
 #endif
 
-#include <ClanLib/d3d.h>
-
-namespace clan
+namespace uicore
 {
 
 class GPUTimer_Impl

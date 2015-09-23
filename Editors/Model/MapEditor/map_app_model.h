@@ -29,18 +29,18 @@ public:
 	static MapAppModel *instance();
 
 	std::string open_filename;
-	clan::MapDesc desc;
+	uicore::MapDesc desc;
 
-	std::shared_ptr<clan::FBXModel> map_fbx;
-	std::shared_ptr<clan::ModelData> map_model_data;
+	std::shared_ptr<uicore::FBXModel> map_fbx;
+	std::shared_ptr<uicore::ModelData> map_model_data;
 
 	UndoSystem undo_system;
 
 	MapToolType tool = MapToolType::select_move;
 
-	clan::Signal<void()> sig_load_finished;
-	clan::Signal<void()> sig_map_model_data_updated;
-	clan::Signal<void()> sig_map_tool_changed;
+	uicore::Signal<void()> sig_load_finished;
+	uicore::Signal<void()> sig_map_model_data_updated;
+	uicore::Signal<void()> sig_map_tool_changed;
 
 	void open(const std::string &filename);
 	void save(const std::string &filename);

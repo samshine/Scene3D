@@ -3,7 +3,7 @@
 #include "menu_screen_controller.h"
 #include "game_screen_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewController(canvas)
 {
@@ -68,7 +68,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 	map_object = SceneObject(scene, model);
 }
 
-void MenuScreenController::update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta)
+void MenuScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
 {
 	canvas.flush();
 

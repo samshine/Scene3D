@@ -30,7 +30,7 @@
 
 #include "model_render_command.h"
 #include "model_mesh_buffers.h"
-namespace clan
+namespace uicore
 {
 
 class ModelData;

@@ -30,8 +30,9 @@
 #pragma once
 
 #include <memory>
+#include "../Scene3D/Resources/userdata.h"
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanPhysics3D_World clanPhysics3D World
 /// \{

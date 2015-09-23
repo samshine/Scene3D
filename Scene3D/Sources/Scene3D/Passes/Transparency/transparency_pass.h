@@ -29,8 +29,10 @@
 #pragma once
 
 #include "Scene3D/Model/model_mesh_visitor.h"
+#include "Scene3D/Resources/resource.h"
+#include "Scene3D/Resources/resource_container.h"
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

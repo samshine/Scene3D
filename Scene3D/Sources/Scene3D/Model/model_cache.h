@@ -31,7 +31,7 @@
 #include <unordered_map>
 #include "model.h"
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

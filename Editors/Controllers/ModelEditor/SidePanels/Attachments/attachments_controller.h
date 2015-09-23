@@ -37,5 +37,5 @@ private:
 	std::shared_ptr<RolloutBrowseFieldProperty> test_model_property;
 	std::shared_ptr<RolloutTextFieldProperty> test_scale_property;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

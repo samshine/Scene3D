@@ -31,7 +31,7 @@
 #include "Scene3D/Model/model_material_cache.h"
 #include <unordered_map>
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

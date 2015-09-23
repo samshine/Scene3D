@@ -7,7 +7,7 @@ public:
 	MouseMovement();
 	~MouseMovement();
 
-	clan::Point pos() const { return clan::Point(x(), y()); }
+	uicore::Point pos() const { return uicore::Point(x(), y()); }
 	int x() const { return _x; }
 	int y() const { return _y; }
 

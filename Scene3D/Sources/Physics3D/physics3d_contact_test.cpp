@@ -36,7 +36,7 @@
 #include "physics3d_object_impl.h"
 #include "physics3d_shape_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DContactTest::Physics3DContactTest()

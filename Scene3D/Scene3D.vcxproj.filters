@@ -166,6 +166,51 @@
     <Filter Include="Sources\Collision3D">
       <UniqueIdentifier>{59c00bf9-026f-4f2e-bb34-1f563d537b62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\JsonValue">
+      <UniqueIdentifier>{bc6fa3e7-dfab-43d5-ad5f-8c23b904247b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\JsonValue">
+      <UniqueIdentifier>{7108bd15-cdaf-4340-878b-12e4a8cfa0d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Sound">
+      <UniqueIdentifier>{c336e7e0-b8ca-457c-abbf-4a8db42e33b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Sound\AudioWorld">
+      <UniqueIdentifier>{1b8f7531-65b0-45eb-a3cd-af9d34477a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Sound\Resources">
+      <UniqueIdentifier>{69d360b1-01c1-4c65-b3b1-ea9427f81fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Sound\SoundFilters">
+      <UniqueIdentifier>{98ffdf2a-6da7-4d27-bfc6-6baac274c3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Sound\SoundProviders">
+      <UniqueIdentifier>{422e1668-698d-41ab-9628-f6ce0827d160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound">
+      <UniqueIdentifier>{f9b4c03f-5838-4036-aa6e-67028ed959dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\AudioWorld">
+      <UniqueIdentifier>{0d57de64-7fbe-4d12-b158-9937ba0ebd3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\Mixer">
+      <UniqueIdentifier>{5bb77d78-971a-47ff-8869-e1fc07de89e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\Platform">
+      <UniqueIdentifier>{16b430a8-2fe4-490c-947a-076f3aa4f7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\Platform\Win32">
+      <UniqueIdentifier>{1c8e59e0-bfb9-4b88-835a-0a35e7d2d0ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\Resources">
+      <UniqueIdentifier>{ab20fd25-a0d0-4965-8edb-b787f77fc7dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\SoundFilters">
+      <UniqueIdentifier>{8d1197d5-ca8c-4c5b-abd4-4530eb71803d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Sound\SoundProviders">
+      <UniqueIdentifier>{5be9dab4-8045-423a-867c-b38f622779ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1104,6 +1149,180 @@
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h">
       <Filter>Include\Collision3D</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene3D\Resources\resource.h">
+      <Filter>Include\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\Resources\resource_container.h">
+      <Filter>Include\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\Resources\resource_manager.h">
+      <Filter>Include\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\Resources\resource_object.h">
+      <Filter>Include\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\Resources\resource_manager_impl.h">
+      <Filter>Sources\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\Resources\userdata.h">
+      <Filter>Include\Scene3D\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\JsonValue\json_value.h">
+      <Filter>Include\JsonValue</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\sound.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\sound_sse.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundbuffer.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundbuffer_session.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundfilter.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundformat.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundoutput.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundoutput_description.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\AudioWorld\audio_definition.h">
+      <Filter>Include\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\AudioWorld\audio_object.h">
+      <Filter>Include\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\AudioWorld\audio_world.h">
+      <Filter>Include\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundfilter_provider.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_factory.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_raw.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_session.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type_register.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_vorbis.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_wave.h">
+      <Filter>Include\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundFilters\echofilter.h">
+      <Filter>Include\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundFilters\fadefilter.h">
+      <Filter>Include\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\SoundFilters\inverse_echofilter.h">
+      <Filter>Include\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\Resources\sound_cache.h">
+      <Filter>Include\Sound\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\setupsound.h">
+      <Filter>Sources\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\soundbuffer_impl.h">
+      <Filter>Sources\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\soundbuffer_session_impl.h">
+      <Filter>Sources\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\soundoutput_impl.h">
+      <Filter>Sources\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_definition_impl.h">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_object_impl.h">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_world_impl.h">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_format_conversion.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixer.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixer_program.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixing_buffers_container.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixing_buffers_data.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\sound_sample_source.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Mixer\speaker_position.h">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_directsound.h">
+      <Filter>Sources\Sound\Platform\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_win32.h">
+      <Filter>Sources\Sound\Platform\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundFilters\echofilter_provider.h">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundFilters\fadefilter_provider.h">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundFilters\inverse_echofilter_provider.h">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_impl.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_session.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_impl.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_session.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_impl.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_session.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\stb_vorbis.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\sound.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1645,6 +1864,117 @@
     </ClCompile>
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp">
       <Filter>Sources\Collision3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\Resources\resource_manager.cpp">
+      <Filter>Sources\Scene3D\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\JsonValue\json_value.cpp">
+      <Filter>Sources\JsonValue</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\setupsound.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\sound.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\sound_sse.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundbuffer.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundbuffer_impl.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundbuffer_session.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundbuffer_session_impl.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundfilter.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundoutput.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundoutput_description.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundoutput_impl.cpp">
+      <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_definition.cpp">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp">
+      <Filter>Sources\Sound\AudioWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp">
+      <Filter>Sources\Sound\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Platform\Win32\init_guids.cpp">
+      <Filter>Sources\Sound\Platform\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_directsound.cpp">
+      <Filter>Sources\Sound\Platform\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp">
+      <Filter>Sources\Sound\Platform\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Resources\sound_cache.cpp">
+      <Filter>Sources\Sound\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\echofilter.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\echofilter_provider.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\fadefilter.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\fadefilter_provider.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\inverse_echofilter.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundFilters\inverse_echofilter_provider.cpp">
+      <Filter>Sources\Sound\SoundFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_factory.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw_session.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_session.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_type.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_vorbis.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_vorbis_session.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp">
+      <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

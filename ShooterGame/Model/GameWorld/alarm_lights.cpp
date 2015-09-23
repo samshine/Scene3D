@@ -4,7 +4,7 @@
 #include "game_world.h"
 #include "Model/game.h"
 
-using namespace clan;
+using namespace uicore;
 
 AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {

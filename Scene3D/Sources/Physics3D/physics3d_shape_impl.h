@@ -31,7 +31,7 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 
 class Physics3DShape_Impl

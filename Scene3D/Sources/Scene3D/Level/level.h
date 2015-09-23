@@ -30,7 +30,7 @@
 
 #include "Scene3D/LevelData/level_data.h"
 #include "level_instance.h"
-namespace clan
+namespace uicore
 {
 
 class ModelMeshVisitor;

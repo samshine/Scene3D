@@ -3,7 +3,7 @@
 #include "add_map_material_command.h"
 #include "../map_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 AddMapMaterialCommand::AddMapMaterialCommand(ModelDescMaterial material) : new_material(material)
 {

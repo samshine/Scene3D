@@ -4,7 +4,7 @@
 #include "Model/MapEditor/map_app_model.h"
 #include "Views/Scene/scene_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 MapSceneController::MapSceneController()
 {
@@ -21,10 +21,10 @@ std::shared_ptr<SceneView> MapSceneController::scene_view()
 
 void MapSceneController::map_model_data_updated()
 {
-	map_object = clan::SceneObject();
+	map_object = uicore::SceneObject();
 }
 
-void MapSceneController::update_scene(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, const clan::Vec2i &)
+void MapSceneController::update_scene(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &)
 {
 	if (map_object.is_null())
 	{

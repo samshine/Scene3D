@@ -3,7 +3,7 @@
 #include "rollout_browse_field_property.h"
 #include "rollout_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_text)
 {

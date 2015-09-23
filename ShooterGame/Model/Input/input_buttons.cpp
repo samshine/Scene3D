@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "input_buttons.h"
 
-using namespace clan;
+using namespace uicore;
 
 void InputButtons::input_disabled()
 {
@@ -10,15 +10,15 @@ void InputButtons::input_disabled()
 		it->second.down = false;
 }
 
-void InputButtons::update(InputContext &ic)
+void InputButtons::update(DisplayWindow &ic)
 {
 	input_disabled();
 	for (std::map<std::string, InputButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
 	for (size_t i = 0; i < it->second.keycodes.size(); i++)
-		it->second.down = it->second.down || ic.get_device(it->second.keycodes[i].device).get_keycode(it->second.keycodes[i].id);
+		it->second.down = it->second.down || ic.get_input_device(it->second.keycodes[i].device).get_keycode(it->second.keycodes[i].id);
 }
-
-void InputButtons::load(InputContext &ic, DomNode buttons_node)
+/*
+void InputButtons::load(DisplayWindow &ic, DomNode buttons_node)
 {
 	std::vector<DomNode> button_nodes = buttons_node.select_nodes("button");
 	for (size_t i = 0; i < button_nodes.size(); i++)
@@ -34,3 +34,4 @@ void InputButtons::load(InputContext &ic, DomNode buttons_node)
 		}
 	}
 }
+*/

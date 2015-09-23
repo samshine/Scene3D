@@ -4,7 +4,7 @@
 #include <array>
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	void LightmapTexture::generate(const std::shared_ptr<ModelData> &new_model_data)
 	{
@@ -295,7 +295,7 @@ namespace clan
 				if (range.light_map.channel == -1 || range.light_map.texture == -1)
 					continue;
 
-				for (size_t element_index = range.start_element; element_index + 2 < range.start_element + range.num_elements; element_index += 3)
+				for (int element_index = range.start_element; element_index + 2 < range.start_element + range.num_elements; element_index += 3)
 				{
 					unsigned int indexes[3] =
 					{
@@ -469,7 +469,7 @@ namespace clan
 			auto &buffer = it.second;
 
 			PixelBuffer pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true);
-			PNGProvider::save(pixelbuffer, texture.name);
+			PNGFormat::save(pixelbuffer, texture.name);
 		}
 	}
 }

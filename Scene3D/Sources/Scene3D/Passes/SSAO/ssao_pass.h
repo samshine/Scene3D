@@ -29,8 +29,10 @@
 #pragma once
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
+#include "Scene3D/Resources/resource_container.h"
+#include "Scene3D/Resources/resource.h"
 
-namespace clan
+namespace uicore
 {
 
 class SSAOPass

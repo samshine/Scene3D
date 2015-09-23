@@ -34,7 +34,7 @@
 #include "physics3d_object_impl.h"
 #include "physics3d_world_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DConstraint::Physics3DConstraint()

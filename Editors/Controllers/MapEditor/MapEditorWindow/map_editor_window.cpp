@@ -16,7 +16,7 @@
 #include "Controllers/MapEditor/SidePanels/Triggers/triggers_controller.h"
 #include "Controllers/MapEditor/SidePanels/PathNodes/path_nodes_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 MapEditorWindow::MapEditorWindow()
 {

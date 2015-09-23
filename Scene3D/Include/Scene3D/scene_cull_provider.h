@@ -31,7 +31,7 @@
 
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanScene_Scene clanScene Scene
 /// \{

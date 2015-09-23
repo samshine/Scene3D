@@ -3,7 +3,7 @@
 
 class SceneView;
 
-class MapSceneController : public clan::ViewController
+class MapSceneController : public uicore::ViewController
 {
 public:
 	MapSceneController();
@@ -12,9 +12,9 @@ private:
 	std::shared_ptr<SceneView> scene_view();
 
 	void map_model_data_updated();
-	void update_scene(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, const clan::Vec2i &);
+	void update_scene(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &window, const uicore::Vec2i &);
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 
-	clan::SceneObject map_object;
+	uicore::SceneObject map_object;
 };

@@ -3,7 +3,7 @@
 #include "update_map_material_command.h"
 #include "../map_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 UpdateMapMaterialCommand::UpdateMapMaterialCommand(size_t index, ModelDescMaterial material) : index(index), new_material(material)
 {

@@ -28,7 +28,7 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Description of a particle emitter in a model

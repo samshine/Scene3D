@@ -3,7 +3,7 @@
 #include "add_attachment_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 AddAttachmentCommand::AddAttachmentCommand(ModelDescAttachmentPoint attachment) : new_attachment(attachment)
 {

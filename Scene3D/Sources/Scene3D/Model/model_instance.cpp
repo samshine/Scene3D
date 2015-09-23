@@ -32,7 +32,7 @@
 #include "Scene3D/ModelData/model_data.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 

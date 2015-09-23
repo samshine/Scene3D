@@ -30,7 +30,7 @@
 #include "ssao_pass.h"
 #include "Scene3D/Framework/shader_setup.h"
 
-namespace clan
+namespace uicore
 {
 
 SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)

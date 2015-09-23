@@ -28,8 +28,9 @@
 
 #include "precomp.h"
 #include "Scene3D/Resources/scene_cache.h"
+#include "Scene3D/Resources/resource_manager.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneCache &SceneCache::get(const ResourceManager &resources)

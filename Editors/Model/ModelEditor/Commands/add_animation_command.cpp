@@ -3,7 +3,7 @@
 #include "add_animation_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 AddAnimationCommand::AddAnimationCommand(ModelDescAnimation animation) : new_animation(animation)
 {

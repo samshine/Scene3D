@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "Scene3D/Performance/scope_timer.h"
 
-namespace clan
+namespace uicore
 {
 
 

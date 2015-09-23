@@ -31,7 +31,7 @@
 #include "model_data_texture_map.h"
 #include "model_data_animation_data.h"
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Information needed to draw a range of vertex elements in a ModelDataMesh.

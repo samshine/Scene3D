@@ -3,7 +3,7 @@
 
 class HeaderMenuView;
 
-class HeaderView : public clan::View
+class HeaderView : public uicore::View
 {
 public:
 	HeaderView();
@@ -19,6 +19,6 @@ public:
 private:
 	void create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last = false);
 
-	std::shared_ptr<clan::View> left_buttons;
-	std::shared_ptr<clan::View> right_buttons;
+	std::shared_ptr<uicore::View> left_buttons;
+	std::shared_ptr<uicore::View> right_buttons;
 };

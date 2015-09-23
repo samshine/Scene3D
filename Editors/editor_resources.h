@@ -1,47 +1,47 @@
 
 #pragma once
 
-class SimpleDisplayCache : public clan::DisplayCache
+class SimpleDisplayCache : public uicore::DisplayCache
 {
 public:
-	clan::Resource<clan::Sprite> get_sprite(clan::Canvas &canvas, const std::string &id) override { throw clan::Exception("Sprite resources not supported"); }
+	uicore::Resource<uicore::Sprite> get_sprite(uicore::Canvas &canvas, const std::string &id) override { throw uicore::Exception("Sprite resources not supported"); }
 
-	clan::Resource<clan::Image> get_image(clan::Canvas &canvas, const std::string &id) override
+	uicore::Resource<uicore::Image> get_image(uicore::Canvas &canvas, const std::string &id) override
 	{
 		if (images.find(id) == images.end())
 		{
-			images[id] = clan::Image(canvas, clan::PathHelp::combine("Resources", id));
+			images[id] = uicore::Image(canvas, uicore::PathHelp::combine("Resources", id));
 		}
 		return images[id];
 	}
 
-	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &id) override { throw clan::Exception("Texture resources not supported"); }
+	uicore::Resource<uicore::Texture> get_texture(uicore::GraphicContext &gc, const std::string &id) override { throw uicore::Exception("Texture resources not supported"); }
 
-	clan::Resource<clan::Font> get_font(clan::Canvas &canvas, const std::string &family_name, const clan::FontDescription &desc) override
+	uicore::Resource<uicore::Font> get_font(uicore::Canvas &canvas, const std::string &family_name, const uicore::FontDescription &desc) override
 	{
-		clan::FontFamily &font_family = font_families[family_name];
+		uicore::FontFamily &font_family = font_families[family_name];
 		if (font_family.is_null())
 		{
-			font_family = clan::FontFamily(family_name);
+			font_family = uicore::FontFamily(family_name);
 			if (font_family.get_family_name() == "Lato")
 			{
-				clan::FontDescription regular;
+				uicore::FontDescription regular;
 				font_family.add(regular, "Resources/Fonts/Lato/Lato-Regular.ttf");
 
-				clan::FontDescription bold;
-				bold.set_weight(clan::FontWeight::bold);
+				uicore::FontDescription bold;
+				bold.set_weight(uicore::FontWeight::bold);
 				font_family.add(bold, "Resources/Fonts/Lato/Lato-Bold.ttf");
 
-				clan::FontDescription italic;
-				italic.set_style(clan::FontStyle::italic);
+				uicore::FontDescription italic;
+				italic.set_style(uicore::FontStyle::italic);
 				font_family.add(italic, "Resources/Fonts/Lato/Lato-Italic.ttf");
 
-				clan::FontDescription light;
-				light.set_weight(clan::FontWeight::light);
+				uicore::FontDescription light;
+				light.set_weight(uicore::FontWeight::light);
 				font_family.add(light, "Resources/Fonts/Lato/Lato-Light.ttf");
 
-				clan::FontDescription black;
-				black.set_weight(clan::FontWeight::heavy);
+				uicore::FontDescription black;
+				black.set_weight(uicore::FontWeight::heavy);
 				font_family.add(black, "Resources/Fonts/Lato/Lato-Black.ttf");
 			}
 			else
@@ -50,10 +50,10 @@ public:
 			}
 		}
 
-		return clan::Font(font_family, desc);
+		return uicore::Font(font_family, desc);
 	}
 
 private:
-	std::map<std::string, clan::Resource<clan::Image>> images;
-	std::map<std::string, clan::FontFamily> font_families;
+	std::map<std::string, uicore::Resource<uicore::Image>> images;
+	std::map<std::string, uicore::FontFamily> font_families;
 };

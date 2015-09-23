@@ -4,7 +4,7 @@
 #include "game_network.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
 int LockStepClientTime::actual_ping = 0;
 
@@ -119,7 +119,7 @@ void LockStepClientTime::reset()
 	next_send_ping = 0;
 }
 
-void LockStepClientTime::on_event_received(const std::string &sender, const clan::NetGameEvent &net_event)
+void LockStepClientTime::on_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
 	if (net_event.get_name() == "LockStepPong")
 	{

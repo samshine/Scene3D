@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "rollout_list.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutList::RolloutList()
 {

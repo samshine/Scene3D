@@ -3,7 +3,7 @@
 
 #include "../ModelDescription/model_desc_particle_emitter.h"
 
-namespace clan
+namespace uicore
 {
 	typedef ModelDescParticleEmitter MapDescParticleEmitter;
 }

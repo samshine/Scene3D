@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace clan
+namespace uicore
 {
 	class ModelData;
 	class ModelDesc;

@@ -10,7 +10,7 @@
 #include "map_desc_trigger.h"
 #include "map_desc_path_node.h"
 
-namespace clan
+namespace uicore
 {
 	class MapDesc
 	{

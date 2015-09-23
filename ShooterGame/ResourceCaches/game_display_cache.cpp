@@ -1,8 +1,8 @@
 
 #include "precomp.h"
 #include "game_display_cache.h"
-
-using namespace clan;
+/*
+using namespace uicore;
 
 Resource<Sprite> GameDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
 {
@@ -63,3 +63,4 @@ Resource<Font> GameDisplayCache::get_font(Canvas &canvas, const std::string &fam
 
 	return Font(font_family, desc);
 }
+*/

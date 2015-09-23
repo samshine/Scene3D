@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "game_network_server.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameNetworkServer::GameNetworkServer()
 {
@@ -112,10 +112,10 @@ void GameNetworkServer::on_client_disconnected(NetGameConnection *connection, co
 	sig_peer_disconnected(id);
 }
 
-void GameNetworkServer::on_event_received(NetGameConnection *connection, const clan::NetGameEvent &net_event)
+void GameNetworkServer::on_event_received(NetGameConnection *connection, const uicore::NetGameEvent &net_event)
 {
 	ConnectionData *data = static_cast<ConnectionData*>(connection->get_data("data"));
 	std::string sender = data->id;
 
-	received_messages.push_back(std::pair<std::string, clan::NetGameEvent>(sender, net_event));
+	received_messages.push_back(std::pair<std::string, uicore::NetGameEvent>(sender, net_event));
 }

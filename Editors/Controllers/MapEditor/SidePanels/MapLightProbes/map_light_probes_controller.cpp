@@ -7,7 +7,7 @@
 #include "Views/Rollout/rollout_position_property.h"
 #include "Model/MapEditor/map_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 MapLightProbesController::MapLightProbesController()
 {

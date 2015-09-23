@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "oct_tree.h"
 
-namespace clan
+namespace uicore
 {
 
 

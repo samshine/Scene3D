@@ -14,5 +14,5 @@ public:
 	ModifyController();
 
 private:
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

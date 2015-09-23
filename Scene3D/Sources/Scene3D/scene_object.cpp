@@ -36,7 +36,7 @@
 #include "Scene3D/scene_impl.h"
 #include "Scene3D/scene_model_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneObject::SceneObject()

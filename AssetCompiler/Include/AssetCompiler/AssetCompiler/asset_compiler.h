@@ -5,7 +5,7 @@
 #include <functional>
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 	enum class CompilerMessageType
 	{

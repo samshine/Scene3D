@@ -6,14 +6,14 @@
 class MenuScreenController : public ScreenViewController
 {
 public:
-	MenuScreenController(clan::Canvas &canvas);
+	MenuScreenController(uicore::Canvas &canvas);
 
-	void update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta) override;
+	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	clan::Scene scene;
-	clan::SceneObject map_object;
+	uicore::Scene scene;
+	uicore::SceneObject map_object;
 
 	float t = 0.0f;
-	clan::GameTime game_time;
+	uicore::GameTime game_time;
 };

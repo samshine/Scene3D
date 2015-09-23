@@ -2,6 +2,7 @@
 #pragma once
 
 #include "player_pawn.h"
+#include "Model/Network/NetGame/event.h"
 
 class SpawnPoint;
 
@@ -13,7 +14,7 @@ public:
 
 	void tick(const GameTick &tick) override;
 
-	void net_input(const GameTick &tick, const clan::NetGameEvent &net_event);
+	void net_input(const GameTick &tick, const uicore::NetGameEvent &net_event);
 
 	void send_net_create(const GameTick &tick, const std::string &target);
 	void send_net_update(const GameTick &tick);
@@ -24,5 +25,5 @@ public:
 	void apply_damage(const GameTick &tick, float damage) override;
 
 private:
-	void add_update_args(clan::NetGameEvent &net_event, const GameTick &tick, bool is_owner);
+	void add_update_args(uicore::NetGameEvent &net_event, const GameTick &tick, bool is_owner);
 };

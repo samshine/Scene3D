@@ -1,10 +1,10 @@
 
 #pragma once
 
-class SidePanelController : public clan::ViewController
+class SidePanelController : public uicore::ViewController
 {
 public:
 	SidePanelController();
 
-	std::shared_ptr<clan::View> content_view() const;
+	std::shared_ptr<uicore::View> content_view() const;
 };

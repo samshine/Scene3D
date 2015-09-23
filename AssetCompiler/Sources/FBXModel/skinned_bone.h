@@ -3,7 +3,7 @@
 
 #include <fbxsdk.h>
 
-namespace clan
+namespace uicore
 {
 	class SkinnedBone
 	{

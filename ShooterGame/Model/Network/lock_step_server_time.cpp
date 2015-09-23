@@ -3,7 +3,7 @@
 #include "lock_step_server_time.h"
 #include "game_network.h"
 
-using namespace clan;
+using namespace uicore;
 
 LockStepServerTime::LockStepServerTime(std::shared_ptr<GameNetwork> network)
 	: game_time(ticks_per_second), network(network)
@@ -52,7 +52,7 @@ void LockStepServerTime::reset()
 	server_tick_time = 0;
 }
 
-void LockStepServerTime::on_event_received(const std::string &sender, const clan::NetGameEvent &net_event)
+void LockStepServerTime::on_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
 	if (net_event.get_name() == "LockStepPing")
 	{

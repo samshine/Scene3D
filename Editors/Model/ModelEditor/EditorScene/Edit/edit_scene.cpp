@@ -2,13 +2,13 @@
 #include "precomp.h"
 #include "edit_scene.h"
 
-using namespace clan;
+using namespace uicore;
 
 EditScene::EditScene()
 {
 }
 
-void EditScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
+void EditScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	setup_default_scene(scene, gc);
 
@@ -148,7 +148,7 @@ void EditScene::set_attachments(std::vector<SceneModelAttachment> new_attachment
 	model_data_updated = true;
 }
 
-void EditScene::update_map(clan::Scene &scene, GraphicContext &gc)
+void EditScene::update_map(uicore::Scene &scene, GraphicContext &gc)
 {
 	if (!map_model_updated) return;
 	map_model_updated = false;
@@ -171,7 +171,7 @@ void EditScene::update_map(clan::Scene &scene, GraphicContext &gc)
 	}
 }
 
-void EditScene::update_model(clan::Scene &scene, GraphicContext &gc)
+void EditScene::update_model(uicore::Scene &scene, GraphicContext &gc)
 {
 	if (!model_data_updated) return;
 	model_data_updated = false;

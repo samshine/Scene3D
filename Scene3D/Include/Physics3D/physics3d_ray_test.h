@@ -31,7 +31,7 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 /// \addtogroup clanPhysics3D_World clanPhysics3D World
 /// \{
@@ -48,7 +48,7 @@ public:
 
 	bool is_null() const;
 
-	bool test(const clan::Vec3f &start, const clan::Vec3f &end);
+	bool test(const uicore::Vec3f &start, const uicore::Vec3f &end);
 
 	bool has_hit() const;
 	float get_hit_fraction() const;

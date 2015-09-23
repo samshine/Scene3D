@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace clan
+namespace uicore
 {
 	class MapDescLight
 	{

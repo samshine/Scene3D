@@ -31,7 +31,7 @@
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/Model/model.h"
 
-namespace clan
+namespace uicore
 {
 
 

@@ -31,7 +31,7 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <map>
 
-namespace clan
+namespace uicore
 {
 
 class Physics3DObject_Impl;

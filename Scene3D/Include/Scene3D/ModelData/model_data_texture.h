@@ -28,7 +28,7 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Description of a texture used by a model

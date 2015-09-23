@@ -37,7 +37,7 @@
 #include "physics3d_object_impl.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 Physics3DSweepTest::Physics3DSweepTest()

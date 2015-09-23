@@ -4,7 +4,7 @@
 #include <physics3d.h>
 #include <Collision3D/triangle_mesh_shape.h>
 
-namespace clan
+namespace uicore
 {
 	template<typename T>
 	class LightmapBuffer

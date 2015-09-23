@@ -4,7 +4,7 @@
 #include "../Editors/Model/MapEditor/map_app_model.h"
 #include "../Editors/editor_resources.h"
 
-using namespace clan;
+using namespace uicore;
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

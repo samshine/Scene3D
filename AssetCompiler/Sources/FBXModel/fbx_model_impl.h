@@ -4,7 +4,7 @@
 #include <fbxsdk.h>
 #include <string>
 
-namespace clan
+namespace uicore
 {
 	class FBXModelImpl
 	{

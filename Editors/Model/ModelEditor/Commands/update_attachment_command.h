@@ -6,13 +6,13 @@
 class UpdateAttachmentCommand : public ModelCommand
 {
 public:
-	UpdateAttachmentCommand(size_t index, clan::ModelDescAttachmentPoint attachment);
+	UpdateAttachmentCommand(size_t index, uicore::ModelDescAttachmentPoint attachment);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	clan::ModelDescAttachmentPoint old_attachment;
-	clan::ModelDescAttachmentPoint new_attachment;
+	uicore::ModelDescAttachmentPoint old_attachment;
+	uicore::ModelDescAttachmentPoint new_attachment;
 };

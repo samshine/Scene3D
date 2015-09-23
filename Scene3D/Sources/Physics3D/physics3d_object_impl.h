@@ -31,7 +31,7 @@
 #include "Physics3D/physics3d_shape.h"
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 
-namespace clan
+namespace uicore
 {
 
 class Physics3DWorld_Impl;

@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "game_network_client.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameNetworkClient::GameNetworkClient()
 {

@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "mouse_movement.h"
 
-using namespace clan;
+using namespace uicore;
 
 MouseMovement::MouseMovement()
 {

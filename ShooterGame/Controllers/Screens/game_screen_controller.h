@@ -7,9 +7,9 @@
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController(clan::Canvas &canvas);
+	GameScreenController(uicore::Canvas &canvas);
 	bool cursor_hidden() override { return true; }
-	void update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta) override;
+	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
 	std::unique_ptr<Game> client_game;
@@ -29,7 +29,7 @@ public:
 	bool pressed() const { return is_down; }
 	bool clicked() const { return is_click; }
 
-	void update(clan::InputContext &ic)
+	void update(uicore::DisplayWindow &ic)
 	{
 		if (ic.get_keyboard().get_keycode(keycode))
 		{
@@ -62,7 +62,7 @@ public:
 		return button;
 	}
 
-	void update_buttons(clan::InputContext &ic)
+	void update_buttons(uicore::DisplayWindow &ic)
 	{
 		for (auto &it : keys)
 			it.second.update(ic);
@@ -75,26 +75,26 @@ private:
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController(clan::Canvas &canvas);
+	GameScreenController(uicore::Canvas &canvas);
 	bool cursor_hidden() override { return true; }
-	void update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta) override;
+	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	void update_game(clan::InputContext &ic);
+	void update_game(uicore::DisplayWindow &ic);
 	void update_camera();
-	void update_look_dir(const clan::Vec2i &mouse_delta);
+	void update_look_dir(const uicore::Vec2i &mouse_delta);
 	void update_character_controller();
 
-	clan::GameTime game_time;
+	uicore::GameTime game_time;
 
-	clan::Scene scene;
-	clan::Physics3DWorld collision_world;
+	uicore::Scene scene;
+	uicore::Physics3DWorld collision_world;
 	CharacterController character_controller;
 
-	clan::SceneObject map_object;
-	clan::Physics3DObject map_collision;
+	uicore::SceneObject map_object;
+	uicore::Physics3DObject map_collision;
 
-	clan::SceneObject model_object;
+	uicore::SceneObject model_object;
 	std::string last_anim = "default";
 
 	GameInput game_input;

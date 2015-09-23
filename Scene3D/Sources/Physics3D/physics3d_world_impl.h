@@ -32,7 +32,7 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include "Physics3D/Bullet/BulletCollision/CollisionDispatch/btGhostObject.h"
 
-namespace clan
+namespace uicore
 {
 
 class Physics3DWorld_Impl

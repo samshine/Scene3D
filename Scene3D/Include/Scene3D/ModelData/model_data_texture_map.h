@@ -30,7 +30,7 @@
 
 #include "model_data_animation_data.h"
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Texture sampler state and UVW animation data used when drawing vertex elements

@@ -30,5 +30,5 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> mesh_light;
 	std::shared_ptr<RolloutTextFieldProperty> bake;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

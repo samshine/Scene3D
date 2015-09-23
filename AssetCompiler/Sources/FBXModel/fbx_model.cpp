@@ -7,11 +7,10 @@
 #include "Lightmap/lightmap_texture.h"
 #include "fbx_model_loader.h"
 #include "fbx_model_impl.h"
-#include <ClanLib/core.h>
 
 #pragma comment(lib, "libfbxsdk-mt.lib")
 
-namespace clan
+namespace uicore
 {
 	FBXModel::FBXModel(const std::string &filename) : impl(std::make_shared<FBXModelImpl>(filename))
 	{

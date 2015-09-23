@@ -29,5 +29,5 @@ private:
 	std::shared_ptr<RolloutView> light_probe;
 	std::shared_ptr<RolloutPositionProperty> position;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

@@ -1,19 +1,19 @@
 
 #pragma once
 
-class ScreenViewController : public clan::ViewController
+class ScreenViewController : public uicore::ViewController
 {
 public:
-	ScreenViewController(clan::Canvas &canvas);
+	ScreenViewController(uicore::Canvas &canvas);
 
-	std::shared_ptr<clan::TextureView> texture_view();
+	std::shared_ptr<uicore::TextureView> texture_view();
 	virtual bool cursor_hidden() { return false; }
-	virtual void update_desktop(clan::Canvas &canvas, clan::InputContext &ic, const clan::Vec2i &mouse_delta) { }
-	clan::Scene create_scene(clan::Canvas &canvas) { return clan::Scene(canvas.get_gc(), clan::UIThread::get_resources(), "Resources/Scene3D"); }
+	virtual void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) { }
+	uicore::Scene create_scene(uicore::Canvas &canvas) { return uicore::Scene(canvas.get_gc(), uicore::UIThread::get_resources(), "Resources/Scene3D"); }
 
-	void render_scene(clan::Canvas &canvas, clan::Scene &scene)
+	void render_scene(uicore::Canvas &canvas, uicore::Scene &scene)
 	{
-		using namespace clan;
+		using namespace uicore;
 
 		GraphicContext gc = canvas.get_gc();
 

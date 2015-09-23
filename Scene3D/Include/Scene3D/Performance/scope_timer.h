@@ -32,7 +32,7 @@
 #include <intrin.h>
 #endif
 
-namespace clan
+namespace uicore
 {
 
 #if defined(_MSC_VER)

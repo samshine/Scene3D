@@ -31,7 +31,7 @@
 #include "Scene3D/Resources/scene_cache.h"
 #include "Scene3D/scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 MaterialCache::MaterialCache(Scene_Impl *scene)

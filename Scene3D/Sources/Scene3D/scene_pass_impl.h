@@ -28,7 +28,7 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

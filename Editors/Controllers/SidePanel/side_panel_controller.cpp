@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "side_panel_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 SidePanelController::SidePanelController()
 {

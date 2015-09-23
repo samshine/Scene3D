@@ -6,7 +6,7 @@
 class Bullet : public GameObject
 {
 public:
-	Bullet(GameWorld *world, const std::string &type, const clan::Vec3f &pos, const clan::Quaternionf &orientation);
+	Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~Bullet();
 
 	void tick(const GameTick &tick) override;
@@ -15,18 +15,18 @@ public:
 private:
 	float time_left = 0.0f;
 
-	clan::Vec3f pos;
-	clan::Quaternionf orientation;
-	clan::Vec3f velocity;
+	uicore::Vec3f pos;
+	uicore::Quaternionf orientation;
+	uicore::Vec3f velocity;
 
-	clan::Vec3f last_pos;
-	clan::Quaternionf last_orientation;
+	uicore::Vec3f last_pos;
+	uicore::Quaternionf last_orientation;
 
-	clan::Physics3DRayTest ray_test;
+	uicore::Physics3DRayTest ray_test;
 
-	clan::SceneObject scene_object;
-	clan::SceneParticleEmitter emitter;
-	clan::AudioObject sound;
+	uicore::SceneObject scene_object;
+	uicore::SceneParticleEmitter emitter;
+	uicore::AudioObject sound;
 
 	float gravity = 0.0f;
 	bool bounce = false;

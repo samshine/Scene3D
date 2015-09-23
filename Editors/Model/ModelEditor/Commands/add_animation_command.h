@@ -6,11 +6,11 @@
 class AddAnimationCommand : public ModelCommand
 {
 public:
-	AddAnimationCommand(clan::ModelDescAnimation animation);
+	AddAnimationCommand(uicore::ModelDescAnimation animation);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	clan::ModelDescAnimation new_animation;
+	uicore::ModelDescAnimation new_animation;
 };

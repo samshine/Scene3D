@@ -29,8 +29,9 @@
 #pragma once
 
 #include <list>
+#include "Scene3D/Resources/resource.h"
 
-namespace clan
+namespace uicore
 {
 
 class ShadowMaps;

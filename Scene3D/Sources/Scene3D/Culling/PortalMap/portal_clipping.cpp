@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "portal_clipping.h"
 
-namespace clan
+namespace uicore
 {
 
 PortalClipping::PortalClipping(const FrustumPlanes &frustum, const Mat4f &world_to_projection)

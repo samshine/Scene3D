@@ -3,7 +3,7 @@
 #include "set_map_fbx_filename_command.h"
 #include "../map_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 SetMapFbxFilenameCommand::SetMapFbxFilenameCommand(const std::string &filename) : new_filename(filename)
 {

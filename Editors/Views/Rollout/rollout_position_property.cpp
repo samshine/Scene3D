@@ -3,7 +3,7 @@
 #include "rollout_position_property.h"
 #include "rollout_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 {

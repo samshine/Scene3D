@@ -3,7 +3,7 @@
 #include "map_app_model.h"
 #include <memory>
 
-using namespace clan;
+using namespace uicore;
 
 MapAppModel::MapAppModel()
 {

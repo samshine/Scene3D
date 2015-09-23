@@ -33,7 +33,7 @@
 #include "noise_3d.h"
 #include "Scene3D/scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)

@@ -33,5 +33,5 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> alpha_test_property;
 	std::shared_ptr<RolloutTextFieldProperty> transparent_property;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

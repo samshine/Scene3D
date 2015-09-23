@@ -4,7 +4,7 @@
 #include "Model/ModelEditor/EditorScene/Game/game_scene.h"
 #include <memory>
 
-using namespace clan;
+using namespace uicore;
 
 ModelAppModel::ModelAppModel()
 {

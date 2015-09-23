@@ -33,7 +33,7 @@
 #include "scene_impl.h"
 #include "scene_model_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneModel::SceneModel()

@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "game_scene_cache.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameSceneCache::GameSceneCache(GraphicContext &gc)
 	: gc(gc), memory_used(0)
@@ -139,7 +139,7 @@ void CacheLoadTexture::work_completed()
 				loaded_texture.set_wrap_mode(wrap_repeat, wrap_repeat);
 				texture.set(loaded_texture);
 			}
-			catch (Exception &e)
+			catch (const Exception &e)
 			{
 				ComPtr<ID3D11Debug> debug;
 				ComPtr<ID3D11InfoQueue> info_queue;
@@ -206,7 +206,7 @@ bool CacheLoadTexture::is_power_of_two(int width, int height)
 
 void CacheLoadTexture::load_ctexture(const std::string &material_name)
 {
-	try
+	/*try
 	{
 		DomDocument xml(File(material_name), false);
 		std::string base_path = PathHelp::get_fullpath(material_name);
@@ -240,10 +240,10 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 			}
 		}
 	}
-	catch (Exception &e)
+	catch (const Exception &e)
 	{
 		log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
-	}
+	}*/
 }
 
 void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
@@ -281,7 +281,7 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		import_desc.set_premultiply_alpha(true);
 		import_desc.set_flip_vertical(true);
 		import_desc.set_srgb(true);*/
-		PixelBuffer image = ImageProviderFactory::load(material_name, std::string(), !linear);
+		PixelBuffer image = ImageFile::load(material_name, std::string(), !linear);
 
 		if (image.get_width() > 1024 || image.get_height() > 1024)
 			return; // Limit textures to 1024 for now
@@ -337,9 +337,9 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 			pixelbuffer_set = PixelBufferSet(image);
 		}
 	}
-	catch (Exception &e)
+	catch (const Exception &)
 	{
-		log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
+		//log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
 	}
 }
 
@@ -347,11 +347,11 @@ void CacheLoadTexture::load_dds_texture(const std::string &material_name)
 {
 	try
 	{
-		pixelbuffer_set = DDSProvider::load(material_name);
+		pixelbuffer_set = DDSFormat::load(material_name);
 	}
-	catch (Exception &e)
+	catch (const Exception &)
 	{
-		log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
+		//log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
 	}
 }
 
@@ -514,7 +514,7 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 			throw Exception("Unknown BLP2 type");
 		}
 	}
-	catch (Exception &)
+	catch (const Exception &)
 	{
 		loaded_levels.clear();
 		PixelBuffer image(1, 1, tf_rgba8);

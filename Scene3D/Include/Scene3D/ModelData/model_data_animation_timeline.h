@@ -28,7 +28,7 @@
 
 #pragma once
 
-namespace clan
+namespace uicore
 {
 
 /// \brief A list of time stamps and the values to be used for each.

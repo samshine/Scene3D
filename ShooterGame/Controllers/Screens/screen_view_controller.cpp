@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "screen_view_controller.h"
 
-using namespace clan;
+using namespace uicore;
 
 ScreenViewController::ScreenViewController(Canvas &canvas)
 {

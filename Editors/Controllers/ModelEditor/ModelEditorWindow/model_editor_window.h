@@ -12,12 +12,12 @@ class BonesController;
 class CamerasController;
 class EnvironmentController;
 
-class ModelEditorWindow : public clan::ViewController
+class ModelEditorWindow : public uicore::ViewController
 {
 public:
 	ModelEditorWindow();
 
-	std::shared_ptr<clan::WindowView> window_view() { return std::static_pointer_cast<clan::WindowView>(view); }
+	std::shared_ptr<uicore::WindowView> window_view() { return std::static_pointer_cast<uicore::WindowView>(view); }
 
 private:
 	void create_layout();
@@ -47,5 +47,5 @@ private:
 	std::shared_ptr<CamerasController> cameras_controller;
 	std::shared_ptr<EnvironmentController> environment_controller;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

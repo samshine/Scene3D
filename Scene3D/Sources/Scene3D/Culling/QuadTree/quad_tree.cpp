@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "quad_tree.h"
 
-namespace clan
+namespace uicore
 {
 
 QuadTree::QuadTree()

@@ -28,7 +28,9 @@
 
 #pragma once
 
-namespace clan
+#include "Scene3D/Resources/resource_container.h"
+
+namespace uicore
 {
 
 class Scene_Impl;

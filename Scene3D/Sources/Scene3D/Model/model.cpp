@@ -36,7 +36,7 @@
 #include "model_lod.h"
 #include "Scene3D/Framework/instances_buffer.h"
 
-namespace clan
+namespace uicore
 {
 
 

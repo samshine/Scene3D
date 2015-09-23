@@ -37,7 +37,7 @@
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 

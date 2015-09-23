@@ -31,9 +31,8 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/Model/model_lod.h"
 #include "Scene3D/scene_impl.h"
-#include <ClanLib/gl.h>
 
-namespace clan
+namespace uicore
 {
 
 

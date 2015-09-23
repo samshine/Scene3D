@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "rtree.h"
 
-namespace clan
+namespace uicore
 {
 
 

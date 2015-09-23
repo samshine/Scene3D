@@ -27,5 +27,5 @@ private:
 
 	std::shared_ptr<RolloutView> camera;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

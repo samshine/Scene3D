@@ -30,7 +30,7 @@
 
 #include "Scene3D/scene.h"
 
-namespace clan
+namespace uicore
 {
 class Scene_Impl;
 

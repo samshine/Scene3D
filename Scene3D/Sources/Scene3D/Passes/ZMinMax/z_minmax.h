@@ -28,7 +28,9 @@
 
 #pragma once
 
-namespace clan
+#include "Scene3D/Resources/resource.h"
+
+namespace uicore
 {
 
 class ZMinMax

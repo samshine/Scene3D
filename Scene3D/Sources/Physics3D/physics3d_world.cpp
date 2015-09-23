@@ -30,7 +30,7 @@
 #include "Physics3D/physics3d_world.h"
 #include "physics3d_world_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DWorld::Physics3DWorld()

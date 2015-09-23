@@ -118,6 +118,45 @@
     <ClInclude Include="Model\GameWorld\character_controller.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\client.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\client_impl.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\connection.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\connection_impl.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\connection_site.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\event.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\event_dispatcher.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\event_value.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\network_data.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\network_event.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\server.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Network\NetGame\server_impl.h">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCaches\work_queue.h">
+      <Filter>ResourceCaches</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -210,6 +249,30 @@
     <ClCompile Include="Model\GameWorld\character_controller.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\client.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\connection.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\connection_impl.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\event.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\event_value.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\network_data.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Network\NetGame\server.cpp">
+      <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCaches\work_queue.cpp">
+      <Filter>ResourceCaches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -238,6 +301,9 @@
     </Filter>
     <Filter Include="Model\Input">
       <UniqueIdentifier>{021ec2b5-478e-4ab3-b0ac-c2407e42d296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Network\NetGame">
+      <UniqueIdentifier>{a5a60a89-a3e9-4b2d-a630-30dd97273a18}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

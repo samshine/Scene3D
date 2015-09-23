@@ -31,7 +31,7 @@
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Framework/shader_setup.h"
 
-namespace clan
+namespace uicore
 {
 
 BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)

@@ -30,7 +30,7 @@
 
 #include "model_data_animation_timeline.h"
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Stores different values for different animation timelines

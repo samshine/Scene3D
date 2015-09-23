@@ -37,9 +37,8 @@
 #include "scene_object_impl.h"
 #include "scene_light_probe_impl.h"
 #include "scene_pass_impl.h"
-#include <ClanLib/gl.h>
 
-namespace clan
+namespace uicore
 {
 
 Scene::Scene()
@@ -247,18 +246,18 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
 	}
 
-	add_pass("gbuffer").func_run() = [=](clan::GraphicContext &gc){gbuffer_pass->run(gc, this);};
-	add_pass("skybox").func_run() = [=](clan::GraphicContext &gc){skybox_pass->run(gc, this); };
-	add_pass("vsm").func_run() = [=](clan::GraphicContext &gc){vsm_shadow_map_pass->run(gc, this); };
+	add_pass("gbuffer").func_run() = [=](uicore::GraphicContext &gc){gbuffer_pass->run(gc, this);};
+	add_pass("skybox").func_run() = [=](uicore::GraphicContext &gc){skybox_pass->run(gc, this); };
+	add_pass("vsm").func_run() = [=](uicore::GraphicContext &gc){vsm_shadow_map_pass->run(gc, this); };
 	if (lightsource_pass)
-		add_pass("light").func_run() = [=](clan::GraphicContext &gc){lightsource_pass->run(gc, this); };
+		add_pass("light").func_run() = [=](uicore::GraphicContext &gc){lightsource_pass->run(gc, this); };
 	else
-		add_pass("light").func_run() = [=](clan::GraphicContext &gc){lightsource_simple_pass->run(gc, this); };
-	add_pass("transparency").func_run() = [=](clan::GraphicContext &gc){transparency_pass->run(gc, this); };
-	add_pass("particles").func_run() = [=](clan::GraphicContext &gc){particle_emitter_pass->run(gc, this); };
-	add_pass("bloom").func_run() = [=](clan::GraphicContext &gc){bloom_pass->run(gc); };
-	//add_pass("ssao").func_run() = [=](clan::GraphicContext &gc){ssao_pass->run(gc);};
-	add_pass("final").func_run() = [=](clan::GraphicContext &gc){final_pass->run(gc); };
+		add_pass("light").func_run() = [=](uicore::GraphicContext &gc){lightsource_simple_pass->run(gc, this); };
+	add_pass("transparency").func_run() = [=](uicore::GraphicContext &gc){transparency_pass->run(gc, this); };
+	add_pass("particles").func_run() = [=](uicore::GraphicContext &gc){particle_emitter_pass->run(gc, this); };
+	add_pass("bloom").func_run() = [=](uicore::GraphicContext &gc){bloom_pass->run(gc); };
+	//add_pass("ssao").func_run() = [=](uicore::GraphicContext &gc){ssao_pass->run(gc);};
+	add_pass("final").func_run() = [=](uicore::GraphicContext &gc){final_pass->run(gc); };
 }
 
 ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)

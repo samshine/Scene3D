@@ -8,7 +8,7 @@
 #include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/MapEditor/map_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 ObjectsController::ObjectsController()
 {

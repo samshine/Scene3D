@@ -2,6 +2,7 @@
 #pragma once
 
 #include "lock_step_time.h"
+#include "NetGame/event.h"
 #include <memory>
 
 class GameNetwork;
@@ -25,12 +26,12 @@ public:
 	void reset() override;
 
 private:
-	void on_event_received(const std::string &sender, const clan::NetGameEvent &net_event);
+	void on_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
-	clan::GameTime game_time;
+	uicore::GameTime game_time;
 	std::shared_ptr<GameNetwork> network;
 
 	int server_tick_time = 0;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

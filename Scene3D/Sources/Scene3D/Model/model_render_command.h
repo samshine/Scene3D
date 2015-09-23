@@ -32,7 +32,7 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 class ModelRenderCommand

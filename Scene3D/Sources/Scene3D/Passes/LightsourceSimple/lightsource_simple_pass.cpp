@@ -36,7 +36,7 @@
 #include "Scene3D/Performance/gpu_timer.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)

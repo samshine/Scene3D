@@ -44,5 +44,5 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> air_movement_property;
 	std::shared_ptr<RolloutTextFieldProperty> bounce_property;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

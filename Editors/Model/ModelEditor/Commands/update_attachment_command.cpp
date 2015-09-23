@@ -3,7 +3,7 @@
 #include "update_attachment_command.h"
 #include "../model_app_model.h"
 
-using namespace clan;
+using namespace uicore;
 
 UpdateAttachmentCommand::UpdateAttachmentCommand(size_t index, ModelDescAttachmentPoint attachment) : index(index), new_attachment(attachment)
 {

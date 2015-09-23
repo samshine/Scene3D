@@ -8,7 +8,7 @@
 #include "Controllers/Screens/game_screen_controller.h"
 #include "mouse_movement.h"
 
-using namespace clan;
+using namespace uicore;
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -24,11 +24,10 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	DisplayWindow window(window_desc);
 	GraphicContext gc = window.get_gc();
-	InputContext ic = window.get_ic();
 	Canvas canvas(window);
 
-	window.set_large_icon(PNGProvider::load("Resources/Icons/App/AppIcon-128.png"));
-	window.set_small_icon(PNGProvider::load("Resources/Icons/App/AppIcon-128.png"));
+	window.set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
+	window.set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
 
 	Slot close_slot = window.sig_window_close().connect([]() { RunLoop::exit(); });
 
@@ -40,30 +39,30 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	MouseMovement mouse_movement;
 
 	ResourceManager resources;
-	DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
+	//DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
 	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
 	SoundCache::set(resources, std::make_shared<GameSoundCache>());
 
-	UIThread ui_thread(resources);
+	UIThread ui_thread("Resources");
 
 	SlotContainer slots;
-	slots.connect(window.get_ic().get_keyboard().sig_key_down(), [&](const InputEvent &e) {
+	slots.connect(window.get_keyboard().sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
 		if (screen) screen->texture_view()->on_key_down(e);
 	});
-	slots.connect(window.get_ic().get_keyboard().sig_key_up(), [&](const InputEvent &e) {
+	slots.connect(window.get_keyboard().sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
 		if (screen) screen->texture_view()->on_key_down(e);
 	});
-	slots.connect(window.get_ic().get_mouse().sig_key_down(), [&](const InputEvent &e) {
+	slots.connect(window.get_mouse().sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
 		if (screen) screen->texture_view()->on_mouse_down(e);
 	});
-	slots.connect(window.get_ic().get_mouse().sig_key_up(), [&](const InputEvent &e) {
+	slots.connect(window.get_mouse().sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
 		if (screen) screen->texture_view()->on_mouse_up(e);
 	});
-	slots.connect(window.get_ic().get_mouse().sig_pointer_move(), [&](const InputEvent &e) {
+	slots.connect(window.get_mouse().sig_pointer_move(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
 		if (screen) screen->texture_view()->on_mouse_move(e);
 	});
@@ -94,11 +93,11 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					if (hide_cursor)
 					{
 						window.hide_cursor();
-						mouse_down_pos = ic.get_mouse().get_position();
+						mouse_down_pos = window.get_mouse().get_position();
 					}
 					else
 					{
-						ic.get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
+						window.get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
 						window.show_cursor();
 					}
 					cursor_hidden = hide_cursor;
@@ -107,14 +106,14 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (cursor_hidden)
 				{
 					Sizef size = canvas.get_size();
-					ic.get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
+					window.get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
 				}
 
 				Point move = mouse_movement.pos();
 				Vec2i delta_mouse_move = move - last_mouse_movement;
 				last_mouse_movement = move;
 
-				screen->update_desktop(canvas, ic, delta_mouse_move);
+				screen->update_desktop(canvas, window, delta_mouse_move);
 				screen->texture_view()->set_viewport(canvas.get_size());
 				screen->texture_view()->set_needs_render();
 				screen->texture_view()->update();

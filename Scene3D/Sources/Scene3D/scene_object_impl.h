@@ -33,7 +33,7 @@
 #include "Model/model_instance.h"
 #include <list>
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

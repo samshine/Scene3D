@@ -13,11 +13,11 @@ public:
 	EulerRotation() { }
 	EulerRotation(float dir, float up, float tilt = 0.0f) : dir(dir), up(up), tilt(tilt) { }
 
-	clan::Quaternionf to_quaternionf() const { return clan::Quaternionf(up, dir, tilt, clan::angle_degrees, clan::order_YXZ); }
+	uicore::Quaternionf to_quaternionf() const { return uicore::Quaternionf(up, dir, tilt, uicore::angle_degrees, uicore::order_YXZ); }
 
 	static EulerRotation lerp(const EulerRotation &a, const EulerRotation &b, float t)
 	{
-		return EulerRotation(clan::mix(a.dir, b.dir, t), clan::mix(a.up, b.up, t), clan::mix(a.tilt, b.tilt, t));
+		return EulerRotation(uicore::mix(a.dir, b.dir, t), uicore::mix(a.up, b.up, t), uicore::mix(a.tilt, b.tilt, t));
 	}
 
 	float dir = 0.0f;
@@ -28,12 +28,12 @@ public:
 class CharacterController : public CollisionEntity
 {
 public:
-	CharacterController(clan::Physics3DWorld collision_world);
+	CharacterController(uicore::Physics3DWorld collision_world);
 
 	bool is_flying() const { return flying; }
-	const clan::Vec3f &get_position() const { return position; }
+	const uicore::Vec3f &get_position() const { return position; }
 	const EulerRotation &get_rotation() const { return rotation; }
-	const clan::Vec3f &get_velocity() const { return velocity; }
+	const uicore::Vec3f &get_velocity() const { return velocity; }
 
 	float get_gravity() const { return gravity; }
 	float get_height() const { return height; }
@@ -59,10 +59,10 @@ public:
 	void set_air_movement(float air_movement);
 	void set_bounce(float bounce);
 
-	void warp(const clan::Vec3f &position, const clan::Vec3f &velocity, bool is_flying);
+	void warp(const uicore::Vec3f &position, const uicore::Vec3f &velocity, bool is_flying);
 
-	void apply_impulse(const clan::Vec3f &force);
-	void thrust(const clan::Vec2f &dir);
+	void apply_impulse(const uicore::Vec3f &force);
+	void thrust(const uicore::Vec2f &dir);
 	void look(const EulerRotation &rotation);
 
 	void update(float tick_elapsed);
@@ -74,7 +74,7 @@ private:
 	void begin_step_up();
 	void end_step_up();
 	void step_down();
-	bool step_move(clan::Vec3f move_vec);
+	bool step_move(uicore::Vec3f move_vec);
 	void apply_gravity(float tick_elapsed);
 	void apply_velocity(float tick_elapsed);
 	void apply_thrust(float tick_elapsed);
@@ -82,11 +82,11 @@ private:
 	void begin_flying();
 	void end_flying();
 
-	static clan::Vec3f reflect(const clan::Vec3f &ray, const clan::Vec3f &normal, float amount = 1.0f);
+	static uicore::Vec3f reflect(const uicore::Vec3f &ray, const uicore::Vec3f &normal, float amount = 1.0f);
 
-	clan::Physics3DWorld collision_world;
-	clan::Physics3DShape collision_shape;
-	clan::Physics3DSweepTest sweep_test;
+	uicore::Physics3DWorld collision_world;
+	uicore::Physics3DShape collision_shape;
+	uicore::Physics3DSweepTest sweep_test;
 
 	float allowed_ccd = 0.001f; // 1 millimeter
 	float acos_too_steep_slope = 0.70f; // cos(45 deg)
@@ -107,11 +107,11 @@ private:
 
 	float land_impact = 0.0f;
 
-	clan::Vec3f position;
+	uicore::Vec3f position;
 	EulerRotation rotation;
 
-	clan::Vec3f velocity;
-	clan::Vec2f thrust_vec;
+	uicore::Vec3f velocity;
+	uicore::Vec2f thrust_vec;
 	bool flying = false;
 
 	bool shape_modified = true;

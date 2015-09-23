@@ -27,5 +27,5 @@ private:
 
 	std::shared_ptr<RolloutView> bone;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

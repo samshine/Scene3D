@@ -33,7 +33,7 @@
 #include "Physics3D/Bullet/BulletCollision/Gimpact/btGImpactShape.h"
 #include "physics3d_shape_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DShape::Physics3DShape()
@@ -45,7 +45,7 @@ bool Physics3DShape::is_null() const
 	return !impl;
 }
 
-Physics3DShape Physics3DShape::box(const clan::Vec3f &size)
+Physics3DShape Physics3DShape::box(const uicore::Vec3f &size)
 {
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -72,7 +72,7 @@ Physics3DShape Physics3DShape::sphere(float radius)
 	return shape;
 }
 
-Physics3DShape Physics3DShape::model(const std::shared_ptr<clan::ModelData> &model_data)
+Physics3DShape Physics3DShape::model(const std::shared_ptr<uicore::ModelData> &model_data)
 {
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -141,7 +141,7 @@ Physics3DShape Physics3DShape::model(const std::shared_ptr<clan::ModelData> &mod
 	return shape;
 }
 
-Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, clan::Vec3f scale)
+Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, uicore::Vec3f scale)
 {
 	btBvhTriangleMeshShape *base_shape = dynamic_cast<btBvhTriangleMeshShape*>(base_model.impl->shape.get());
 	if (base_shape == 0)
@@ -155,7 +155,7 @@ Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, cla
 	return shape;
 }
 
-Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<clan::ModelData> &model_data)
+Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<uicore::ModelData> &model_data)
 {
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -187,7 +187,7 @@ Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<clan::ModelDa
 	return shape;
 }
 
-Physics3DShape Physics3DShape::terrain(const std::shared_ptr<clan::TerrainData> &terrain_data, clan::Mat4f &out_transform)
+Physics3DShape Physics3DShape::terrain(const std::shared_ptr<uicore::TerrainData> &terrain_data, uicore::Mat4f &out_transform)
 {
 	throw Exception("Physics3DShape::terrain not implemented");
 /*
@@ -214,7 +214,7 @@ Physics3DShape Physics3DShape::terrain(const std::shared_ptr<clan::TerrainData> 
 }
 
 /*
-Physics3DShape Physics3DShape::terrain_with_holes(const std::shared_ptr<clan::TerrainData> &terrain_data, Mat4f &out_transform)
+Physics3DShape Physics3DShape::terrain_with_holes(const std::shared_ptr<uicore::TerrainData> &terrain_data, Mat4f &out_transform)
 {
 	out_transform = Mat4f::translate((float)tile.x(), 0.0f, (float)tile.y());
 

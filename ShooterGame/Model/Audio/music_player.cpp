@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "music_player.h"
 
-using namespace clan;
+using namespace uicore;
 
 //#define NO_MUSIC
 

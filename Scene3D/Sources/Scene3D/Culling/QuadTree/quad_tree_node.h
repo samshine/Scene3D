@@ -30,7 +30,7 @@
 
 #include "Scene3D/scene_cull_provider.h"
 
-namespace clan
+namespace uicore
 {
 
 class QuadTreeNode

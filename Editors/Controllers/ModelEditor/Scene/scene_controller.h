@@ -4,7 +4,7 @@
 class SceneView;
 class EditorScene;
 
-class SceneController : public clan::ViewController
+class SceneController : public uicore::ViewController
 {
 public:
 	SceneController();
@@ -14,7 +14,7 @@ private:
 
 	void model_data_updated();
 	void map_model_updated();
-	void update_scene(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, const clan::Vec2i &);
+	void update_scene(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &);
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

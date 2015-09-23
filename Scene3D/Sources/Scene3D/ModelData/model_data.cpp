@@ -29,27 +29,27 @@
 #include "precomp.h"
 #include "Scene3D/ModelData/model_data.h"
 
-namespace clan
+namespace uicore
 {
 	class CModelFormat
 	{
 	public:
-		static void save(clan::IODevice &device, std::shared_ptr<clan::ModelData> data, const std::string &base_path);
-		static std::shared_ptr<clan::ModelData> load(const std::string &filename);
-		static std::shared_ptr<clan::ModelData> load(clan::IODevice &device, const std::string &base_path);
+		static void save(uicore::IODevice &device, std::shared_ptr<uicore::ModelData> data, const std::string &base_path);
+		static std::shared_ptr<uicore::ModelData> load(const std::string &filename);
+		static std::shared_ptr<uicore::ModelData> load(uicore::IODevice &device, const std::string &base_path);
 
 	private:
 		template<typename Type>
-		static void write_animation_data(clan::IODevice &file, const clan::ModelDataAnimationData<Type> &animation_data);
+		static void write_animation_data(uicore::IODevice &file, const uicore::ModelDataAnimationData<Type> &animation_data);
 
 		template<typename Type>
-		static void write_vector_contents(clan::IODevice &file, const std::vector<Type> &vector_data);
+		static void write_vector_contents(uicore::IODevice &file, const std::vector<Type> &vector_data);
 
 		template<typename Type>
-		static void read_animation_data(clan::IODevice &file, clan::ModelDataAnimationData<Type> &out_animation_data);
+		static void read_animation_data(uicore::IODevice &file, uicore::ModelDataAnimationData<Type> &out_animation_data);
 
 		template<typename Type>
-		static void read_vector_contents(clan::IODevice &file, std::vector<Type> &out_vector_data);
+		static void read_vector_contents(uicore::IODevice &file, std::vector<Type> &out_vector_data);
 	};
 	
 	/////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	inline void CModelFormat::save(clan::IODevice &file, std::shared_ptr<clan::ModelData> data, const std::string &base_path)
+	inline void CModelFormat::save(uicore::IODevice &file, std::shared_ptr<uicore::ModelData> data, const std::string &base_path)
 	{
 		file.write_uint32(13); // version number
 		file.write("ModelCaramba", 12); // file magic
@@ -231,7 +231,7 @@ namespace clan
 			file.write_float(data->cameras[i].fov_y);
 		}
 
-		std::vector<clan::Vec3f> attachments_position;
+		std::vector<uicore::Vec3f> attachments_position;
 		std::vector<int> attachments_bone_selector;
 		for (size_t i = 0; i < data->attachment_points.size(); i++)
 		{
@@ -257,24 +257,24 @@ namespace clan
 		}
 	}
 
-	inline std::shared_ptr<clan::ModelData> CModelFormat::load(const std::string &filename)
+	inline std::shared_ptr<uicore::ModelData> CModelFormat::load(const std::string &filename)
 	{
-		clan::File file(filename);
-		return load(file, clan::PathHelp::get_fullpath(filename));
+		uicore::File file(filename);
+		return load(file, uicore::PathHelp::get_fullpath(filename));
 	}
 
-	inline std::shared_ptr<clan::ModelData> CModelFormat::load(clan::IODevice &file, const std::string &base_path)
+	inline std::shared_ptr<uicore::ModelData> CModelFormat::load(uicore::IODevice &file, const std::string &base_path)
 	{
 		int version = file.read_uint32();
 		char magic[12];
 		file.read(magic, 12);
 		if (memcmp(magic, "ModelCaramba", 12) != 0)
-			throw clan::Exception("Not a Caramba Model file");
+			throw uicore::Exception("Not a Caramba Model file");
 
 		if (version < 6 || version > 13)
-			throw clan::Exception("Unsupported file version");
+			throw uicore::Exception("Unsupported file version");
 
-		std::shared_ptr<clan::ModelData> data(new clan::ModelData());
+		std::shared_ptr<uicore::ModelData> data(new uicore::ModelData());
 
 		if (version < 11)
 			file.read_uint32();
@@ -331,9 +331,9 @@ namespace clan
 
 			for (size_t k = 0; k < data->meshes[j].draw_ranges.size(); k++)
 			{
-				data->meshes[j].draw_ranges[k].ambient.set_single_value(clan::Vec3f(file.read_float(), file.read_float(), file.read_float()));
-				data->meshes[j].draw_ranges[k].diffuse.set_single_value(clan::Vec3f(file.read_float(), file.read_float(), file.read_float()));
-				data->meshes[j].draw_ranges[k].specular.set_single_value(clan::Vec3f(file.read_float(), file.read_float(), file.read_float()));
+				data->meshes[j].draw_ranges[k].ambient.set_single_value(uicore::Vec3f(file.read_float(), file.read_float(), file.read_float()));
+				data->meshes[j].draw_ranges[k].diffuse.set_single_value(uicore::Vec3f(file.read_float(), file.read_float(), file.read_float()));
+				data->meshes[j].draw_ranges[k].specular.set_single_value(uicore::Vec3f(file.read_float(), file.read_float(), file.read_float()));
 
 				if (version < 13)
 					data->meshes[j].draw_ranges[k].glossiness.set_single_value(std::pow(2.0f, file.read_float() * 10.0f));
@@ -363,13 +363,13 @@ namespace clan
 					for (size_t anim_index = 0; anim_index < data->animations.size(); anim_index++)
 					{
 						data->meshes[j].draw_ranges[k].self_illumination.timelines[anim_index].timestamps.resize(1);
-						data->meshes[j].draw_ranges[k].self_illumination.timelines[anim_index].values.push_back(clan::Vec3f(self_illumination));
+						data->meshes[j].draw_ranges[k].self_illumination.timelines[anim_index].values.push_back(uicore::Vec3f(self_illumination));
 					}
 				}
 				else if (version == 8)
 				{
 					float self_illumination_amount = 1.0f;
-					clan::ModelDataAnimationData<float> self_illumination_old;
+					uicore::ModelDataAnimationData<float> self_illumination_old;
 					read_animation_data(file, self_illumination_old);
 					data->meshes[j].draw_ranges[k].self_illumination.timelines.resize(self_illumination_old.timelines.size());
 					for (size_t anim_index = 0; anim_index < self_illumination_old.timelines.size(); anim_index++)
@@ -378,7 +378,7 @@ namespace clan
 						for (size_t time_index = 0; time_index < self_illumination_old.timelines[anim_index].values.size(); time_index++)
 						{
 							float self_illumination = self_illumination_old.timelines[anim_index].values[time_index];
-							data->meshes[j].draw_ranges[k].self_illumination.timelines[anim_index].values.push_back(clan::Vec3f(self_illumination));
+							data->meshes[j].draw_ranges[k].self_illumination.timelines[anim_index].values.push_back(uicore::Vec3f(self_illumination));
 						}
 					}
 				}
@@ -395,16 +395,16 @@ namespace clan
 					file.read_uint32();
 				data->meshes[j].draw_ranges[k].diffuse_map.texture = file.read_uint32();
 				data->meshes[j].draw_ranges[k].diffuse_map.channel = file.read_uint32();
-				data->meshes[j].draw_ranges[k].diffuse_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
-				data->meshes[j].draw_ranges[k].diffuse_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].diffuse_map.wrap_x = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].diffuse_map.wrap_y = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
 				if (version < 8)
 				{
-					clan::Mat4f uv_transform;
+					uicore::Mat4f uv_transform;
 					file.read(uv_transform.matrix, 16 * 4);
 
-					clan::Vec3f uvw_offset;
-					clan::Quaternionf uvw_rotation;
-					clan::Vec3f uvw_scale;
+					uicore::Vec3f uvw_offset;
+					uicore::Quaternionf uvw_rotation;
+					uicore::Vec3f uvw_scale;
 					uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
 
 					data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset.timelines.resize(data->animations.size());
@@ -432,16 +432,16 @@ namespace clan
 					file.read_uint32();
 				data->meshes[j].draw_ranges[k].specular_map.texture = file.read_uint32();
 				data->meshes[j].draw_ranges[k].specular_map.channel = file.read_uint32();
-				data->meshes[j].draw_ranges[k].specular_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
-				data->meshes[j].draw_ranges[k].specular_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].specular_map.wrap_x = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].specular_map.wrap_y = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
 				if (version < 8)
 				{
-					clan::Mat4f uv_transform;
+					uicore::Mat4f uv_transform;
 					file.read(uv_transform.matrix, 16 * 4);
 
-					clan::Vec3f uvw_offset;
-					clan::Quaternionf uvw_rotation;
-					clan::Vec3f uvw_scale;
+					uicore::Vec3f uvw_offset;
+					uicore::Quaternionf uvw_rotation;
+					uicore::Vec3f uvw_scale;
 					uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
 
 					data->meshes[j].draw_ranges[k].specular_map.uvw_offset.timelines.resize(data->animations.size());
@@ -469,16 +469,16 @@ namespace clan
 					file.read_uint32();
 				data->meshes[j].draw_ranges[k].bumpmap_map.texture = file.read_uint32();
 				data->meshes[j].draw_ranges[k].bumpmap_map.channel = file.read_uint32();
-				data->meshes[j].draw_ranges[k].bumpmap_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
-				data->meshes[j].draw_ranges[k].bumpmap_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].bumpmap_map.wrap_x = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].bumpmap_map.wrap_y = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
 				if (version < 8)
 				{
-					clan::Mat4f uv_transform;
+					uicore::Mat4f uv_transform;
 					file.read(uv_transform.matrix, 16 * 4);
 
-					clan::Vec3f uvw_offset;
-					clan::Quaternionf uvw_rotation;
-					clan::Vec3f uvw_scale;
+					uicore::Vec3f uvw_offset;
+					uicore::Quaternionf uvw_rotation;
+					uicore::Vec3f uvw_scale;
 					uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
 
 					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset.timelines.resize(data->animations.size());
@@ -506,16 +506,16 @@ namespace clan
 					file.read_uint32();
 				data->meshes[j].draw_ranges[k].self_illumination_map.texture = file.read_uint32();
 				data->meshes[j].draw_ranges[k].self_illumination_map.channel = file.read_uint32();
-				data->meshes[j].draw_ranges[k].self_illumination_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
-				data->meshes[j].draw_ranges[k].self_illumination_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].self_illumination_map.wrap_x = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
+				data->meshes[j].draw_ranges[k].self_illumination_map.wrap_y = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
 				if (version < 8)
 				{
-					clan::Mat4f uv_transform;
+					uicore::Mat4f uv_transform;
 					file.read(uv_transform.matrix, 16 * 4);
 
-					clan::Vec3f uvw_offset;
-					clan::Quaternionf uvw_rotation;
-					clan::Vec3f uvw_scale;
+					uicore::Vec3f uvw_offset;
+					uicore::Quaternionf uvw_rotation;
+					uicore::Vec3f uvw_scale;
 					uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
 
 					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset.timelines.resize(data->animations.size());
@@ -543,8 +543,8 @@ namespace clan
 				{
 					data->meshes[j].draw_ranges[k].light_map.texture = file.read_uint32();
 					data->meshes[j].draw_ranges[k].light_map.channel = file.read_uint32();
-					data->meshes[j].draw_ranges[k].light_map.wrap_x = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
-					data->meshes[j].draw_ranges[k].light_map.wrap_y = (clan::ModelDataTextureMap::WrapMode)file.read_uint32();
+					data->meshes[j].draw_ranges[k].light_map.wrap_x = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
+					data->meshes[j].draw_ranges[k].light_map.wrap_y = (uicore::ModelDataTextureMap::WrapMode)file.read_uint32();
 
 					read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_offset);
 					read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_rotation);
@@ -559,7 +559,7 @@ namespace clan
 		for (size_t i = 0; i < data->textures.size(); i++)
 		{
 			data->textures[i].gamma = file.read_float();
-			data->textures[i].name = clan::PathHelp::combine(base_path, file.read_string_a());
+			data->textures[i].name = uicore::PathHelp::combine(base_path, file.read_string_a());
 		}
 
 		for (size_t i = 0; i < data->bones.size(); i++)
@@ -583,10 +583,10 @@ namespace clan
 
 		if (version < 7)
 		{
-			std::vector<clan::Vec3f> lights_position(data->lights.size());
-			std::vector<clan::Quaternionf> lights_orientation(data->lights.size());
+			std::vector<uicore::Vec3f> lights_position(data->lights.size());
+			std::vector<uicore::Quaternionf> lights_orientation(data->lights.size());
 			std::vector<int> lights_bone_selector(data->lights.size());
-			std::vector<clan::Vec3f> lights_color(data->lights.size());
+			std::vector<uicore::Vec3f> lights_color(data->lights.size());
 			std::vector<float> lights_attenuation_start(data->lights.size());
 			std::vector<float> lights_attenuation_end(data->lights.size());
 			std::vector<float> lights_falloff(data->lights.size());
@@ -675,7 +675,7 @@ namespace clan
 			data->cameras[i].fov_y = file.read_float();
 		}
 
-		std::vector<clan::Vec3f> attachments_position(data->attachment_points.size());
+		std::vector<uicore::Vec3f> attachments_position(data->attachment_points.size());
 		std::vector<int> attachments_bone_selector(data->attachment_points.size());
 		read_vector_contents(file, attachments_position);
 		read_vector_contents(file, attachments_bone_selector);
@@ -704,7 +704,7 @@ namespace clan
 	}
 
 	template<typename Type>
-	void CModelFormat::write_animation_data(clan::IODevice &file, const clan::ModelDataAnimationData<Type> &animation_data)
+	void CModelFormat::write_animation_data(uicore::IODevice &file, const uicore::ModelDataAnimationData<Type> &animation_data)
 	{
 		file.write_uint32(animation_data.timelines.size());
 		for (size_t j = 0; j < animation_data.timelines.size(); j++)
@@ -717,19 +717,19 @@ namespace clan
 	}
 
 	template<typename Type>
-	void CModelFormat::write_vector_contents(clan::IODevice &file, const std::vector<Type> &vector_data)
+	void CModelFormat::write_vector_contents(uicore::IODevice &file, const std::vector<Type> &vector_data)
 	{
 		if (!vector_data.empty())
 			file.write(&vector_data[0], vector_data.size() * sizeof(Type));
 	}
 
 	template<typename Type>
-	inline void CModelFormat::read_animation_data(clan::IODevice &file, clan::ModelDataAnimationData<Type> &out_animation_data)
+	inline void CModelFormat::read_animation_data(uicore::IODevice &file, uicore::ModelDataAnimationData<Type> &out_animation_data)
 	{
 		out_animation_data.timelines.resize(file.read_uint32());
 		for (size_t j = 0; j < out_animation_data.timelines.size(); j++)
 		{
-			clan::ModelDataAnimationTimeline<Type> data;
+			uicore::ModelDataAnimationTimeline<Type> data;
 
 			data.timestamps.resize(file.read_uint32());
 			data.values.resize(file.read_uint32());
@@ -737,7 +737,7 @@ namespace clan
 			read_vector_contents(file, data.values);
 
 			if (data.timestamps.size() != data.values.size())
-				throw clan::Exception("Corrupt model file");
+				throw uicore::Exception("Corrupt model file");
 
 			// Remove redundant data:
 			out_animation_data.timelines[j].timestamps.reserve(data.timestamps.size());
@@ -754,7 +754,7 @@ namespace clan
 	}
 
 	template<typename Type>
-	void CModelFormat::read_vector_contents(clan::IODevice &file, std::vector<Type> &out_vector_data)
+	void CModelFormat::read_vector_contents(uicore::IODevice &file, std::vector<Type> &out_vector_data)
 	{
 		if (!out_vector_data.empty())
 			file.read(&out_vector_data[0], out_vector_data.size() * sizeof(Type));

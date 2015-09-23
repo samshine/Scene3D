@@ -6,26 +6,26 @@
 class PlayerRagdoll : public GameObject
 {
 public:
-	PlayerRagdoll(GameWorld *world, const clan::Vec3f &pos, const clan::Quaternionf &orientation);
+	PlayerRagdoll(GameWorld *world, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~PlayerRagdoll();
 
 	void tick(const GameTick &tick) override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
 protected:
-	std::shared_ptr<clan::ModelData> create_box(const clan::Vec3f &box_size);
+	std::shared_ptr<uicore::ModelData> create_box(const uicore::Vec3f &box_size);
 
-	clan::SceneObject scene_object1;
-	clan::SceneObject scene_object2;
+	uicore::SceneObject scene_object1;
+	uicore::SceneObject scene_object2;
 
-	clan::Physics3DConstraint hinge_constraint;
-	clan::Physics3DObject physics_object1;
-	clan::Physics3DObject physics_object2;
+	uicore::Physics3DConstraint hinge_constraint;
+	uicore::Physics3DObject physics_object1;
+	uicore::Physics3DObject physics_object2;
 
-	clan::Vec3f prev_pos1, next_pos1;
-	clan::Vec3f prev_pos2, next_pos2;
-	clan::Quaternionf prev_orientation1, next_orientation1;
-	clan::Quaternionf prev_orientation2, next_orientation2;
+	uicore::Vec3f prev_pos1, next_pos1;
+	uicore::Vec3f prev_pos2, next_pos2;
+	uicore::Quaternionf prev_orientation1, next_orientation1;
+	uicore::Quaternionf prev_orientation2, next_orientation2;
 
 	bool first_tick = true;
 
@@ -58,7 +58,7 @@ protected:
 		total_joints
 	};
 
-	clan::Physics3DShape shapes[total_parts];
-	clan::Physics3DObject parts[total_parts];
-	clan::Physics3DConstraint joints[total_joints];
+	uicore::Physics3DShape shapes[total_parts];
+	uicore::Physics3DObject parts[total_parts];
+	uicore::Physics3DConstraint joints[total_joints];
 };

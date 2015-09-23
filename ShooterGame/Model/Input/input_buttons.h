@@ -28,6 +28,6 @@ public:
 	std::map<std::string, InputButton> buttons;
 
 	void input_disabled();
-	void update(clan::InputContext &ic);
-	void load(clan::InputContext &ic, clan::DomNode buttons_node);
+	void update(uicore::DisplayWindow &ic);
+	//void load(uicore::DisplayWindow &ic, uicore::DomNode buttons_node);
 };

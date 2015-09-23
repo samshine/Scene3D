@@ -27,5 +27,5 @@ private:
 
 	std::shared_ptr<RolloutView> path_node;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

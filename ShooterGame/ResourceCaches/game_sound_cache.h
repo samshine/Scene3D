@@ -1,21 +1,21 @@
 
 #pragma once
 
-class GameSoundCache : public clan::SoundCache
+class GameSoundCache : public uicore::SoundCache
 {
 public:
-	clan::Resource<clan::SoundBuffer> get_sound(const std::string &id) override;
+	uicore::Resource<uicore::SoundBuffer> get_sound(const std::string &id) override;
 
 private:
-	std::map<std::string, clan::Resource<clan::SoundBuffer>> sounds;
+	std::map<std::string, uicore::Resource<uicore::SoundBuffer>> sounds;
 };
 
-inline clan::Resource<clan::SoundBuffer> GameSoundCache::get_sound(const std::string &id)
+inline uicore::Resource<uicore::SoundBuffer> GameSoundCache::get_sound(const std::string &id)
 {
 	auto it = sounds.find(id);
 	if (it != sounds.end())
 		return it->second;
 
-	sounds[id] = clan::Resource<clan::SoundBuffer>(clan::SoundBuffer(clan::PathHelp::combine("Resources", id)));
+	sounds[id] = uicore::Resource<uicore::SoundBuffer>(uicore::SoundBuffer(uicore::PathHelp::combine("Resources", id)));
 	return sounds[id];
 }

@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "gaussian_blur.h"
 
-namespace clan
+namespace uicore
 {
 
 

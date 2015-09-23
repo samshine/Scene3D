@@ -34,7 +34,7 @@
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout)

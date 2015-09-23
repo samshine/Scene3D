@@ -31,7 +31,7 @@
 #include "Scene3D/ModelData/model_data.h"
 #include "model_instance.h"
 
-namespace clan
+namespace uicore
 {
 
 class ModelDataLight;

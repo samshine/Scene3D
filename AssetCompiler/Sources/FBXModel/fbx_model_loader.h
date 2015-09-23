@@ -2,12 +2,11 @@
 #pragma once
 
 #include <fbxsdk.h>
-#include <ClanLib/core.h>
 #include <scene3d.h>
 #include "vertex_mapping.h"
 #include "skinned_bone.h"
 
-namespace clan
+namespace uicore
 {
 	class FBXModelImpl;
 	class ModelDescAnimation;

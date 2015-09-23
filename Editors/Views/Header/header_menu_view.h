@@ -1,7 +1,7 @@
 
 #pragma once
 
-class HeaderMenuView : public clan::View
+class HeaderMenuView : public uicore::View
 {
 public:
 	HeaderMenuView(const std::string &text, const std::string &icon, bool last);
@@ -9,8 +9,8 @@ public:
 	void add_item(const std::string &text, std::function<void()> click);
 
 private:
-	void button_clicked(clan::PointerEvent &e);
+	void button_clicked(uicore::PointerEvent &e);
 
-	std::shared_ptr<clan::ButtonView> button;
-	std::shared_ptr<clan::PopupView> items;
+	std::shared_ptr<uicore::ButtonView> button;
+	std::shared_ptr<uicore::PopupView> items;
 };

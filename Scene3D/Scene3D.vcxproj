@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Include\Collision3D\sphere_shape.h" />
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h" />
+    <ClInclude Include="Include\JsonValue\json_value.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
     <ClInclude Include="Include\Physics3D\physics3d_contact_pair_test.h" />
@@ -51,7 +52,12 @@
     <ClInclude Include="Include\Scene3D\ModelData\model_data_texture_map.h" />
     <ClInclude Include="Include\Scene3D\Performance\gpu_timer.h" />
     <ClInclude Include="Include\Scene3D\Performance\scope_timer.h" />
+    <ClInclude Include="Include\Scene3D\Resources\resource.h" />
+    <ClInclude Include="Include\Scene3D\Resources\resource_container.h" />
+    <ClInclude Include="Include\Scene3D\Resources\resource_manager.h" />
+    <ClInclude Include="Include\Scene3D\Resources\resource_object.h" />
     <ClInclude Include="Include\Scene3D\Resources\scene_cache.h" />
+    <ClInclude Include="Include\Scene3D\Resources\userdata.h" />
     <ClInclude Include="Include\Scene3D\scene.h" />
     <ClInclude Include="Include\Scene3D\scene_camera.h" />
     <ClInclude Include="Include\Scene3D\scene_cull_provider.h" />
@@ -61,6 +67,31 @@
     <ClInclude Include="Include\Scene3D\scene_object.h" />
     <ClInclude Include="Include\Scene3D\scene_particle_emitter.h" />
     <ClInclude Include="Include\Scene3D\scene_pass.h" />
+    <ClInclude Include="Include\sound.h" />
+    <ClInclude Include="Include\Sound\AudioWorld\audio_definition.h" />
+    <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
+    <ClInclude Include="Include\Sound\AudioWorld\audio_world.h" />
+    <ClInclude Include="Include\Sound\Resources\sound_cache.h" />
+    <ClInclude Include="Include\Sound\sound.h" />
+    <ClInclude Include="Include\Sound\soundbuffer.h" />
+    <ClInclude Include="Include\Sound\soundbuffer_session.h" />
+    <ClInclude Include="Include\Sound\soundfilter.h" />
+    <ClInclude Include="Include\Sound\SoundFilters\echofilter.h" />
+    <ClInclude Include="Include\Sound\SoundFilters\fadefilter.h" />
+    <ClInclude Include="Include\Sound\SoundFilters\inverse_echofilter.h" />
+    <ClInclude Include="Include\Sound\soundformat.h" />
+    <ClInclude Include="Include\Sound\soundoutput.h" />
+    <ClInclude Include="Include\Sound\soundoutput_description.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundfilter_provider.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_factory.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_raw.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_session.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type_register.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_vorbis.h" />
+    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_wave.h" />
+    <ClInclude Include="Include\Sound\sound_sse.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletCollisionCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletDynamicsCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.h" />
@@ -323,6 +354,7 @@
     <ClInclude Include="Sources\Scene3D\Passes\Transparency\transparency_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\VSMShadowMap\vsm_shadow_map_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.h" />
+    <ClInclude Include="Sources\Scene3D\Resources\resource_manager_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_camera_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_light_impl.h" />
@@ -331,9 +363,36 @@
     <ClInclude Include="Sources\Scene3D\scene_object_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_particle_emitter_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_pass_impl.h" />
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_definition_impl.h" />
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_object_impl.h" />
+    <ClInclude Include="Sources\Sound\AudioWorld\audio_world_impl.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_format_conversion.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixer.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixer_program.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixing_buffers_container.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_mixing_buffers_data.h" />
+    <ClInclude Include="Sources\Sound\Mixer\sound_sample_source.h" />
+    <ClInclude Include="Sources\Sound\Mixer\speaker_position.h" />
+    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_directsound.h" />
+    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_win32.h" />
+    <ClInclude Include="Sources\Sound\setupsound.h" />
+    <ClInclude Include="Sources\Sound\soundbuffer_impl.h" />
+    <ClInclude Include="Sources\Sound\soundbuffer_session_impl.h" />
+    <ClInclude Include="Sources\Sound\SoundFilters\echofilter_provider.h" />
+    <ClInclude Include="Sources\Sound\SoundFilters\fadefilter_provider.h" />
+    <ClInclude Include="Sources\Sound\SoundFilters\inverse_echofilter_provider.h" />
+    <ClInclude Include="Sources\Sound\soundoutput_impl.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_impl.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_session.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_impl.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_session.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_impl.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_session.h" />
+    <ClInclude Include="Sources\Sound\SoundProviders\stb_vorbis.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp" />
+    <ClCompile Include="Sources\JsonValue\json_value.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btDbvt.cpp" />
@@ -509,6 +568,7 @@
     <ClCompile Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp" />
+    <ClCompile Include="Sources\Scene3D\Resources\resource_manager.cpp" />
     <ClCompile Include="Sources\Scene3D\Resources\scene_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\scene.cpp" />
     <ClCompile Include="Sources\Scene3D\scene_camera.cpp" />
@@ -518,6 +578,46 @@
     <ClCompile Include="Sources\Scene3D\scene_object.cpp" />
     <ClCompile Include="Sources\Scene3D\scene_particle_emitter.cpp" />
     <ClCompile Include="Sources\Scene3D\scene_pass.cpp" />
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_definition.cpp" />
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp" />
+    <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp" />
+    <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp" />
+    <ClCompile Include="Sources\Sound\Platform\Win32\init_guids.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_directsound.cpp" />
+    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp" />
+    <ClCompile Include="Sources\Sound\Resources\sound_cache.cpp" />
+    <ClCompile Include="Sources\Sound\setupsound.cpp" />
+    <ClCompile Include="Sources\Sound\sound.cpp" />
+    <ClCompile Include="Sources\Sound\soundbuffer.cpp" />
+    <ClCompile Include="Sources\Sound\soundbuffer_impl.cpp" />
+    <ClCompile Include="Sources\Sound\soundbuffer_session.cpp" />
+    <ClCompile Include="Sources\Sound\soundbuffer_session_impl.cpp" />
+    <ClCompile Include="Sources\Sound\soundfilter.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\echofilter.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\echofilter_provider.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\fadefilter.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\fadefilter_provider.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\inverse_echofilter.cpp" />
+    <ClCompile Include="Sources\Sound\SoundFilters\inverse_echofilter_provider.cpp" />
+    <ClCompile Include="Sources\Sound\soundoutput.cpp" />
+    <ClCompile Include="Sources\Sound\soundoutput_description.cpp" />
+    <ClCompile Include="Sources\Sound\soundoutput_impl.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_factory.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw_session.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_session.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_type.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_vorbis.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_vorbis_session.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave.cpp" />
+    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp" />
+    <ClCompile Include="Sources\Sound\sound_sse.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}</ProjectGuid>

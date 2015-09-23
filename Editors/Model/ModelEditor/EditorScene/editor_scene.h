@@ -12,10 +12,10 @@ public:
 	virtual CharacterController *get_character_controller() = 0;
 
 	virtual void set_map_model(const std::string &map_model) = 0;
-	virtual void set_model_data(std::shared_ptr<clan::ModelData> model_data) = 0;
+	virtual void set_model_data(std::shared_ptr<uicore::ModelData> model_data) = 0;
 	virtual void set_attachments(std::vector<SceneModelAttachment> attachments) = 0;
 
-	virtual void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta) = 0;
+	virtual void update(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta) = 0;
 };
 
 class SceneModelAttachment
@@ -28,6 +28,6 @@ public:
 	std::string model_name;
 	float model_scale = 1.0f;
 
-	clan::SceneModel model;
-	clan::SceneObject object;
+	uicore::SceneModel model;
+	uicore::SceneObject object;
 };

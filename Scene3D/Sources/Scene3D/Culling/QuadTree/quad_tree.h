@@ -30,7 +30,7 @@
 
 #include "quad_tree_node.h"
 
-namespace clan
+namespace uicore
 {
 
 class QuadTree : public SceneCullProvider

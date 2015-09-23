@@ -11,35 +11,35 @@ public:
 	CharacterController *get_character_controller() { return 0; }
 
 	void set_map_model(const std::string &map_model) override;
-	void set_model_data(std::shared_ptr<clan::ModelData> model_data) override;
+	void set_model_data(std::shared_ptr<uicore::ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;
 
-	void update(clan::Scene &scene, clan::GraphicContext &gc, clan::InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta) override;
+	void update(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &window, bool has_focus, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	void setup_default_scene(clan::Scene &scene, clan::GraphicContext &gc);
-	void update_model(clan::Scene &scene, clan::GraphicContext &gc);
-	void update_map(clan::Scene &scene, clan::GraphicContext &gc);
+	void setup_default_scene(uicore::Scene &scene, uicore::GraphicContext &gc);
+	void update_model(uicore::Scene &scene, uicore::GraphicContext &gc);
+	void update_map(uicore::Scene &scene, uicore::GraphicContext &gc);
 
 	void play_animation(const std::string &name, bool instant);
 	void play_transition(const std::string &anim1, const std::string &anim2, bool instant);
 	std::string get_animation() const;
 
-	std::shared_ptr<clan::ModelData> model_data;
+	std::shared_ptr<uicore::ModelData> model_data;
 	std::string current_animation = "default";
 
-	clan::GameTime gametime;
+	uicore::GameTime gametime;
 
-	clan::SceneLight light1;
-	clan::SceneLight light2;
-	clan::SceneModel model1;
-	clan::SceneObject object1;
-	clan::SceneCamera camera;
+	uicore::SceneLight light1;
+	uicore::SceneLight light2;
+	uicore::SceneModel model1;
+	uicore::SceneObject object1;
+	uicore::SceneCamera camera;
 
 	std::string map_model_filename;
 	bool map_model_updated = true;
-	clan::SceneModel map_model;
-	clan::SceneObject map_object;
+	uicore::SceneModel map_model;
+	uicore::SceneObject map_object;
 
 	std::vector<SceneModelAttachment> attachments;
 

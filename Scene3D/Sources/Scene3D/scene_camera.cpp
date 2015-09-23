@@ -32,7 +32,7 @@
 #include "scene_camera_impl.h"
 #include "scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneCamera::SceneCamera()

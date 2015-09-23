@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "instances_buffer.h"
 
-namespace clan
+namespace uicore
 {
 
 

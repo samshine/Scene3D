@@ -14,12 +14,12 @@ class MapMaterialsController;
 class TriggersController;
 class PathNodesController;
 
-class MapEditorWindow : public clan::ViewController
+class MapEditorWindow : public uicore::ViewController
 {
 public:
 	MapEditorWindow();
 
-	std::shared_ptr<clan::WindowView> window_view() { return std::static_pointer_cast<clan::WindowView>(view); }
+	std::shared_ptr<uicore::WindowView> window_view() { return std::static_pointer_cast<uicore::WindowView>(view); }
 
 private:
 	void create_layout();
@@ -53,5 +53,5 @@ private:
 	std::shared_ptr<TriggersController> triggers_controller;
 	std::shared_ptr<PathNodesController> path_nodes_controller;
 
-	clan::SlotContainer slots;
+	uicore::SlotContainer slots;
 };

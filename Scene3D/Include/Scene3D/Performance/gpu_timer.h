@@ -30,7 +30,7 @@
 
 #include <memory>
 
-namespace clan
+namespace uicore
 {
 
 class GPUTimer_Impl;

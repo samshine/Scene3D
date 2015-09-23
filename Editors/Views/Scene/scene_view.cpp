@@ -3,7 +3,7 @@
 #include "scene_view.h"
 #include "viewer_scene_cache.h"
 
-using namespace clan;
+using namespace uicore;
 
 SceneView::SceneView()
 {
@@ -75,7 +75,7 @@ void SceneView::render_content(Canvas &canvas)
 
 	canvas.flush();
 	GraphicContext gc = canvas.get_gc();
-	InputContext ic;
+	DisplayWindow ic;
 	if (dynamic_cast<WindowView*>(root_view())) ic = static_cast<WindowView*>(root_view())->get_display_window().get_ic();
 
 	Point move = mouse_movement.pos();

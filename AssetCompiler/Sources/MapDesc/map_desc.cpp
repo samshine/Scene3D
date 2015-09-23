@@ -1,8 +1,9 @@
 
 #include "precomp.h"
 #include "AssetCompiler/MapDescription/map_desc.h"
+#include "JsonValue/json_value.h"
 
-namespace clan
+namespace uicore
 {
 	MapDesc::MapDesc()
 	{

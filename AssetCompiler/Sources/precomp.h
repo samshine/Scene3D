@@ -1,6 +1,7 @@
 
 #pragma once
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <uicore.h>
 #include <scene3d.h>

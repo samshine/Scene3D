@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "game_scene.h"
 
-using namespace clan;
+using namespace uicore;
 
 GameScene::GameScene() : gametime(60), character_controller(collision_world)
 {
@@ -26,7 +26,7 @@ void GameScene::set_attachments(std::vector<SceneModelAttachment> attachments)
 	model_updated = true;
 }
 
-void GameScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
+void GameScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	gametime.update();
 	update_map(scene, gc);
@@ -37,7 +37,7 @@ void GameScene::update(Scene &scene, GraphicContext &gc, InputContext &ic, bool 
 	scene.update(gc, gametime.get_time_elapsed());
 }
 
-void GameScene::update_input(InputContext &ic, bool has_focus, const clan::Vec2i &mouse_delta)
+void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	if (!has_focus)
 		return;

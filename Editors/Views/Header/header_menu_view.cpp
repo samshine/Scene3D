@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "header_menu_view.h"
 
-using namespace clan;
+using namespace uicore;
 
 HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon, bool last)
 {

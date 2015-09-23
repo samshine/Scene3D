@@ -3,9 +3,9 @@
 #include "character_controller.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
-CharacterController::CharacterController(clan::Physics3DWorld collision_world) : collision_world(collision_world), sweep_test(collision_world)
+CharacterController::CharacterController(uicore::Physics3DWorld collision_world) : collision_world(collision_world), sweep_test(collision_world)
 {
 }
 
@@ -72,20 +72,20 @@ void CharacterController::set_gravity(float new_gravity)
 	gravity = new_gravity;
 }
 
-void CharacterController::warp(const clan::Vec3f &new_position, const clan::Vec3f &new_velocity, bool new_is_flying)
+void CharacterController::warp(const uicore::Vec3f &new_position, const uicore::Vec3f &new_velocity, bool new_is_flying)
 {
 	position = new_position;
 	velocity = new_velocity;
 	flying = new_is_flying;
 }
 
-void CharacterController::apply_impulse(const clan::Vec3f &force)
+void CharacterController::apply_impulse(const uicore::Vec3f &force)
 {
 	velocity += force / mass;
 	begin_flying();
 }
 
-void CharacterController::thrust(const clan::Vec2f &dir)
+void CharacterController::thrust(const uicore::Vec2f &dir)
 {
 	thrust_vec = dir;
 }
@@ -115,7 +115,7 @@ void CharacterController::update_shape()
 	}
 }
 
-bool CharacterController::step_move(clan::Vec3f move_vec)
+bool CharacterController::step_move(uicore::Vec3f move_vec)
 {
 	position.y += height * 0.5f + shape_margin;
 

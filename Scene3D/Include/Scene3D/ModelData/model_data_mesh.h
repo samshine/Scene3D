@@ -30,7 +30,7 @@
 
 #include "model_data_draw_range.h"
 
-namespace clan
+namespace uicore
 {
 
 /// \brief Vertex attributes and draw ranges required to draw a mesh

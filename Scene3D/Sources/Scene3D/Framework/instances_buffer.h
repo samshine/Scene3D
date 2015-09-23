@@ -30,7 +30,7 @@
 
 #include "mapped_buffer.h"
 
-namespace clan
+namespace uicore
 {
 	class InstancesBuffer
 	{

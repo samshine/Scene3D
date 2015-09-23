@@ -30,10 +30,12 @@
 #include "Scene3D/Framework/shadow_maps.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
+#include "Scene3D/Resources/resource.h"
+#include "Scene3D/Resources/resource_container.h"
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 class Scene_Impl;

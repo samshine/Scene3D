@@ -184,6 +184,18 @@
     <ClInclude Include="Model\Network\lock_step_server_time.h" />
     <ClInclude Include="Model\Network\lock_step_time.h" />
     <ClInclude Include="Model\Network\netevents.h" />
+    <ClInclude Include="Model\Network\NetGame\client.h" />
+    <ClInclude Include="Model\Network\NetGame\client_impl.h" />
+    <ClInclude Include="Model\Network\NetGame\connection.h" />
+    <ClInclude Include="Model\Network\NetGame\connection_impl.h" />
+    <ClInclude Include="Model\Network\NetGame\connection_site.h" />
+    <ClInclude Include="Model\Network\NetGame\event.h" />
+    <ClInclude Include="Model\Network\NetGame\event_dispatcher.h" />
+    <ClInclude Include="Model\Network\NetGame\event_value.h" />
+    <ClInclude Include="Model\Network\NetGame\network_data.h" />
+    <ClInclude Include="Model\Network\NetGame\network_event.h" />
+    <ClInclude Include="Model\Network\NetGame\server.h" />
+    <ClInclude Include="Model\Network\NetGame\server_impl.h" />
     <ClInclude Include="Model\Network\net_tick_timer.h" />
     <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="precomp.h" />
@@ -192,6 +204,7 @@
     <ClInclude Include="ResourceCaches\game_display_cache.h" />
     <ClInclude Include="ResourceCaches\game_scene_cache.h" />
     <ClInclude Include="ResourceCaches\game_sound_cache.h" />
+    <ClInclude Include="ResourceCaches\work_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\Screens\game_screen_controller.cpp" />
@@ -221,6 +234,13 @@
     <ClCompile Include="Model\Network\game_network_server.cpp" />
     <ClCompile Include="Model\Network\lock_step_client_time.cpp" />
     <ClCompile Include="Model\Network\lock_step_server_time.cpp" />
+    <ClCompile Include="Model\Network\NetGame\client.cpp" />
+    <ClCompile Include="Model\Network\NetGame\connection.cpp" />
+    <ClCompile Include="Model\Network\NetGame\connection_impl.cpp" />
+    <ClCompile Include="Model\Network\NetGame\event.cpp" />
+    <ClCompile Include="Model\Network\NetGame\event_value.cpp" />
+    <ClCompile Include="Model\Network\NetGame\network_data.cpp" />
+    <ClCompile Include="Model\Network\NetGame\server.cpp" />
     <ClCompile Include="Model\Network\net_tick_timer.cpp" />
     <ClCompile Include="mouse_movement.cpp" />
     <ClCompile Include="precomp.cpp">
@@ -231,6 +251,7 @@
     </ClCompile>
     <ClCompile Include="ResourceCaches\game_display_cache.cpp" />
     <ClCompile Include="ResourceCaches\game_scene_cache.cpp" />
+    <ClCompile Include="ResourceCaches\work_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scene3D\Scene3D.vcxproj">

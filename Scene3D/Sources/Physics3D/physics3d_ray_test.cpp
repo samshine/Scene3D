@@ -34,7 +34,7 @@
 #include "physics3d_world_impl.h"
 #include "physics3d_object_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 Physics3DRayTest::Physics3DRayTest()
@@ -51,7 +51,7 @@ bool Physics3DRayTest::is_null() const
 	return !impl;
 }
 
-bool Physics3DRayTest::test(const clan::Vec3f &new_start, const clan::Vec3f &new_end)
+bool Physics3DRayTest::test(const uicore::Vec3f &new_start, const uicore::Vec3f &new_end)
 {
 	impl->start = new_start;
 	impl->end = new_end;

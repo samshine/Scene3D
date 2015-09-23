@@ -8,9 +8,9 @@
 #include "Model/game.h"
 #include <algorithm>
 
-using namespace clan;
+using namespace uicore;
 
-Bullet::Bullet(GameWorld *world, const std::string &type, const clan::Vec3f &init_pos, const clan::Quaternionf &init_orientation)
+Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation)
 	: GameObject(world), pos(init_pos), orientation(init_orientation)
 {
 	ray_test = Physics3DRayTest(world->game()->collision);

@@ -33,7 +33,7 @@
 #include "Scene3D/scene_light_impl.h"
 #include "Scene3D/scene_impl.h"
 
-namespace clan
+namespace uicore
 {
 
 SceneLight::SceneLight()

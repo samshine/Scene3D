@@ -4,7 +4,7 @@
 #include "Collision3D/sphere_shape.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 	TriangleMeshShape::TriangleMeshShape(const Vec3f *vertices, int num_vertices, const unsigned int *elements, int num_elements)
 		: vertices(vertices), num_vertices(num_vertices), elements(elements), num_elements(num_elements), root(-1)

@@ -30,7 +30,7 @@
 #include "oct_tree_node.h"
 #include <algorithm>
 
-namespace clan
+namespace uicore
 {
 
 

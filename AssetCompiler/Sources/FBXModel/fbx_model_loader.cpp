@@ -12,7 +12,7 @@
 
 #pragma comment(lib, "libfbxsdk-mt.lib")
 
-namespace clan
+namespace uicore
 {
 	FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const ModelDesc &desc)
 		: model_desc(desc), model(model), model_data(std::make_shared<ModelData>())

@@ -27,7 +27,7 @@
 */
 
 #pragma once
-namespace clan
+namespace uicore
 {
 
 class LevelDataLight

@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "shadow_maps.h"
 
-namespace clan
+namespace uicore
 {
 
 
