@@ -30,8 +30,8 @@ CreateController::CreateController()
 	create->content->add_subview(button_create_path_point);
 	create->content->add_subview(button_create_light_probe);
 
-	content_view()->add_subview(select);
-	content_view()->add_subview(create);
+	view->content_view()->add_subview(select);
+	view->content_view()->add_subview(create);
 
 	button_select->button->func_clicked() = bind_member(this, &CreateController::select_clicked);
 	button_select_move->button->func_clicked() = bind_member(this, &CreateController::select_move_clicked);

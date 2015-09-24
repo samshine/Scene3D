@@ -15,8 +15,8 @@ MapLightProbesController::MapLightProbesController()
 	light_probe = std::make_shared<RolloutView>("LIGHT PROBE");
 	position = std::make_shared<RolloutPositionProperty>("POSITION");
 
-	content_view()->add_subview(light_probes);
-	content_view()->add_subview(light_probe);
+	view->content_view()->add_subview(light_probes);
+	view->content_view()->add_subview(light_probe);
 
 	light_probes_list = std::make_shared<RolloutList>();
 	light_probes_list->set_allow_edit(false);

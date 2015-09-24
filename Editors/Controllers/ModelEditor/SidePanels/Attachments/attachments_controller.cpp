@@ -15,8 +15,8 @@ AttachmentsController::AttachmentsController()
 	attachments = std::make_shared<RolloutView>("ATTACHMENTS");
 	attachment = std::make_shared<RolloutView>("ATTACHMENT");
 
-	content_view()->add_subview(attachments);
-	content_view()->add_subview(attachment);
+	view->content_view()->add_subview(attachments);
+	view->content_view()->add_subview(attachment);
 
 	attachments_list = std::make_shared<RolloutList>();
 	position_property = std::make_shared<RolloutPositionProperty>("POSITION");

@@ -29,9 +29,8 @@ void SceneView::pointer_press(PointerEvent &e)
 
 	if (!mouse_down)
 	{
-		WindowView *window_view = static_cast<WindowView*>(root_view());
-		window_view->get_display_window().hide_cursor();
-		mouse_down_pos = window_view->get_display_window().get_ic().get_mouse().get_position();
+		view_tree()->get_display_window().hide_cursor();
+		mouse_down_pos = view_tree()->get_display_window().get_mouse().get_position();
 		mouse_down = true;
 	}
 }
@@ -40,9 +39,8 @@ void SceneView::pointer_release(PointerEvent &e)
 {
 	if (mouse_down)
 	{
-		WindowView *window_view = static_cast<WindowView*>(root_view());
-		window_view->get_display_window().get_ic().get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
-		window_view->get_display_window().show_cursor();
+		view_tree()->get_display_window().get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
+		view_tree()->get_display_window().show_cursor();
 		mouse_down = false;
 	}
 }
@@ -51,9 +49,8 @@ void SceneView::pointer_move(PointerEvent &e)
 {
 	if (mouse_down)
 	{
-		WindowView *window_view = static_cast<WindowView*>(root_view());
-		Sizef size = window_view->get_display_window().get_geometry().get_size();
-		window_view->get_display_window().get_ic().get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
+		Sizef size = view_tree()->get_display_window().get_geometry().get_size();
+		view_tree()->get_display_window().get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
 	}
 }
 
@@ -75,8 +72,7 @@ void SceneView::render_content(Canvas &canvas)
 
 	canvas.flush();
 	GraphicContext gc = canvas.get_gc();
-	DisplayWindow ic;
-	if (dynamic_cast<WindowView*>(root_view())) ic = static_cast<WindowView*>(root_view())->get_display_window().get_ic();
+	DisplayWindow window = view_tree()->get_display_window();
 
 	Point move = mouse_movement.pos();
 	Vec2i delta_mouse_move;
@@ -88,7 +84,7 @@ void SceneView::render_content(Canvas &canvas)
 
 
 	setup_scene(gc);
-	sig_update_scene(scene, gc, ic, delta_mouse_move);
+	sig_update_scene(scene, gc, window, delta_mouse_move);
 
 	if (scene_frame_buffer.is_null() || scene_texture.is_null() || scene_texture.get_size() != viewport_size_i)
 	{
@@ -119,8 +115,8 @@ void SceneView::render_content(Canvas &canvas)
 	{
 		canvas.fill_triangles(
 		{
-			Vec2f(0.0f, 0.0f), Vec2f(viewport_size_i.width, 0.0f), Vec2f(0.0f, viewport_size_i.height),
-			Vec2f(viewport_size_i.width, 0.0f), Vec2f(0.0f, viewport_size_i.height), Vec2f(viewport_size_i.width, viewport_size_i.height)
+			Vec2f(0.0f, 0.0f), Vec2f((float)viewport_size_i.width, 0.0f), Vec2f(0.0f, (float)viewport_size_i.height),
+			Vec2f((float)viewport_size_i.width, 0.0f), Vec2f(0.0f, (float)viewport_size_i.height), Vec2f((float)viewport_size_i.width, (float)viewport_size_i.height)
 		}, scene_texture);
 	}
 

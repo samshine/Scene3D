@@ -361,7 +361,6 @@
     <ClInclude Include="Controllers\ModelEditor\ModelEditorWindow\model_editor_window.h">
       <Filter>Controllers\ModelEditor\ModelEditorWindow</Filter>
     </ClInclude>
-    <ClInclude Include="editor_resources.h" />
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Animations\animations_controller.h">
       <Filter>Controllers\ModelEditor\SidePanels\Animations</Filter>
     </ClInclude>

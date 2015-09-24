@@ -13,8 +13,8 @@ BonesController::BonesController()
 	bones = std::make_shared<RolloutView>("BONES");
 	bone = std::make_shared<RolloutView>("BONE");
 
-	content_view()->add_subview(bones);
-	content_view()->add_subview(bone);
+	view->content_view()->add_subview(bones);
+	view->content_view()->add_subview(bone);
 
 	bones_list = std::make_shared<RolloutList>();
 	bones_list->set_allow_edit(false);

@@ -20,11 +20,21 @@ using namespace uicore;
 
 MapEditorWindow::MapEditorWindow()
 {
-	create_layout();
+	set_title("Scene3D Map Editor");
+	set_frame_size({ 1280.0f, 768.0f });
+	set_icon({"Icons/App/AppIcon-256.png", "Icons/App/AppIcon-16.png"});
+
+	view->style()->set("background: rgb(240,240,240)");
+
+	header_view = std::make_shared<HeaderView>();
+	workspace_controller = std::make_shared<WorkspaceController>();
+
+	view->add_subview(header_view);
+	view->add_subview(workspace_controller->view);
 
 	slots.connect(view->sig_close(), [this](CloseEvent &e)
 	{
-		RunLoop::exit();
+		dismiss();
 	});
 
 	auto app_menu = header_view->add_left_menu("Map Editor", "Icons/App/AppIcon-32.png");
@@ -65,33 +75,12 @@ MapEditorWindow::MapEditorWindow()
 	workspace_controller->set_docked(create_controller);
 }
 
-void MapEditorWindow::create_layout()
-{
-	DisplayWindowDescription desc;
-	desc.set_size(Size(1280, 768), false);
-	desc.set_title("Scene3D Map Editor");
-	desc.set_allow_resize(true);
-	view = std::make_shared<WindowView>(desc);
-
-	window_view()->get_display_window().set_large_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-256.png"));
-	window_view()->get_display_window().set_small_icon(ImageProviderFactory::load("Resources/Icons/App/AppIcon-16.png"));
-
-	view->style()->set("flex-direction: column");
-	view->style()->set("background: rgb(240,240,240)");
-
-	header_view = std::make_shared<HeaderView>();
-	workspace_controller = std::make_shared<WorkspaceController>();
-
-	view->add_subview(header_view);
-	add_child_controller(workspace_controller);
-}
-
 void MapEditorWindow::update_window_title()
 {
 	if (!MapAppModel::instance()->open_filename.empty())
-		window_view()->get_display_window().set_title(PathHelp::get_basename(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
+		set_title(PathHelp::get_basename(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
 	else
-		window_view()->get_display_window().set_title("Model Editor");
+		set_title("Model Editor");
 }
 
 void MapEditorWindow::on_open()

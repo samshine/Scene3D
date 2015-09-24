@@ -13,8 +13,8 @@ AnimationsController::AnimationsController()
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");
 
-	content_view()->add_subview(animations);
-	content_view()->add_subview(animation);
+	view->content_view()->add_subview(animations);
+	view->content_view()->add_subview(animation);
 
 	animations_list = std::make_shared<RolloutList>();
 	start_property = std::make_shared<RolloutTextFieldProperty>("START FRAME");

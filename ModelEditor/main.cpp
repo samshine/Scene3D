@@ -2,26 +2,30 @@
 #include "precomp.h"
 #include "../Editors/Controllers/ModelEditor/ModelEditorWindow/model_editor_window.h"
 #include "../Editors/Model/ModelEditor/model_app_model.h"
-#include "../Editors/editor_resources.h"
 
 using namespace uicore;
 
-int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+class ApplicationController : uicore::Application
 {
-	D3DTarget::set_current();
-	ResourceManager resources;
-	DisplayCache::set(resources, std::make_shared<SimpleDisplayCache>());
-	UIThread ui_thread(resources);
+public:
+	ApplicationController()
+	{
+		D3DTarget::set_current();
 
+		ui_thread = UIThread("Resources");
+
+		UIThread::add_font_face("font-family: 'Lato'", "Fonts/Lato/Lato-Regular.ttf");
+		UIThread::add_font_face("font-family: 'Lato'; font-weight: bold", "Fonts/Lato/Lato-Bold.ttf");
+		UIThread::add_font_face("font-family: 'Lato'; font-weight: italic", "Fonts/Lato/Lato-Italic.ttf");
+		UIThread::add_font_face("font-family: 'Lato'; font-weight: 300", "Fonts/Lato/Lato-Light.ttf");
+		UIThread::add_font_face("font-family: 'Lato'; font-weight: 900", "Fonts/Lato/Lato-Black.ttf");
+
+		WindowManager::set_exit_on_last_close();
+		WindowManager::present_main<ModelEditorWindow>();
+	}
+
+	UIThread ui_thread;
 	ModelAppModel model;
+};
 
-	auto window = std::make_shared<ModelEditorWindow>();
-	window->window_view()->show();
-
-	RunLoop::run();
-
-	model.editor_scene.reset();
-
-	return 0;
-}
-
+ApplicationInstance<ApplicationController> app;

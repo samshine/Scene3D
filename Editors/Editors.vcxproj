@@ -99,7 +99,6 @@
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.h" />
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
-    <ClInclude Include="editor_resources.h" />
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\set_map_fbx_filename_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h" />

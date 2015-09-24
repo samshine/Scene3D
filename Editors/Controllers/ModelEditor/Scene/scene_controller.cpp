@@ -14,15 +14,10 @@ SceneController::SceneController()
 
 	slots.connect(ModelAppModel::instance()->sig_model_data_updated, this, &SceneController::model_data_updated);
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);
-	slots.connect(scene_view()->sig_update_scene, this, &SceneController::update_scene);
+	slots.connect(view->sig_update_scene, this, &SceneController::update_scene);
 
 	map_model_updated();
 	model_data_updated();
-}
-
-std::shared_ptr<SceneView> SceneController::scene_view()
-{
-	return std::static_pointer_cast<SceneView>(view);
 }
 
 void SceneController::model_data_updated()

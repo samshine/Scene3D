@@ -8,15 +8,10 @@ using namespace uicore;
 
 MapSceneController::MapSceneController()
 {
-	view = std::make_shared<SceneView>();
+	set_root_view(view);
 
 	slots.connect(MapAppModel::instance()->sig_map_model_data_updated, this, &MapSceneController::map_model_data_updated);
-	slots.connect(scene_view()->sig_update_scene, this, &MapSceneController::update_scene);
-}
-
-std::shared_ptr<SceneView> MapSceneController::scene_view()
-{
-	return std::static_pointer_cast<SceneView>(view);
+	slots.connect(view->sig_update_scene, this, &MapSceneController::update_scene);
 }
 
 void MapSceneController::map_model_data_updated()

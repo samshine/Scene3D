@@ -16,8 +16,8 @@ MapLightsController::MapLightsController()
 	mesh_light = std::make_shared<RolloutTextFieldProperty>("MESH LIGHT");
 	bake = std::make_shared<RolloutTextFieldProperty>("BAKE");
 
-	content_view()->add_subview(lights);
-	content_view()->add_subview(light);
+	view->content_view()->add_subview(lights);
+	view->content_view()->add_subview(light);
 
 	lights_list = std::make_shared<RolloutList>();
 	lights_list->set_allow_edit(false);

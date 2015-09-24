@@ -13,8 +13,8 @@ TriggersController::TriggersController()
 	triggers = std::make_shared<RolloutView>("TRIGGERS");
 	trigger = std::make_shared<RolloutView>("TRIGGER");
 
-	content_view()->add_subview(triggers);
-	content_view()->add_subview(trigger);
+	view->content_view()->add_subview(triggers);
+	view->content_view()->add_subview(trigger);
 
 	triggers_list = std::make_shared<RolloutList>();
 	triggers_list->set_allow_edit(false);

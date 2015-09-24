@@ -28,36 +28,30 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
 	add_subview(button);
 
-	items = std::make_shared<PopupView>();
-	items->style()->set("flex-direction: column");
-	items->style()->set("position: absolute");
-	items->style()->set("top: 40px");
-	items->style()->set("width: 175px");
-	items->style()->set("background: rgb(15,50,77)");
-	items->style()->set("margin: 0 10px 10px 0");
-	items->style()->set("box-shadow: 5px 5px 5px rgba(0,0,0,0.2)");
-	items->set_hidden(true);
-	add_subview(items);
+	menu = std::make_shared<HeaderMenuPopupController>(this, last);
 
 	if (last)
-	{
 		button->move_label_before_image();
+
+	/*if (last)
+	{
 		items->style()->set("right: 0");
 	}
 	else
 	{
 		items->style()->set("left: 0");
-	}
+	}*/
 }
 
 void HeaderMenuView::button_clicked(PointerEvent &e)
 {
 	e.stop_propagation();
-	items->set_hidden(!items->hidden());
-	if (!items->hidden())
+	WindowManager::present_popup(this, { 0.0f, 40.0f }, menu);
+	style()->set("background: rgb(15,50,77)");
+	/*if (!items->hidden())
 		style()->set("background: rgb(15,50,77)");
 	else
-		style()->set("background: none");
+		style()->set("background: none");*/
 }
 
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
@@ -72,8 +66,8 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	{
 		e.stop_propagation();
 		style()->set("background: none");
-		items->set_hidden(true);
+		menu->dismiss();
 		click();
 	});
-	items->add_subview(button);
+	menu->items->add_subview(button);
 }

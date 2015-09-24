@@ -13,8 +13,8 @@ PathNodesController::PathNodesController()
 	path_nodes = std::make_shared<RolloutView>("PATH NODES");
 	path_node = std::make_shared<RolloutView>("PATH NODE");
 
-	content_view()->add_subview(path_nodes);
-	content_view()->add_subview(path_node);
+	view->content_view()->add_subview(path_nodes);
+	view->content_view()->add_subview(path_node);
 
 	path_nodes_list = std::make_shared<RolloutList>();
 	path_nodes_list->set_allow_edit(false);

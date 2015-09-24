@@ -22,8 +22,8 @@ ObjectsController::ObjectsController()
 	scale = std::make_shared<RolloutTextFieldProperty>("SCALE");
 	model_desc_filename = std::make_shared<RolloutBrowseFieldProperty>("MODEL");
 
-	content_view()->add_subview(objects);
-	content_view()->add_subview(object);
+	view->content_view()->add_subview(objects);
+	view->content_view()->add_subview(object);
 
 	objects_list = std::make_shared<RolloutList>();
 	objects_list->set_allow_edit(false);

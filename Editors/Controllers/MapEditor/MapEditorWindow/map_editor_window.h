@@ -14,15 +14,12 @@ class MapMaterialsController;
 class TriggersController;
 class PathNodesController;
 
-class MapEditorWindow : public uicore::ViewController
+class MapEditorWindow : public uicore::WindowController
 {
 public:
 	MapEditorWindow();
 
-	std::shared_ptr<uicore::WindowView> window_view() { return std::static_pointer_cast<uicore::WindowView>(view); }
-
 private:
-	void create_layout();
 	void update_window_title();
 	void on_open();
 	void on_save();
@@ -39,6 +36,7 @@ private:
 	void on_show_path_nodes();
 	void on_change_model();
 
+	std::shared_ptr<uicore::ColumnView> view = std::make_shared<uicore::ColumnView>();
 	std::shared_ptr<HeaderView> header_view;
 	std::shared_ptr<WorkspaceController> workspace_controller;
 

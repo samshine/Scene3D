@@ -27,56 +27,50 @@ WorkspaceController::WorkspaceController()
 	view->add_subview(dock_view);
 }
 
-void WorkspaceController::set_center(const std::shared_ptr<uicore::ViewController> &view_controller)
+void WorkspaceController::set_center(const std::shared_ptr<WorkspaceDockableController> &view_controller)
 {
 	if (center == view_controller) return;
 
 	if (center)
 	{
-		center->remove_from_parent_controller();
+		center->root_view()->remove_from_super();
+		center->workspace_controller_ptr = nullptr;
 		center.reset();
 	}
 
 	if (view_controller)
-	{
-		add_child_controller(view_controller);
-		center_view->add_subview(view_controller->view);
-	}
+		center_view->add_subview(view_controller->root_view());
 
 	center = view_controller;
 }
 
-void WorkspaceController::set_docked(const std::shared_ptr<uicore::ViewController> &view_controller)
+void WorkspaceController::set_docked(const std::shared_ptr<WorkspaceDockableController> &view_controller)
 {
 	if (docked == view_controller) return;
 
 	if (docked)
 	{
-		docked->remove_from_parent_controller();
+		docked->root_view()->remove_from_super();
 		docked.reset();
 	}
 
 	if (view_controller)
-	{
-		add_child_controller(view_controller);
 		dock_view->add_subview(view_controller->view);
-	}
 
 	docked = view_controller;
 	dock_view->set_hidden(!docked);
 }
 
-void WorkspaceController::child_controller_added(const std::shared_ptr<uicore::ViewController> &view_controller)
+void WorkspaceController::remove(WorkspaceDockableController *controller)
 {
-}
-
-void WorkspaceController::child_controller_removed(const std::shared_ptr<uicore::ViewController> &view_controller)
-{
-	if (docked == view_controller)
+	if (center.get() == controller)
 	{
-		docked.reset();
-		dock_view->set_hidden(true);
+		center->root_view()->remove_from_super();
+		center.reset();
 	}
-	if (center == view_controller) center.reset();
-	view_controller->view->remove_from_super();
+	else if (docked.get() == controller)
+	{
+		docked->root_view()->remove_from_super();
+		docked.reset();
+	}
 }

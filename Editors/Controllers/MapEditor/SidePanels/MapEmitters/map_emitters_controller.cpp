@@ -13,8 +13,8 @@ MapEmittersController::MapEmittersController()
 	emitters = std::make_shared<RolloutView>("EMITTERS");
 	emitter = std::make_shared<RolloutView>("EMITTER");
 
-	content_view()->add_subview(emitters);
-	content_view()->add_subview(emitter);
+	view->content_view()->add_subview(emitters);
+	view->content_view()->add_subview(emitter);
 
 	emitters_list = std::make_shared<RolloutList>();
 	emitters_list->set_allow_edit(false);
