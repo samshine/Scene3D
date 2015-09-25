@@ -17,21 +17,17 @@ void InputButtons::update(DisplayWindow &ic)
 	for (size_t i = 0; i < it->second.keycodes.size(); i++)
 		it->second.down = it->second.down || ic.get_input_device(it->second.keycodes[i].device).get_keycode(it->second.keycodes[i].id);
 }
-/*
-void InputButtons::load(DisplayWindow &ic, DomNode buttons_node)
+
+void InputButtons::load(DisplayWindow &window, JsonValue buttons_node)
 {
-	std::vector<DomNode> button_nodes = buttons_node.select_nodes("button");
-	for (size_t i = 0; i < button_nodes.size(); i++)
+	for (auto &button : buttons_node.get_items())
 	{
-		std::string name = button_nodes[i].select_string("name/text()");
-		InputButton &button = buttons[name];
-		std::vector<DomNode> keys = button_nodes[i].select_nodes("key");
-		for (size_t j = 0; j < keys.size(); j++)
+		std::string name = button["name"].to_string();
+		for (auto &key : button["keys"].get_items())
 		{
-			std::string device_name = keys[j].select_string("device/text()");
-			std::string id = keys[j].select_string("id/text()");
-			button.keycodes.push_back(InputKey(device_name, ic.get_device(device_name).string_to_keyid(id)));
+			std::string device_name = key["device"];
+			std::string id = key["id"];
+			buttons[name].keycodes.push_back(InputKey(device_name, window.get_input_device(device_name).string_to_keyid(id)));
 		}
 	}
 }
-*/

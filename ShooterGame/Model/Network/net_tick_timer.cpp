@@ -112,7 +112,7 @@ void NetTickTimerClient::update()
 	if (std::abs(server_tick_time - client_tick_time) > 10)
 	{
 		client_tick_time = server_tick_time - jitter * 2;
-		Console::write_line("Client snapped to server time");
+		//Console::write_line("Client snapped to server time");
 	}
 
 	// Fetch how many ticks elapsed since last
@@ -232,8 +232,8 @@ void NetTickTimerServer::update()
 	// Fetch how many ticks elapsed since last
 	int ticks = ticks_elapsed();
 
-	if (ticks > 1)
-		Console::write_line("Update needed to do %1 ticks", ticks);
+	//if (ticks > 1)
+	//	Console::write_line("Update needed to do %1 ticks", ticks);
 
 	// Run simulation for the ticks required
 	for (int i = 0; i < ticks; i++)

@@ -31,12 +31,12 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 		item->label()->set_text(str);
 		item->func_clicked() = [this]()
 		{
-			Screen::set(std::make_shared<GameScreenController>(view->get_canvas()));
+			Screen::set(std::make_shared<GameScreenController>(texture_view->get_canvas()));
 		};
 		menu_box->add_subview(item);
 	}
 
-	view->add_subview(menu_box);
+	texture_view->add_subview(menu_box);
 
 	GraphicContext gc = canvas.get_gc();
 

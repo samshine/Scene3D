@@ -74,7 +74,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 			static_cast<PlayerPawn*>(obj_collision->obj)->apply_damage(world->net_tick, player_damage);
 
-			Console::write_line("normalized_distance = %1, player_damage = %2", normalized_distance, player_damage);
+			//Console::write_line("normalized_distance = %1, player_damage = %2", normalized_distance, player_damage);
 		}
 	}
 

@@ -89,8 +89,8 @@ void GameNetworkServer::receive_events(int tick_time)
 		}
 	}
 
-	if (missed_deadline)
-		Console::write_line("A client missed its delivery deadline in tick %1", tick_time);
+	//if (missed_deadline)
+	//	Console::write_line("A client missed its delivery deadline in tick %1", tick_time);
 }
 
 void GameNetworkServer::on_client_connected(NetGameConnection *connection)

@@ -42,29 +42,30 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
 	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
 	SoundCache::set(resources, std::make_shared<GameSoundCache>());
+	Screen::set_resources(resources);
 
 	UIThread ui_thread("Resources");
 
 	SlotContainer slots;
 	slots.connect(window.get_keyboard().sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
-		if (screen) screen->texture_view()->on_key_down(e);
+		if (screen) screen->texture_view->on_key_down(e);
 	});
 	slots.connect(window.get_keyboard().sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
-		if (screen) screen->texture_view()->on_key_down(e);
+		if (screen) screen->texture_view->on_key_down(e);
 	});
 	slots.connect(window.get_mouse().sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
-		if (screen) screen->texture_view()->on_mouse_down(e);
+		if (screen) screen->texture_view->on_mouse_down(e);
 	});
 	slots.connect(window.get_mouse().sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
-		if (screen) screen->texture_view()->on_mouse_up(e);
+		if (screen) screen->texture_view->on_mouse_up(e);
 	});
 	slots.connect(window.get_mouse().sig_pointer_move(), [&](const InputEvent &e) {
 		auto screen = Screen::get();
-		if (screen) screen->texture_view()->on_mouse_move(e);
+		if (screen) screen->texture_view->on_mouse_move(e);
 	});
 
 	//ConsoleWindow console("Debug");
@@ -114,9 +115,8 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				last_mouse_movement = move;
 
 				screen->update_desktop(canvas, window, delta_mouse_move);
-				screen->texture_view()->set_viewport(canvas.get_size());
-				screen->texture_view()->set_needs_render();
-				screen->texture_view()->update();
+				screen->texture_view->set_viewport(canvas.get_size());
+				screen->texture_view->update();
 			}
 
 			canvas.flush();

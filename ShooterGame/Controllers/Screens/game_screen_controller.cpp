@@ -26,7 +26,7 @@ void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::Displa
 			GraphicContext gc = canvas.get_gc();
 
 			server_game = std::make_unique<Game>(hostname, port, true);
-			client_game = std::make_unique<Game>(hostname, port, false, uicore::UIThread::get_resources(), gc, ic);
+			client_game = std::make_unique<Game>(hostname, port, false, Screen::resources(), gc, ic);
 		}
 
 		server_game->update(mouse_delta);

@@ -122,8 +122,8 @@ void Game::create_scene_objects()
 
 void Game::create_input_buttons()
 {
-	DomDocument xml(File("Resources/Config/input.xml"));
-	buttons.load(ic, xml.select_node("/input/buttons"));
+	auto json = JsonValue::from_json(File::read_text("Resources/Config/input.json"));
+	buttons.load(ic, json["buttons"]);
 }
 
 void Game::update(uicore::Vec2i mouse_movement)

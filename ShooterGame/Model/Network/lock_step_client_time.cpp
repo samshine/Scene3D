@@ -78,7 +78,7 @@ void LockStepClientTime::update()
 	{
 		//new_client_tick_time = ideal_client_tick_time;
 		client_tick_time = server_tick_time - 5;
-		Console::write_line("Client snapped to server time");
+		//Console::write_line("Client snapped to server time");
 	}
 	/*
 	// Adjust ticks based on how our time is relative to the server
