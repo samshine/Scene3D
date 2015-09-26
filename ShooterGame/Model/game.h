@@ -10,7 +10,7 @@
 class Game
 {
 public:
-	Game(std::string hostname, std::string port, bool server, uicore::ResourceManager resources = uicore::ResourceManager(), uicore::GraphicContext gc = uicore::GraphicContext(), uicore::DisplayWindow ic = uicore::DisplayWindow());
+	Game(std::string hostname, std::string port, bool server, uicore::ResourceManager resources = uicore::ResourceManager(), const std::shared_ptr<uicore::SoundCache> &sound_cache = std::shared_ptr<uicore::SoundCache>(), uicore::GraphicContext gc = uicore::GraphicContext(), uicore::DisplayWindow ic = uicore::DisplayWindow());
 
 	void update(uicore::Vec2i mouse_movement);
 
@@ -41,7 +41,7 @@ public:
 	std::unique_ptr<GameWorld> game_world;
 
 private:
-	void create_client_objects();
+	void create_client_objects(const std::shared_ptr<uicore::SoundCache> &sound_cache);
 	void create_scene_objects();
 	void create_input_buttons();
 

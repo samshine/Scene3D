@@ -8,8 +8,8 @@
 
 namespace uicore
 {
-	AudioWorld::AudioWorld(const ResourceManager &resources)
-		: impl(std::make_shared<AudioWorld_Impl>(resources))
+	AudioWorld::AudioWorld(const std::shared_ptr<SoundCache> &sound_cache)
+		: impl(std::make_shared<AudioWorld_Impl>(sound_cache))
 	{
 	}
 
@@ -56,8 +56,7 @@ namespace uicore
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	AudioWorld_Impl::AudioWorld_Impl(const ResourceManager &resources)
-		: play_ambience(true), reverse_stereo(false), resources(resources)
+	AudioWorld_Impl::AudioWorld_Impl(const std::shared_ptr<SoundCache> &sound_cache) : sound_cache(sound_cache)
 	{
 	}
 

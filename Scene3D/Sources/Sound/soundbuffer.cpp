@@ -35,7 +35,6 @@
 #include "Sound/SoundProviders/soundprovider_factory.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
-#include "Sound/Resources/sound_cache.h"
 
 namespace uicore
 {
@@ -80,11 +79,6 @@ namespace uicore
 
 	SoundBuffer::~SoundBuffer()
 	{
-	}
-
-	Resource<SoundBuffer> SoundBuffer::resource(const std::string &id, const ResourceManager &resources)
-	{
-		return SoundCache::get(resources).get_sound(id);
 	}
 
 	SoundProvider *SoundBuffer::get_provider() const

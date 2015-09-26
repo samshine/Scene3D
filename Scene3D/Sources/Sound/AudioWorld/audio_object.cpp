@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "Sound/AudioWorld/audio_object.h"
 #include "Sound/AudioWorld/audio_world.h"
+#include "Sound/sound_cache.h"
 #include "audio_object_impl.h"
 #include "audio_world_impl.h"
 
@@ -89,7 +90,7 @@ namespace uicore
 
 	void AudioObject::set_sound(const std::string &id)
 	{
-		impl->sound = SoundBuffer::resource(id, impl->world->resources);
+		impl->sound = impl->world->sound_cache->get(id);
 	}
 
 	void AudioObject::set_looping(bool loop)

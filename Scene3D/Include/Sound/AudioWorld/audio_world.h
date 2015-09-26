@@ -32,14 +32,14 @@
 
 namespace uicore
 {
-	class ResourceManager;
 	class SoundBuffer;
+	class SoundCache;
 	class AudioWorld_Impl;
 
 	class AudioWorld
 	{
 	public:
-		AudioWorld(const ResourceManager &resources);
+		AudioWorld(const std::shared_ptr<SoundCache> &sound_cache);
 
 		void update();
 

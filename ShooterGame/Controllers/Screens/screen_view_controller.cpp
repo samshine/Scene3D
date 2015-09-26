@@ -37,14 +37,10 @@ void ScreenViewController::render_scene(uicore::Canvas &canvas, uicore::Scene &s
 
 /////////////////////////////////////////////////////////////////////////////
 
-void Screen::set(const std::shared_ptr<ScreenViewController> &new_active)
+std::shared_ptr<ScreenViewController> &Screen::controller()
 {
-	active = new_active;
-}
-
-std::shared_ptr<ScreenViewController> Screen::get()
-{
-	return active;
+	static std::shared_ptr<ScreenViewController> screen_controller;
+	return screen_controller;
 }
 
 const uicore::ResourceManager &Screen::resources()
@@ -52,10 +48,21 @@ const uicore::ResourceManager &Screen::resources()
 	return resource_manager;
 }
 
+std::shared_ptr<SceneCache> &Screen::scene_cache()
+{
+	static std::shared_ptr<SceneCache> cache;
+	return cache;
+}
+
+std::shared_ptr<SoundCache> &Screen::sound_cache()
+{
+	static std::shared_ptr<SoundCache> cache;
+	return cache;
+}
+
 void Screen::set_resources(const uicore::ResourceManager &resources)
 {
 	resource_manager = resources;
 }
 
-std::shared_ptr<ScreenViewController> Screen::active;
 uicore::ResourceManager Screen::resource_manager;

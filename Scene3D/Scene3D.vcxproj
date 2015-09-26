@@ -71,7 +71,6 @@
     <ClInclude Include="Include\Sound\AudioWorld\audio_definition.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_world.h" />
-    <ClInclude Include="Include\Sound\Resources\sound_cache.h" />
     <ClInclude Include="Include\Sound\sound.h" />
     <ClInclude Include="Include\Sound\soundbuffer.h" />
     <ClInclude Include="Include\Sound\soundbuffer_session.h" />
@@ -91,6 +90,7 @@
     <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type_register.h" />
     <ClInclude Include="Include\Sound\SoundProviders\soundprovider_vorbis.h" />
     <ClInclude Include="Include\Sound\SoundProviders\soundprovider_wave.h" />
+    <ClInclude Include="Include\Sound\sound_cache.h" />
     <ClInclude Include="Include\Sound\sound_sse.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletCollisionCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletDynamicsCommon.h" />
@@ -590,7 +590,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_directsound.cpp" />
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp" />
-    <ClCompile Include="Sources\Sound\Resources\sound_cache.cpp" />
     <ClCompile Include="Sources\Sound\setupsound.cpp" />
     <ClCompile Include="Sources\Sound\sound.cpp" />
     <ClCompile Include="Sources\Sound\soundbuffer.cpp" />

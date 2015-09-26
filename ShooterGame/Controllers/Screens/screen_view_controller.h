@@ -18,13 +18,14 @@ public:
 class Screen
 {
 public:
-	static void set(const std::shared_ptr<ScreenViewController> &active);
-	static std::shared_ptr<ScreenViewController> get();
+	static std::shared_ptr<ScreenViewController> &controller();
 
 	static const uicore::ResourceManager &resources();
 	static void set_resources(const uicore::ResourceManager &resources);
 
+	static std::shared_ptr<uicore::SceneCache> &scene_cache();
+	static std::shared_ptr<uicore::SoundCache> &sound_cache();
+
 private:
-	static std::shared_ptr<ScreenViewController> active;
 	static uicore::ResourceManager resource_manager;
 };

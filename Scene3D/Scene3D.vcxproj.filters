@@ -178,9 +178,6 @@
     <Filter Include="Include\Sound\AudioWorld">
       <UniqueIdentifier>{1b8f7531-65b0-45eb-a3cd-af9d34477a4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Sound\Resources">
-      <UniqueIdentifier>{69d360b1-01c1-4c65-b3b1-ea9427f81fe1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Sound\SoundFilters">
       <UniqueIdentifier>{98ffdf2a-6da7-4d27-bfc6-6baac274c3da}</UniqueIdentifier>
     </Filter>
@@ -201,9 +198,6 @@
     </Filter>
     <Filter Include="Sources\Sound\Platform\Win32">
       <UniqueIdentifier>{1c8e59e0-bfb9-4b88-835a-0a35e7d2d0ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Sound\Resources">
-      <UniqueIdentifier>{ab20fd25-a0d0-4965-8edb-b787f77fc7dc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Sound\SoundFilters">
       <UniqueIdentifier>{8d1197d5-ca8c-4c5b-abd4-4530eb71803d}</UniqueIdentifier>
@@ -1239,9 +1233,6 @@
     <ClInclude Include="Include\Sound\SoundFilters\inverse_echofilter.h">
       <Filter>Include\Sound\SoundFilters</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Sound\Resources\sound_cache.h">
-      <Filter>Include\Sound\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Sound\setupsound.h">
       <Filter>Sources\Sound</Filter>
     </ClInclude>
@@ -1322,6 +1313,9 @@
     </ClInclude>
     <ClInclude Include="Include\sound.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\sound_cache.h">
+      <Filter>Include\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1924,9 +1918,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp">
       <Filter>Sources\Sound\Platform\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\Resources\sound_cache.cpp">
-      <Filter>Sources\Sound\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\SoundFilters\echofilter.cpp">
       <Filter>Sources\Sound\SoundFilters</Filter>

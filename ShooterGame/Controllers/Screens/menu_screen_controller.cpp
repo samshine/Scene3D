@@ -31,7 +31,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 		item->label()->set_text(str);
 		item->func_clicked() = [this]()
 		{
-			Screen::set(std::make_shared<GameScreenController>(texture_view->get_canvas()));
+			Screen::controller() = std::make_shared<GameScreenController>(texture_view->get_canvas());
 		};
 		menu_box->add_subview(item);
 	}

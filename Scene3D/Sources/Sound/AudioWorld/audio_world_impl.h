@@ -38,7 +38,7 @@ namespace uicore
 	class AudioWorld_Impl
 	{
 	public:
-		AudioWorld_Impl(const ResourceManager &resources);
+		AudioWorld_Impl(const std::shared_ptr<SoundCache> &sound_cache);
 		~AudioWorld_Impl();
 
 		void update_session(AudioObject_Impl *obj);
@@ -48,9 +48,9 @@ namespace uicore
 
 		Vec3f listener_position;
 		Quaternionf listener_orientation;
-		bool play_ambience;
-		bool reverse_stereo;
+		bool play_ambience = true;
+		bool reverse_stereo = false;
 
-		ResourceManager resources;
+		std::shared_ptr<SoundCache> sound_cache;
 	};
 }

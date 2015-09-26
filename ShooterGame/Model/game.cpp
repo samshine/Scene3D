@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-Game::Game(std::string hostname, std::string port, bool server, uicore::ResourceManager resources, uicore::GraphicContext gc, uicore::DisplayWindow ic) : server(server), resources(resources), gc(gc), ic(ic)
+Game::Game(std::string hostname, std::string port, bool server, uicore::ResourceManager resources, const std::shared_ptr<uicore::SoundCache> &sound_cache, uicore::GraphicContext gc, uicore::DisplayWindow ic) : server(server), resources(resources), gc(gc), ic(ic)
 {
 	game_data = JsonValue::from_json(File::read_text("Resources/Config/game.json"));
 
@@ -67,14 +67,14 @@ Game::Game(std::string hostname, std::string port, bool server, uicore::Resource
 	game_world.reset(new GameWorld(this));
 
 	if (!server)
-		create_client_objects();
+		create_client_objects(sound_cache);
 
 	on_game_init(server);
 }
 
-void Game::create_client_objects()
+void Game::create_client_objects(const std::shared_ptr<uicore::SoundCache> &sound_cache)
 {
-	audio.reset(new AudioWorld(resources));
+	audio.reset(new AudioWorld(sound_cache));
 	music_player.reset(new MusicPlayer());
 
 	if (game_data["music"].to_boolean())

@@ -30,14 +30,12 @@
 
 #include <memory>
 #include "soundbuffer_session.h"
-#include "Scene3D/Resources/resource.h"
 
 namespace uicore
 {
 	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 	/// \{
 
-	class XMLResourceDocument;
 	class SoundOutput;
 	class SoundProvider;
 	class SoundBuffer_Session;
@@ -45,7 +43,6 @@ namespace uicore
 	class SoundBuffer_Impl;
 	class IODevice;
 	class FileSystem;
-	class ResourceManager;
 
 	/// \brief Sample interface in ClanLib.
 	///
@@ -55,53 +52,12 @@ namespace uicore
 	class SoundBuffer
 	{
 	public:
-		/// \brief Construct a null instance
 		SoundBuffer();
-
-		/// \brief Construct sound buffer.
-		/** <p>A sound buffer can be constructed either as static or
-			streamed. If the sound buffer is loaded from resources, the
-			buffer type is determined by the resource option 'stream'
-			associated with the resource.</p>
-			-
-			<p>SoundBuffer's internals are reference counted, so the copy
-			constructor will create a new soundbuffer object which shares
-			the same buffer as the original one. This means that if the copy
-			is modified, the original is affected as well.</p>
-			-
-			<p>If <i>delete_provider</i> is true, the provider will be
-			deleted when the soundbuffer is deleted.</p>*/
-
-		SoundBuffer(
-			SoundProvider *provider);
-
-		SoundBuffer(
-			const std::string &fullname,
-			bool streamed = false,
-			const std::string &format = "");
-
-		SoundBuffer(
-			const std::string &filename,
-			bool streamed,
-			const FileSystem &fs,
-			const std::string &type = "");
-
-		SoundBuffer(
-			IODevice &file,
-			bool streamed,
-			const std::string &type);
-
-		/// \brief Retrieves a SoundBuffer resource from the resource manager
-		///
-		/// \param gc = Graphic Context
-		/// \param resources = Resource manager
-		/// \param id = id
-		static Resource<SoundBuffer> resource(const std::string &id, const ResourceManager &resources);
-
-		/// \brief Loads a SoundBuffer from a XML resource definition
-		static SoundBuffer load(const std::string &id, const XMLResourceDocument &doc);
-
-		virtual ~SoundBuffer();
+		SoundBuffer(SoundProvider *provider);
+		SoundBuffer(const std::string &fullname, bool streamed = false, const std::string &format = "");
+		SoundBuffer(const std::string &filename, bool streamed, const FileSystem &fs, const std::string &type = "");
+		SoundBuffer(IODevice &file, bool streamed, const std::string &type);
+		~SoundBuffer();
 
 		/// \brief Returns the sound provider to be used for playback.
 		SoundProvider *get_provider() const;

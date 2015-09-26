@@ -1,7 +1,5 @@
 
 #include "precomp.h"
-#include "ResourceCaches/game_display_cache.h"
-#include "ResourceCaches/game_sound_cache.h"
 #include "ResourceCaches/game_scene_cache.h"
 #include "Controllers/Screens/screen_view_controller.h"
 #include "Controllers/Screens/menu_screen_controller.h"
@@ -39,32 +37,31 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	MouseMovement mouse_movement;
 
 	ResourceManager resources;
-	//DisplayCache::set(resources, std::make_shared<GameDisplayCache>());
 	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
-	SoundCache::set(resources, std::make_shared<GameSoundCache>());
 	Screen::set_resources(resources);
+	Screen::sound_cache() = std::make_shared<SoundCache>();
 
 	UIThread ui_thread("Resources");
 
 	SlotContainer slots;
 	slots.connect(window.get_keyboard().sig_key_down(), [&](const InputEvent &e) {
-		auto screen = Screen::get();
+		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_key_down(e);
 	});
 	slots.connect(window.get_keyboard().sig_key_up(), [&](const InputEvent &e) {
-		auto screen = Screen::get();
+		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_key_down(e);
 	});
 	slots.connect(window.get_mouse().sig_key_down(), [&](const InputEvent &e) {
-		auto screen = Screen::get();
+		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_down(e);
 	});
 	slots.connect(window.get_mouse().sig_key_up(), [&](const InputEvent &e) {
-		auto screen = Screen::get();
+		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_up(e);
 	});
 	slots.connect(window.get_mouse().sig_pointer_move(), [&](const InputEvent &e) {
-		auto screen = Screen::get();
+		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_move(e);
 	});
 
@@ -72,8 +69,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	try
 	{
-		Screen::set(std::make_shared<MenuScreenController>(canvas));
-		//Screen::set(std::make_shared<GameScreenController>(canvas));
+		Screen::controller() = std::make_shared<MenuScreenController>(canvas);
 
 		Vec2i last_mouse_movement = mouse_movement.pos();
 		bool cursor_hidden = false;
@@ -85,7 +81,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			gc.clear();
 
-			auto screen = Screen::get();
+			auto screen = Screen::controller();
 			if (screen)
 			{
 				bool hide_cursor = screen->cursor_hidden();
@@ -123,7 +119,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			window.flip(1);
 		}
 
-		Screen::set(std::shared_ptr<ScreenViewController>());
+		Screen::controller().reset();
 	}
 	catch (...)
 	{
