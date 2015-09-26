@@ -37,7 +37,6 @@
 
 namespace uicore
 {
-	class SoundFilter;
 	class SoundBuffer_Session_Impl;
 	class SoundBuffer_Session;
 
@@ -56,7 +55,6 @@ namespace uicore
 		int mixing_latency;
 		float volume;
 		float pan;
-		std::vector<SoundFilter> filters;
 		std::thread thread;
 		std::atomic_bool stop_flag;
 		std::vector< SoundBuffer_Session > sessions;
@@ -109,9 +107,6 @@ namespace uicore
 
 		/// \brief Mixes soundbuffer sessions into the mixing buffers
 		void fill_mix_buffers();
-
-		/// \brief Applies filters to the mixing buffers
-		void filter_mix_buffers();
 
 		/// \brief Apply master volume and panning to mix buffers
 		void apply_master_volume_on_mix_buffers();

@@ -37,7 +37,6 @@
 
 namespace uicore
 {
-	class SoundFilter;
 	class SoundBuffer_Impl;
 	class SoundProvider_Session;
 	class SoundOutput_Impl;
@@ -60,7 +59,6 @@ namespace uicore
 		float pan;
 		bool looping;
 		bool playing;
-		std::vector<SoundFilter> filters;
 		mutable std::recursive_mutex mutex;
 
 		bool mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels);
@@ -74,9 +72,6 @@ namespace uicore
 
 		/// \brief Reads data into temp_data in the mixers native frequency
 		void get_data_in_mixer_frequency(int num_samples, float **temp_data);
-
-		/// \brief Runs the sample data through attached filters
-		void run_filters(float ** temp_data, int num_samples);
 
 		/// \brief Fills temporary buffers with data from provider.
 		void get_data();

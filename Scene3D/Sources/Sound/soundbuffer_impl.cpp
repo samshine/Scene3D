@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "soundbuffer_impl.h"
 #include "Sound/SoundProviders/soundprovider.h"
-#include "Sound/soundfilter.h"
 
 namespace uicore
 {

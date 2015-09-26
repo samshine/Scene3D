@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "Sound/soundbuffer_session.h"
 #include "Sound/SoundProviders/soundprovider_session.h"
-#include "Sound/soundfilter.h"
 #include "soundbuffer_session_impl.h"
 #include "soundoutput_impl.h"
 
@@ -262,30 +261,6 @@ namespace uicore
 			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 			impl->looping = loop;
 			impl->provider_session->set_looping(loop);
-		}
-	}
-
-	void SoundBuffer_Session::add_filter(SoundFilter &filter)
-	{
-		if (impl)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-			impl->filters.push_back(filter);
-		}
-	}
-
-	void SoundBuffer_Session::remove_filter(SoundFilter &filter)
-	{
-		if (impl)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-			for (std::vector<SoundFilter>::size_type i = 0; i < impl->filters.size(); i++)
-			{
-				if (impl->filters[i] == filter)
-				{
-					impl->filters.erase(impl->filters.begin() + i);
-				}
-			}
 		}
 	}
 }

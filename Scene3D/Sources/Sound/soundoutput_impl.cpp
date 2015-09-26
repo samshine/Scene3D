@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "soundoutput_impl.h"
 #include "soundbuffer_session_impl.h"
-#include "Sound/soundfilter.h"
 #include <algorithm>
 #include "Sound/sound_sse.h"
 
@@ -108,7 +107,6 @@ namespace uicore
 		resize_mix_buffers();
 		clear_mix_buffers();
 		fill_mix_buffers();
-		filter_mix_buffers();
 		apply_master_volume_on_mix_buffers();
 		clamp_mix_buffers();
 		SoundSSE::pack_float_stereo(mix_buffers, mix_buffer_size, stereo_buffer);
@@ -183,18 +181,6 @@ namespace uicore
 		// Release any sessions pending for removal:
 		int size_ended_sessions = ended_sessions.size();
 		for (int i = 0; i < size_ended_sessions; i++) stop_session(ended_sessions[i]);
-	}
-
-	void SoundOutput_Impl::filter_mix_buffers()
-	{
-		// Apply global filters to mixing buffers:
-		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
-		int size_filters = filters.size();
-		int i;
-		for (i = 0; i < size_filters; i++)
-		{
-			filters[i].filter(mix_buffers, mix_buffer_size, 2);
-		}
 	}
 
 	void SoundOutput_Impl::apply_master_volume_on_mix_buffers()

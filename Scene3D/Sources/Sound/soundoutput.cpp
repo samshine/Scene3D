@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "Sound/soundoutput.h"
 #include "Sound/soundoutput_description.h"
-#include "Sound/soundfilter.h"
 #include "Sound/sound.h"
 #include "soundoutput_impl.h"
 #include "setupsound.h"
@@ -173,31 +172,6 @@ namespace uicore
 		{
 			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 			impl->pan = pan;
-		}
-	}
-
-	void SoundOutput::add_filter(SoundFilter &filter)
-	{
-		if (impl)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-			impl->filters.push_back(filter);
-		}
-	}
-
-	void SoundOutput::remove_filter(SoundFilter &filter)
-	{
-		if (impl)
-		{
-			std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-			for (std::vector<SoundFilter>::size_type i = 0; i < impl->filters.size(); i++)
-			{
-				if (impl->filters[i] == filter)
-				{
-					impl->filters.erase(impl->filters.begin() + i);
-					break;
-				}
-			}
 		}
 	}
 }

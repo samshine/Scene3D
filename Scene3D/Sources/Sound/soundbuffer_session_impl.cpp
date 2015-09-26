@@ -31,7 +31,6 @@
 #include "soundbuffer_impl.h"
 #include "soundoutput_impl.h"
 #include "Sound/sound_sse.h"
-#include "Sound/soundfilter.h"
 #include "Sound/SoundProviders/soundprovider.h"
 #include "Sound/SoundProviders/soundprovider_session.h"
 
@@ -72,7 +71,6 @@ namespace uicore
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		get_data_in_mixer_frequency(num_samples, temp_data);
-		run_filters(temp_data, num_samples);
 		mix_channels(num_channels, num_samples, sample_data, temp_data);
 		return playing;
 	}
@@ -171,14 +169,6 @@ namespace uicore
 			{
 				temp_data[chan][sample_count] = 0.0f;
 			}
-		}
-	}
-
-	void SoundBuffer_Session_Impl::run_filters(float **temp_data, int num_samples)
-	{
-		for (auto & elem : filters)
-		{
-			elem.filter(temp_data, num_samples, num_buffer_channels);
 		}
 	}
 

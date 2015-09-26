@@ -35,7 +35,6 @@ namespace uicore
 	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 	/// \{
 
-	class SoundFilter;
 	class SoundBuffer;
 	class SoundOutput_Description;
 	class SoundOutput_Impl;
@@ -92,14 +91,6 @@ namespace uicore
 
 		/// \brief Sets the main panning position on the sound output.
 		void set_global_pan(float pan);
-
-		/// \brief Adds the sound filter to the sound output.
-		///
-		/// \param filter Sound filter to pass sound through.
-		void add_filter(SoundFilter &filter);
-
-		/// \brief Remove the sound filter from the session.
-		void remove_filter(SoundFilter &filter);
 
 	private:
 		SoundOutput(const std::weak_ptr<SoundOutput_Impl> impl);

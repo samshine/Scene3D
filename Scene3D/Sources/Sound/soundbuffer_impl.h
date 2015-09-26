@@ -34,7 +34,6 @@
 namespace uicore
 {
 	class SoundProvider;
-	class SoundFilter;
 
 	class SoundBuffer_Impl
 	{
@@ -45,7 +44,6 @@ namespace uicore
 		SoundProvider *provider;
 		float volume;
 		float pan;
-		std::vector<SoundFilter> filters;
 		mutable std::recursive_mutex mutex;
 	};
 }

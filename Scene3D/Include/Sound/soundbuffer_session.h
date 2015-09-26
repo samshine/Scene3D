@@ -36,7 +36,6 @@ namespace uicore
 	/// \{
 
 	class SoundCard;
-	class SoundFilter;
 	class SoundBuffer;
 	class SoundBuffer_Session_Impl;
 	class SoundOutput;
@@ -156,14 +155,6 @@ namespace uicore
 		///
 		/// \param loop true if session should loop, false otherwise
 		void set_looping(bool loop);
-
-		/// \brief Adds the sound filter to the session. See SoundFilter for details.
-		///
-		/// \param filter Sound filter to pass sound through.
-		void add_filter(SoundFilter &filter);
-
-		/// \brief Remove the sound filter from the session. See SoundFilter for details.
-		void remove_filter(SoundFilter &filter);
 
 	private:
 		SoundBuffer_Session(SoundBuffer &soundbuffer, bool looping, SoundOutput &output);

@@ -39,7 +39,6 @@ namespace uicore
 	class SoundOutput;
 	class SoundProvider;
 	class SoundBuffer_Session;
-	class SoundFilter;
 	class SoundBuffer_Impl;
 	class IODevice;
 	class FileSystem;
@@ -86,14 +85,6 @@ namespace uicore
 			extreme right (right speaker only).</p>
 			\param new_pan New pan of the sound buffer played.*/
 		void set_pan(float new_pan);
-
-		/// \brief Adds the sound filter to the sound buffer.
-		///
-		/// \param filter Sound filter to pass sound through.
-		void add_filter(SoundFilter &filter);
-
-		/// \brief Remove the sound filter from the sound buffer.
-		void remove_filter(SoundFilter &filter);
 
 		/// \brief Plays the soundbuffer on the specified soundcard.
 		///
