@@ -18,9 +18,9 @@ protected:
 	uicore::SceneObject scene_object1;
 	uicore::SceneObject scene_object2;
 
-	uicore::Physics3DConstraint hinge_constraint;
-	uicore::Physics3DObject physics_object1;
-	uicore::Physics3DObject physics_object2;
+	Physics3DConstraint hinge_constraint;
+	Physics3DObject physics_object1;
+	Physics3DObject physics_object2;
 
 	uicore::Vec3f prev_pos1, next_pos1;
 	uicore::Vec3f prev_pos2, next_pos2;
@@ -58,7 +58,7 @@ protected:
 		total_joints
 	};
 
-	uicore::Physics3DShape shapes[total_parts];
-	uicore::Physics3DObject parts[total_parts];
-	uicore::Physics3DConstraint joints[total_joints];
+	Physics3DShape shapes[total_parts];
+	Physics3DObject parts[total_parts];
+	Physics3DConstraint joints[total_joints];
 };

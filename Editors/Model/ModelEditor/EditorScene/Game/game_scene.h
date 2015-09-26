@@ -28,7 +28,7 @@ private:
 	std::string last_anim = "default";
 
 	uicore::GameTime gametime;
-	uicore::Physics3DWorld collision_world;
+	Physics3DWorld collision_world;
 	CharacterController character_controller;
 	float dodge_cooldown = 0;
 	float double_tap_left_elapsed = 1;
@@ -43,7 +43,7 @@ private:
 	std::string map_filename;
 	bool map_updated = true;
 	uicore::SceneObject map_object;
-	uicore::Physics3DObject map_collision;
+	Physics3DObject map_collision;
 
 	bool model_updated = true;
 	std::shared_ptr<uicore::ModelData> model_data;

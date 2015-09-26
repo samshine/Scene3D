@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-NetTickTimer::NetTickTimer(uicore::Physics3DWorld collision)
+NetTickTimer::NetTickTimer(Physics3DWorld collision)
 : start_time(0), last_tick(0), collision(collision), server_arrival_tick_time(0), next_send_ping(0)
 {
 	start_time = (unsigned int)System::get_time();

@@ -28,7 +28,7 @@ public:
 class CharacterController : public CollisionEntity
 {
 public:
-	CharacterController(uicore::Physics3DWorld collision_world);
+	CharacterController(Physics3DWorld collision_world);
 
 	bool is_flying() const { return flying; }
 	const uicore::Vec3f &get_position() const { return position; }
@@ -81,9 +81,9 @@ private:
 
 	static uicore::Vec3f reflect(const uicore::Vec3f &ray, const uicore::Vec3f &normal, float amount = 1.0f);
 
-	uicore::Physics3DWorld collision_world;
-	uicore::Physics3DShape collision_shape;
-	uicore::Physics3DSweepTest sweep_test;
+	Physics3DWorld collision_world;
+	Physics3DShape collision_shape;
+	Physics3DSweepTest sweep_test;
 
 	float allowed_ccd = 0.001f; // 1 millimeter
 	float acos_too_steep_slope = 0.70f; // cos(45 deg)

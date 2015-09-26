@@ -22,7 +22,7 @@ private:
 	uicore::Vec3f last_pos;
 	uicore::Quaternionf last_orientation;
 
-	uicore::Physics3DRayTest ray_test;
+	Physics3DRayTest ray_test;
 
 	uicore::SceneObject scene_object;
 	uicore::SceneParticleEmitter emitter;

@@ -28,7 +28,7 @@ public:
 	std::shared_ptr<GameNetwork> network;
 	std::unique_ptr<LockStepTime> lock_step_time;
 
-	uicore::Physics3DWorld collision;
+	Physics3DWorld collision;
 
 	JsonValue game_data;
 	JsonValue level_data;
@@ -36,7 +36,7 @@ public:
 	uicore::SceneObject level_instance;
 	std::vector<uicore::SceneObject> objects;
 
-	std::vector<uicore::Physics3DObject> level_collision_objects;
+	std::vector<Physics3DObject> level_collision_objects;
 
 	std::unique_ptr<GameWorld> game_world;
 

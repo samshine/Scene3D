@@ -1,30 +1,3 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #include "precomp.h"
 #include "Physics3D/physics3d_shape.h"
@@ -32,9 +5,6 @@
 #include "Physics3D/Bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "Physics3D/Bullet/BulletCollision/Gimpact/btGImpactShape.h"
 #include "physics3d_shape_impl.h"
-
-namespace uicore
-{
 
 Physics3DShape::Physics3DShape()
 {
@@ -92,7 +62,7 @@ Physics3DShape Physics3DShape::model(const std::shared_ptr<uicore::ModelData> &m
 	submesh.m_triangleIndexStride = sizeof(int)*3;
 	submesh.m_vertexType = PHY_FLOAT;
 	submesh.m_vertexBase = reinterpret_cast<const unsigned char *>(&shape.impl->model_vertices[0]);
-	submesh.m_vertexStride = sizeof(Vec3f);
+	submesh.m_vertexStride = sizeof(uicore::Vec3f);
 	submesh.m_numVertices = (int)shape.impl->model_vertices.size();
 
 	shape.impl->vertex_array.reset(new btTriangleIndexVertexArray());
@@ -145,7 +115,7 @@ Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, uic
 {
 	btBvhTriangleMeshShape *base_shape = dynamic_cast<btBvhTriangleMeshShape*>(base_model.impl->shape.get());
 	if (base_shape == 0)
-		throw Exception("Physics3DShape is not a model shape!");
+		throw uicore::Exception("Physics3DShape is not a model shape!");
 
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -175,7 +145,7 @@ Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<uicore::Model
 	submesh.m_triangleIndexStride = sizeof(int)*3;
 	submesh.m_vertexType = PHY_FLOAT;
 	submesh.m_vertexBase = reinterpret_cast<const unsigned char *>(&shape.impl->model_vertices[0]);
-	submesh.m_vertexStride = sizeof(Vec3f);
+	submesh.m_vertexStride = sizeof(uicore::Vec3f);
 	submesh.m_numVertices = (int)shape.impl->model_vertices.size();
 
 	shape.impl->vertex_array.reset(new btTriangleIndexVertexArray());
@@ -189,7 +159,7 @@ Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<uicore::Model
 
 Physics3DShape Physics3DShape::terrain(const std::shared_ptr<uicore::TerrainData> &terrain_data, uicore::Mat4f &out_transform)
 {
-	throw Exception("Physics3DShape::terrain not implemented");
+	throw uicore::Exception("Physics3DShape::terrain not implemented");
 /*
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -303,6 +273,4 @@ Physics3DShape_Impl::Physics3DShape_Impl()
 
 Physics3DShape_Impl::~Physics3DShape_Impl()
 {
-}
-
 }
