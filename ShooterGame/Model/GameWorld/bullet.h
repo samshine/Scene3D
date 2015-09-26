@@ -26,7 +26,7 @@ private:
 
 	uicore::SceneObject scene_object;
 	uicore::SceneParticleEmitter emitter;
-	uicore::AudioObject sound;
+	AudioObject sound;
 
 	float gravity = 0.0f;
 	bool bounce = false;

@@ -17,7 +17,7 @@ protected:
 	uicore::Quaternionf orientation;
 	uicore::SceneObject scene_object;
 	uicore::SceneParticleEmitter emitter;
-	uicore::AudioObject sound;
+	AudioObject sound;
 
 	float time_left = 0.0f;
 };

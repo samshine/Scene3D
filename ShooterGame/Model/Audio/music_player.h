@@ -18,6 +18,6 @@ private:
 	bool loop;
 	float volume = 0.15f;
 
-	uicore::SoundBuffer current_song;
-	uicore::SoundBuffer_Session current_session;
+	SoundBuffer current_song;
+	SoundBuffer_Session current_session;
 };

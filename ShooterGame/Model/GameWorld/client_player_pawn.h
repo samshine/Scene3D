@@ -25,7 +25,7 @@ private:
 	bool is_owner = false;
 
 	uicore::SceneObject scene_object;
-	uicore::AudioObject sound;
+	AudioObject sound;
 	float step_movement = 0.0f;
 	bool left_step = false;
 

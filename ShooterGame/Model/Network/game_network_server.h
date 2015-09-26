@@ -4,6 +4,7 @@
 #include "game_network.h"
 #include "NetGame/server.h"
 #include "NetGame/connection.h"
+#include <list>
 
 class GameNetworkServer : public GameNetwork
 {

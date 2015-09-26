@@ -1212,9 +1212,6 @@
     <ClInclude Include="Sources\Sound\Mixer\speaker_position.h">
       <Filter>Sources\Sound\Mixer</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_directsound.h">
-      <Filter>Sources\Sound\Platform\Win32</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_win32.h">
       <Filter>Sources\Sound\Platform\Win32</Filter>
     </ClInclude>
@@ -1852,12 +1849,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp">
       <Filter>Sources\Sound\Mixer</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\Platform\Win32\init_guids.cpp">
-      <Filter>Sources\Sound\Platform\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_directsound.cpp">
-      <Filter>Sources\Sound\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp">
       <Filter>Sources\Sound\Platform\Win32</Filter>

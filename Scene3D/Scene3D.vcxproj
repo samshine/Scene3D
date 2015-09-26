@@ -368,7 +368,6 @@
     <ClInclude Include="Sources\Sound\Mixer\sound_mixing_buffers_data.h" />
     <ClInclude Include="Sources\Sound\Mixer\sound_sample_source.h" />
     <ClInclude Include="Sources\Sound\Mixer\speaker_position.h" />
-    <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_directsound.h" />
     <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_win32.h" />
     <ClInclude Include="Sources\Sound\setupsound.h" />
     <ClInclude Include="Sources\Sound\soundbuffer_impl.h" />
@@ -575,13 +574,6 @@
     <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp" />
     <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp" />
-    <ClCompile Include="Sources\Sound\Platform\Win32\init_guids.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_directsound.cpp" />
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp" />
     <ClCompile Include="Sources\Sound\setupsound.cpp" />
     <ClCompile Include="Sources\Sound\sound.cpp" />

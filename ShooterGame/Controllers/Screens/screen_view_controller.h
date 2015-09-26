@@ -20,7 +20,7 @@ public:
 	static std::shared_ptr<ScreenViewController> &controller();
 
 	static uicore::SceneCache &scene_cache();
-	static std::shared_ptr<uicore::SoundCache> &sound_cache();
+	static std::shared_ptr<SoundCache> &sound_cache();
 
 private:
 	static uicore::ResourceManager resource_manager;
