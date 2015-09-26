@@ -29,31 +29,23 @@
 
 #pragma once
 
-#include "resource.h"
-#include "../ModelData/model_data.h"
 #include <memory>
 #include <string>
 
 namespace uicore
 {
-/// \addtogroup clanScene_Scene clanScene Scene
-/// \{
+	class SceneCacheImpl;
 
-class ModelData;
-class GraphicContext;
+	class SceneCache
+	{
+	public:
+		SceneCache();
+		SceneCache(GraphicContext &gc, const std::string &shader_path);
+		bool is_null() const { return !impl; }
 
-class SceneCache
-{
-public:
-	virtual ~SceneCache() { }
-	virtual std::shared_ptr<ModelData> get_model_data(const std::string &name) = 0;
-	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &name, bool linear) = 0;
-	virtual void update_textures(GraphicContext &gc, float time_elapsed) = 0;
+	private:
+		std::shared_ptr<SceneCacheImpl> impl;
 
-	static SceneCache &get(const ResourceManager &resources);
-	static void set(ResourceManager &resources, const std::shared_ptr<SceneCache> &cache);
-};
-
+		friend class Scene_Impl;
+	};
 }
-
-/// \}

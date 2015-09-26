@@ -10,7 +10,6 @@ public:
 	SceneView();
 	void render_content(uicore::Canvas &canvas) override;
 
-	uicore::ResourceManager &get_resources() { return resources; }
 	uicore::Scene &get_scene() { return scene; }
 
 	uicore::Signal<void(uicore::Scene &, uicore::GraphicContext &, uicore::DisplayWindow &, const uicore::Vec2i &)> sig_update_scene;
@@ -28,10 +27,9 @@ private:
 	bool mouse_down = false;
 	uicore::Point last_mouse_movement;
 
-	uicore::ResourceManager resources;
-
 	uicore::Texture2D scene_texture;
 	uicore::FrameBuffer scene_frame_buffer;
 
+	uicore::SceneCache cache;
 	uicore::Scene scene;
 };

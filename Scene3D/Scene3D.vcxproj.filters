@@ -67,9 +67,6 @@
     <Filter Include="Sources\Scene3D\Culling">
       <UniqueIdentifier>{d4f39bf9-40d9-461d-990b-8508f609db72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Scene3D\Framework">
-      <UniqueIdentifier>{f12afc1f-7f31-4951-bb5f-d26d015c6715}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\Level">
       <UniqueIdentifier>{187394de-2979-41b6-96dd-58b32c63fc1c}</UniqueIdentifier>
     </Filter>
@@ -81,9 +78,6 @@
     </Filter>
     <Filter Include="Sources\Scene3D\Performance">
       <UniqueIdentifier>{f0db1207-023d-4ff0-ad51-aaa2acb55929}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Resources">
-      <UniqueIdentifier>{54f5cc16-5d54-4f93-9f59-17dc05684240}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scene3D\Passes\Bloom">
       <UniqueIdentifier>{6e49aa09-2b96-4e9e-8069-df591e3a64c8}</UniqueIdentifier>
@@ -142,9 +136,6 @@
     <Filter Include="Include\Scene3D\Performance">
       <UniqueIdentifier>{f0519199-6bff-4be1-ad0d-0abdaea63ee1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Scene3D\Resources">
-      <UniqueIdentifier>{4a5c0cf0-4198-40e7-be77-c38f881f40b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\Culling\OctTree">
       <UniqueIdentifier>{1933708d-31ab-4f5e-9f59-1435a980435d}</UniqueIdentifier>
     </Filter>
@@ -198,6 +189,9 @@
     </Filter>
     <Filter Include="Sources\Sound\SoundProviders">
       <UniqueIdentifier>{5be9dab4-8045-423a-867c-b38f622779ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneCache">
+      <UniqueIdentifier>{fd28d256-0b78-47d0-ad6f-d42b3801eee5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -312,9 +306,6 @@
     <ClInclude Include="Include\Scene3D\ModelData\model_data_texture_map.h">
       <Filter>Include\Scene3D\ModelData</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\scene_cache.h">
-      <Filter>Include\Scene3D\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene3D\Performance\gpu_timer.h">
       <Filter>Include\Scene3D\Performance</Filter>
     </ClInclude>
@@ -374,18 +365,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree_root.h">
       <Filter>Sources\Scene3D\Culling\RTree</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Framework\instances_buffer.h">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Framework\material_cache.h">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Framework\shader_setup.h">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Framework\shadow_maps.h">
-      <Filter>Sources\Scene3D\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Level\level.h">
       <Filter>Sources\Scene3D\Level</Filter>
@@ -1128,32 +1107,11 @@
     <ClInclude Include="Sources\precomp.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Framework\mapped_buffer.h">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Collision3D\sphere_shape.h">
       <Filter>Include\Collision3D</Filter>
     </ClInclude>
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h">
       <Filter>Include\Collision3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\resource.h">
-      <Filter>Include\Scene3D\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\resource_container.h">
-      <Filter>Include\Scene3D\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\resource_manager.h">
-      <Filter>Include\Scene3D\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\resource_object.h">
-      <Filter>Include\Scene3D\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Resources\resource_manager_impl.h">
-      <Filter>Sources\Scene3D\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\Resources\userdata.h">
-      <Filter>Include\Scene3D\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Include\JsonValue\json_value.h">
       <Filter>Include\JsonValue</Filter>
@@ -1287,6 +1245,42 @@
     <ClInclude Include="Include\Sound\sound_cache.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene3D\scene_cache.h">
+      <Filter>Include\Scene3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\resource.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\resource_container.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\resource_object.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\scene_cache_impl.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\instances_buffer.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\mapped_buffer.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\material_cache.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\shader_setup.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\shadow_maps.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\file_search_path.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneCache\work_queue.h">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1334,18 +1328,6 @@
     <ClCompile Include="Sources\Scene3D\Culling\RTree\rtree.cpp">
       <Filter>Sources\Scene3D\Culling\RTree</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Framework\instances_buffer.cpp">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Framework\material_cache.cpp">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Framework\shader_setup.cpp">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Framework\shadow_maps.cpp">
-      <Filter>Sources\Scene3D\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\Level\level.cpp">
       <Filter>Sources\Scene3D\Level</Filter>
     </ClCompile>
@@ -1363,9 +1345,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Model\model_shader_cache.cpp">
       <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Resources\scene_cache.cpp">
-      <Filter>Sources\Scene3D\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp">
       <Filter>Sources\Scene3D\Performance</Filter>
@@ -1829,9 +1808,6 @@
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp">
       <Filter>Sources\Collision3D</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Resources\resource_manager.cpp">
-      <Filter>Sources\Scene3D\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\JsonValue\json_value.cpp">
       <Filter>Sources\JsonValue</Filter>
     </ClCompile>
@@ -1915,6 +1891,27 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\instances_buffer.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\material_cache.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\shader_setup.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\shadow_maps.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache_impl.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\work_queue.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

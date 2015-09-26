@@ -28,7 +28,7 @@
 
 #include "precomp.h"
 #include "ssao_pass.h"
-#include "Scene3D/Framework/shader_setup.h"
+#include "Scene3D/SceneCache/shader_setup.h"
 
 namespace uicore
 {

@@ -28,12 +28,16 @@
 
 #pragma once
 
+#include "Scene3D/scene_cache.h"
 #include "Scene3D/scene_camera.h"
 #include "Scene3D/scene_pass.h"
 #include "Scene3D/scene_cull_provider.h"
 #include "Scene3D/Performance/gpu_timer.h"
-#include "Scene3D/Framework/material_cache.h"
-#include "Scene3D/Framework/instances_buffer.h"
+#include "Scene3D/SceneCache/material_cache.h"
+#include "Scene3D/SceneCache/instances_buffer.h"
+#include "Scene3D/SceneCache/scene_cache_impl.h"
+#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneCache/resource.h"
 #include "Scene3D/Model/model_shader_cache.h"
 #include "Scene3D/Model/model_cache.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
@@ -46,12 +50,13 @@
 #include "Scene3D/Passes/Final/final_pass.h"
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
-#include "Scene3D/Resources/resource_manager.h"
 #include <list>
 
 namespace uicore
 {
 
+class SceneCache;
+class SceneCacheImpl;
 class ModelMeshVisitor;
 class FrustumPlanes;
 class SceneObject_Impl;
@@ -65,7 +70,7 @@ class SceneLightProbe_Impl;
 class Scene_Impl
 {
 public:
-	Scene_Impl(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path);
+	Scene_Impl(const SceneCache &cache);
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
@@ -85,7 +90,7 @@ public:
 
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
-	const ResourceManager &get_resources() const { return resources; }
+	SceneCacheImpl *get_cache() const { return cache.impl.get(); }
 
 	const SceneCamera &get_camera() const { return camera; }
 	SceneCamera &get_camera() { return camera; }
@@ -95,10 +100,9 @@ public:
 	std::vector<ScenePass> passes;
 
 private:
-	ResourceManager resources;
-	std::string shader_path;
+	SceneCache cache;
 
-	int frame;
+	int frame = 0;
 	InstancesBuffer instances_buffer;
 
 	std::unique_ptr<MaterialCache> material_cache;

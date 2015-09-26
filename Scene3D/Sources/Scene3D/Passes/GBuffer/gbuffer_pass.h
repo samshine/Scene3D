@@ -30,8 +30,8 @@
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
-#include "Scene3D/Resources/resource_container.h"
-#include "Scene3D/Resources/resource.h"
+#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneCache/resource.h"
 
 namespace uicore
 {

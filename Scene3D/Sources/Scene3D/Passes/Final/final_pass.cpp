@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "final_pass.h"
 #include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/Framework/shader_setup.h"
+#include "Scene3D/SceneCache/shader_setup.h"
 
 namespace uicore
 {

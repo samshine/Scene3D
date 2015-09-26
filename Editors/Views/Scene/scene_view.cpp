@@ -1,7 +1,6 @@
 
 #include "precomp.h"
 #include "scene_view.h"
-#include "viewer_scene_cache.h"
 
 using namespace uicore;
 
@@ -127,10 +126,8 @@ void SceneView::setup_scene(GraphicContext &gc)
 {
 	if (!scene.is_null()) return;
 
-	resources = ResourceManager();
-	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ViewerSceneCache()));
-
-	scene = Scene(gc, resources, "Resources/Scene3D");
+	cache = SceneCache(gc, "Resources/Scene3D");
+	scene = Scene(cache);
 
 	scene.set_camera(SceneCamera(scene));
 

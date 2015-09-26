@@ -31,8 +31,8 @@
 #include "Scene3D/scene_particle_emitter.h"
 #include "particle_emitter_pass_data.h"
 #include "Scene3D/scene_particle_emitter_impl.h"
-#include "Scene3D/Resources/resource_container.h"
-#include "Scene3D/Resources/resource.h"
+#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneCache/resource.h"
 
 namespace uicore
 {

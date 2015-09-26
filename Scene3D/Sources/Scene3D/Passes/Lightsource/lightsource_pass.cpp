@@ -28,8 +28,8 @@
 
 #include "precomp.h"
 #include "lightsource_pass.h"
-#include "Scene3D/Framework/shader_setup.h"
-#include "Scene3D/Framework/mapped_buffer.h"
+#include "Scene3D/SceneCache/shader_setup.h"
+#include "Scene3D/SceneCache/mapped_buffer.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"

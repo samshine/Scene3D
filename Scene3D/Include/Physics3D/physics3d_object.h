@@ -30,7 +30,6 @@
 #pragma once
 
 #include <memory>
-#include "../Scene3D/Resources/userdata.h"
 
 namespace uicore
 {
@@ -95,16 +94,7 @@ public:
 	void set_debug_drawn(bool enable);
 
 	template<typename T>
-	void set_data(const std::shared_ptr<T> &data)
-	{
-		get_userdata_owner()->set_data<T>(data);
-	}
-
-	template<typename T>
-	std::shared_ptr<T> get_data()
-	{
-		return get_userdata_owner()->get_data<T>();
-	}
+	std::shared_ptr<T> get_data() { return std::shared_ptr<T>(); } // To do: remove this function and fix code depending on it
 
 	// Rigid body functionality:
 
@@ -128,8 +118,6 @@ public:
 	void remove_constraint(const Physics3DConstraint &constraint);
 
 private:
-	UserDataOwner *get_userdata_owner();
-
 	std::shared_ptr<Physics3DObject_Impl> impl;
 
 	friend class Physics3DContactTest;

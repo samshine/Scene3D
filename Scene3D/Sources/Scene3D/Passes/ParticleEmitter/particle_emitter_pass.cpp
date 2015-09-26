@@ -29,8 +29,8 @@
 #include "precomp.h"
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
-#include "Scene3D/Framework/material_cache.h"
-#include "Scene3D/Framework/mapped_buffer.h"
+#include "Scene3D/SceneCache/material_cache.h"
+#include "Scene3D/SceneCache/mapped_buffer.h"
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 

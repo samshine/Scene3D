@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene3D/Resources/resource_container.h"
+#include "Scene3D/SceneCache/resource_container.h"
 
 namespace uicore
 {

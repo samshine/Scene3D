@@ -167,7 +167,6 @@
     <ClInclude Include="Model\GameWorld\game_object_collision.h" />
     <ClInclude Include="Model\GameWorld\game_tick.h" />
     <ClInclude Include="Model\GameWorld\game_world.h" />
-    <ClInclude Include="Model\GameWorld\old_character_controller.h" />
     <ClInclude Include="Model\GameWorld\player_list.h" />
     <ClInclude Include="Model\GameWorld\player_pawn.h" />
     <ClInclude Include="Model\GameWorld\player_ragdoll.h" />
@@ -200,9 +199,6 @@
     <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="ResourceCaches\file_search_path.h" />
-    <ClInclude Include="ResourceCaches\game_scene_cache.h" />
-    <ClInclude Include="ResourceCaches\work_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\Screens\game_screen_controller.cpp" />
@@ -220,7 +216,6 @@
     <ClCompile Include="Model\GameWorld\flag.cpp" />
     <ClCompile Include="Model\GameWorld\game_object.cpp" />
     <ClCompile Include="Model\GameWorld\game_world.cpp" />
-    <ClCompile Include="Model\GameWorld\old_character_controller.cpp" />
     <ClCompile Include="Model\GameWorld\player_pawn.cpp" />
     <ClCompile Include="Model\GameWorld\player_ragdoll.cpp" />
     <ClCompile Include="Model\GameWorld\powerup.cpp" />
@@ -247,8 +242,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ResourceCaches\game_scene_cache.cpp" />
-    <ClCompile Include="ResourceCaches\work_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scene3D\Scene3D.vcxproj">

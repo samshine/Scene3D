@@ -1,6 +1,5 @@
 
 #include "precomp.h"
-#include "ResourceCaches/game_scene_cache.h"
 #include "Controllers/Screens/screen_view_controller.h"
 #include "Controllers/Screens/menu_screen_controller.h"
 #include "Controllers/Screens/game_screen_controller.h"
@@ -36,9 +35,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	MouseMovement mouse_movement;
 
-	ResourceManager resources;
-	SceneCache::set(resources, std::make_shared<GameSceneCache>(gc));
-	Screen::set_resources(resources);
+	Screen::scene_cache() = SceneCache(gc, "Resources/Scene3D");
 	Screen::sound_cache() = std::make_shared<SoundCache>();
 
 	UIThread ui_thread("Resources");
@@ -77,8 +74,6 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		while (RunLoop::process())
 		{
-			static_cast<GameSceneCache*>(&SceneCache::get(resources))->process_work_completed();
-
 			gc.clear();
 
 			auto screen = Screen::controller();

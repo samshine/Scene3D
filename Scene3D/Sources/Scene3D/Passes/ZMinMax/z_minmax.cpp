@@ -28,7 +28,7 @@
 
 #include "precomp.h"
 #include "z_minmax.h"
-#include "Scene3D/Framework/shader_setup.h"
+#include "Scene3D/SceneCache/shader_setup.h"
 
 namespace uicore
 {

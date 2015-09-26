@@ -45,8 +45,6 @@ public:
 	Physics3DWorld_Impl *world;
 	Physics3DShape shape;
 	std::unique_ptr<btCollisionObject> object;
-
-	UserDataOwner userdata_owner;
 };
 
 }

@@ -29,10 +29,10 @@
 #pragma once
 
 #include <list>
-#include "Scene3D/Resources/resource_manager.h"
 
 namespace uicore
 {
+	class SoundCache;
 	class AudioObject_Impl;
 
 	class AudioWorld_Impl

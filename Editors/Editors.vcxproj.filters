@@ -177,9 +177,6 @@
     <ClCompile Include="Views\Scene\scene_view.cpp">
       <Filter>Views\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Views\Scene\viewer_scene_cache.cpp">
-      <Filter>Views\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Views\Rollout\rollout_browse_field_property.cpp">
       <Filter>Views\Rollout</Filter>
     </ClCompile>
@@ -331,9 +328,6 @@
       <Filter>Views\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Views\Scene\scene_view.h">
-      <Filter>Views\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Views\Scene\viewer_scene_cache.h">
       <Filter>Views\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h">

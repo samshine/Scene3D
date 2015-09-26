@@ -29,7 +29,7 @@
 #pragma once
 
 #include <list>
-#include "Scene3D/Resources/resource.h"
+#include "resource.h"
 
 namespace uicore
 {

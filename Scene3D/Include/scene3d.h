@@ -35,6 +35,7 @@
 #pragma managed(push, off)
 #endif
 
+#include "Scene3D/scene_cache.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/scene_camera.h"
 #include "Scene3D/scene_light.h"
@@ -44,10 +45,6 @@
 #include "Scene3D/scene_particle_emitter.h"
 #include "Scene3D/scene_pass.h"
 #include "Scene3D/scene_cull_provider.h"
-#include "Scene3D/Resources/resource_manager.h"
-#include "Scene3D/Resources/resource_container.h"
-#include "Scene3D/Resources/resource.h"
-#include "Scene3D/Resources/scene_cache.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/LevelData/level_data.h"
 #include "Scene3D/Performance/gpu_timer.h"

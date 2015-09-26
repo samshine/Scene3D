@@ -45,8 +45,8 @@ Scene::Scene()
 {
 }
 
-Scene::Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
-: impl(std::make_shared<Scene_Impl>(gc, resources, shader_path))
+Scene::Scene(const SceneCache &cache)
+: impl(std::make_shared<Scene_Impl>(cache))
 {
 	impl->set_camera(SceneCamera(*this));
 }
@@ -64,11 +64,6 @@ const SceneCamera &Scene::get_camera() const
 SceneCamera &Scene::get_camera()
 {
 	return impl->get_camera();
-}
-
-ResourceContainer &Scene::get_inout_container()
-{
-	return impl->inout_data;
 }
 
 void Scene::set_viewport(const Rect &box, const FrameBuffer &fb)
@@ -198,10 +193,12 @@ std::vector<GPUTimer::Result> Scene::gpu_results;
 
 /////////////////////////////////////////////////////////////////////////////
 
-Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
-: resources(resources), frame(0)
+Scene_Impl::Scene_Impl(const SceneCache &cache) : cache(cache)
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
+
+	auto shader_path = get_cache()->get_shader_path();
+	auto gc = get_cache()->get_gc();
 
 	material_cache = std::unique_ptr<MaterialCache>(new MaterialCache(this));
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
@@ -328,6 +325,7 @@ void Scene_Impl::render(GraphicContext &gc)
 
 void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 {
+	get_cache()->process_work_completed();
 	material_cache->update(gc, time_elapsed);
 	particle_emitter_pass->update(gc, time_elapsed);
 	// To do: update scene object animations here too

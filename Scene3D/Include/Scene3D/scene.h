@@ -30,7 +30,6 @@
 #pragma once
 
 #include "Performance/gpu_timer.h"
-#include "Resources/resource_container.h"
 #include <memory>
 
 namespace uicore
@@ -38,7 +37,7 @@ namespace uicore
 /// \addtogroup clanScene_Scene clanScene Scene
 /// \{
 
-class ResourceManager;
+class SceneCache;
 class Scene_Impl;
 class SceneLight;
 class SceneParticleEmitter;
@@ -50,20 +49,12 @@ class Scene
 {
 public:
 	Scene();
-	Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path);
+	Scene(const SceneCache &cache);
 
 	bool is_null() const;
 
 	const SceneCamera &get_camera() const;
 	SceneCamera &get_camera();
-
-	ResourceContainer &get_inout_container();
-
-	template<typename Type>
-	Resource<Type> get_inout(const std::string &name)
-	{
-		return get_inout_container().get<Type>(name);
-	}
 
 	void set_viewport(const Rect &box, const FrameBuffer &fb = FrameBuffer());
 	void set_camera(const SceneCamera &camera);

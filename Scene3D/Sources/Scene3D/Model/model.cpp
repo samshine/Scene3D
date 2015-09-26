@@ -28,13 +28,13 @@
 
 #include "precomp.h"
 #include "model.h"
-#include "Scene3D/Framework/material_cache.h"
+#include "Scene3D/SceneCache/material_cache.h"
 #include "model_shader_cache.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
 #include "model_mesh_visitor.h"
 #include "model_lod.h"
-#include "Scene3D/Framework/instances_buffer.h"
+#include "Scene3D/SceneCache/instances_buffer.h"
 
 namespace uicore
 {

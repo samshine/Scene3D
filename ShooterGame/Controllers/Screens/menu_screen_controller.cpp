@@ -40,7 +40,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 
 	GraphicContext gc = canvas.get_gc();
 
-	scene = create_scene(canvas);
+	scene = Scene(Screen::scene_cache());
 	scene.set_camera(SceneCamera(scene));
 	scene.get_camera().set_position(Vec3f(0.0f, 1.8f, -3.0f));
 	//scene.get_camera().set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));

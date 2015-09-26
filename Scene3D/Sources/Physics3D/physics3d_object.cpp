@@ -192,11 +192,6 @@ void Physics3DObject::set_debug_drawn(bool enable)
 		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT));
 }
 
-UserDataOwner *Physics3DObject::get_userdata_owner()
-{
-	return &impl->userdata_owner;
-}
-
 void Physics3DObject::set_mass(float mass, const Vec3f &local_inertia)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());

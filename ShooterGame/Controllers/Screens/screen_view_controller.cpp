@@ -12,11 +12,6 @@ ScreenViewController::ScreenViewController(Canvas &canvas)
 	texture_view->set_always_render(true);
 }
 
-uicore::Scene ScreenViewController::create_scene(uicore::Canvas &canvas)
-{
-	return uicore::Scene(canvas.get_gc(), Screen::resources(), "Resources/Scene3D");
-}
-
 void ScreenViewController::render_scene(uicore::Canvas &canvas, uicore::Scene &scene)
 {
 	using namespace uicore;
@@ -43,14 +38,9 @@ std::shared_ptr<ScreenViewController> &Screen::controller()
 	return screen_controller;
 }
 
-const uicore::ResourceManager &Screen::resources()
+SceneCache &Screen::scene_cache()
 {
-	return resource_manager;
-}
-
-std::shared_ptr<SceneCache> &Screen::scene_cache()
-{
-	static std::shared_ptr<SceneCache> cache;
+	static SceneCache cache;
 	return cache;
 }
 
@@ -59,10 +49,3 @@ std::shared_ptr<SoundCache> &Screen::sound_cache()
 	static std::shared_ptr<SoundCache> cache;
 	return cache;
 }
-
-void Screen::set_resources(const uicore::ResourceManager &resources)
-{
-	resource_manager = resources;
-}
-
-uicore::ResourceManager Screen::resource_manager;

@@ -74,7 +74,6 @@
     <ClCompile Include="Views\Rollout\rollout_view.cpp" />
     <ClCompile Include="Views\Scene\mouse_movement.cpp" />
     <ClCompile Include="Views\Scene\scene_view.cpp" />
-    <ClCompile Include="Views\Scene\viewer_scene_cache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.h" />
@@ -129,7 +128,6 @@
     <ClInclude Include="Views\Rollout\rollout_view.h" />
     <ClInclude Include="Views\Scene\mouse_movement.h" />
     <ClInclude Include="Views\Scene\scene_view.h" />
-    <ClInclude Include="Views\Scene\viewer_scene_cache.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A8588D01-1C50-44CB-92CD-707B951D1AA9}</ProjectGuid>
