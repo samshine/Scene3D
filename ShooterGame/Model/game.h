@@ -10,15 +10,15 @@
 class Game
 {
 public:
-	Game(std::string hostname, std::string port, bool server, uicore::SceneCache scene_cache = uicore::SceneCache(), const std::shared_ptr<SoundCache> &sound_cache = std::shared_ptr<SoundCache>(), uicore::GraphicContext gc = uicore::GraphicContext(), uicore::DisplayWindow ic = uicore::DisplayWindow());
+	Game(std::string hostname, std::string port, bool server, SceneCache scene_cache = SceneCache(), const std::shared_ptr<SoundCache> &sound_cache = std::shared_ptr<SoundCache>(), uicore::GraphicContext gc = uicore::GraphicContext(), uicore::DisplayWindow ic = uicore::DisplayWindow());
 
 	void update(uicore::Vec2i mouse_movement);
 
 	uicore::GraphicContext gc;
 	uicore::DisplayWindow ic;
 
-	uicore::SceneCache scene_cache;
-	uicore::Scene scene;
+	SceneCache scene_cache;
+	Scene scene;
 
 	std::unique_ptr<AudioWorld> audio;
 	std::unique_ptr<MusicPlayer> music_player;
@@ -33,8 +33,8 @@ public:
 	JsonValue game_data;
 	JsonValue level_data;
 
-	uicore::SceneObject level_instance;
-	std::vector<uicore::SceneObject> objects;
+	SceneObject level_instance;
+	std::vector<SceneObject> objects;
 
 	std::vector<Physics3DObject> level_collision_objects;
 

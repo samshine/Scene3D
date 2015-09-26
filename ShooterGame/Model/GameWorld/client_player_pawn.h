@@ -17,14 +17,14 @@ public:
 	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event);
 	void net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event);
 
-	uicore::SceneCamera camera;
+	SceneCamera camera;
 
 	bool get_is_owner() const { return is_owner; }
 
 private:
 	bool is_owner = false;
 
-	uicore::SceneObject scene_object;
+	SceneObject scene_object;
 	AudioObject sound;
 	float step_movement = 0.0f;
 	bool left_step = false;

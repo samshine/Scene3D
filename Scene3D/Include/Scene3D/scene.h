@@ -1,41 +1,8 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
-
 
 #pragma once
 
 #include "Performance/gpu_timer.h"
 #include <memory>
-
-namespace uicore
-{
-/// \addtogroup clanScene_Scene clanScene Scene
-/// \{
 
 class SceneCache;
 class Scene_Impl;
@@ -56,28 +23,28 @@ public:
 	const SceneCamera &get_camera() const;
 	SceneCamera &get_camera();
 
-	void set_viewport(const Rect &box, const FrameBuffer &fb = FrameBuffer());
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBuffer &fb = uicore::FrameBuffer());
 	void set_camera(const SceneCamera &camera);
 
-	void render(GraphicContext &gc);
+	void render(uicore::GraphicContext &gc);
 
-	void update(GraphicContext &gc, float time_elapsed);
+	void update(uicore::GraphicContext &gc, float time_elapsed);
 
-	Mat4f world_to_eye() const;
-	Mat4f eye_to_projection() const;
-	Mat4f world_to_projection() const;
+	uicore::Mat4f world_to_eye() const;
+	uicore::Mat4f eye_to_projection() const;
+	uicore::Mat4f world_to_projection() const;
 
-	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
+	void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction);
 
-	void set_cull_oct_tree(const AxisAlignedBoundingBox &aabb);
-	void set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max);
+	void set_cull_oct_tree(const uicore::AxisAlignedBoundingBox &aabb);
+	void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max);
 	void set_cull_oct_tree(float max_size);
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 	void remove_pass(const std::string &name);
 
 	void show_skybox_stars(bool enable);
-	void set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors);
+	void set_skybox_gradient(uicore::GraphicContext &gc, std::vector<uicore::Colorf> &colors);
 
 	// To do: should not be static, should be getter functions, etc.
 	static int models_drawn;
@@ -98,7 +65,3 @@ private:
 	friend class SceneLightProbe;
 	friend class ScenePass;
 };
-
-}
-
-/// \}

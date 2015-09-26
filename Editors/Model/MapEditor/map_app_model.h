@@ -29,10 +29,10 @@ public:
 	static MapAppModel *instance();
 
 	std::string open_filename;
-	uicore::MapDesc desc;
+	MapDesc desc;
 
-	std::shared_ptr<uicore::FBXModel> map_fbx;
-	std::shared_ptr<uicore::ModelData> map_model_data;
+	std::shared_ptr<FBXModel> map_fbx;
+	std::shared_ptr<ModelData> map_model_data;
 
 	UndoSystem undo_system;
 

@@ -1,50 +1,47 @@
 
 #pragma once
 
-namespace uicore
+class VertexMapping
 {
-	class VertexMapping
+public:
+	VertexMapping() : vertex_index(), next(nullptr), bone_selectors(255) { }
+	~VertexMapping() { delete next; }
+
+	VertexMapping *next;
+
+	uicore::Vec3f position;
+	uicore::Vec3f normal;
+	uicore::Vec3f tangent;
+	uicore::Vec3f bitangent;
+
+	uicore::Vec4ub color;
+
+	uicore::Vec2f diffuse_uv;
+	uicore::Vec2f specular_uv;
+	uicore::Vec2f normal_uv;
+	uicore::Vec2f emission_uv;
+
+	uicore::Vec4ub bone_selectors;
+	uicore::Vec4ub bone_weights;
+
+	int vertex_index;
+};
+
+class VertexMappingVector : public std::vector<VertexMapping *>
+{
+public:
+	VertexMappingVector(size_t count)
+		: std::vector<VertexMapping *>(count)
 	{
-	public:
-		VertexMapping() : vertex_index(), next(nullptr), bone_selectors(255) { }
-		~VertexMapping() { delete next; }
+	}
 
-		VertexMapping *next;
-
-		Vec3f position;
-		Vec3f normal;
-		Vec3f tangent;
-		Vec3f bitangent;
-
-		Vec4ub color;
-
-		Vec2f diffuse_uv;
-		Vec2f specular_uv;
-		Vec2f normal_uv;
-		Vec2f emission_uv;
-
-		Vec4ub bone_selectors;
-		Vec4ub bone_weights;
-
-		int vertex_index;
-	};
-
-	class VertexMappingVector : public std::vector<VertexMapping *>
+	~VertexMappingVector()
 	{
-	public:
-		VertexMappingVector(size_t count)
-			: std::vector<VertexMapping *>(count)
-		{
-		}
+		for (size_t i = 0; i < size(); i++)
+			delete (*this)[i];
+	}
 
-		~VertexMappingVector()
-		{
-			for (size_t i = 0; i < size(); i++)
-				delete (*this)[i];
-		}
-
-	private:
-		VertexMappingVector(const VertexMappingVector &that);
-		VertexMappingVector &operator=(const VertexMappingVector &that);
-	};
-}
+private:
+	VertexMappingVector(const VertexMappingVector &that);
+	VertexMappingVector &operator=(const VertexMappingVector &that);
+};

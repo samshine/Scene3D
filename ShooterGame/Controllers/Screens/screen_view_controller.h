@@ -11,7 +11,7 @@ public:
 	virtual bool cursor_hidden() { return false; }
 	virtual void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) { }
 
-	void render_scene(uicore::Canvas &canvas, uicore::Scene &scene);
+	void render_scene(uicore::Canvas &canvas, Scene &scene);
 };
 
 class Screen
@@ -19,9 +19,6 @@ class Screen
 public:
 	static std::shared_ptr<ScreenViewController> &controller();
 
-	static uicore::SceneCache &scene_cache();
+	static SceneCache &scene_cache();
 	static std::shared_ptr<SoundCache> &sound_cache();
-
-private:
-	static uicore::ResourceManager resource_manager;
 };

@@ -3,12 +3,9 @@
 
 #include <vector>
 
-namespace uicore
+class MapDescPathNode
 {
-	class MapDescPathNode
-	{
-	public:
-		Vec3f position;
-		std::vector<int> connections;
-	};
-}
+public:
+	uicore::Vec3f position;
+	std::vector<int> connections;
+};

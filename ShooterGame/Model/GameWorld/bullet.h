@@ -24,8 +24,8 @@ private:
 
 	Physics3DRayTest ray_test;
 
-	uicore::SceneObject scene_object;
-	uicore::SceneParticleEmitter emitter;
+	SceneObject scene_object;
+	SceneParticleEmitter emitter;
 	AudioObject sound;
 
 	float gravity = 0.0f;

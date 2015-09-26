@@ -15,8 +15,8 @@ public:
 protected:
 	uicore::Vec3f pos;
 	uicore::Quaternionf orientation;
-	uicore::SceneObject scene_object;
-	uicore::SceneParticleEmitter emitter;
+	SceneObject scene_object;
+	SceneParticleEmitter emitter;
 	AudioObject sound;
 
 	float time_left = 0.0f;

@@ -1,30 +1,3 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #pragma once
 
@@ -52,13 +25,9 @@
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
 #include <list>
 
-namespace uicore
-{
-
 class SceneCache;
 class SceneCacheImpl;
 class ModelMeshVisitor;
-class FrustumPlanes;
 class SceneObject_Impl;
 class SceneLight_Impl;
 class SceneLightVisitor;
@@ -74,19 +43,19 @@ public:
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
-	void set_viewport(const Rect &box, const FrameBuffer &fb = FrameBuffer());
-	void set_camera(const Vec3f &position, const Quaternionf &orientation);
-	void set_camera_position(const Vec3f &position);
-	void set_camera_orientation(const Quaternionf &orientation);
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBuffer &fb = uicore::FrameBuffer());
+	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
+	void set_camera_position(const uicore::Vec3f &position);
+	void set_camera_orientation(const uicore::Quaternionf &orientation);
 	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
-	void render(GraphicContext &gc);
-	void update(GraphicContext &gc, float time_elapsed);
+	void render(uicore::GraphicContext &gc);
+	void update(uicore::GraphicContext &gc, float time_elapsed);
 
-	void visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor);
-	void visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor);
-	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
+	void visit(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, ModelMeshVisitor *visitor);
+	void visit_lights(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneLightVisitor *visitor);
+	void visit_emitters(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
 
-	SceneLightProbe_Impl *find_nearest_probe(const Vec3f &position);
+	SceneLightProbe_Impl *find_nearest_probe(const uicore::Vec3f &position);
 
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
@@ -119,9 +88,9 @@ private:
 	SceneCamera camera;
 
 	Resource<float> camera_field_of_view;
-	Resource<FrameBuffer> viewport_fb;
-	Resource<Rect> viewport;
-	Resource<Mat4f> out_world_to_eye;
+	Resource<uicore::FrameBuffer> viewport_fb;
+	Resource<uicore::Rect> viewport;
+	Resource<uicore::Mat4f> out_world_to_eye;
 
 	std::unique_ptr<VSMShadowMapPass> vsm_shadow_map_pass;
 	std::unique_ptr<GBufferPass> gbuffer_pass;
@@ -148,6 +117,3 @@ private:
 	friend class SceneModel_Impl;
 	friend class Scene;
 };
-
-}
-

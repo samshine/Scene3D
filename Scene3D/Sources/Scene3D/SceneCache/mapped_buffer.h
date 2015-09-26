@@ -1,35 +1,32 @@
 
 #pragma once
 
-namespace uicore
+template<typename Type>
+class MappedBuffer
 {
-	template<typename Type>
-	class MappedBuffer
+public:
+	MappedBuffer() : ptr(0), length(0) { }
+	MappedBuffer(Type *ptr, size_t length) : ptr(ptr), length(length) { }
+
+	Type &operator[](size_t index)
 	{
-	public:
-		MappedBuffer() : ptr(0), length(0) { }
-		MappedBuffer(Type *ptr, size_t length) : ptr(ptr), length(length) { }
+		return (index < length) ? ptr[index] : *((Type*)0);
+	}
 
-		Type &operator[](size_t index)
-		{
-			return (index < length) ? ptr[index] : *((Type*)0);
-		}
+	const Type &operator[](size_t index) const
+	{
+		return (index < length) ? ptr[index] : *((Type*)0);
+	}
 
-		const Type &operator[](size_t index) const
-		{
-			return (index < length) ? ptr[index] : *((Type*)0);
-		}
+	MappedBuffer operator+(size_t offset) const
+	{
+		if (length < offset)
+			return MappedBuffer();
+		else
+			return MappedBuffer(ptr + offset, length - offset);
+	}
 
-		MappedBuffer operator+(size_t offset) const
-		{
-			if (length < offset)
-				return MappedBuffer();
-			else
-				return MappedBuffer(ptr + offset, length - offset);
-		}
-
-	private:
-		Type *ptr;
-		size_t length;
-	};
-}
+private:
+	Type *ptr;
+	size_t length;
+};

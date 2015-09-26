@@ -11,8 +11,8 @@ public:
 	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	uicore::Scene scene;
-	uicore::SceneObject map_object;
+	Scene scene;
+	SceneObject map_object;
 
 	float t = 0.0f;
 	uicore::GameTime game_time;

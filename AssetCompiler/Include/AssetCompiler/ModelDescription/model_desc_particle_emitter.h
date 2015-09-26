@@ -1,20 +1,17 @@
 
 #pragma once
 
-namespace uicore
+class ModelDescParticleEmitter
 {
-	class ModelDescParticleEmitter
-	{
-	public:
-		Vec3f position;
-		int bone_selector;
-		float size;
-		float speed;
-		float spread;
-		float gravity;
-		float longevity;
-		float delay;
-		Vec4f color;
-		std::string texture;
-	};
-}
+public:
+	uicore::Vec3f position;
+	int bone_selector = -1;
+	float size = 0.0f;
+	float speed = 0.0f;
+	float spread = 0.0f;
+	float gravity = 0.0f;
+	float longevity = 0.0f;
+	float delay = 0.0f;
+	uicore::Vec4f color;
+	std::string texture;
+};

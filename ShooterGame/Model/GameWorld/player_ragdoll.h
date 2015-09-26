@@ -13,10 +13,10 @@ public:
 	void frame(float time_elapsed, float interpolated_time) override;
 
 protected:
-	std::shared_ptr<uicore::ModelData> create_box(const uicore::Vec3f &box_size);
+	std::shared_ptr<ModelData> create_box(const uicore::Vec3f &box_size);
 
-	uicore::SceneObject scene_object1;
-	uicore::SceneObject scene_object2;
+	SceneObject scene_object1;
+	SceneObject scene_object2;
 
 	Physics3DConstraint hinge_constraint;
 	Physics3DObject physics_object1;

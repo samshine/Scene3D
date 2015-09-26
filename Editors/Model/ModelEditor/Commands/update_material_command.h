@@ -6,13 +6,13 @@
 class UpdateMaterialCommand : public ModelCommand
 {
 public:
-	UpdateMaterialCommand(size_t index, uicore::ModelDescMaterial material);
+	UpdateMaterialCommand(size_t index, ModelDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	uicore::ModelDescMaterial old_material;
-	uicore::ModelDescMaterial new_material;
+	ModelDescMaterial old_material;
+	ModelDescMaterial new_material;
 };

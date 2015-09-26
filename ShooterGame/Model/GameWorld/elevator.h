@@ -33,7 +33,7 @@ protected:
 	Physics3DShape box_shape;
 	Physics3DObject body;
 
-	uicore::SceneObject scene_object;
+	SceneObject scene_object;
 
 	enum State
 	{
@@ -50,5 +50,5 @@ protected:
 	float speed = 1.0f;
 	float wait_time = 5.0f;
 
-	std::shared_ptr<uicore::ModelData> create_box();
+	std::shared_ptr<ModelData> create_box();
 };

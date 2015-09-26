@@ -1,13 +1,10 @@
 
 #pragma once
 
-namespace uicore
+class MapDescTrigger
 {
-	class MapDescTrigger
-	{
-	public:
-		std::string id;
-		std::vector<Vec3f> points;
-		Vec3f direction_normal;
-	};
-}
+public:
+	std::string id;
+	std::vector<uicore::Vec3f> points;
+	uicore::Vec3f direction_normal;
+};

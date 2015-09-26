@@ -1,45 +1,16 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #pragma once
-namespace uicore
-{
 
 template<typename Type>
 class DualQuaternionx
 {
 public:
 	DualQuaternionx();
-	DualQuaternionx(const Vec3f translate, const Quaternionf orientation);
-	Mat4<Type> to_matrix();
+	DualQuaternionx(const uicore::Vec3f translate, const uicore::Quaternionf orientation);
+	uicore::Mat4<Type> to_matrix();
 
-	Quaternionx<Type> first;
-	Quaternionx<Type> second;
+	uicore::Quaternionx<Type> first;
+	uicore::Quaternionx<Type> second;
 };
 
 template<typename Type>
@@ -48,7 +19,7 @@ DualQuaternionx<Type>::DualQuaternionx()
 }
 
 template<typename Type>
-DualQuaternionx<Type>::DualQuaternionx(const Vec3f translate, const Quaternionf orientation)
+DualQuaternionx<Type>::DualQuaternionx(const uicore::Vec3f translate, const uicore::Quaternionf orientation)
 {
 	first = orientation;
 	second.x = Type( 0.5) * ( translate.x * orientation.w + translate.y * orientation.z - translate.z * orientation.y);
@@ -58,7 +29,7 @@ DualQuaternionx<Type>::DualQuaternionx(const Vec3f translate, const Quaternionf 
 }
 
 template<typename Type>
-Mat4<Type> DualQuaternionx<Type>::to_matrix()
+uicore::Mat4<Type> DualQuaternionx<Type>::to_matrix()
 {
 	Type length = first.magnitude();
 	Type x = first.x;
@@ -70,7 +41,7 @@ Mat4<Type> DualQuaternionx<Type>::to_matrix()
 	Type t3 = second.z;
 	Type t0 = second.w;
 
-	Mat4<Type> result;
+	uicore::Mat4<Type> result;
 	result.m[0][0] = w*w + x*x - y*y - z*z; 
 	result.m[1][0] = 2*x*y - 2*w*z;
 	result.m[2][0] = 2*x*z + 2*w*y;
@@ -96,6 +67,3 @@ Mat4<Type> DualQuaternionx<Type>::to_matrix()
 
 typedef DualQuaternionx<float> DualQuaternionf;
 typedef DualQuaternionx<double> DualQuaterniond;
-
-}
-

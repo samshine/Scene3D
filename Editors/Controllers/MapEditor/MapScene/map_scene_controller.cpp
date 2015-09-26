@@ -16,10 +16,10 @@ MapSceneController::MapSceneController()
 
 void MapSceneController::map_model_data_updated()
 {
-	map_object = uicore::SceneObject();
+	map_object = SceneObject();
 }
 
-void MapSceneController::update_scene(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &)
+void MapSceneController::update_scene(Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &)
 {
 	if (map_object.is_null())
 	{

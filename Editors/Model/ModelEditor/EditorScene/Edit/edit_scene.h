@@ -11,35 +11,35 @@ public:
 	CharacterController *get_character_controller() { return 0; }
 
 	void set_map_model(const std::string &map_model) override;
-	void set_model_data(std::shared_ptr<uicore::ModelData> model_data) override;
+	void set_model_data(std::shared_ptr<ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;
 
-	void update(uicore::Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &window, bool has_focus, const uicore::Vec2i &mouse_delta) override;
+	void update(Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &window, bool has_focus, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	void setup_default_scene(uicore::Scene &scene, uicore::GraphicContext &gc);
-	void update_model(uicore::Scene &scene, uicore::GraphicContext &gc);
-	void update_map(uicore::Scene &scene, uicore::GraphicContext &gc);
+	void setup_default_scene(Scene &scene, uicore::GraphicContext &gc);
+	void update_model(Scene &scene, uicore::GraphicContext &gc);
+	void update_map(Scene &scene, uicore::GraphicContext &gc);
 
 	void play_animation(const std::string &name, bool instant);
 	void play_transition(const std::string &anim1, const std::string &anim2, bool instant);
 	std::string get_animation() const;
 
-	std::shared_ptr<uicore::ModelData> model_data;
+	std::shared_ptr<ModelData> model_data;
 	std::string current_animation = "default";
 
 	uicore::GameTime gametime;
 
-	uicore::SceneLight light1;
-	uicore::SceneLight light2;
-	uicore::SceneModel model1;
-	uicore::SceneObject object1;
-	uicore::SceneCamera camera;
+	SceneLight light1;
+	SceneLight light2;
+	SceneModel model1;
+	SceneObject object1;
+	SceneCamera camera;
 
 	std::string map_model_filename;
 	bool map_model_updated = true;
-	uicore::SceneModel map_model;
-	uicore::SceneObject map_object;
+	SceneModel map_model;
+	SceneObject map_object;
 
 	std::vector<SceneModelAttachment> attachments;
 

@@ -148,7 +148,7 @@ void EditScene::set_attachments(std::vector<SceneModelAttachment> new_attachment
 	model_data_updated = true;
 }
 
-void EditScene::update_map(uicore::Scene &scene, GraphicContext &gc)
+void EditScene::update_map(Scene &scene, GraphicContext &gc)
 {
 	if (!map_model_updated) return;
 	map_model_updated = false;
@@ -171,7 +171,7 @@ void EditScene::update_map(uicore::Scene &scene, GraphicContext &gc)
 	}
 }
 
-void EditScene::update_model(uicore::Scene &scene, GraphicContext &gc)
+void EditScene::update_model(Scene &scene, GraphicContext &gc)
 {
 	if (!model_data_updated) return;
 	model_data_updated = false;

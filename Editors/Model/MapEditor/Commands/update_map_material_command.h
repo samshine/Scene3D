@@ -6,13 +6,13 @@
 class UpdateMapMaterialCommand : public ModelCommand
 {
 public:
-	UpdateMapMaterialCommand(size_t index, uicore::MapDescMaterial material);
+	UpdateMapMaterialCommand(size_t index, MapDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	uicore::MapDescMaterial old_material;
-	uicore::MapDescMaterial new_material;
+	MapDescMaterial old_material;
+	MapDescMaterial new_material;
 };

@@ -1,16 +1,13 @@
 
 #pragma once
 
-namespace uicore
+class ModelDescMaterial
 {
-	class ModelDescMaterial
-	{
-	public:
-		std::string mesh_material;
-		bool two_sided = false;
-		bool alpha_test = false;
-		bool transparent = false;
-		bool no_collision = false;
-		bool no_render = false;
-	};
-}
+public:
+	std::string mesh_material;
+	bool two_sided = false;
+	bool alpha_test = false;
+	bool transparent = false;
+	bool no_collision = false;
+	bool no_render = false;
+};

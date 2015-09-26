@@ -1,30 +1,3 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #pragma once
 
@@ -32,14 +5,11 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/scene_impl.h"
 
-namespace uicore
-{
-
 class ModelRenderCommand
 {
 public:
 	virtual ~ModelRenderCommand() { }
-	virtual void execute(GraphicContext &gc, int num_instances) = 0;
+	virtual void execute(uicore::GraphicContext &gc, int num_instances) = 0;
 };
 
 class ModelRenderCommandList
@@ -51,7 +21,7 @@ public:
 			delete commands[i];
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		for (size_t i = 0; i < commands.size(); i++)
 			commands[i]->execute(gc, num_instances);
@@ -67,7 +37,7 @@ public:
 	{
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_primitives_array(buffers->primitives_array);
 		gc.set_primitives_elements(buffers->elements);
@@ -79,63 +49,63 @@ public:
 class ModelRenderCommand_BindShader : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindShader(ProgramObject shader) : shader(shader)
+	ModelRenderCommand_BindShader(uicore::ProgramObject shader) : shader(shader)
 	{
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_program_object(shader);
 	}
 
-	ProgramObject shader;
+	uicore::ProgramObject shader;
 };
 
 class ModelRenderCommand_BindTexture : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindTexture(int bind_index, Resource<Texture> texture, TextureWrapMode wrap_u, TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
+	ModelRenderCommand_BindTexture(int bind_index, Resource<uicore::Texture> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
 	{
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		texture.get().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
 		gc.set_texture(bind_index, texture.get());
 	}
 
 	int bind_index;
-	Resource<Texture> texture;
-	TextureWrapMode wrap_u, wrap_v;
+	Resource<uicore::Texture> texture;
+	uicore::TextureWrapMode wrap_u, wrap_v;
 };
 
 class ModelRenderCommand_SetRasterizerState : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_SetRasterizerState(RasterizerState state) : state(state)
+	ModelRenderCommand_SetRasterizerState(uicore::RasterizerState state) : state(state)
 	{
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_rasterizer_state(state);
 	}
 
-	RasterizerState state;
+	uicore::RasterizerState state;
 };
 
 class ModelRenderCommand_DrawElements : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_DrawElements(int start_element, int num_elements, UniformVector<ModelMaterialUniforms> uniforms)
+	ModelRenderCommand_DrawElements(int start_element, int num_elements, uicore::UniformVector<ModelMaterialUniforms> uniforms)
 		: start_element(start_element), num_elements(num_elements), uniforms(uniforms)
 	{
 	}
 
-	void execute(GraphicContext &gc, int num_instances)
+	void execute(uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_uniform_buffer(0, uniforms);
-		gc.draw_primitives_elements_instanced(type_triangles, num_elements, type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
+		gc.draw_primitives_elements_instanced(uicore::type_triangles, num_elements, uicore::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
 		Scene::draw_calls++;
 		Scene::triangles_drawn += num_elements / 3;
@@ -143,8 +113,5 @@ public:
 
 	int start_element;
 	int num_elements;
-	UniformVector<ModelMaterialUniforms> uniforms;
+	uicore::UniformVector<ModelMaterialUniforms> uniforms;
 };
-
-}
-

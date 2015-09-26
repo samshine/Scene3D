@@ -1,11 +1,8 @@
 
 #pragma once
 
-namespace uicore
+class MapDescLightProbe
 {
-	class MapDescLightProbe
-	{
-	public:
-		Vec3f position;
-	};
-}
+public:
+	uicore::Vec3f position;
+};

@@ -6,11 +6,11 @@
 class AddMapMaterialCommand : public ModelCommand
 {
 public:
-	AddMapMaterialCommand(uicore::MapDescMaterial material);
+	AddMapMaterialCommand(MapDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	uicore::MapDescMaterial new_material;
+	MapDescMaterial new_material;
 };

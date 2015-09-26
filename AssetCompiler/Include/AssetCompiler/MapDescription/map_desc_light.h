@@ -3,12 +3,9 @@
 
 #include <string>
 
-namespace uicore
+class MapDescLight
 {
-	class MapDescLight
-	{
-	public:
-		std::string mesh_light;
-		bool bake = false;
-	};
-}
+public:
+	std::string mesh_light;
+	bool bake = false;
+};

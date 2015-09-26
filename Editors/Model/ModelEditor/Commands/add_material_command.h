@@ -6,11 +6,11 @@
 class AddMaterialCommand : public ModelCommand
 {
 public:
-	AddMaterialCommand(uicore::ModelDescMaterial material);
+	AddMaterialCommand(ModelDescMaterial material);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	uicore::ModelDescMaterial new_material;
+	ModelDescMaterial new_material;
 };

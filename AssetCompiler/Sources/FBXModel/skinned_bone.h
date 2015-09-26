@@ -3,14 +3,9 @@
 
 #include <fbxsdk.h>
 
-namespace uicore
+class SkinnedBone
 {
-	class SkinnedBone
-	{
-	public:
-		SkinnedBone() : bone_node(nullptr) { }
-
-		FbxAMatrix bind_bone_to_world;
-		FbxNode *bone_node;
-	};
-}
+public:
+	FbxAMatrix bind_bone_to_world;
+	FbxNode *bone_node = nullptr;
+};

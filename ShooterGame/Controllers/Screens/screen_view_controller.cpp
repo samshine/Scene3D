@@ -12,7 +12,7 @@ ScreenViewController::ScreenViewController(Canvas &canvas)
 	texture_view->set_always_render(true);
 }
 
-void ScreenViewController::render_scene(uicore::Canvas &canvas, uicore::Scene &scene)
+void ScreenViewController::render_scene(uicore::Canvas &canvas, Scene &scene)
 {
 	using namespace uicore;
 

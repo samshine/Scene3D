@@ -87,14 +87,14 @@ private:
 
 	uicore::GameTime game_time;
 
-	uicore::Scene scene;
+	Scene scene;
 	uicore::Physics3DWorld collision_world;
 	CharacterController character_controller;
 
-	uicore::SceneObject map_object;
+	SceneObject map_object;
 	uicore::Physics3DObject map_collision;
 
-	uicore::SceneObject model_object;
+	SceneObject model_object;
 	std::string last_anim = "default";
 
 	GameInput game_input;

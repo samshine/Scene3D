@@ -1,49 +1,19 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
-
 
 #pragma once
-namespace uicore
-{
 
 class Icosahedron
 {
 public:
-	Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed_sphere = false);
+	Icosahedron(uicore::GraphicContext &gc, bool use_radius_of_inscribed_sphere = false);
 
-	VertexArrayVector<Vec3f> vertices;
-	ElementArrayVector<unsigned int> elements;
+	uicore::VertexArrayVector<uicore::Vec3f> vertices;
+	uicore::ElementArrayVector<unsigned int> elements;
 
 	static const int num_vertices = 12;
 	static const int num_elements = 20 * 3;
 };
 
-inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed_sphere)
+inline Icosahedron::Icosahedron(uicore::GraphicContext &gc, bool use_radius_of_inscribed_sphere)
 {
 	// radius of a circumscribed sphere (one that touches the icosahedron at all vertices)
 	float x = 0.525731112119133606f;
@@ -55,20 +25,20 @@ inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed
 		z *= 1.32316908f;
 	}
 
-	Vec3f local_vertices[num_vertices] =
+	uicore::Vec3f local_vertices[num_vertices] =
 	{
-		Vec3f(-x, 0.0f, z),
-		Vec3f( x, 0.0f, z),
-		Vec3f(-x, 0.0f, -z),
-		Vec3f( x, 0.0f, -z),
-		Vec3f( 0.0f, z, x),
-		Vec3f( 0.0f, z, -x),
-		Vec3f( 0.0f, -z, x),
-		Vec3f( 0.0f, -z, -x),
-		Vec3f( z, x, 0.0f),
-		Vec3f(-z, x, 0.0f),
-		Vec3f( z, -x, 0.0f),
-		Vec3f(-z, -x, 0.0f)
+		uicore::Vec3f(-x, 0.0f, z),
+		uicore::Vec3f(x, 0.0f, z),
+		uicore::Vec3f(-x, 0.0f, -z),
+		uicore::Vec3f(x, 0.0f, -z),
+		uicore::Vec3f(0.0f, z, x),
+		uicore::Vec3f(0.0f, z, -x),
+		uicore::Vec3f(0.0f, -z, x),
+		uicore::Vec3f(0.0f, -z, -x),
+		uicore::Vec3f(z, x, 0.0f),
+		uicore::Vec3f(-z, x, 0.0f),
+		uicore::Vec3f(z, -x, 0.0f),
+		uicore::Vec3f(-z, -x, 0.0f)
 	};
 
 	unsigned int local_elements[num_elements] =
@@ -95,9 +65,6 @@ inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed
 		7,2,11
 	};
 
-	vertices = VertexArrayVector<Vec3f>(gc, local_vertices, num_vertices);
-	elements = ElementArrayVector<unsigned int>(gc, local_elements, num_elements);
+	vertices = uicore::VertexArrayVector<uicore::Vec3f>(gc, local_vertices, num_vertices);
+	elements = uicore::ElementArrayVector<unsigned int>(gc, local_elements, num_elements);
 }
-
-}
-

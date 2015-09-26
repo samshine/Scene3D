@@ -6,48 +6,47 @@
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "asset_compiler_impl.h"
 
-namespace uicore
+using namespace uicore;
+
+AssetCompiler::AssetCompiler() : impl(std::make_shared<AssetCompilerImpl>())
 {
-	AssetCompiler::AssetCompiler() : impl(std::make_shared<AssetCompilerImpl>())
+}
+
+void AssetCompiler::compile(const std::string &filename, const std::function<void(const CompilerMessage&)> &output)
+{
+	try
 	{
+		std::string filetype = PathHelp::get_extension(filename);
+		std::string base_path = PathHelp::get_fullpath(filename);
+		std::string output_filename = PathHelp::combine(base_path, PathHelp::get_basename(filename) + ".cmodel");
+
+		if (StringHelp::compare(filetype, "modeldesc", true) == 0)
+		{
+			ModelDesc desc = ModelDesc::load(filename);
+
+			FBXModel model(desc.fbx_filename);
+			std::shared_ptr<ModelData> model_data = model.convert(desc);
+
+			File file(output_filename, File::create_always, File::access_read_write);
+			ModelData::save(file, model_data, base_path);
+		}
+		else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
+		{
+			MapDesc desc = MapDesc::load(filename);
+
+			FBXModel model(desc.fbx_filename);
+			std::shared_ptr<ModelData> model_data = model.convert(desc);
+
+			File file(output_filename, File::create_always, File::access_read_write);
+			ModelData::save(file, model_data, base_path);
+		}
+		else
+		{
+			throw Exception("Unknown file type");
+		}
 	}
-
-	void AssetCompiler::compile(const std::string &filename, const std::function<void(const CompilerMessage&)> &output)
+	catch (Exception &e)
 	{
-		try
-		{
-			std::string filetype = PathHelp::get_extension(filename);
-			std::string base_path = PathHelp::get_fullpath(filename);
-			std::string output_filename = PathHelp::combine(base_path, PathHelp::get_basename(filename) + ".cmodel");
-
-			if (StringHelp::compare(filetype, "modeldesc", true) == 0)
-			{
-				ModelDesc desc = ModelDesc::load(filename);
-
-				FBXModel model(desc.fbx_filename);
-				std::shared_ptr<ModelData> model_data = model.convert(desc);
-
-				File file(output_filename, File::create_always, File::access_read_write);
-				ModelData::save(file, model_data, base_path);
-			}
-			else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
-			{
-				MapDesc desc = MapDesc::load(filename);
-
-				FBXModel model(desc.fbx_filename);
-				std::shared_ptr<ModelData> model_data = model.convert(desc);
-
-				File file(output_filename, File::create_always, File::access_read_write);
-				ModelData::save(file, model_data, base_path);
-			}
-			else
-			{
-				throw Exception("Unknown file type");
-			}
-		}
-		catch (Exception &e)
-		{
-			output(CompilerMessage(CompilerMessageType::error, e.message));
-		}
+		output(CompilerMessage(CompilerMessageType::error, e.message));
 	}
 }

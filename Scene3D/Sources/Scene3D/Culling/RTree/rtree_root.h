@@ -1,26 +1,4 @@
 /*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
 **  File Author(s):
 **
 **    1983 Original algorithm and test code by Antonin Guttman and Michael Stonebraker, UC Berkely
@@ -28,7 +6,7 @@
 **    1995 Sphere volume fix for degeneracy problem submitted by Paul Brook
 **    2004 Templated C++ port by Greg Douglas
 **    2011 Modified the container to support more data types, by Yariv Barkan
-**    2013 Modified to fit the needs of ClanLib, by Magnus Norddahl
+**    2013 Modified to fit the needs of Scene3D, by Magnus Norddahl
 **
 **  This file was originally made available as public domain by Yariv Barkan.
 **  This version of the file can be used using the above license, or as public domain.
@@ -42,9 +20,6 @@
 #include <stdlib.h>
 
 #include <algorithm>
-
-namespace uicore
-{
 
 #define ASSERT assert // RTreeRoot uses ASSERT( condition )
 #ifndef Min
@@ -1637,5 +1612,3 @@ bool RTREE_QUAL::Search(Node* a_node, Rect* a_rect, int& a_foundCount, t_resultC
 
 #undef RTREE_TEMPLATE
 #undef RTREE_QUAL
-
-}

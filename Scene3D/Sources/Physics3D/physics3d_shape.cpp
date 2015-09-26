@@ -42,7 +42,7 @@ Physics3DShape Physics3DShape::sphere(float radius)
 	return shape;
 }
 
-Physics3DShape Physics3DShape::model(const std::shared_ptr<uicore::ModelData> &model_data)
+Physics3DShape Physics3DShape::model(const std::shared_ptr<ModelData> &model_data)
 {
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -125,7 +125,7 @@ Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, uic
 	return shape;
 }
 
-Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<uicore::ModelData> &model_data)
+Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<ModelData> &model_data)
 {
 	Physics3DShape shape;
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
@@ -157,7 +157,7 @@ Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<uicore::Model
 	return shape;
 }
 
-Physics3DShape Physics3DShape::terrain(const std::shared_ptr<uicore::TerrainData> &terrain_data, uicore::Mat4f &out_transform)
+Physics3DShape Physics3DShape::terrain(const std::shared_ptr<TerrainData> &terrain_data, uicore::Mat4f &out_transform)
 {
 	throw uicore::Exception("Physics3DShape::terrain not implemented");
 /*

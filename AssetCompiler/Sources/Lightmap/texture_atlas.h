@@ -1,50 +1,47 @@
 
 #pragma once
 
-namespace uicore
+class TextureAtlasObject;
+class TextureAtlasNode;
+
+class TextureAtlas
 {
-	class TextureAtlasObject;
-	class TextureAtlasNode;
+public:
+	TextureAtlas(uicore::Size texture_size, bool search_previous_textures = false);
 
-	class TextureAtlas
-	{
-	public:
-		TextureAtlas(Size texture_size, bool search_previous_textures = false);
+	TextureAtlasObject add(uicore::Size size);
+	int array_count() const;
 
-		TextureAtlasObject add(Size size);
-		int array_count() const;
+private:
+	void add_new_root(const uicore::Size &texture_size);
 
-	private:
-		void add_new_root(const Size &texture_size);
+	int next_id = 1;
+	uicore::Size initial_texture_size;
+	std::vector<std::shared_ptr<TextureAtlasNode>> roots;
+	bool search_previous_textures;
+};
 
-		int next_id = 1;
-		Size initial_texture_size;
-		std::vector<std::shared_ptr<TextureAtlasNode>> roots;
-		bool search_previous_textures;
-	};
+class TextureAtlasObject
+{
+public:
+	TextureAtlasObject(int array_index, uicore::Rect box) : array_index(array_index), box(box) { }
 
-	class TextureAtlasObject
-	{
-	public:
-		TextureAtlasObject(int array_index, Rect box) : array_index(array_index), box(box) { }
+	int array_index = 0;
+	uicore::Rect box;
+};
 
-		int array_index = 0;
-		Rect box;
-	};
+class TextureAtlasNode : public std::enable_shared_from_this<TextureAtlasNode>
+{
+public:
+	TextureAtlasNode(const uicore::Rect &rect) : node_rect(rect) { }
 
-	class TextureAtlasNode : public std::enable_shared_from_this<TextureAtlasNode>
-	{
-	public:
-		TextureAtlasNode(const Rect &rect) : node_rect(rect) { }
+	TextureAtlasNode *insert(const uicore::Size &texture_size, int texture_id);
 
-		TextureAtlasNode *insert(const Size &texture_size, int texture_id);
+	uicore::Rect image_rect;
 
-		Rect image_rect;
+private:
+	std::unique_ptr<TextureAtlasNode> child[2];
+	uicore::Rect node_rect;
 
-	private:
-		std::unique_ptr<TextureAtlasNode> child[2];
-		Rect node_rect;
-
-		int id = 0;
-	};
-}
+	int id = 0;
+};

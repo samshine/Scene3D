@@ -1,30 +1,3 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-*/
 
 #pragma once
 
@@ -36,17 +9,14 @@
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
 
-namespace uicore
-{
-
 class Scene_Impl;
 class VSMShadowMapPassLightData;
 
 class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
 {
 public:
-	VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout);
-	void run(GraphicContext &gc, Scene_Impl *scene);
+	VSMShadowMapPass(uicore::GraphicContext &gc, ResourceContainer &inout);
+	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
 
 private:
 	void find_lights(Scene_Impl *scene);
@@ -55,15 +25,15 @@ private:
 	void blur_maps();
 
 	// ModelMeshVisitor
-	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void render(uicore::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
 	// SceneLightVisitor
-	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
-	Resource<Rect> viewport;
+	Resource<uicore::Rect> viewport;
 	Resource<float> field_of_view;
-	Resource<Mat4f> world_to_eye;
+	Resource<uicore::Mat4f> world_to_eye;
 
 	std::vector<SceneLight_Impl *> lights;
 	int round_robin;
@@ -71,9 +41,9 @@ private:
 
 	ShadowMaps maps;
 	GaussianBlur blur;
-	GraphicContext gc;
-	BlendState blend_state;
-	DepthStencilState depth_stencil_state;
+	uicore::GraphicContext gc;
+	uicore::BlendState blend_state;
+	uicore::DepthStencilState depth_stencil_state;
 
 	friend class VSMShadowMapPassLightData;
 };
@@ -86,11 +56,8 @@ public:
 	VSMShadowMapPass *pass;
 	SceneLight_Impl *light;
 
-	Mat4f eye_to_projection;
-	Mat4f world_to_eye;
-	Mat4f world_to_shadow_projection;
+	uicore::Mat4f eye_to_projection;
+	uicore::Mat4f world_to_eye;
+	uicore::Mat4f world_to_shadow_projection;
 	ShadowMapEntry shadow_map;
 };
-
-}
-

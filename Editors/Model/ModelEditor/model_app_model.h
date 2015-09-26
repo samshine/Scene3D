@@ -20,11 +20,11 @@ public:
 	static ModelAppModel *instance();
 
 	std::string open_filename;
-	uicore::ModelDesc desc;
+	ModelDesc desc;
 	std::string map_model;
 
-	std::shared_ptr<uicore::FBXModel> fbx;
-	std::shared_ptr<uicore::ModelData> model_data;
+	std::shared_ptr<FBXModel> fbx;
+	std::shared_ptr<ModelData> model_data;
 
 	std::shared_ptr<EditorScene> editor_scene;
 

@@ -6,11 +6,11 @@
 class AddAttachmentCommand : public ModelCommand
 {
 public:
-	AddAttachmentCommand(uicore::ModelDescAttachmentPoint attachment);
+	AddAttachmentCommand(ModelDescAttachmentPoint attachment);
 
 	void execute() override;
 	void rollback() override;
 
 private:
-	uicore::ModelDescAttachmentPoint new_attachment;
+	ModelDescAttachmentPoint new_attachment;
 };

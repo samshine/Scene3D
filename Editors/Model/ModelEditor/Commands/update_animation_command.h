@@ -6,13 +6,13 @@
 class UpdateAnimationCommand : public ModelCommand
 {
 public:
-	UpdateAnimationCommand(size_t index, uicore::ModelDescAnimation animation);
+	UpdateAnimationCommand(size_t index, ModelDescAnimation animation);
 
 	void execute() override;
 	void rollback() override;
 
 private:
 	size_t index;
-	uicore::ModelDescAnimation old_animation;
-	uicore::ModelDescAnimation new_animation;
+	ModelDescAnimation old_animation;
+	ModelDescAnimation new_animation;
 };

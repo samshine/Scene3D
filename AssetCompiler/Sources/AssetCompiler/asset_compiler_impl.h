@@ -1,10 +1,7 @@
 
 #pragma once
 
-namespace uicore
+class AssetCompilerImpl
 {
-	class AssetCompilerImpl
-	{
-	public:
-	};
-}
+public:
+};
