@@ -1,15 +1,12 @@
 
 #pragma once
 
-namespace uicore
+class SphereShape
 {
-	class SphereShape
-	{
-	public:
-		SphereShape() { }
-		SphereShape(const Vec3f &center, float radius) : center(center), radius(radius) { }
+public:
+	SphereShape() { }
+	SphereShape(const uicore::Vec3f &center, float radius) : center(center), radius(radius) { }
 
-		Vec3f center;
-		float radius = 0.0f;
-	};
-}
+	uicore::Vec3f center;
+	float radius = 0.0f;
+};
