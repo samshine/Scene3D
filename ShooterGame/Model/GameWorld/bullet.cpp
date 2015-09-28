@@ -35,7 +35,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 		SceneModel model(world->game()->gc, world->game()->scene, model_name);
 		scene_object = SceneObject(world->game()->scene, model, pos, orientation, Vec3f(scale));
 
-		if (desc.get_members().find("fireSound") != desc.get_members().end())
+		if (!desc["fireSound"].is_undefined())
 		{
 			sound = AudioObject(*world->game()->audio.get());
 			sound.set_sound(desc["fireSound"]["sample"].to_string());
@@ -46,7 +46,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 			sound.play();
 		}
 
-		if (desc.get_members().find("particleEmitter") != desc.get_members().end())
+		if (!desc["particleEmitter"].is_undefined())
 		{
 			emitter = SceneParticleEmitter(world->game()->scene);
 			emitter.set_type(SceneParticleEmitter::type_omni);

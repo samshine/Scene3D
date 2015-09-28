@@ -18,7 +18,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 	if (!world->is_server)
 	{
-		if (desc.get_members().find("model") != desc.get_members().end())
+		if (!desc["model"].is_undefined())
 		{
 			std::string model_name = desc["model"]["mesh"].to_string();
 			float scale = desc["model"]["scale"].to_float();
@@ -28,7 +28,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 			scene_object = SceneObject(world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
 		}
 
-		if (desc.get_members().find("sound") != desc.get_members().end())
+		if (!desc["sound"].is_undefined())
 		{
 			sound = AudioObject(*world->game()->audio.get());
 			sound.set_sound(desc["sound"]["sample"].to_string());
@@ -39,7 +39,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 			sound.play();
 		}
 
-		if (desc.get_members().find("particleEmitter") != desc.get_members().end())
+		if (!desc["particleEmitter"].is_undefined())
 		{
 			emitter = SceneParticleEmitter(world->game()->scene);
 			emitter.set_type(SceneParticleEmitter::type_omni);

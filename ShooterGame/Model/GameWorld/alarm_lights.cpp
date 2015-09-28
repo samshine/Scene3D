@@ -8,11 +8,11 @@ using namespace uicore;
 
 AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {
-	for (auto &item : world->game()->level_data["objects"].get_items())
+	for (const auto &item : world->game()->level_data["objects"].items())
 	{
 		if (item["type"].to_string() != "alarmLights") continue;
 
-		std::string group = item["fields"]["group"];
+		std::string group = item["fields"]["group"].to_string();
 
 		SceneModel model(world->game()->gc, world->game()->scene, item["mesh"].to_string());
 		SceneObject light(world->game()->scene, model);

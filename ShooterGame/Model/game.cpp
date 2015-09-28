@@ -10,26 +10,26 @@ using namespace uicore;
 
 Game::Game(std::string hostname, std::string port, bool server, SceneCache scene_cache, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContext gc, uicore::DisplayWindow ic) : server(server), scene_cache(scene_cache), gc(gc), ic(ic)
 {
-	game_data = JsonValue::from_json(File::read_text("Resources/Config/game.json"));
+	game_data = JsonValue::parse(File::read_text("Resources/Config/game.json"));
 
-	std::string map_name = game_data["map"];
+	std::string map_name = game_data["map"].to_string();
 
-	level_data = JsonValue::from_json(File::read_text(PathHelp::combine("Resources", map_name + ".mapdesc")));
+	level_data = JsonValue::parse(File::read_text(PathHelp::combine("Resources", map_name + ".mapdesc")));
 	map_cmodel_filename = map_name + ".cmodel";
 
 	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources", map_cmodel_filename)))));
 
 	std::map<std::string, Physics3DShape> level_shapes;
 
-	for (auto &item : level_data["objects"].get_items())
+	for (auto &item : level_data["objects"].items())
 	{
 		if (item["type"].to_string() != "Static")
 			continue;
 
-		Vec3f position(item["position"]["x"], item["position"]["y"], item["position"]["z"]);
-		Vec3f scale(item["scale"]);
-		Vec3f rotate(item["dir"], item["up"], item["tilt"]);
-		std::string model_name = item["mesh"];
+		Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
+		Vec3f scale(item["scale"].to_float());
+		Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
+		std::string model_name = item["mesh"].to_string();
 
 		auto it = level_shapes.find(model_name);
 		if (it == level_shapes.end())
@@ -103,16 +103,16 @@ void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 
 void Game::create_scene_objects()
 {
-	for (auto &item : level_data["objects"].get_items())
+	for (auto &item : level_data["objects"].items())
 	{
-		if (item["type"].to_string() != "Static" || item["fields"]["no_render"])
+		if (item["type"].to_string() != "Static" || item["fields"]["no_render"].to_boolean())
 			continue;
 
-		Vec3f position(item["position"]["x"], item["position"]["y"], item["position"]["z"]);
-		Vec3f scale(item["scale"]);
-		Vec3f rotate(item["dir"], item["up"], item["tilt"]);
-		std::string model_name = item["mesh"];
-		std::string animation_name = item["animation"];
+		Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
+		Vec3f scale(item["scale"].to_float());
+		Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
+		std::string model_name = item["mesh"].to_string();
+		std::string animation_name = item["animation"].to_string();
 		objects.push_back(SceneObject(scene, SceneModel(gc, scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
 		objects.back().play_animation(animation_name, true);
 	}
@@ -122,7 +122,7 @@ void Game::create_scene_objects()
 
 void Game::create_input_buttons()
 {
-	auto json = JsonValue::from_json(File::read_text("Resources/Config/input.json"));
+	auto json = JsonValue::parse(File::read_text("Resources/Config/input.json"));
 	buttons.load(ic, json["buttons"]);
 }
 

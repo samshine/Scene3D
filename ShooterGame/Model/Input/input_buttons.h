@@ -29,5 +29,5 @@ public:
 
 	void input_disabled();
 	void update(uicore::DisplayWindow &ic);
-	void load(uicore::DisplayWindow &ic, JsonValue buttons_node);
+	void load(uicore::DisplayWindow &ic, uicore::JsonValue buttons_node);
 };

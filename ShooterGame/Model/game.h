@@ -30,8 +30,8 @@ public:
 
 	Physics3DWorld collision;
 
-	JsonValue game_data;
-	JsonValue level_data;
+	uicore::JsonValue game_data;
+	uicore::JsonValue level_data;
 
 	SceneObject level_instance;
 	std::vector<SceneObject> objects;

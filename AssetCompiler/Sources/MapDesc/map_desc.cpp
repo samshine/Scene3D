@@ -1,7 +1,6 @@
 
 #include "precomp.h"
 #include "AssetCompiler/MapDescription/map_desc.h"
-#include "JsonValue/json_value.h"
 
 using namespace uicore;
 
@@ -13,15 +12,15 @@ MapDesc MapDesc::load(const std::string &filename)
 {
 	MapDesc desc;
 
-	JsonValue json = JsonValue::from_json(File::read_text(filename));
-	if ((std::string)json["type"] != "map")
+	JsonValue json = JsonValue::parse(File::read_text(filename));
+	if (json["type"].to_string() != "map")
 		throw Exception("Not a map description file");
-	if ((int)json["version"] != 1)
+	if (json["version"].to_number() != 1)
 		throw Exception("Unsupported map description file version");
 
-	desc.fbx_filename = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json["fbx_filename"]);
+	desc.fbx_filename = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json["fbx_filename"].to_string());
 
-	for (const auto &json_light : json["lights"].get_items())
+	for (const auto &json_light : json["lights"].items())
 	{
 		MapDescLight light;
 		light.mesh_light = json_light["mesh_light"].to_string();
@@ -29,7 +28,7 @@ MapDesc MapDesc::load(const std::string &filename)
 		desc.lights.push_back(light);
 	}
 
-	for (const auto &json_probe : json["light_probes"].get_items())
+	for (const auto &json_probe : json["light_probes"].items())
 	{
 		MapDescLightProbe probe;
 		probe.position.x = json_probe["position"]["x"].to_float();
@@ -38,7 +37,7 @@ MapDesc MapDesc::load(const std::string &filename)
 		desc.light_probes.push_back(probe);
 	}
 
-	for (const auto &json_material : json["materials"].get_items())
+	for (const auto &json_material : json["materials"].items())
 	{
 		MapDescMaterial material;
 		material.transparent = json_material["transparent"].to_boolean();
@@ -48,7 +47,7 @@ MapDesc MapDesc::load(const std::string &filename)
 		desc.materials.push_back(material);
 	}
 
-	for (const auto &json_object : json["objects"].get_items())
+	for (const auto &json_object : json["objects"].items())
 	{
 		MapDescObject object;
 		object.id = json_object["id"].to_string();
@@ -66,41 +65,41 @@ MapDesc MapDesc::load(const std::string &filename)
 		desc.objects.push_back(object);
 	}
 
-	for (const auto &json_emitter : json["emitters"].get_items())
+	for (const auto &json_emitter : json["emitters"].items())
 	{
 		MapDescParticleEmitter emitter;
-		emitter.position = Vec3f(json_emitter["position"]["x"], json_emitter["position"]["y"], json_emitter["position"]["z"]);
-		emitter.bone_selector = json_emitter["bone_selector"];
-		emitter.size = json_emitter["size"];
-		emitter.speed = json_emitter["speed"];
-		emitter.spread = json_emitter["spread"];
-		emitter.gravity = json_emitter["gravity"];
-		emitter.longevity = json_emitter["longevity"];
-		emitter.delay = json_emitter["delay"];
-		emitter.color = Vec4f(json_emitter["color"]["red"], json_emitter["color"]["green"], json_emitter["color"]["blue"], json_emitter["color"]["alpha"]);
-		emitter.texture = json_emitter["texture"];
+		emitter.position = Vec3f(json_emitter["position"]["x"].to_float(), json_emitter["position"]["y"].to_float(), json_emitter["position"]["z"].to_float());
+		emitter.bone_selector = json_emitter["bone_selector"].to_int();
+		emitter.size = json_emitter["size"].to_float();
+		emitter.speed = json_emitter["speed"].to_float();
+		emitter.spread = json_emitter["spread"].to_float();
+		emitter.gravity = json_emitter["gravity"].to_float();
+		emitter.longevity = json_emitter["longevity"].to_float();
+		emitter.delay = json_emitter["delay"].to_float();
+		emitter.color = Vec4f(json_emitter["color"]["red"].to_float(), json_emitter["color"]["green"].to_float(), json_emitter["color"]["blue"].to_float(), json_emitter["color"]["alpha"].to_float());
+		emitter.texture = json_emitter["texture"].to_string();
 		desc.emitters.push_back(emitter);
 	}
 
-	for (const auto &json_node : json["path_nodes"].get_items())
+	for (const auto &json_node : json["path_nodes"].items())
 	{
 		MapDescPathNode node;
 		node.position.x = json_node["position"]["x"].to_float();
 		node.position.y = json_node["position"]["y"].to_float();
 		node.position.z = json_node["position"]["z"].to_float();
-		for (const auto &json_item : json_node["connections"].get_items())
+		for (const auto &json_item : json_node["connections"].items())
 			node.connections.push_back(json_item.to_int());
 		desc.path_nodes.push_back(node);
 	}
 
-	for (const auto &json_trigger : json["triggers"].get_items())
+	for (const auto &json_trigger : json["triggers"].items())
 	{
 		MapDescTrigger trigger;
 		trigger.id = json_trigger["id"].to_string();
 		trigger.direction_normal.x = json_trigger["direction_normal"]["x"].to_float();
 		trigger.direction_normal.y = json_trigger["direction_normal"]["y"].to_float();
 		trigger.direction_normal.z = json_trigger["direction_normal"]["z"].to_float();
-		for (const auto &json_item : json_trigger["points"].get_items())
+		for (const auto &json_item : json_trigger["points"].items())
 		{
 			Vec3f point;
 			point.x = json_item["x"].to_float();
@@ -120,9 +119,9 @@ void MapDesc::save(const std::string &filename)
 	for (const auto &light : lights)
 	{
 		JsonValue json_light = JsonValue::object();
-		json_light["mesh_light"] = light.mesh_light;
-		json_light["bake"] = light.bake;
-		json_lights.get_items().push_back(json_light);
+		json_light["mesh_light"].set_string(light.mesh_light);
+		json_light["bake"].set_boolean(light.bake);
+		json_lights.items().push_back(json_light);
 	}
 
 	JsonValue json_probes = JsonValue::array();
@@ -130,41 +129,41 @@ void MapDesc::save(const std::string &filename)
 	{
 		JsonValue json_probe = JsonValue::object();
 		json_probe["position"] = JsonValue::object();
-		json_probe["position"]["x"] = probe.position.x;
-		json_probe["position"]["y"] = probe.position.y;
-		json_probe["position"]["z"] = probe.position.z;
-		json_probes.get_items().push_back(json_probe);
+		json_probe["position"]["x"].set_number(probe.position.x);
+		json_probe["position"]["y"].set_number(probe.position.y);
+		json_probe["position"]["z"].set_number(probe.position.z);
+		json_probes.items().push_back(json_probe);
 	}
 
 	JsonValue json_materials = JsonValue::array();
 	for (const auto &material : materials)
 	{
 		JsonValue json_material = JsonValue::object();
-		json_material["mesh_material"] = material.mesh_material;
-		json_material["transparent"] = material.transparent;
-		json_material["two_sided"] = material.two_sided;
-		json_material["alpha_test"] = material.alpha_test;
-		json_materials.get_items().push_back(json_material);
+		json_material["mesh_material"].set_string(material.mesh_material);
+		json_material["transparent"].set_boolean(material.transparent);
+		json_material["two_sided"].set_boolean(material.two_sided);
+		json_material["alpha_test"].set_boolean(material.alpha_test);
+		json_materials.items().push_back(json_material);
 	}
 
 	JsonValue json_objects = JsonValue::array();
 	for (const auto &object : objects)
 	{
 		JsonValue json_object = JsonValue::object();
-		json_object["id"] = object.id;
-		json_object["type"] = object.type;
+		json_object["id"].set_string(object.id);
+		json_object["type"].set_string(object.type);
 		json_object["position"] = JsonValue::object();
-		json_object["position"]["x"] = object.position.x;
-		json_object["position"]["y"] = object.position.y;
-		json_object["position"]["z"] = object.position.z;
-		json_object["dir"] = object.dir;
-		json_object["up"] = object.up;
-		json_object["tilt"] = object.tilt;
-		json_object["scale"] = object.scale;
-		json_object["mesh"] = object.mesh;
-		json_object["animation"] = object.animation;
+		json_object["position"]["x"].set_number(object.position.x);
+		json_object["position"]["y"].set_number(object.position.y);
+		json_object["position"]["z"].set_number(object.position.z);
+		json_object["dir"].set_number(object.dir);
+		json_object["up"].set_number(object.up);
+		json_object["tilt"].set_number(object.tilt);
+		json_object["scale"].set_number(object.scale);
+		json_object["mesh"].set_string(object.mesh);
+		json_object["animation"].set_string(object.animation);
 		json_object["fields"] = object.fields;
-		json_objects.get_items().push_back(json_object);
+		json_objects.items().push_back(json_object);
 	}
 
 	JsonValue json_emitters = JsonValue::array();
@@ -174,14 +173,14 @@ void MapDesc::save(const std::string &filename)
 	{
 		JsonValue json_node = JsonValue::object();
 		json_node["position"] = JsonValue::object();
-		json_node["position"]["x"] = node.position.x;
-		json_node["position"]["y"] = node.position.y;
-		json_node["position"]["z"] = node.position.z;
+		json_node["position"]["x"].set_number(node.position.x);
+		json_node["position"]["y"].set_number(node.position.y);
+		json_node["position"]["z"].set_number(node.position.z);
 		JsonValue json_connections = JsonValue::array();
 		for (const auto &item : node.connections)
-			json_connections.get_items().push_back(item);
+			json_connections.items().push_back(JsonValue::number(item));
 		json_node["connections"] = json_connections;
-		json_nodes.get_items().push_back(json_node);
+		json_nodes.items().push_back(json_node);
 	}
 
 	JsonValue json_triggers = JsonValue::array();
@@ -189,25 +188,25 @@ void MapDesc::save(const std::string &filename)
 	{
 		JsonValue json_trigger = JsonValue::object();
 		json_trigger["direction_normal"] = JsonValue::object();
-		json_trigger["direction_normal"]["x"] = trigger.direction_normal.x;
-		json_trigger["direction_normal"]["y"] = trigger.direction_normal.y;
-		json_trigger["direction_normal"]["z"] = trigger.direction_normal.z;
+		json_trigger["direction_normal"]["x"].set_number(trigger.direction_normal.x);
+		json_trigger["direction_normal"]["y"].set_number(trigger.direction_normal.y);
+		json_trigger["direction_normal"]["z"].set_number(trigger.direction_normal.z);
 		JsonValue json_points = JsonValue::array();
 		for (const auto &item : trigger.points)
 		{
 			JsonValue json_item = JsonValue::object();
-			json_item["x"] = item.x;
-			json_item["y"] = item.y;
-			json_item["z"] = item.z;
-			json_points.get_items().push_back(json_item);
+			json_item["x"].set_number(item.x);
+			json_item["y"].set_number(item.y);
+			json_item["z"].set_number(item.z);
+			json_points.items().push_back(json_item);
 		}
 		json_trigger["points"] = json_points;
-		json_triggers.get_items().push_back(json_trigger);
+		json_triggers.items().push_back(json_trigger);
 	}
 
 	JsonValue json = JsonValue::object();
-	json["type"] = "map";
-	json["version"] = 1;
+	json["type"].set_string("map");
+	json["version"].set_number(1);
 	json["lights"] = json_lights;
 	json["light_probes"] = json_probes;
 	json["materials"] = json_materials;
@@ -215,7 +214,7 @@ void MapDesc::save(const std::string &filename)
 	json["emitters"] = json_emitters;
 	json["path_nodes"] = json_nodes;
 	json["triggers"] = json_triggers;
-	json["fbx_filename"] = PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename);
+	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename));
 
 	File::write_text(filename, json.to_json());
 }

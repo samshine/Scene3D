@@ -162,7 +162,7 @@ void Weapon::tick_firing(const GameTick &tick)
 	{
 		JsonValue subweapon_description = player->world()->weapon_data["weapons"][weapon_type][weapon_subtype];
 
-		std::string type = subweapon_description["type"];
+		std::string type = subweapon_description["type"].to_string();
 
 		if (type == "semi" || should_stop_fire)
 		{

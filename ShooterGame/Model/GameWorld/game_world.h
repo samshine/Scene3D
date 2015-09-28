@@ -28,7 +28,7 @@ public:
 	Game *game() { return _game; }
 	GameObject *get(int id);
 
-	JsonValue weapon_data;
+	uicore::JsonValue weapon_data;
 
 	std::unique_ptr<PlayerList> player_list;
 	std::unique_ptr<TeamList> team_list;

@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "JsonValue/json_value.h"
-
 class MapDescObject
 {
 public:
@@ -15,5 +13,5 @@ public:
 	float scale = 1.0f;
 	std::string mesh;
 	std::string animation = "default";
-	JsonValue fields = JsonValue::object();
+	uicore::JsonValue fields = uicore::JsonValue::object();
 };

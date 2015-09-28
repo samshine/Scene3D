@@ -17,7 +17,7 @@ using namespace uicore;
 
 GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
 {
-	weapon_data = JsonValue::from_json(File::read_text("Resources/Config/weapon_data.json"));
+	weapon_data = JsonValue::parse(File::read_text("Resources/Config/weapon_data.json"));
 	player_list.reset(new PlayerList());
 	team_list.reset(new TeamList());
 }
@@ -38,16 +38,16 @@ void GameWorld::init(bool init_is_server)
 
 	int level_obj_id = 0;
 
-	for (auto &objdesc : game()->level_data["objects"].get_items())
+	for (auto &objdesc : game()->level_data["objects"].items())
 	{
-		std::string type = objdesc["type"];
+		std::string type = objdesc["type"].to_string();
 		Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
 		float dir = objdesc["dir"].to_float();
 		float up = objdesc["up"].to_float();
 		float tilt = objdesc["tilt"].to_float();
 		Quaternionf orientation(up, dir, tilt, angle_degrees, order_YXZ);
-		std::string mesh = objdesc["mesh"];
-		std::string animation = objdesc["animation"];
+		std::string mesh = objdesc["mesh"].to_string();
+		std::string animation = objdesc["animation"].to_string();
 		float scale = objdesc["scale"].to_float();
 
 		auto &fields = objdesc["fields"];
@@ -63,7 +63,7 @@ void GameWorld::init(bool init_is_server)
 		}
 		else if (type == "Powerup")
 		{
-			std::string powerup_type = fields["powerupType"];
+			std::string powerup_type = fields["powerupType"].to_string();
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			float respawn_time = fields["respawnTime"].to_float();
 
@@ -73,14 +73,14 @@ void GameWorld::init(bool init_is_server)
 		else if (type == "Flag")
 		{
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
-			std::string team = fields["team"];
+			std::string team = fields["team"].to_string();
 
 			Flag *flag = new Flag(this, pos, orientation, mesh, scale, animation, collision_box_size, team);
 			add(flag);
 		}
 		else if (type == "SpawnPoint")
 		{
-			std::string team = fields["team"];
+			std::string team = fields["team"].to_string();
 
 			SpawnPoint *spawn = new SpawnPoint(this, pos, dir, up, tilt, team);
 			add(spawn);

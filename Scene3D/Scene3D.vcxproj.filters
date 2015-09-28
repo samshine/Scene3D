@@ -157,12 +157,6 @@
     <Filter Include="Sources\Collision3D">
       <UniqueIdentifier>{59c00bf9-026f-4f2e-bb34-1f563d537b62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\JsonValue">
-      <UniqueIdentifier>{bc6fa3e7-dfab-43d5-ad5f-8c23b904247b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\JsonValue">
-      <UniqueIdentifier>{7108bd15-cdaf-4340-878b-12e4a8cfa0d1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Sound">
       <UniqueIdentifier>{c336e7e0-b8ca-457c-abbf-4a8db42e33b1}</UniqueIdentifier>
     </Filter>
@@ -1113,9 +1107,6 @@
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h">
       <Filter>Include\Collision3D</Filter>
     </ClInclude>
-    <ClInclude Include="Include\JsonValue\json_value.h">
-      <Filter>Include\JsonValue</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Sound\sound.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
@@ -1804,9 +1795,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp">
       <Filter>Sources\Collision3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\JsonValue\json_value.cpp">
-      <Filter>Sources\JsonValue</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\setupsound.cpp">
       <Filter>Sources\Sound</Filter>

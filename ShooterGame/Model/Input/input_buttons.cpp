@@ -20,13 +20,13 @@ void InputButtons::update(DisplayWindow &ic)
 
 void InputButtons::load(DisplayWindow &window, JsonValue buttons_node)
 {
-	for (auto &button : buttons_node.get_items())
+	for (auto &button : buttons_node.items())
 	{
 		std::string name = button["name"].to_string();
-		for (auto &key : button["keys"].get_items())
+		for (auto &key : button["keys"].items())
 		{
-			std::string device_name = key["device"];
-			std::string id = key["id"];
+			std::string device_name = key["device"].to_string();
+			std::string id = key["id"].to_string();
 			buttons[name].keycodes.push_back(InputKey(device_name, window.get_input_device(device_name).string_to_keyid(id)));
 		}
 	}
