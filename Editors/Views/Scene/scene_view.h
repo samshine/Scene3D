@@ -4,7 +4,7 @@
 #include <scene3d.h>
 #include "mouse_movement.h"
 
-class SceneView : public uicore::View
+class SceneView : public uicore::ColumnView
 {
 public:
 	SceneView();

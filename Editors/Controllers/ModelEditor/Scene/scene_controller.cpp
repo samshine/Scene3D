@@ -11,6 +11,7 @@ using namespace uicore;
 SceneController::SceneController()
 {
 	view = std::make_shared<SceneView>();
+	set_root_view(view);
 
 	slots.connect(ModelAppModel::instance()->sig_model_data_updated, this, &SceneController::model_data_updated);
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);

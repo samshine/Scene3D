@@ -37,6 +37,9 @@
     <Filter Include="Include\ModelDescription">
       <UniqueIdentifier>{63d189db-33b2-4320-be15-bd4f2c90fefc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\TextureBuilder">
+      <UniqueIdentifier>{534f2ae8-744c-4477-8f18-04acba748adb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp">
@@ -284,6 +287,9 @@
     </ClCompile>
     <ClCompile Include="Sources\MapDesc\map_desc.cpp">
       <Filter>Sources\MapDesc</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\TextureBuilder\texture_builder.cpp">
+      <Filter>Sources\TextureBuilder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -661,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="Include\AssetCompiler\MapDescription\map_desc_path_node.h">
       <Filter>Include\MapDescription</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\TextureBuilder\texture_builder.h">
+      <Filter>Sources\TextureBuilder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -42,9 +42,9 @@ class CacheLoadTexture : public WorkItem
 public:
 	CacheLoadTexture(SceneCacheImpl *cache, Resource<uicore::Texture> texture, const std::string &material_name, bool linear);
 
-private:
 	void process_work();
 	void work_completed();
+private:
 	void load_ctexture(const std::string &material_name);
 	void load_clanlib_texture(const std::string &material_name);
 	void load_dds_texture(const std::string &material_name);

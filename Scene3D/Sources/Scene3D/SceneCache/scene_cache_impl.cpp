@@ -12,7 +12,7 @@ SceneCacheImpl::SceneCacheImpl(GraphicContext &gc, const std::string &shader_pat
 
 std::shared_ptr<ModelData> SceneCacheImpl::get_model_data(const std::string &name)
 {
-	return ModelData::load(PathHelp::combine("Resources", name));
+	return ModelData::load(PathHelp::combine("Resources/Assets", name));
 }
 
 void SceneCacheImpl::update_textures(GraphicContext &gc, float time_elapsed)
@@ -85,21 +85,26 @@ CacheLoadTexture::CacheLoadTexture(SceneCacheImpl *cache, Resource<Texture> text
 void CacheLoadTexture::process_work()
 {
 	std::string extension = PathHelp::get_extension(material_name);
+	std::string filename = material_name;
+
+	if (!FileHelp::file_exists(filename))
+		filename = PathHelp::combine("Resources/Assets/Textures", filename);
+
 	if (StringHelp::compare(extension, "ctexture", true) == 0)
 	{
-		load_ctexture(material_name);
+		load_ctexture(filename);
 	}
 	if (StringHelp::compare(extension, "blp", true) == 0)
 	{
-		load_blp_texture(material_name);
+		load_blp_texture(filename);
 	}
 	else if (StringHelp::compare(extension, "dds", true) == 0)
 	{
-		load_dds_texture(material_name);
+		load_dds_texture(filename);
 	}
 	else
 	{
-		load_clanlib_texture(material_name);
+		load_clanlib_texture(filename);
 	}
 }
 

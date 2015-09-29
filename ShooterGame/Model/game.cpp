@@ -14,10 +14,10 @@ Game::Game(std::string hostname, std::string port, bool server, SceneCache scene
 
 	std::string map_name = game_data["map"].to_string();
 
-	level_data = JsonValue::parse(File::read_text(PathHelp::combine("Resources", map_name + ".mapdesc")));
+	level_data = JsonValue::parse(File::read_text(PathHelp::combine("Resources/Assets", map_name + ".mapdesc")));
 	map_cmodel_filename = map_name + ".cmodel";
 
-	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources", map_cmodel_filename)))));
+	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources/Assets", map_cmodel_filename)))));
 
 	std::map<std::string, Physics3DShape> level_shapes;
 
@@ -34,7 +34,7 @@ Game::Game(std::string hostname, std::string port, bool server, SceneCache scene
 		auto it = level_shapes.find(model_name);
 		if (it == level_shapes.end())
 		{
-			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine("Resources", model_name));
+			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine("Resources/Assets", model_name));
 
 			level_shapes[model_name] = Physics3DShape::model(model_data);
 			it = level_shapes.find(model_name);
@@ -81,9 +81,9 @@ void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 	{
 		music_player->play(
 		{
-			"Resources/Music/game1.ogg",
-			"Resources/Music/game2.ogg",
-			"Resources/Music/game3.ogg"
+			"Resources/Assets/Music/game1.ogg",
+			"Resources/Assets/Music/game2.ogg",
+			"Resources/Assets/Music/game3.ogg"
 		}, true);
 	}
 
@@ -178,6 +178,8 @@ void Game::on_game_init(bool is_server)
 void Game::on_frame_update(float time_elapsed, float interpolated_time)
 {
 	game_world->frame(time_elapsed, interpolated_time);
+	if (!server)
+		scene.update(gc, time_elapsed);
 }
 
 void Game::on_game_tick(float time_elapsed, int receive_tick_time, int arrival_tick_time)

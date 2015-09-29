@@ -7,9 +7,9 @@ using namespace uicore;
 class CModelFormat
 {
 public:
-	static void save(IODevice &device, std::shared_ptr<ModelData> data, const std::string &base_path);
+	static void save(IODevice &device, std::shared_ptr<ModelData> data);
 	static std::shared_ptr<ModelData> load(const std::string &filename);
-	static std::shared_ptr<ModelData> load(IODevice &device, const std::string &base_path);
+	static std::shared_ptr<ModelData> load(IODevice &device);
 
 private:
 	template<typename Type>
@@ -27,9 +27,9 @@ private:
 	
 /////////////////////////////////////////////////////////////////////////
 
-void ModelData::save(IODevice &device, std::shared_ptr<ModelData> data, const std::string &base_path)
+void ModelData::save(IODevice &device, std::shared_ptr<ModelData> data)
 {
-	CModelFormat::save(device, data, base_path);
+	CModelFormat::save(device, data);
 }
 
 std::shared_ptr<ModelData> ModelData::load(const std::string &filename)
@@ -37,14 +37,14 @@ std::shared_ptr<ModelData> ModelData::load(const std::string &filename)
 	return CModelFormat::load(filename);
 }
 
-std::shared_ptr<ModelData> ModelData::load(IODevice &device, const std::string &base_path)
+std::shared_ptr<ModelData> ModelData::load(IODevice &device)
 {
-	return CModelFormat::load(device, base_path);
+	return CModelFormat::load(device);
 }
 
 /////////////////////////////////////////////////////////////////////////
 
-inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data, const std::string &base_path)
+inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data)
 {
 	file.write_uint32(13); // version number
 	file.write("ModelCaramba", 12); // file magic
@@ -164,7 +164,7 @@ inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data, 
 	for (size_t i = 0; i < data->textures.size(); i++)
 	{
 		file.write_float(data->textures[i].gamma);
-		file.write_string_a(PathHelp::make_relative(base_path, data->textures[i].name));
+		file.write_string_a(data->textures[i].name);
 	}
 
 	for (size_t i = 0; i < data->bones.size(); i++)
@@ -233,10 +233,10 @@ inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data, 
 inline std::shared_ptr<ModelData> CModelFormat::load(const std::string &filename)
 {
 	File file(filename);
-	return load(file, PathHelp::get_fullpath(filename));
+	return load(file);
 }
 
-inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file, const std::string &base_path)
+inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file)
 {
 	int version = file.read_uint32();
 	char magic[12];
@@ -532,7 +532,7 @@ inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file, const std::
 	for (size_t i = 0; i < data->textures.size(); i++)
 	{
 		data->textures[i].gamma = file.read_float();
-		data->textures[i].name = PathHelp::combine(base_path, file.read_string_a());
+		data->textures[i].name = file.read_string_a();
 	}
 
 	for (size_t i = 0; i < data->bones.size(); i++)

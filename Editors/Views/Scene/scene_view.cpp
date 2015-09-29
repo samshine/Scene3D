@@ -6,7 +6,6 @@ using namespace uicore;
 
 SceneView::SceneView()
 {
-	style()->set("flex-direction: row");
 	style()->set("flex: auto");
 
 	set_focus_policy(FocusPolicy::accept);

@@ -24,7 +24,7 @@ public:
 	std::vector<ModelDataAnimation> animations;
 	uicore::Vec3f aabb_min, aabb_max;
 
-	static void save(uicore::IODevice &device, std::shared_ptr<ModelData> data, const std::string &base_path);
+	static void save(uicore::IODevice &device, std::shared_ptr<ModelData> data);
 	static std::shared_ptr<ModelData> load(const std::string &filename);
-	static std::shared_ptr<ModelData> load(uicore::IODevice &device, const std::string &base_path);
+	static std::shared_ptr<ModelData> load(uicore::IODevice &device);
 };

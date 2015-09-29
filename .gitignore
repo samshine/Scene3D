@@ -28,3 +28,4 @@ ipch
 /ShooterGame/Release
 /ShooterGame/*.aps
 /ShooterGame/x64
+/ShooterGame/Resources/Assets

@@ -38,8 +38,6 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Screen::scene_cache() = SceneCache(gc, "Resources/Scene3D");
 	Screen::sound_cache() = std::make_shared<SoundCache>();
 
-	UIThread ui_thread("Resources");
-
 	SlotContainer slots;
 	slots.connect(window.get_keyboard().sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();

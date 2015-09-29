@@ -4,6 +4,7 @@
 #include "AssetCompiler/ModelDescription/model_desc.h"
 #include "AssetCompiler/MapDescription/map_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
+#include "TextureBuilder/texture_builder.h"
 #include "asset_compiler_impl.h"
 
 using namespace uicore;
@@ -14,6 +15,46 @@ AssetCompiler::AssetCompiler() : impl(std::make_shared<AssetCompilerImpl>())
 
 void AssetCompiler::compile(const std::string &filename, const std::function<void(const CompilerMessage&)> &output)
 {
+	/*
+	// Convert old cmodel files to newer format:
+
+	std::function<void(std::string)> scan_dir;
+
+	scan_dir = [&](std::string path)
+	{
+		DirectoryScanner dir;
+		if (dir.scan(path))
+		{
+			while (dir.next())
+			{
+				if (dir.get_name() == "." || dir.get_name() == "..")
+					continue;
+
+				if (dir.is_directory())
+				{
+					scan_dir(dir.get_pathname());
+				}
+				else if (StringHelp::compare(PathHelp::get_extension(dir.get_name()), "cmodel", true) == 0)
+				{
+					auto model_data = ModelData::load(dir.get_pathname());
+					for (auto &texture : model_data->textures)
+					{
+						if (!FileHelp::file_exists(texture.name))
+							texture.name = PathHelp::make_absolute(path, texture.name);
+					}
+					TextureBuilder::build(model_data, "C:\\Development\\Workspaces\\Scene3D\\ShooterGame\\Resources\\Assets\\Textures");
+
+					File file(dir.get_pathname(), File::create_always, File::access_read_write);
+					ModelData::save(file, model_data);
+				}
+			}
+		}
+
+	};
+	scan_dir("C:\\Development\\Workspaces\\Scene3D\\ShooterGame\\Resources\\Assets");
+	return;
+	*/
+
 	try
 	{
 		std::string filetype = PathHelp::get_extension(filename);
@@ -27,8 +68,10 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 			FBXModel model(desc.fbx_filename);
 			std::shared_ptr<ModelData> model_data = model.convert(desc);
 
+			TextureBuilder::build(model_data, base_path);
+
 			File file(output_filename, File::create_always, File::access_read_write);
-			ModelData::save(file, model_data, base_path);
+			ModelData::save(file, model_data);
 		}
 		else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
 		{
@@ -37,8 +80,10 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 			FBXModel model(desc.fbx_filename);
 			std::shared_ptr<ModelData> model_data = model.convert(desc);
 
+			TextureBuilder::build(model_data, base_path);
+
 			File file(output_filename, File::create_always, File::access_read_write);
-			ModelData::save(file, model_data, base_path);
+			ModelData::save(file, model_data);
 		}
 		else
 		{

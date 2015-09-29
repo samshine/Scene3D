@@ -10,10 +10,6 @@ class ApplicationController : uicore::Application
 public:
 	ApplicationController()
 	{
-		D3DTarget::set_current();
-
-		ui_thread = UIThread("Resources");
-
 		UIThread::add_font_face("font-family: 'Lato'", "Fonts/Lato/Lato-Regular.ttf");
 		UIThread::add_font_face("font-family: 'Lato'; font-weight: bold", "Fonts/Lato/Lato-Bold.ttf");
 		UIThread::add_font_face("font-family: 'Lato'; font-weight: italic", "Fonts/Lato/Lato-Italic.ttf");
@@ -24,7 +20,6 @@ public:
 		WindowManager::present_main<ModelEditorWindow>();
 	}
 
-	UIThread ui_thread;
 	ModelAppModel model;
 };
 
