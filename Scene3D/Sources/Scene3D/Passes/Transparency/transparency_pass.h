@@ -26,6 +26,7 @@ private:
 	// InOut:
 	Resource<uicore::Texture2D> final_color;
 
+	Scene_Impl *scene;
 	uicore::FrameBuffer fb_transparency;
 	uicore::GraphicContext gc;
 	uicore::BlendState blend_state;

@@ -113,11 +113,11 @@ void Game::create_scene_objects()
 		Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
 		std::string model_name = item["mesh"].to_string();
 		std::string animation_name = item["animation"].to_string();
-		objects.push_back(SceneObject(scene, SceneModel(gc, scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		objects.push_back(SceneObject(scene, SceneModel(scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
 		objects.back().play_animation(animation_name, true);
 	}
 
-	level_instance = SceneObject(scene, SceneModel(gc, scene, map_cmodel_filename), Vec3f(), Quaternionf(), Vec3f(1.0f));
+	level_instance = SceneObject(scene, SceneModel(scene, map_cmodel_filename), Vec3f(), Quaternionf(), Vec3f(1.0f));
 }
 
 void Game::create_input_buttons()

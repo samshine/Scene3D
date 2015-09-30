@@ -21,9 +21,10 @@ GBufferPass::GBufferPass(ResourceContainer &inout)
 	zbuffer = inout.get<Texture2D>("ZBuffer");
 }
 
-void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
+void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)
 {
 	gc = render_gc;
+	scene = render_scene;
 	setup_gbuffer(gc);
 
 	gc.set_frame_buffer(fb_gbuffer);
@@ -55,7 +56,7 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 
 	gc.set_blend_state(blend_state);
 	for (size_t i = 0; i < render_list.size(); i++)
-		render_list[i].model_lod->gbuffer_commands.execute(gc, render_list[i].num_instances);
+		render_list[i].model_lod->gbuffer_commands.execute(scene, gc, render_list[i].num_instances);
 
 	if (gc.get_shader_language() == shader_glsl)
 	{
@@ -140,6 +141,6 @@ void GBufferPass::setup_gbuffer(GraphicContext &gc)
 
 void GBufferPass::render(GraphicContext &gc, ModelLOD *model_lod, int num_instances)
 {
-	model_lod->early_z_commands.execute(gc, num_instances);
+	model_lod->early_z_commands.execute(scene, gc, num_instances);
 	render_list.push_back(RenderEntry(model_lod, num_instances));
 }

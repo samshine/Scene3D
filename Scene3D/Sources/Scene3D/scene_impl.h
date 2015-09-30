@@ -68,6 +68,13 @@ public:
 	ResourceContainer inout_data;
 	std::vector<ScenePass> passes;
 
+	int models_drawn = 0;
+	int instances_drawn = 0;
+	int draw_calls = 0;
+	int triangles_drawn = 0;
+	int scene_visits = 0;
+	std::vector<GPUTimer::Result> gpu_results;
+
 private:
 	SceneCache cache;
 

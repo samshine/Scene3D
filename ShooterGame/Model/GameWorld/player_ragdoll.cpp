@@ -14,7 +14,7 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	Vec3f box_size(1.0f, 1.0f, 2.72f);
 
 	//SceneModel model(world->game()->gc(), world->game()->scene, "Thalania/Thalania.cmodel");
-	SceneModel model(world->game()->gc, world->game()->scene, create_box(box_size));
+	SceneModel model(world->game()->scene, create_box(box_size));
 
 	//scene_object1.set_scale(Vec3f(0.15f));
 	//scene_object1.play_animation("static");

@@ -12,12 +12,12 @@ ModelCache::ModelCache(Scene_Impl *scene, ModelMaterialCache &texture_cache, Mod
 {
 }
 
-std::shared_ptr<Model> ModelCache::get_model(GraphicContext &gc, const std::string &model_name)
+std::shared_ptr<Model> ModelCache::get_model(const std::string &model_name)
 {
 	std::shared_ptr<Model> renderer = models[model_name];
 	if (!renderer)
 	{
-		renderer = std::shared_ptr<Model>(new Model(gc, texture_cache, shader_cache, scene->get_cache()->get_model_data(model_name), instances_buffer.new_offset_index()));
+		renderer = std::shared_ptr<Model>(new Model(scene->get_cache()->get_gc(), texture_cache, shader_cache, scene->get_cache()->get_model_data(model_name), instances_buffer.new_offset_index()));
 		models[model_name]= renderer;
 	}
 	return renderer;

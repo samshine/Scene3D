@@ -156,12 +156,35 @@ void Scene::set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors)
 	impl->skybox_pass->set_skybox_texture(texture);
 }
 
-int Scene::instances_drawn = 0;
-int Scene::models_drawn = 0;
-int Scene::draw_calls = 0;
-int Scene::triangles_drawn = 0;
-int Scene::scene_visits = 0;
-std::vector<GPUTimer::Result> Scene::gpu_results;
+int Scene::models_drawn() const
+{
+	return impl->models_drawn;
+}
+
+int Scene::instances_drawn() const
+{
+	return impl->instances_drawn;
+}
+
+int Scene::draw_calls() const
+{
+	return impl->draw_calls;
+}
+
+int Scene::triangles_drawn() const
+{
+	return impl->triangles_drawn;
+}
+
+int Scene::scene_visits() const
+{
+	return impl->scene_visits;
+}
+
+const std::vector<GPUTimer::Result> &Scene::gpu_results() const
+{
+	return impl->gpu_results;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -261,11 +284,11 @@ void Scene_Impl::render(GraphicContext &gc)
 {
 	ScopeTimeFunction();
 
-	Scene::models_drawn = 0;
-	Scene::instances_drawn = 0;
-	Scene::draw_calls = 0;
-	Scene::triangles_drawn = 0;
-	Scene::scene_visits = 0;
+	models_drawn = 0;
+	instances_drawn = 0;
+	draw_calls = 0;
+	triangles_drawn = 0;
+	scene_visits = 0;
 
 	gpu_timer.begin_frame(gc);
 
@@ -289,7 +312,7 @@ void Scene_Impl::render(GraphicContext &gc)
 
 	gpu_timer.end_frame(gc);
 
-	Scene::gpu_results = gpu_timer.get_results(gc);
+	gpu_results = gpu_timer.get_results(gc);
 
 	if (gc.get_shader_language() == shader_glsl)
 		OpenGL::check_error();
@@ -306,7 +329,7 @@ void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
-	Scene::scene_visits++;
+	scene_visits++;
 
 	std::vector<Model *> models;
 
@@ -326,12 +349,12 @@ void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4
 						light_probe_color = probe->color;
 				}
 
-				Scene::instances_drawn++;
+				instances_drawn++;
 				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 				if (first_instance)
 				{
 					models.push_back(object->instance.get_renderer().get());
-					Scene::models_drawn++;
+					models_drawn++;
 				}
 			}
 		}

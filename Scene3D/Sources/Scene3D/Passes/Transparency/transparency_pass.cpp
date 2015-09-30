@@ -17,9 +17,10 @@ TransparencyPass::TransparencyPass(ResourceContainer &inout)
 	final_color = inout.get<Texture2D>("FinalColor");
 }
 
-void TransparencyPass::run(GraphicContext &render_gc, Scene_Impl *scene)
+void TransparencyPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)
 {
 	gc = render_gc;
+	scene = render_scene;
 	setup(gc);
 
 	gc.set_frame_buffer(fb_transparency);
@@ -78,5 +79,5 @@ void TransparencyPass::setup(GraphicContext &gc)
 
 void TransparencyPass::render(GraphicContext &gc, ModelLOD *model_lod, int num_instances)
 {
-	model_lod->transparency_commands.execute(gc, num_instances);
+	model_lod->transparency_commands.execute(scene, gc, num_instances);
 }

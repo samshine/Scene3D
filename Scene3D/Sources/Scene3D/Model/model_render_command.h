@@ -9,7 +9,7 @@ class ModelRenderCommand
 {
 public:
 	virtual ~ModelRenderCommand() { }
-	virtual void execute(uicore::GraphicContext &gc, int num_instances) = 0;
+	virtual void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances) = 0;
 };
 
 class ModelRenderCommandList
@@ -21,10 +21,10 @@ public:
 			delete commands[i];
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		for (size_t i = 0; i < commands.size(); i++)
-			commands[i]->execute(gc, num_instances);
+			commands[i]->execute(scene, gc, num_instances);
 	}
 
 	std::vector<ModelRenderCommand *> commands;
@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_primitives_array(buffers->primitives_array);
 		gc.set_primitives_elements(buffers->elements);
@@ -53,7 +53,7 @@ public:
 	{
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_program_object(shader);
 	}
@@ -68,7 +68,7 @@ public:
 	{
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		texture.get().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
 		gc.set_texture(bind_index, texture.get());
@@ -86,7 +86,7 @@ public:
 	{
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_rasterizer_state(state);
 	}
@@ -102,13 +102,13 @@ public:
 	{
 	}
 
-	void execute(uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
 	{
 		gc.set_uniform_buffer(0, uniforms);
 		gc.draw_primitives_elements_instanced(uicore::type_triangles, num_elements, uicore::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
-		Scene::draw_calls++;
-		Scene::triangles_drawn += num_elements / 3;
+		scene->draw_calls++;
+		scene->triangles_drawn += num_elements / 3;
 	}
 
 	int start_element;

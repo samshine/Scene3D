@@ -12,8 +12,8 @@ class SceneModel
 {
 public:
 	SceneModel();
-	SceneModel(uicore::GraphicContext &gc, Scene &scene, const std::string &model_name);
-	SceneModel(uicore::GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data);
+	SceneModel(Scene &scene, const std::string &model_name);
+	SceneModel(Scene &scene, std::shared_ptr<ModelData> model_data);
 
 	bool is_null() const;
 

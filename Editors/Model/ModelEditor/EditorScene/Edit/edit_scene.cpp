@@ -163,7 +163,7 @@ void EditScene::update_map(Scene &scene, GraphicContext &gc)
 		FBXModel fbx_model(model_desc.fbx_filename);
 		auto attachment_model_data = fbx_model.convert(model_desc);
 
-		map_model = SceneModel(gc, scene, attachment_model_data);
+		map_model = SceneModel(scene, attachment_model_data);
 		map_object = SceneObject(scene, map_model);
 	}
 	catch (Exception &)
@@ -181,7 +181,7 @@ void EditScene::update_model(Scene &scene, GraphicContext &gc)
 
 	if (model_data)
 	{
-		model1 = SceneModel(gc, scene, model_data);
+		model1 = SceneModel(scene, model_data);
 		object1 = SceneObject(scene, model1, Vec3f(), Quaternionf(), Vec3f(1.0f));
 		object1.play_animation(current_animation, true);
 
@@ -194,7 +194,7 @@ void EditScene::update_model(Scene &scene, GraphicContext &gc)
 				FBXModel fbx_model(model_desc.fbx_filename);
 				auto attachment_model_data = fbx_model.convert(model_desc);
 
-				attachment.model = SceneModel(gc, scene, attachment_model_data);
+				attachment.model = SceneModel(scene, attachment_model_data);
 				attachment.object = SceneObject(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
 			}
 			catch (Exception &)

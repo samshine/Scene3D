@@ -41,6 +41,7 @@ private:
 
 	ShadowMaps maps;
 	GaussianBlur blur;
+	Scene_Impl *scene;
 	uicore::GraphicContext gc;
 	uicore::BlendState blend_state;
 	uicore::DepthStencilState depth_stencil_state;

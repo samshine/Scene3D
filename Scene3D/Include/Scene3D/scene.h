@@ -46,13 +46,12 @@ public:
 	void show_skybox_stars(bool enable);
 	void set_skybox_gradient(uicore::GraphicContext &gc, std::vector<uicore::Colorf> &colors);
 
-	// To do: should not be static, should be getter functions, etc.
-	static int models_drawn;
-	static int instances_drawn;
-	static int draw_calls;
-	static int triangles_drawn;
-	static int scene_visits;
-	static std::vector<GPUTimer::Result> gpu_results;
+	int models_drawn() const;
+	int instances_drawn() const;
+	int draw_calls() const;
+	int triangles_drawn() const;
+	int scene_visits() const;
+	const std::vector<GPUTimer::Result> &gpu_results() const;
 
 private:
 	std::shared_ptr<Scene_Impl> impl;

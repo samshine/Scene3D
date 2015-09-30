@@ -361,7 +361,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (scene_object.is_null())
 		{
-			SceneModel model(world()->game()->gc, world()->game()->scene, "Models/Thalania/Thalania.cmodel");
+			SceneModel model(world()->game()->scene, "Models/Thalania/Thalania.cmodel");
 			scene_object = SceneObject(world()->game()->scene, model);
 			scene_object.set_scale(Vec3f(0.075f));
 

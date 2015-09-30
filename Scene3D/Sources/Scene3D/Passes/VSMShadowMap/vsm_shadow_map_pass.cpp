@@ -25,9 +25,10 @@ VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout)
 	depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
 }
 
-void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *scene)
+void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)
 {
 	gc = render_gc;
+	scene = render_scene;
 
 	find_lights(scene);
 	assign_shadow_map_indexes();
@@ -141,7 +142,7 @@ void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 
 void VSMShadowMapPass::render(GraphicContext &gc, ModelLOD *model_lod, int num_instances)
 {
-	model_lod->shadow_commands.execute(gc, num_instances);
+	model_lod->shadow_commands.execute(scene, gc, num_instances);
 }
 
 void VSMShadowMapPass::blur_maps()
