@@ -10,11 +10,11 @@ using namespace uicore;
 
 Game::Game(std::string hostname, std::string port, bool server, SceneCache scene_cache, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContext gc, uicore::DisplayWindow ic) : server(server), scene_cache(scene_cache), gc(gc), ic(ic)
 {
-	game_data = JsonValue::parse(File::read_text("Resources/Config/game.json"));
+	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
 
 	std::string map_name = game_data["map"].to_string();
 
-	level_data = JsonValue::parse(File::read_text(PathHelp::combine("Resources/Assets", map_name + ".mapdesc")));
+	level_data = JsonValue::parse(File::read_all_text(PathHelp::combine("Resources/Assets", map_name + ".mapdesc")));
 	map_cmodel_filename = map_name + ".cmodel";
 
 	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources/Assets", map_cmodel_filename)))));
@@ -122,7 +122,7 @@ void Game::create_scene_objects()
 
 void Game::create_input_buttons()
 {
-	auto json = JsonValue::parse(File::read_text("Resources/Config/input.json"));
+	auto json = JsonValue::parse(File::read_all_text("Resources/Config/input.json"));
 	buttons.load(ic, json["buttons"]);
 }
 

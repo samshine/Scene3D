@@ -23,6 +23,9 @@ private:
 
 	template<typename Type>
 	static void read_vector_contents(IODevice &file, std::vector<Type> &out_vector_data);
+
+	static std::string read_string_a(IODevice &file);
+	static void write_string_a(IODevice &file, const std::string &text);
 };
 	
 /////////////////////////////////////////////////////////////////////////
@@ -164,7 +167,7 @@ inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data)
 	for (size_t i = 0; i < data->textures.size(); i++)
 	{
 		file.write_float(data->textures[i].gamma);
-		file.write_string_a(data->textures[i].name);
+		write_string_a(file, data->textures[i].name);
 	}
 
 	for (size_t i = 0; i < data->bones.size(); i++)
@@ -221,7 +224,7 @@ inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data)
 
 	for (size_t i = 0; i < data->animations.size(); i++)
 	{
-		file.write_string_a(data->animations[i].name);
+		write_string_a(file, data->animations[i].name);
 		file.write_float(data->animations[i].length);
 		file.write_uint32(data->animations[i].loop ? 1 : 0);
 		file.write_float(data->animations[i].playback_speed);
@@ -232,8 +235,8 @@ inline void CModelFormat::save(IODevice &file, std::shared_ptr<ModelData> data)
 
 inline std::shared_ptr<ModelData> CModelFormat::load(const std::string &filename)
 {
-	File file(filename);
-	return load(file);
+	auto file = File::open_existing(filename);
+	return load(*file);
 }
 
 inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file)
@@ -532,7 +535,7 @@ inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file)
 	for (size_t i = 0; i < data->textures.size(); i++)
 	{
 		data->textures[i].gamma = file.read_float();
-		data->textures[i].name = file.read_string_a();
+		data->textures[i].name = read_string_a(file);
 	}
 
 	for (size_t i = 0; i < data->bones.size(); i++)
@@ -665,7 +668,7 @@ inline std::shared_ptr<ModelData> CModelFormat::load(IODevice &file)
 
 	for (size_t i = 0; i < data->animations.size(); i++)
 	{
-		data->animations[i].name = file.read_string_a();
+		data->animations[i].name = read_string_a(file);
 		data->animations[i].length = file.read_float();
 		data->animations[i].loop = (file.read_uint32() == 1);
 		data->animations[i].playback_speed = file.read_float();
@@ -731,4 +734,19 @@ void CModelFormat::read_vector_contents(IODevice &file, std::vector<Type> &out_v
 {
 	if (!out_vector_data.empty())
 		file.read(&out_vector_data[0], out_vector_data.size() * sizeof(Type));
+}
+
+std::string CModelFormat::read_string_a(IODevice &file)
+{
+	std::string s;
+	s.resize(file.read_uint32());
+	if (!s.empty())
+		file.read(&s[0], s.size());
+	return s;
+}
+
+void CModelFormat::write_string_a(IODevice &file, const std::string &text)
+{
+	file.write_uint32(text.length());
+	file.write(text.data(), text.length());
 }

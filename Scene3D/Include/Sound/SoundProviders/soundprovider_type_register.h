@@ -11,9 +11,9 @@ class SoundProviderType_Register : public SoundProviderType
 public:
 	SoundProviderType_Register(const std::string &type) : SoundProviderType(type) { }
 
-	virtual SoundProvider *load(const std::string &filename, bool stream, const uicore::FileSystem &fs) override
+	virtual SoundProvider *load(const std::string &filename, bool stream) override
 	{
-		return new SoundProviderClass(filename, fs, stream);
+		return new SoundProviderClass(filename, stream);
 	}
 
 	virtual SoundProvider *load(uicore::IODevice &file, bool stream) override

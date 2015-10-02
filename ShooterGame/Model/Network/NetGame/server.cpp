@@ -71,7 +71,7 @@ namespace uicore
 		std::unique_lock<std::mutex> lock(impl->mutex);
 		impl->stop_flag = false;
 		lock.unlock();
-		impl->tcp_listen.reset(new TCPListen(SocketName(port)));
+		impl->tcp_listen = TCPListen::listen(SocketName(port));
 		impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 	}
 
@@ -81,7 +81,7 @@ namespace uicore
 		std::unique_lock<std::mutex> lock(impl->mutex);
 		impl->stop_flag = false;
 		lock.unlock();
-		impl->tcp_listen.reset(new TCPListen(SocketName(address, port)));
+		impl->tcp_listen = TCPListen::listen(SocketName(address, port));
 		impl->listen_thread = std::thread(&NetGameServer::listen_thread_main, this);
 	}
 
@@ -114,8 +114,8 @@ namespace uicore
 			impl->worker_event.wait(lock, 1, events);
 
 			SocketName peer_endpoint;
-			TCPConnection connection = impl->tcp_listen->accept(peer_endpoint);
-			if (!connection.is_null())
+			auto connection = impl->tcp_listen->accept(peer_endpoint);
+			if (connection)
 			{
 				std::unique_ptr<NetGameConnection> game_connection(new NetGameConnection(this, connection));
 				impl->connections.push_back(game_connection.release());

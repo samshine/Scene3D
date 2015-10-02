@@ -6,19 +6,10 @@
 
 using namespace uicore;
 
-SoundProvider_Wave::SoundProvider_Wave(const std::string &filename, const FileSystem &fs, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
+SoundProvider_Wave::SoundProvider_Wave(const std::string &filename, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
 {
-	IODevice source = fs.open_file(filename, File::open_existing, File::access_read, File::share_read);
-	impl->load(source);
-}
-
-SoundProvider_Wave::SoundProvider_Wave(const std::string &fullname, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	FileSystem vfs(path);
-	IODevice input = vfs.open_file(filename, File::open_existing, File::access_read, File::share_all);
-	impl->load(input);
+	auto source = File::open_existing(filename);
+	impl->load(*source);
 }
 
 SoundProvider_Wave::SoundProvider_Wave(IODevice &file, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
@@ -42,8 +33,6 @@ void SoundProvider_Wave::end_session(SoundProvider_Session *session)
 
 void SoundProvider_Wave_Impl::load(IODevice &source)
 {
-	source.set_little_endian_mode();
-
 	char chunk_id[4];
 	source.read(chunk_id, 4);
 	if (memcmp(chunk_id, "RIFF", 4))
@@ -55,7 +44,7 @@ void SoundProvider_Wave_Impl::load(IODevice &source)
 	if (memcmp(format_id, "WAVE", 4))
 		throw Exception("Expected WAVE header!");
 
-	uint32_t subchunk_pos = source.get_position();
+	uint32_t subchunk_pos = source.position();
 	uint32_t subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
 
 	uint16_t audio_format = source.read_uint16();

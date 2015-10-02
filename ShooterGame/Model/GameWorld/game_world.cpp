@@ -17,7 +17,7 @@ using namespace uicore;
 
 GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
 {
-	weapon_data = JsonValue::parse(File::read_text("Resources/Config/weapon_data.json"));
+	weapon_data = JsonValue::parse(File::read_all_text("Resources/Config/weapon_data.json"));
 	player_list.reset(new PlayerList());
 	team_list.reset(new TeamList());
 }

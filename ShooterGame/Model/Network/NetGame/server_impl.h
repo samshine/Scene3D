@@ -39,7 +39,7 @@ namespace uicore
 	public:
 		void process();
 
-		std::unique_ptr<TCPListen> tcp_listen;
+		TCPListenPtr tcp_listen;
 		std::thread listen_thread;
 
 		NetworkConditionVariable worker_event;

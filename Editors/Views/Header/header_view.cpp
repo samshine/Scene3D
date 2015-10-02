@@ -75,7 +75,7 @@ void HeaderView::create_button(const std::string &text, const std::string &icon,
 			button->image_view()->style()->set("margin-left: 5px");
 		button->image_view()->set_image(ImageSource::from_resource(icon));
 	}
-	button->label()->set_text(StringHelp::text_to_upper(text));
+	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e) { click(); e.stop_propagation(); });

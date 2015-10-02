@@ -63,17 +63,17 @@ EnvironmentController::EnvironmentController()
 	CharacterController *cc = ModelAppModel::instance()->editor_scene->get_character_controller();
 	if (cc)
 	{
-		gravity_property->text_field->set_text(StringHelp::float_to_text(cc->get_gravity()));
-		height_property->text_field->set_text(StringHelp::float_to_text(cc->get_height()));
-		radius_property->text_field->set_text(StringHelp::float_to_text(cc->get_radius()));
-		step_height_property->text_field->set_text(StringHelp::float_to_text(cc->get_step_height()));
-		mass_property->text_field->set_text(StringHelp::float_to_text(cc->get_mass()));
-		acceleration_property->text_field->set_text(StringHelp::float_to_text(cc->get_acceleration()));
-		run_speed_property->text_field->set_text(StringHelp::float_to_text(cc->get_run_speed()));
-		friction_property->text_field->set_text(StringHelp::float_to_text(cc->get_friction()));
-		air_resistance_property->text_field->set_text(StringHelp::float_to_text(cc->get_air_resistance()));
-		air_movement_property->text_field->set_text(StringHelp::float_to_text(cc->get_air_movement()));
-		bounce_property->text_field->set_text(StringHelp::float_to_text(cc->get_bounce()));
+		gravity_property->text_field->set_text(Text::to_string(cc->get_gravity()));
+		height_property->text_field->set_text(Text::to_string(cc->get_height()));
+		radius_property->text_field->set_text(Text::to_string(cc->get_radius()));
+		step_height_property->text_field->set_text(Text::to_string(cc->get_step_height()));
+		mass_property->text_field->set_text(Text::to_string(cc->get_mass()));
+		acceleration_property->text_field->set_text(Text::to_string(cc->get_acceleration()));
+		run_speed_property->text_field->set_text(Text::to_string(cc->get_run_speed()));
+		friction_property->text_field->set_text(Text::to_string(cc->get_friction()));
+		air_resistance_property->text_field->set_text(Text::to_string(cc->get_air_resistance()));
+		air_movement_property->text_field->set_text(Text::to_string(cc->get_air_movement()));
+		bounce_property->text_field->set_text(Text::to_string(cc->get_bounce()));
 	}
 	else
 	{

@@ -40,12 +40,12 @@ namespace uicore
 	{
 	}
 
-	void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const TCPConnection &xconnection)
+	void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const TCPConnectionPtr &xconnection)
 	{
 		base = xbase;
 		site = xsite;
 		connection = xconnection;
-		socket_name = connection.get_remote_name();
+		socket_name = connection->remote_name();
 		is_connected = true;
 		thread = std::thread(&NetGameConnection_Impl::connection_main, this);
 	}
@@ -125,24 +125,24 @@ namespace uicore
 	{
 		while (true)
 		{
-			int bytes = connection.read(receive_buffer.get_data() + bytes_received, receive_buffer.get_size() - bytes_received);
+			int bytes = connection->read(receive_buffer.data() + bytes_received, receive_buffer.size() - bytes_received);
 			if (bytes < 0)
 				return false;
 
 			if (bytes == 0)
 			{
-				connection.close();
+				connection->close();
 				return true;
 			}
 
 			bytes_received += bytes;
 
 			int bytes_consumed = 0;
-			bool exit = read_data(receive_buffer.get_data(), bytes_received, bytes_consumed);
+			bool exit = read_data(receive_buffer.data(), bytes_received, bytes_consumed);
 
 			if (bytes_consumed >= 0)
 			{
-				memmove(receive_buffer.get_data(), receive_buffer.get_data() + bytes_consumed, bytes_received - bytes_consumed);
+				memmove(receive_buffer.data(), receive_buffer.data() + bytes_consumed, bytes_received - bytes_consumed);
 				bytes_received -= bytes_consumed;
 			}
 
@@ -156,17 +156,17 @@ namespace uicore
 	{
 		while (true)
 		{
-			int bytes = connection.write(send_buffer.get_data() + bytes_sent, send_buffer.get_size() - bytes_sent);
+			int bytes = connection->write(send_buffer.data() + bytes_sent, send_buffer.size() - bytes_sent);
 			if (bytes < 0)
 				return false;
 
 			bytes_sent += bytes;
 
-			if (bytes_sent == send_buffer.get_size())
+			if (bytes_sent == send_buffer.size())
 			{
 				if (send_graceful_close)
 				{
-					connection.close();
+					connection->close();
 					return true;
 				}
 				else
@@ -174,7 +174,7 @@ namespace uicore
 					bytes_sent = 0;
 					send_buffer.set_size(0);
 					send_graceful_close = write_data(send_buffer);
-					if (send_buffer.get_size() == 0)
+					if (send_buffer.size() == 0)
 						return false;
 				}
 			}
@@ -186,29 +186,29 @@ namespace uicore
 		try
 		{
 			if (!is_connected)
-				connection = TCPConnection(socket_name);
+				connection = TCPConnection::connect(socket_name);
 			is_connected = true;
 			site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_connected));
 
 			int bytes_received = 0;
 			int bytes_sent = 0;
 			const int max_event_packet_size = 32000 + 2;
-			DataBuffer receive_buffer(max_event_packet_size);
-			DataBuffer send_buffer;
+			auto receive_buffer = DataBuffer::create(max_event_packet_size);
+			auto send_buffer = DataBuffer::create(0);
 
 			bool send_graceful_close = false;
 
 			while (true)
 			{
-				if (read_connection_data(receive_buffer, bytes_received))
+				if (read_connection_data(*receive_buffer, bytes_received))
 					break;
-				if (write_connection_data(send_buffer, bytes_sent, send_graceful_close))
+				if (write_connection_data(*send_buffer, bytes_sent, send_graceful_close))
 					break;
 
 				std::unique_lock<std::mutex> lock(mutex);
 				if (stop_flag)
 					break;
-				NetworkEvent *events[] = { &connection };
+				NetworkEvent *events[] = { connection.get() };
 				worker_event.wait(lock, 1, events);
 			}
 
@@ -253,11 +253,11 @@ namespace uicore
 		{
 			if (elem.type == Message::type_message)
 			{
-				DataBuffer packet = NetGameNetworkData::send_data(elem.event);
+				DataBufferPtr packet = NetGameNetworkData::send_data(elem.event);
 
-				int pos = buffer.get_size();
-				buffer.set_size(pos + packet.get_size());
-				memcpy(buffer.get_data() + pos, packet.get_data(), packet.get_size());
+				int pos = buffer.size();
+				buffer.set_size(pos + packet->size());
+				memcpy(buffer.data() + pos, packet->data(), packet->size());
 			}
 			else if (elem.type == Message::type_disconnect)
 			{

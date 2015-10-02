@@ -5,9 +5,9 @@ class Noise2D
 {
 public:
 	Noise2D(int width, int height)
-	: noise_width(width), noise_height(height), noise_buffer(noise_width * noise_height * sizeof(double))
+	: noise_width(width), noise_height(height), noise_buffer(uicore::DataBuffer::create(noise_width * noise_height * sizeof(double)))
 	{
-		noise = noise_buffer.get_data<double>();
+		noise = noise_buffer->data<double>();
 		for (int x = 0; x < noise_width; x++)
 		{
 			for (int y = 0; y < noise_height; y++)
@@ -57,6 +57,6 @@ public:
 private:
 	int noise_width;
 	int noise_height;
-	uicore::DataBuffer noise_buffer;
+	uicore::DataBufferPtr noise_buffer;
 	double *noise;
 };

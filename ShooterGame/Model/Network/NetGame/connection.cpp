@@ -35,7 +35,7 @@
 
 namespace uicore
 {
-	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection)
+	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnectionPtr &connection)
 		: impl(new NetGameConnection_Impl)
 	{
 		impl->start(this, site, connection);

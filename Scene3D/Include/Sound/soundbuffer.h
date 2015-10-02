@@ -15,7 +15,6 @@ public:
 	SoundBuffer();
 	SoundBuffer(SoundProvider *provider);
 	SoundBuffer(const std::string &fullname, bool streamed = false, const std::string &format = "");
-	SoundBuffer(const std::string &filename, bool streamed, const uicore::FileSystem &fs, const std::string &type = "");
 	SoundBuffer(uicore::IODevice &file, bool streamed, const std::string &type);
 	~SoundBuffer();
 

@@ -39,8 +39,6 @@ namespace uicore
 
 	class NetGameConnectionSite;
 	class NetGameConnection_Impl;
-	class SocketName;
-	class TCPConnection;
 
 	/// \brief NetGameConnection
 	class NetGameConnection
@@ -50,7 +48,7 @@ namespace uicore
 		///
 		/// \param site = Net Game Connection Site
 		/// \param connection = TCPConnection
-		NetGameConnection(NetGameConnectionSite *site, const TCPConnection &connection);
+		NetGameConnection(NetGameConnectionSite *site, const TCPConnectionPtr &connection);
 		NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name);
 
 		~NetGameConnection();

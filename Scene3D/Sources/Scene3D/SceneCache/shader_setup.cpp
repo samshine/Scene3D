@@ -9,7 +9,7 @@ ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, 
 	std::string prefix;
 	if (gc.get_shader_language() == shader_glsl)
 		prefix += "#version 330\r\n";
-	std::vector<std::string> define_list = StringHelp::split_text(defines, " ");
+	std::vector<std::string> define_list = Text::split(defines, " ");
 	for (size_t i = 0; i < define_list.size(); i++)
 		prefix += string_format("#define %1\r\n", define_list[i]);
 	prefix += "#line 0\r\n";
@@ -18,7 +18,7 @@ ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, 
 
 	if (!vertex.empty())
 	{
-		ShaderObject vertex_shader(gc, shadertype_vertex, prefix + File::read_text(PathHelp::combine(shader_path, vertex)));
+		ShaderObject vertex_shader(gc, shadertype_vertex, prefix + File::read_all_text(PathHelp::combine(shader_path, vertex)));
 		if (!vertex_shader.compile())
 			throw Exception(vertex_shader.get_info_log());
 		program.attach(vertex_shader);
@@ -26,7 +26,7 @@ ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, 
 
 	if (!fragment.empty())
 	{
-		ShaderObject fragment_shader(gc, shadertype_fragment, prefix + File::read_text(PathHelp::combine(shader_path, fragment)));
+		ShaderObject fragment_shader(gc, shadertype_fragment, prefix + File::read_all_text(PathHelp::combine(shader_path, fragment)));
 		if (!fragment_shader.compile())
 			throw Exception(fragment_shader.get_info_log());
 		program.attach(fragment_shader);

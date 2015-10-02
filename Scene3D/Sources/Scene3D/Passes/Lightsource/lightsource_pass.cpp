@@ -237,10 +237,10 @@ void LightsourcePass::update_buffers(GraphicContext &gc)
 
 ProgramObject LightsourcePass::compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines)
 {
-	std::string source = File::read_text(compute_filename);
+	std::string source = File::read_all_text(compute_filename);
 
 	std::string prefix;
-	std::vector<std::string> define_list = StringHelp::split_text(defines, " ");
+	std::vector<std::string> define_list = Text::split(defines, " ");
 	for (size_t i = 0; i < define_list.size(); i++)
 		prefix += string_format("#define %1\r\n", define_list[i]);
 	prefix += "#line 0\r\n";

@@ -15,7 +15,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 	ModelDesc desc;
 	desc.animations.clear();
 
-	JsonValue json = JsonValue::parse(File::read_text(filename));
+	JsonValue json = JsonValue::parse(File::read_all_text(filename));
 	if (json["type"].to_string() != "fbx-model")
 		throw Exception("Not a model description file");
 	if (json["version"].to_number() != 1)
@@ -142,5 +142,5 @@ void ModelDesc::save(const std::string &filename)
 	json["emitters"] = json_emitters;
 	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename));
 
-	File::write_text(filename, json.to_json());
+	File::write_all_text(filename, json.to_json());
 }

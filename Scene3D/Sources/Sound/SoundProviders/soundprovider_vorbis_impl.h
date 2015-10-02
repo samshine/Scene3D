@@ -9,5 +9,5 @@ class SoundProvider_Vorbis_Impl
 public:
 	void load(uicore::IODevice &input);
 
-	uicore::DataBuffer buffer;
+	uicore::DataBufferPtr buffer;
 };

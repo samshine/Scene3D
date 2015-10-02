@@ -24,11 +24,6 @@ SoundBuffer::SoundBuffer(const std::string &fullname, bool streamed, const std::
 	impl->provider = SoundProviderFactory::load(fullname, streamed, sound_format);
 }
 
-SoundBuffer::SoundBuffer(const std::string &filename, bool streamed, const FileSystem &fs, const std::string &type) : impl(std::make_shared<SoundBuffer_Impl>())
-{
-	impl->provider = SoundProviderFactory::load(filename, streamed, fs, type);
-}
-
 SoundBuffer::SoundBuffer(IODevice &file, bool streamed, const std::string &type) : impl(std::make_shared<SoundBuffer_Impl>())
 {
 	impl->provider = SoundProviderFactory::load(file, streamed, type);

@@ -5,9 +5,9 @@ class Noise3D
 {
 public:
 	Noise3D(int width, int height, int depth)
-	: noise_width(width), noise_height(height), noise_depth(depth), noise_buffer(noise_width * noise_height * noise_depth * sizeof(double))
+	: noise_width(width), noise_height(height), noise_depth(depth), noise_buffer(uicore::DataBuffer::create(noise_width * noise_height * noise_depth * sizeof(double)))
 	{
-		noise = noise_buffer.get_data<double>();
+		noise = noise_buffer->data<double>();
 		for (int x = 0; x < noise_width; x++)
 		{
 			for (int y = 0; y < noise_height; y++)
@@ -69,6 +69,6 @@ private:
 	int noise_width;
 	int noise_height;
 	int noise_depth;
-	uicore::DataBuffer noise_buffer;
+	uicore::DataBufferPtr noise_buffer;
 	double *noise;
 };

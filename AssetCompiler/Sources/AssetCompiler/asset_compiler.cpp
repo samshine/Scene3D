@@ -61,7 +61,7 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 		std::string base_path = PathHelp::get_fullpath(filename);
 		std::string output_filename = PathHelp::combine(base_path, PathHelp::get_basename(filename) + ".cmodel");
 
-		if (StringHelp::compare(filetype, "modeldesc", true) == 0)
+		if (Text::equal_caseless(filetype, "modeldesc"))
 		{
 			ModelDesc desc = ModelDesc::load(filename);
 
@@ -70,10 +70,10 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 
 			TextureBuilder::build(model_data, base_path);
 
-			File file(output_filename, File::create_always, File::access_read_write);
-			ModelData::save(file, model_data);
+			auto file = File::create_always(output_filename);
+			ModelData::save(*file, model_data);
 		}
-		else if (StringHelp::compare(filetype, "mapdesc", true) == 0)
+		else if (Text::equal_caseless(filetype, "mapdesc"))
 		{
 			MapDesc desc = MapDesc::load(filename);
 
@@ -82,8 +82,8 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 
 			TextureBuilder::build(model_data, base_path);
 
-			File file(output_filename, File::create_always, File::access_read_write);
-			ModelData::save(file, model_data);
+			auto file = File::create_always(output_filename);
+			ModelData::save(*file, model_data);
 		}
 		else
 		{

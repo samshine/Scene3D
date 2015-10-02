@@ -13,7 +13,7 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 			PixelBufferSet pixelbuffer_set;
 
 			std::string filetype = PathHelp::get_extension(texture.name);
-			if (StringHelp::compare(filetype, "dds", true) == 0)
+			if (Text::equal_caseless(filetype, "dds"))
 			{
 				pixelbuffer_set = DDSFormat::load(texture.name);
 			}
@@ -24,17 +24,17 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 
 			auto pixels = pixelbuffer_set.get_image(0, 0);
 
-			MemoryDevice file_data;
-			file_data.get_data().set_capacity(pixels.get_data_size());
-			PNGFormat::save(pixels, file_data);
+			auto file_data = MemoryDevice::create();
+			file_data->buffer()->set_capacity(pixels.get_data_size());
+			PNGFormat::save(pixels, *file_data);
 
-			SHA1 sha1;
-			sha1.add(file_data.get_data());
-			sha1.calculate();
-			std::string hash = sha1.get_hash();
+			auto sha1 = SHA1::create();
+			sha1->add(file_data->buffer());
+			sha1->calculate();
+			std::string hash = sha1->get_hash();
 
 			std::string filename = hash + ".png";
-			File::write_bytes(PathHelp::combine(output_path, filename), file_data.get_data());
+			File::write_all_bytes(PathHelp::combine(output_path, filename), file_data->buffer());
 			texture.name = filename;
 		}
 		catch (const Exception &)

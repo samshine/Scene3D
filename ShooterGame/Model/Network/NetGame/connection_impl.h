@@ -39,7 +39,7 @@ namespace uicore
 	public:
 		NetGameConnection_Impl();
 		~NetGameConnection_Impl();
-		void start(NetGameConnection *base, NetGameConnectionSite *site, const TCPConnection &connection);
+		void start(NetGameConnection *base, NetGameConnectionSite *site, const TCPConnectionPtr &connection);
 		void start(NetGameConnection *base, NetGameConnectionSite *site, const SocketName &socket_name);
 		void set_data(const std::string &name, void *data);
 		void *get_data(const std::string &name) const;
@@ -61,7 +61,7 @@ namespace uicore
 		NetGameConnectionSite *site;
 
 		NetworkConditionVariable worker_event;
-		TCPConnection connection;
+		TCPConnectionPtr connection;
 		SocketName socket_name;
 		bool is_connected;
 		std::thread thread;

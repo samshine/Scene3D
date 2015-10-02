@@ -43,7 +43,7 @@ namespace uicore
 			if (size >= 2 + payload_size)
 			{
 				out_bytes_consumed = 2 + payload_size;
-				DataBuffer buffer(static_cast<const char*>(data)+2, payload_size);
+				auto buffer = DataBuffer::create(static_cast<const char*>(data)+2, payload_size);
 				return decode_event(buffer);
 			}
 		}
@@ -52,18 +52,18 @@ namespace uicore
 		return NetGameEvent(std::string());
 	}
 
-	DataBuffer NetGameNetworkData::send_data(const NetGameEvent &e)
+	DataBufferPtr NetGameNetworkData::send_data(const NetGameEvent &e)
 	{
-		DataBuffer buffer = encode_event(e);
-		if (buffer.get_size() > packet_limit + 2)
+		DataBufferPtr buffer = encode_event(e);
+		if (buffer->size() > packet_limit + 2)
 			throw Exception("Outgoing message too big");
 		return buffer;
 	}
 
-	NetGameEvent NetGameNetworkData::decode_event(const DataBuffer &data)
+	NetGameEvent NetGameNetworkData::decode_event(const DataBufferPtr &data)
 	{
-		const unsigned char *d = data.get_data<unsigned char>();
-		unsigned int length = data.get_size();
+		const unsigned char *d = data->data<unsigned char>();
+		unsigned int length = data->size();
 		if (length < 3)
 			throw Exception("Invalid network data");
 
@@ -170,7 +170,7 @@ namespace uicore
 			pos += 2;
 			if (pos + binary_length > length)
 				throw Exception("Invalid network data");
-			DataBuffer value(reinterpret_cast<const char*>(d + pos), binary_length);
+			auto value = DataBuffer::create(reinterpret_cast<const char*>(d + pos), binary_length);
 			pos += binary_length;
 			return NetGameEventValue(value);
 		}
@@ -179,17 +179,17 @@ namespace uicore
 		}
 	}
 
-	DataBuffer NetGameNetworkData::encode_event(const NetGameEvent &e)
+	DataBufferPtr NetGameNetworkData::encode_event(const NetGameEvent &e)
 	{
 		unsigned int length = 3 + e.get_name().length();
 		for (unsigned int i = 0; i < e.get_argument_count(); i++)
 			length += get_encoded_length(e.get_argument(i));
 
-		DataBuffer data(length + 2);
+		auto data = DataBuffer::create(length + 2);
 
-		*data.get_data<unsigned short>() = length;
+		*data->data<unsigned short>() = length;
 
-		unsigned char *d = data.get_data<unsigned char>() + 2;
+		unsigned char *d = data->data<unsigned char>() + 2;
 
 		// Write name (2 + name length)
 		unsigned int name_length = e.get_name().length();
@@ -257,11 +257,11 @@ namespace uicore
 			return 2;
 		case NetGameEventValue::binary:
 		{
-			DataBuffer s = value.get_binary();
+			DataBufferPtr s = value.get_binary();
 			*d = 11;
-			*reinterpret_cast<unsigned short*>(d + 1) = s.get_size();
-			memcpy(d + 3, s.get_data(), s.get_size());
-			return 3 + s.get_size();
+			*reinterpret_cast<unsigned short*>(d + 1) = s->size();
+			memcpy(d + 3, s->data(), s->size());
+			return 3 + s->size();
 		}
 		default:
 			throw Exception("Unknown game event value type");
@@ -285,7 +285,7 @@ namespace uicore
 		case NetGameEventValue::string:
 			return 1 + 2 + value.get_string().length();
 		case NetGameEventValue::binary:
-			return 1 + 2 + value.get_binary().get_size();
+			return 1 + 2 + value.get_binary()->size();
 		case NetGameEventValue::complex:
 		{
 			unsigned l = 2;

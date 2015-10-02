@@ -101,7 +101,7 @@ namespace uicore
 		/// \brief Constructs a NetGameEventValue
 		///
 		/// \param value = DataBuffer
-		NetGameEventValue(const DataBuffer &value);
+		NetGameEventValue(const DataBufferPtr &value);
 
 		/// \brief Constructs a NetGameEventValue
 		///
@@ -215,7 +215,7 @@ namespace uicore
 		/// \brief To binary
 		///
 		/// \return binary
-		DataBuffer get_binary() const;
+		DataBufferPtr get_binary() const;
 
 		inline operator unsigned int() const { return get_uinteger(); }
 		inline operator int() const { return get_integer(); }
@@ -223,7 +223,7 @@ namespace uicore
 		inline operator float() const { return get_number(); }
 		inline operator std::string() const { return get_string(); }
 		inline operator bool() const { return get_boolean(); }
-		inline operator DataBuffer() const { return get_binary(); }
+		inline operator DataBufferPtr() const { return get_binary(); }
 
 		/// Helper function to obtain a string representation of an EventValue object.
 		static std::string to_string(const NetGameEventValue &);
@@ -243,7 +243,7 @@ namespace uicore
 			bool value_bool;
 		};
 		std::string value_string;
-		DataBuffer value_binary;
+		DataBufferPtr value_binary;
 		std::vector<NetGameEventValue> value_complex;
 	};
 

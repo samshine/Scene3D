@@ -96,7 +96,7 @@ SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_
 		if (FAILED(result))
 			throw Exception("IAudioClient.GetBufferSize failed");
 
-		next_fragment = DataBuffer(sizeof(float) * 2 * fragment_size);
+		next_fragment = DataBuffer::create(sizeof(float) * 2 * fragment_size);
 
 		start_mixer_thread();
 	}
@@ -130,7 +130,7 @@ int SoundOutput_Win32::get_fragment_size()
 
 void SoundOutput_Win32::write_fragment(float *data)
 {
-	memcpy(next_fragment.get_data(), data, next_fragment.get_size());
+	memcpy(next_fragment->data(), data, next_fragment->size());
 	write_pos = 0;
 }
 
@@ -156,7 +156,7 @@ void SoundOutput_Win32::wait()
 			HRESULT result = audio_render_client->GetBuffer(buffer_size, &buffer);
 			if (SUCCEEDED(result))
 			{
-				memcpy(buffer, next_fragment.get_data<float>() + write_pos * 2, sizeof(float) * 2 * buffer_size);
+				memcpy(buffer, next_fragment->data<float>() + write_pos * 2, sizeof(float) * 2 * buffer_size);
 				result = audio_render_client->ReleaseBuffer(buffer_size, 0);
 
 				if (!is_playing)

@@ -96,11 +96,11 @@ LRESULT MouseMovement::window_proc(HWND window_handle, UINT message_id, WPARAM w
 		UINT result = GetRawInputData(handle, RID_INPUT, 0, &size, sizeof(RAWINPUTHEADER));
 		if (result == 0 && size > 0)
 		{
-			DataBuffer buffer(size);
-			result = GetRawInputData(handle, RID_INPUT, buffer.get_data(), &size, sizeof(RAWINPUTHEADER));
+			auto buffer = DataBuffer::create(size);
+			result = GetRawInputData(handle, RID_INPUT, buffer->data(), &size, sizeof(RAWINPUTHEADER));
 			if (result >= 0)
 			{
-				RAWINPUT *rawinput = (RAWINPUT*)buffer.get_data();
+				RAWINPUT *rawinput = (RAWINPUT*)buffer->data();
 				if (rawinput->header.dwType == RIM_TYPEMOUSE)
 				{
 					_x += rawinput->data.mouse.lLastX;

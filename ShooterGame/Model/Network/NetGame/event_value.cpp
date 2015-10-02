@@ -72,9 +72,8 @@ namespace uicore
 	}
 
 	NetGameEventValue::NetGameEventValue(const wchar_t *value)
-		: type(string)
+		: type(string), value_string(Text::from_utf16(value))
 	{
-		value_string = StringHelp::ucs2_to_utf8(value);
 	}
 
 	NetGameEventValue::NetGameEventValue(bool value)
@@ -82,7 +81,7 @@ namespace uicore
 	{
 	}
 
-	NetGameEventValue::NetGameEventValue(const DataBuffer &value)
+	NetGameEventValue::NetGameEventValue(const DataBufferPtr &value)
 		: type(binary), value_binary(value)
 	{
 	}
@@ -233,7 +232,7 @@ namespace uicore
 			throw Exception("NetGameEventValue is not a boolean");
 	}
 
-	DataBuffer NetGameEventValue::get_binary() const
+	DataBufferPtr NetGameEventValue::get_binary() const
 	{
 		if (is_binary())
 			return value_binary;
@@ -248,19 +247,19 @@ namespace uicore
 		case NetGameEventValue::null:
 			return "null";
 		case NetGameEventValue::integer:
-			return StringHelp::int_to_text(v.get_integer());
+			return Text::to_string(v.get_integer());
 		case NetGameEventValue::uinteger:
-			return StringHelp::uint_to_text(v.get_uinteger());
+			return Text::to_string(v.get_uinteger());
 		case NetGameEventValue::character:
-			return StringHelp::int_to_text(static_cast<int>(v.get_character()));
+			return Text::to_string(static_cast<int>(v.get_character()));
 		case NetGameEventValue::ucharacter:
-			return StringHelp::uint_to_text(static_cast<unsigned int>(v.get_ucharacter()));
+			return Text::to_string(static_cast<unsigned int>(v.get_ucharacter()));
 		case NetGameEventValue::string:
 			return "\"" + v.get_string() + "\"";
 		case NetGameEventValue::boolean:
 			return v.get_boolean() ? "true" : "false";
 		case NetGameEventValue::number:
-			return StringHelp::float_to_text(v.get_number());
+			return Text::to_string(v.get_number());
 		case NetGameEventValue::complex:
 		{
 			std::string str;
@@ -275,7 +274,7 @@ namespace uicore
 			return str;
 		}
 		default:
-			return "??" + StringHelp::int_to_text(v.get_type());
+			return "??" + Text::to_string(v.get_type());
 		}
 	}
 }

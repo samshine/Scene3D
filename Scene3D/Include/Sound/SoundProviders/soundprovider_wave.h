@@ -8,8 +8,7 @@ class SoundProvider_Wave_Impl;
 class SoundProvider_Wave : public SoundProvider
 {
 public:
-	SoundProvider_Wave(const std::string &filename, const uicore::FileSystem &fs, bool stream = false);
-	SoundProvider_Wave(const std::string &fullname, bool stream = false);
+	SoundProvider_Wave(const std::string &filename, bool stream = false);
 	SoundProvider_Wave(uicore::IODevice &file, bool stream = false);
 	virtual ~SoundProvider_Wave();
 

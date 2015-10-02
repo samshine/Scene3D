@@ -71,7 +71,7 @@ void DiffuseGIPassCS::update_buffers(GraphicContext &gc)
 
 ProgramObject DiffuseGIPassCS::compile_and_link(GraphicContext &gc, const std::string &compute_filename)
 {
-	std::string source = File::read_text(compute_filename);
+	std::string source = File::read_all_text(compute_filename);
 
 	ShaderObject compute_shader(gc, shadertype_compute, source);
 	if (!compute_shader.compile())

@@ -22,7 +22,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 			button->image_view()->style()->set("margin-left: 5px");
 		button->image_view()->set_image(ImageSource::from_resource(icon));
 	}
-	button->label()->set_text(StringHelp::text_to_upper(text));
+	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
@@ -59,7 +59,7 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	auto button = std::make_shared<ButtonView>();
 	button->style()->set("flex: none");
 	button->style()->set("padding: 3px 10px");
-	button->label()->set_text(StringHelp::text_to_upper(text));
+	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e)

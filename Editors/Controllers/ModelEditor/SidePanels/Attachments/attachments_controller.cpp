@@ -72,21 +72,21 @@ void AttachmentsController::update_attachment_fields()
 		attachment->set_hidden(false);
 
 		const auto &attachment = ModelAppModel::instance()->desc.attachment_points[selection->index];
-		position_property->input_x->set_text(StringHelp::float_to_text(attachment.position.x));
-		position_property->input_y->set_text(StringHelp::float_to_text(attachment.position.y));
-		position_property->input_z->set_text(StringHelp::float_to_text(attachment.position.z));
+		position_property->input_x->set_text(Text::to_string(attachment.position.x));
+		position_property->input_y->set_text(Text::to_string(attachment.position.y));
+		position_property->input_z->set_text(Text::to_string(attachment.position.z));
 
 		Vec3f rotation = attachment.orientation.to_matrix().get_euler(order_YXZ);
 		rotation *= 180.0f / PI;
 
-		orientation_property->input_x->set_text(StringHelp::float_to_text(rotation.x));
-		orientation_property->input_y->set_text(StringHelp::float_to_text(rotation.y));
-		orientation_property->input_z->set_text(StringHelp::float_to_text(rotation.z));
+		orientation_property->input_x->set_text(Text::to_string(rotation.x));
+		orientation_property->input_y->set_text(Text::to_string(rotation.y));
+		orientation_property->input_z->set_text(Text::to_string(rotation.z));
 
 		bone_name_property->text_field->set_text(attachment.bone_name);
 
 		test_model_property->browse_field->set_text(PathHelp::get_basename(attachment.test_model));
-		test_scale_property->text_field->set_text(StringHelp::float_to_text(attachment.test_scale));
+		test_scale_property->text_field->set_text(Text::to_string(attachment.test_scale));
 	}
 	else
 	{

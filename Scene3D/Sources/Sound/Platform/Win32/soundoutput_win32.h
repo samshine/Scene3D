@@ -20,7 +20,7 @@ private:
 	uicore::ComPtr<IMMDevice> mmdevice;
 	uicore::ComPtr<IAudioClient> audio_client;
 	uicore::ComPtr<IAudioRenderClient> audio_render_client;
-	uicore::DataBuffer next_fragment;
+	uicore::DataBufferPtr next_fragment;
 	HANDLE audio_buffer_ready_event;
 	bool is_playing;
 	UINT32 fragment_size;

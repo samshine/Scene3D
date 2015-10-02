@@ -33,17 +33,15 @@
 
 namespace uicore
 {
-	class DataBuffer;
-
 	class NetGameNetworkData
 	{
 	public:
 		static NetGameEvent receive_data(const void *data, int size, int &out_bytes_consumed);
-		static DataBuffer send_data(const NetGameEvent &e);
+		static DataBufferPtr send_data(const NetGameEvent &e);
 
 	private:
-		static NetGameEvent decode_event(const DataBuffer &data);
-		static DataBuffer encode_event(const NetGameEvent &e);
+		static NetGameEvent decode_event(const DataBufferPtr &data);
+		static DataBufferPtr encode_event(const NetGameEvent &e);
 
 		static unsigned int get_encoded_length(const NetGameEventValue &value);
 		static unsigned int encode_value(unsigned char *d, const NetGameEventValue &value);

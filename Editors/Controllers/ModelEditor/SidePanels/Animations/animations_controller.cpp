@@ -74,12 +74,12 @@ void AnimationsController::update_animation_fields()
 		animation->set_hidden(false);
 
 		const auto &anim = ModelAppModel::instance()->desc.animations[selection->index];
-		start_property->text_field->set_text(StringHelp::int_to_text(anim.start_frame));
-		end_property->text_field->set_text(StringHelp::int_to_text(anim.end_frame));
-		play_property->text_field->set_text(StringHelp::float_to_text(anim.play_speed));
-		move_property->text_field->set_text(StringHelp::float_to_text(anim.move_speed));
+		start_property->text_field->set_text(Text::to_string(anim.start_frame));
+		end_property->text_field->set_text(Text::to_string(anim.end_frame));
+		play_property->text_field->set_text(Text::to_string(anim.play_speed));
+		move_property->text_field->set_text(Text::to_string(anim.move_speed));
 		loop_property->text_field->set_text(anim.loop ? "1" : "0");
-		rarity_property->text_field->set_text(StringHelp::int_to_text(anim.rarity));
+		rarity_property->text_field->set_text(Text::to_string(anim.rarity));
 	}
 	else
 	{

@@ -8,8 +8,7 @@ class SoundProvider_Vorbis_Impl;
 class SoundProvider_Vorbis : public SoundProvider
 {
 public:
-	SoundProvider_Vorbis(const std::string &filename, const uicore::FileSystem &fs, bool stream = false);
-	SoundProvider_Vorbis(const std::string &fullname, bool stream = false);
+	SoundProvider_Vorbis(const std::string &filename, bool stream = false);
 	SoundProvider_Vorbis(uicore::IODevice &file, bool stream = false);
 	virtual ~SoundProvider_Vorbis();
 

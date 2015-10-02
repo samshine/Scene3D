@@ -87,18 +87,18 @@ void CacheLoadTexture::process_work()
 	std::string extension = PathHelp::get_extension(material_name);
 	std::string filename = material_name;
 
-	if (!FileHelp::file_exists(filename))
+	if (!File::exists(filename))
 		filename = PathHelp::combine("Resources/Assets/Textures", filename);
 
-	if (StringHelp::compare(extension, "ctexture", true) == 0)
+	if (Text::equal_caseless(extension, "ctexture"))
 	{
 		load_ctexture(filename);
 	}
-	if (StringHelp::compare(extension, "blp", true) == 0)
+	if (Text::equal_caseless(extension, "blp"))
 	{
 		load_blp_texture(filename);
 	}
-	else if (StringHelp::compare(extension, "dds", true) == 0)
+	else if (Text::equal_caseless(extension, "dds"))
 	{
 		load_dds_texture(filename);
 	}
