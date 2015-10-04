@@ -58,34 +58,34 @@ void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_fo
 		else
 			get_shader_hlsl(blur_amount, sample_count, vertex_shader, vertical_fragment_shader, horizontal_fragment_shader);
 
-		ShaderObject vertex(gc, shadertype_vertex, vertex_shader);
-		ShaderObject vertical_fragment(gc, shadertype_fragment, vertical_fragment_shader);
-		ShaderObject horizontal_fragment(gc, shadertype_fragment, horizontal_fragment_shader);
-		if (!vertex.compile())
-			throw Exception(string_format("Could not compile Gaussian blur vertex shader: %1", vertex.get_info_log()));
-		if (!vertical_fragment.compile())
-			throw Exception(string_format("Could not compile vertical Gaussian blur fragment shader: %1", vertical_fragment.get_info_log()));
-		if (!horizontal_fragment.compile())
-			throw Exception(string_format("Could not compile horizontal Gaussian blur fragment shader: %1", horizontal_fragment.get_info_log()));
+		auto vertex = ShaderObject::create(gc, ShaderType::vertex, vertex_shader);
+		auto vertical_fragment = ShaderObject::create(gc, ShaderType::fragment, vertical_fragment_shader);
+		auto horizontal_fragment = ShaderObject::create(gc, ShaderType::fragment, horizontal_fragment_shader);
+		if (!vertex->try_compile())
+			throw Exception(string_format("Could not compile Gaussian blur vertex shader: %1", vertex->info_log()));
+		if (!vertical_fragment->try_compile())
+			throw Exception(string_format("Could not compile vertical Gaussian blur fragment shader: %1", vertical_fragment->info_log()));
+		if (!horizontal_fragment->try_compile())
+			throw Exception(string_format("Could not compile horizontal Gaussian blur fragment shader: %1", horizontal_fragment->info_log()));
 
 		BlurSetup blur_setup(blur_amount, sample_count);
-		blur_setup.vertical_blur_program = ProgramObject(gc);
-		blur_setup.vertical_blur_program.attach(vertex);
-		blur_setup.vertical_blur_program.attach(vertical_fragment);
-		blur_setup.vertical_blur_program.bind_frag_data_location(0, "FragColor");
-		blur_setup.vertical_blur_program.bind_attribute_location(0, "PositionInProjection");
-		if (!blur_setup.vertical_blur_program.link())
+		blur_setup.vertical_blur_program = ProgramObject::create(gc);
+		blur_setup.vertical_blur_program->attach(vertex);
+		blur_setup.vertical_blur_program->attach(vertical_fragment);
+		blur_setup.vertical_blur_program->bind_frag_data_location(0, "FragColor");
+		blur_setup.vertical_blur_program->bind_attribute_location(0, "PositionInProjection");
+		if (!blur_setup.vertical_blur_program->try_link())
 			throw Exception("Could not link vertical Gaussian blur program");
-		blur_setup.vertical_blur_program.set_uniform1i("SourceTexture", 0);
+		blur_setup.vertical_blur_program->set_uniform1i("SourceTexture", 0);
 
-		blur_setup.horizontal_blur_program = ProgramObject(gc);
-		blur_setup.horizontal_blur_program.attach(vertex);
-		blur_setup.horizontal_blur_program.attach(horizontal_fragment);
-		blur_setup.horizontal_blur_program.bind_frag_data_location(0, "FragColor");
-		blur_setup.horizontal_blur_program.bind_attribute_location(0, "PositionInProjection");
-		if (!blur_setup.horizontal_blur_program.link())
+		blur_setup.horizontal_blur_program = ProgramObject::create(gc);
+		blur_setup.horizontal_blur_program->attach(vertex);
+		blur_setup.horizontal_blur_program->attach(horizontal_fragment);
+		blur_setup.horizontal_blur_program->bind_frag_data_location(0, "FragColor");
+		blur_setup.horizontal_blur_program->bind_attribute_location(0, "PositionInProjection");
+		if (!blur_setup.horizontal_blur_program->try_link())
 			throw Exception("Could not link horizontal Gaussian blur program");
-		blur_setup.horizontal_blur_program.set_uniform1i("SourceTexture", 0);
+		blur_setup.horizontal_blur_program->set_uniform1i("SourceTexture", 0);
 
 		blur_setups.push_back(blur_setup);
 		current_blur_setup = blur_setups.begin() + (blur_setups.size() - 1);
@@ -130,7 +130,7 @@ void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_fo
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
-		blend_state = BlendState(gc, blend_desc);
+		blend_state = gc.create_blend_state(blend_desc);
 	}
 }
 

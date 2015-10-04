@@ -134,22 +134,22 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 
 void ParticleEmitterPass::setup(GraphicContext &gc)
 {
-	if (program.is_null())
+	if (!program)
 	{
 		std::string vertex_filename = PathHelp::combine(shader_path, "ParticleEmitter/vertex.hlsl");
 		std::string fragment_filename = PathHelp::combine(shader_path, "ParticleEmitter/fragment.hlsl");
 		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
-		program.bind_attribute_location(0, "AttrPosition");
-		program.bind_frag_data_location(0, "FragColor");
-		if (!program.link())
-			throw Exception(string_format("Particle emitter program failed to link: %1", program.get_info_log()));
-		program.set_uniform_buffer_index("Uniforms", 0);
-		program.set_uniform1i("NormalZTexture", 0);
-		program.set_uniform1i("InstanceTexture", 1);
-		program.set_uniform1i("ParticleTexture", 2);
-		program.set_uniform1i("ParticleSampler", 2);
-		program.set_uniform1i("ColorGradientTexture", 3);
-		program.set_uniform1i("ColorGradientSampler", 3);
+		program->bind_attribute_location(0, "AttrPosition");
+		program->bind_frag_data_location(0, "FragColor");
+		if (!program->try_link())
+			throw Exception(string_format("Particle emitter program failed to link: %1", program->get_info_log()));
+		program->set_uniform_buffer_index("Uniforms", 0);
+		program->set_uniform1i("NormalZTexture", 0);
+		program->set_uniform1i("InstanceTexture", 1);
+		program->set_uniform1i("ParticleTexture", 2);
+		program->set_uniform1i("ParticleSampler", 2);
+		program->set_uniform1i("ColorGradientTexture", 3);
+		program->set_uniform1i("ColorGradientSampler", 3);
 
 		billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 	}
@@ -164,17 +164,17 @@ void ParticleEmitterPass::setup(GraphicContext &gc)
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
-		blend_state = BlendState(gc, blend_desc);
+		blend_state = gc.create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(false);
 		depth_stencil_desc.enable_depth_test(true);
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
+		depth_stencil_state = gc.create_depth_stencil_state(depth_stencil_desc);
 
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_culled(false);
-		rasterizer_state = RasterizerState(gc, rasterizer_desc);
+		rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
 
 		prim_array = PrimitivesArray(gc);
 		prim_array.set_attributes(0, billboard_positions);

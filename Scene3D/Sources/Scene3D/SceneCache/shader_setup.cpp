@@ -4,7 +4,7 @@
 
 using namespace uicore;
 
-ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)
+ProgramObjectPtr ShaderSetup::compile(GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)
 {
 	std::string prefix;
 	if (gc.get_shader_language() == shader_glsl)
@@ -14,29 +14,26 @@ ProgramObject ShaderSetup::compile(GraphicContext &gc, std::string shader_path, 
 		prefix += string_format("#define %1\r\n", define_list[i]);
 	prefix += "#line 0\r\n";
 
-	ProgramObject program(gc);
+	auto program = ProgramObject::create(gc);
 
 	if (!vertex.empty())
 	{
-		ShaderObject vertex_shader(gc, shadertype_vertex, prefix + File::read_all_text(PathHelp::combine(shader_path, vertex)));
-		if (!vertex_shader.compile())
-			throw Exception(vertex_shader.get_info_log());
-		program.attach(vertex_shader);
+		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, prefix + File::read_all_text(PathHelp::combine(shader_path, vertex)));
+		vertex_shader->compile();
+		program->attach(vertex_shader);
 	}
 
 	if (!fragment.empty())
 	{
-		ShaderObject fragment_shader(gc, shadertype_fragment, prefix + File::read_all_text(PathHelp::combine(shader_path, fragment)));
-		if (!fragment_shader.compile())
-			throw Exception(fragment_shader.get_info_log());
-		program.attach(fragment_shader);
+		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + File::read_all_text(PathHelp::combine(shader_path, fragment)));
+		program->attach(fragment_shader);
 	}
 
 	return program;
 }
 
-void ShaderSetup::link(ProgramObject &program, const std::string &program_name)
+void ShaderSetup::link(ProgramObjectPtr &program, const std::string &program_name)
 {
-	if (!program.link())
-		throw Exception(string_format("Failed to link %1: %2", program.get_info_log()));
+	if (!program->try_link())
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
 }

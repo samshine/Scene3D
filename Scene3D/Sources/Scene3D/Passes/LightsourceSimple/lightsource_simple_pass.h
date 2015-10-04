@@ -19,7 +19,7 @@ public:
 	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
 
 private:
-	uicore::ProgramObject compile_and_link(uicore::GraphicContext &gc, const std::string &shader_path, const std::string &type);
+	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &shader_path, const std::string &type);
 
 	void setup(uicore::GraphicContext &gc);
 	void find_lights(uicore::GraphicContext &gc, Scene_Impl *scene);
@@ -57,13 +57,13 @@ private:
 	};
 
 	uicore::FrameBuffer fb;
-	uicore::BlendState blend_state;
+	uicore::BlendStatePtr blend_state;
 
-	uicore::DepthStencilState icosahedron_depth_stencil_state;
-	uicore::RasterizerState icosahedron_rasterizer_state;
+	uicore::DepthStencilStatePtr icosahedron_depth_stencil_state;
+	uicore::RasterizerStatePtr icosahedron_rasterizer_state;
 
-	uicore::DepthStencilState rect_depth_stencil_state;
-	uicore::RasterizerState rect_rasterizer_state;
+	uicore::DepthStencilStatePtr rect_depth_stencil_state;
+	uicore::RasterizerStatePtr rect_rasterizer_state;
 
 	uicore::PrimitivesArray icosahedron_prim_array;
 	uicore::PrimitivesArray rect_prim_array;
@@ -76,8 +76,8 @@ private:
 	uicore::PixelBuffer light_instance_transfer;
 	uicore::Texture1D light_instance_texture;
 
-	uicore::ProgramObject icosahedron_light_program;
-	uicore::ProgramObject rect_light_program;
+	uicore::ProgramObjectPtr icosahedron_light_program;
+	uicore::ProgramObjectPtr rect_light_program;
 
 	std::vector<SceneLight_Impl *> lights;
 };

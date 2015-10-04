@@ -89,7 +89,7 @@ void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
 
 void SkyboxPass::setup(GraphicContext &gc)
 {
-	if (cube_program.is_null())
+	if (!cube_program)
 	{
 		create_clouds(gc);
 		create_stars(gc);
@@ -113,17 +113,17 @@ void SkyboxPass::setup(GraphicContext &gc)
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
-		blend_state = BlendState(gc, blend_desc);
+		blend_state = gc.create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(false);
 		depth_stencil_desc.enable_depth_test(true);
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
+		depth_stencil_state = gc.create_depth_stencil_state(depth_stencil_desc);
 
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_culled(false);
-		rasterizer_state = RasterizerState(gc, rasterizer_desc);
+		rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
 
 		billboard_prim_array = PrimitivesArray(gc);
 		billboard_prim_array.set_attributes(0, billboard_positions);
@@ -213,14 +213,14 @@ void SkyboxPass::create_billboard_program(GraphicContext &gc)
 	billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 
 	billboard_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_billboard.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_billboard.hlsl"));
-	billboard_program.bind_attribute_location(0, "AttrPosition");
-	billboard_program.bind_frag_data_location(0, "FragColor");
-	if (!billboard_program.link())
-		throw Exception(string_format("Link failed: %1", billboard_program.get_info_log()));
-	billboard_program.set_uniform1i("InstanceTexture", 0);
-	billboard_program.set_uniform1i("ParticleTexture", 1);
-	billboard_program.set_uniform1i("ParticleTextureSampler", 1);
-	billboard_program.set_uniform_buffer_index("Uniforms", 0);
+	billboard_program->bind_attribute_location(0, "AttrPosition");
+	billboard_program->bind_frag_data_location(0, "FragColor");
+	if (!billboard_program->try_link())
+		throw Exception(string_format("Link failed: %1", billboard_program->get_info_log()));
+	billboard_program->set_uniform1i("InstanceTexture", 0);
+	billboard_program->set_uniform1i("ParticleTexture", 1);
+	billboard_program->set_uniform1i("ParticleTextureSampler", 1);
+	billboard_program->set_uniform_buffer_index("Uniforms", 0);
 }
 
 void SkyboxPass::create_cube_program(GraphicContext &gc)
@@ -228,13 +228,13 @@ void SkyboxPass::create_cube_program(GraphicContext &gc)
 	cube_positions = VertexArrayVector<Vec3f>(gc, cpu_cube_positions, 36);
 
 	cube_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_cube.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_sphere.hlsl"));
-	cube_program.bind_attribute_location(0, "AttrPosition");
-	cube_program.bind_frag_data_location(0, "FragColor");
-	if (!cube_program.link())
-		throw Exception(string_format("Link failed: %1", cube_program.get_info_log()));
-	cube_program.set_uniform1i("SkyboxTexture", 0);
-	cube_program.set_uniform1i("SkyboxTextureSampler", 0);
-	cube_program.set_uniform_buffer_index("Uniforms", 0);
+	cube_program->bind_attribute_location(0, "AttrPosition");
+	cube_program->bind_frag_data_location(0, "FragColor");
+	if (!cube_program->try_link())
+		throw Exception(string_format("Link failed: %1", cube_program->get_info_log()));
+	cube_program->set_uniform1i("SkyboxTexture", 0);
+	cube_program->set_uniform1i("SkyboxTextureSampler", 0);
+	cube_program->set_uniform_buffer_index("Uniforms", 0);
 }
 
 float SkyboxPass::random(float min_value, float max_value)

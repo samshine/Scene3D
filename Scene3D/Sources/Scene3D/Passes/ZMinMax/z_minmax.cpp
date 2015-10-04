@@ -101,7 +101,7 @@ void ZMinMax::update_buffers(GraphicContext &gc)
 
 			BlendStateDescription blend_desc;
 			blend_desc.enable_blending(false);
-			blend_state = BlendState(gc, blend_desc);
+			blend_state = gc.create_blend_state(blend_desc);
 		}
 
 		result.set((iterations % 2 == 0) ? texture1 : texture0);
@@ -115,23 +115,23 @@ Size ZMinMax::find_texture_size(Texture2D &normal_z)
 	return tile_dimensions * tile_size / 2;
 }
 
-ProgramObject ZMinMax::compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source)
+ProgramObjectPtr ZMinMax::compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex_source);
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment_source);
-	if (!vertex_shader.compile())
-		throw Exception(string_format("ZMinMax vertex program could not compile: %1", vertex_shader.get_info_log()));
-	if (!fragment_shader.compile())
-		throw Exception(string_format("ZMinMax fragment program could not compile: %1", fragment_shader.get_info_log()));
+	auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_source);
+	auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_source);
+	if (!vertex_shader->try_compile())
+		throw Exception(string_format("ZMinMax vertex program could not compile: %1", vertex_shader->info_log()));
+	if (!fragment_shader->try_compile())
+		throw Exception(string_format("ZMinMax fragment program could not compile: %1", fragment_shader->info_log()));
 
-	ProgramObject program(gc);
-	program.attach(vertex_shader);
-	program.attach(fragment_shader);
-	program.bind_attribute_location(0, "PositionInProjection");
-	program.bind_frag_data_location(0, "FragMinMax");
+	auto program = ProgramObject::create(gc);
+	program->attach(vertex_shader);
+	program->attach(fragment_shader);
+	program->bind_attribute_location(0, "PositionInProjection");
+	program->bind_frag_data_location(0, "FragMinMax");
 	ShaderSetup::link(program, "zminmax program");
 
-	program.set_uniform1i("Texture", 0);
+	program->set_uniform1i("Texture", 0);
 	return program;
 }
 

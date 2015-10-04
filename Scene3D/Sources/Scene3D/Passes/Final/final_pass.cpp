@@ -17,21 +17,21 @@ FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, Resourc
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");
-		present_shader.bind_frag_data_location(0, "FragColor");
+		present_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
 		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "Final/fragment_present.hlsl"), "");
 	}
-	if (!present_shader.link())
+	if (!present_shader->try_link())
 		throw Exception("Shader linking failed!");
-	present_shader.bind_attribute_location(0, "PositionInProjection");
-	present_shader.set_uniform1i("FinalColors", 0);
-	present_shader.set_uniform1i("FinalColorsSampler", 0);
-	present_shader.set_uniform1i("LogAverageLight", 1);
-	present_shader.set_uniform1i("BloomColors", 2);
-	present_shader.set_uniform1i("BloomColorsSampler", 2);
-	present_shader.set_uniform1i("AmbientOcclusion", 3);
+	present_shader->bind_attribute_location(0, "PositionInProjection");
+	present_shader->set_uniform1i("FinalColors", 0);
+	present_shader->set_uniform1i("FinalColorsSampler", 0);
+	present_shader->set_uniform1i("LogAverageLight", 1);
+	present_shader->set_uniform1i("BloomColors", 2);
+	present_shader->set_uniform1i("BloomColorsSampler", 2);
+	present_shader->set_uniform1i("AmbientOcclusion", 3);
 
 	Vec4f positions[6] =
 	{
@@ -48,7 +48,7 @@ FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, Resourc
 
 	RasterizerStateDescription rasterizer_desc;
 	rasterizer_desc.set_culled(false);
-	rasterizer_state = RasterizerState(gc, rasterizer_desc);
+	rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
 }
 
 void FinalPass::run(GraphicContext &gc)

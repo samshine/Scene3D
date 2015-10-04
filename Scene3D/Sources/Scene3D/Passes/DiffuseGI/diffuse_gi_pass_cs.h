@@ -17,7 +17,7 @@ public:
 
 private:
 	void update_buffers(uicore::GraphicContext &gc);
-	uicore::ProgramObject compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename);
+	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -28,9 +28,9 @@ private:
 	// Out:
 	Resource<uicore::Texture2D> final_color;
 
-	uicore::ProgramObject init_lpv_program;
-	uicore::ProgramObject init_gv_program;
-	uicore::ProgramObject propagate_lpv_program;
-	uicore::ProgramObject accumulate_lpv_program;
-	uicore::ProgramObject render_result_program;
+	uicore::ProgramObjectPtr init_lpv_program;
+	uicore::ProgramObjectPtr init_gv_program;
+	uicore::ProgramObjectPtr propagate_lpv_program;
+	uicore::ProgramObjectPtr accumulate_lpv_program;
+	uicore::ProgramObjectPtr render_result_program;
 };

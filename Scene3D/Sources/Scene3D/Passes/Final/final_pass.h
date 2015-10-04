@@ -18,8 +18,8 @@ private:
 	Resource<uicore::Texture2D> bloom_blur_texture;
 	Resource<uicore::Texture2D> ambient_occlusion;
 
-	uicore::ProgramObject present_shader;
+	uicore::ProgramObjectPtr present_shader;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 	uicore::PrimitivesArray rect_primarray;
-	uicore::RasterizerState rasterizer_state;
+	uicore::RasterizerStatePtr rasterizer_state;
 };

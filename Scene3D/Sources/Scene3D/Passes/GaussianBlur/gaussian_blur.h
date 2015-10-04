@@ -26,8 +26,8 @@ private:
 
 		float blur_amount;
 		int sample_count;
-		uicore::ProgramObject vertical_blur_program;
-		uicore::ProgramObject horizontal_blur_program;
+		uicore::ProgramObjectPtr vertical_blur_program;
+		uicore::ProgramObjectPtr horizontal_blur_program;
 	};
 
 	uicore::PrimitivesArray prim_array;
@@ -38,5 +38,5 @@ private:
 	uicore::TextureFormat format;
 	std::vector<BlurSetup> blur_setups;
 	std::vector<BlurSetup>::iterator current_blur_setup;
-	uicore::BlendState blend_state;
+	uicore::BlendStatePtr blend_state;
 };

@@ -49,7 +49,7 @@ public:
 class ModelRenderCommand_BindShader : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindShader(uicore::ProgramObject shader) : shader(shader)
+	ModelRenderCommand_BindShader(uicore::ProgramObjectPtr shader) : shader(shader)
 	{
 	}
 
@@ -58,7 +58,7 @@ public:
 		gc.set_program_object(shader);
 	}
 
-	uicore::ProgramObject shader;
+	uicore::ProgramObjectPtr shader;
 };
 
 class ModelRenderCommand_BindTexture : public ModelRenderCommand
@@ -79,10 +79,10 @@ public:
 	uicore::TextureWrapMode wrap_u, wrap_v;
 };
 
-class ModelRenderCommand_SetRasterizerState : public ModelRenderCommand
+class ModelRenderCommand_SetRasterizerStatePtr : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_SetRasterizerState(uicore::RasterizerState state) : state(state)
+	ModelRenderCommand_SetRasterizerStatePtr(uicore::RasterizerStatePtr state) : state(state)
 	{
 	}
 
@@ -91,7 +91,7 @@ public:
 		gc.set_rasterizer_state(state);
 	}
 
-	uicore::RasterizerState state;
+	uicore::RasterizerStatePtr state;
 };
 
 class ModelRenderCommand_DrawElements : public ModelRenderCommand

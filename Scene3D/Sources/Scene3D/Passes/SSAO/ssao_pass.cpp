@@ -14,15 +14,15 @@ SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, ResourceC
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.glsl"), "");
-		extract_shader.bind_frag_data_location(0, "FragColor");
+		extract_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
 		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.hlsl"), "");
 	}
 	ShaderSetup::link(extract_shader, "ssao extract program");
-	extract_shader.bind_attribute_location(0, "AttrPositionInProjection");
-	extract_shader.set_uniform1i("NormalZ", 0);
+	extract_shader->bind_attribute_location(0, "AttrPositionInProjection");
+	extract_shader->set_uniform1i("NormalZ", 0);
 
 /*	To do: port this to uniform buffer
 	for (int i = 0; i < 160; i++)
@@ -51,7 +51,7 @@ SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, ResourceC
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = BlendState(gc, blend_desc);
+	blend_state = gc.create_blend_state(blend_desc);
 }
 
 void SSAOPass::run(GraphicContext &gc)

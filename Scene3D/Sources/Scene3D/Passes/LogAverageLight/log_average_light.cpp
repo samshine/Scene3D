@@ -116,7 +116,7 @@ LogAverageLight::LogAverageLight(GraphicContext &gc, ResourceContainer &inout, i
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = BlendState(gc, blend_desc);
+	blend_state = gc.create_blend_state(blend_desc);
 }
 
 Texture2D &LogAverageLight::find_log_average_light(GraphicContext &gc, Texture2D &hdr_texture)
@@ -166,25 +166,25 @@ Texture2D &LogAverageLight::find_log_average_light(GraphicContext &gc, Texture2D
 	return current_index == 0 ? result_texture0 : result_texture1;
 }
 
-ProgramObject LogAverageLight::compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source)
+ProgramObjectPtr LogAverageLight::compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex_source);
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment_source);
-	if (!vertex_shader.compile())
-		throw Exception(string_format("LogAverageLight vertex program could not compile: %1", vertex_shader.get_info_log()));
-	if (!fragment_shader.compile())
-		throw Exception(string_format("LogAverageLight fragment program could not compile: %1", fragment_shader.get_info_log()));
+	auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_source);
+	auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_source);
+	if (!vertex_shader->try_compile())
+		throw Exception(string_format("LogAverageLight vertex program could not compile: %1", vertex_shader->info_log()));
+	if (!fragment_shader->try_compile())
+		throw Exception(string_format("LogAverageLight fragment program could not compile: %1", fragment_shader->info_log()));
 
-	ProgramObject program(gc);
-	program.attach(vertex_shader);
-	program.attach(fragment_shader);
-	program.bind_attribute_location(0, "PositionInProjection");
-	program.bind_frag_data_location(0, "FragAverage");
+	auto program = ProgramObject::create(gc);
+	program->attach(vertex_shader);
+	program->attach(fragment_shader);
+	program->bind_attribute_location(0, "PositionInProjection");
+	program->bind_frag_data_location(0, "FragAverage");
 
 	ShaderSetup::link(program, "log average light program");
 
-	program.set_uniform1i("Texture", 0);
-	program.set_uniform1i("TextureCurrent", 0);
-	program.set_uniform1i("TexturePrev", 1);
+	program->set_uniform1i("Texture", 0);
+	program->set_uniform1i("TextureCurrent", 0);
+	program->set_uniform1i("TexturePrev", 1);
 	return program;
 }

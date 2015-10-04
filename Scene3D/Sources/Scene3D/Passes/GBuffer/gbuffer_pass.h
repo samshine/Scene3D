@@ -34,9 +34,9 @@ private:
 	uicore::FrameBuffer fb_gbuffer;
 	uicore::GraphicContext gc;
 	Scene_Impl *scene;
-	uicore::BlendState blend_state;
-	uicore::BlendState early_z_blend_state;
-	uicore::DepthStencilState depth_stencil_state;
+	uicore::BlendStatePtr blend_state;
+	uicore::BlendStatePtr early_z_blend_state;
+	uicore::DepthStencilStatePtr depth_stencil_state;
 
 	struct RenderEntry
 	{

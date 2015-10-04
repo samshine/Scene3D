@@ -26,7 +26,7 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 	if (!model_data->meshes.empty() && !model_data->meshes[0].draw_ranges.empty())
 	{
 		is_two_sided = model_data->meshes[0].draw_ranges[0].two_sided;
-		out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
+		out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 	}
 
 	bool uses_bones = !model_data->bones.empty();
@@ -77,7 +77,7 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 			if (is_two_sided != material_range.two_sided)
 			{
 				is_two_sided = material_range.two_sided;
-				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
+				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 			}
 
 			ModelShaderDescription shader_desc(material_range, uses_bones, uses_color_channel);
@@ -130,7 +130,7 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 
 			if (!raster_set)
 			{
-				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
+				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 				raster_set = true;
 			}
 
@@ -168,7 +168,7 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 			if (is_two_sided != material_range.two_sided)
 			{
 				is_two_sided = material_range.two_sided;
-				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
+				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 			}
 
 			ModelShaderDescription shader_desc(material_range, uses_bones, uses_color_channel);
@@ -196,7 +196,7 @@ void ModelShaderCache::create_shadow_commands(GraphicContext &gc, Model *model, 
 
 	bool uses_bones = !model_data->bones.empty();
 
-	out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(rasterizer_state));
+	out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(rasterizer_state));
 	out_list.commands.push_back(new ModelRenderCommand_BindShader(get_shadow_program(gc, uses_bones)));
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
@@ -219,7 +219,7 @@ void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model,
 
 	bool uses_bones = !model_data->bones.empty();
 
-	out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(rasterizer_state));
+	out_list.commands.push_back(new ModelRenderCommand_SetRasterizerStatePtr(rasterizer_state));
 	out_list.commands.push_back(new ModelRenderCommand_BindShader(get_early_z_program(gc, uses_bones)));
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
@@ -267,7 +267,7 @@ ModelShaderCache::Shaderset ModelShaderCache::get_shader(GraphicContext &gc, con
 	}
 }
 
-ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const ModelShaderDescription &description)
+ProgramObjectPtr ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const ModelShaderDescription &description)
 {
 	std::string defines;
 	if (description.diffuse_channel)
@@ -285,60 +285,60 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 	if (description.color_channel)
 		defines += " USE_COLORS";
 
-	ProgramObject gbuffer;
+	ProgramObjectPtr gbuffer;
 	if (gc.get_shader_language() == shader_glsl)
 		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.glsl", "GBuffer/fragment_gbuffer.glsl", defines);
 	else
 		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.hlsl", "GBuffer/fragment_gbuffer.hlsl", defines);
 
-	gbuffer.bind_frag_data_location(0, "FragColor");
-	gbuffer.bind_frag_data_location(1, "FragFaceNormal");
+	gbuffer->bind_frag_data_location(0, "FragColor");
+	gbuffer->bind_frag_data_location(1, "FragFaceNormal");
 
-	gbuffer.bind_frag_data_location(0, "FragDiffuseColor");
-	gbuffer.bind_frag_data_location(1, "FragSpecularColor");
-	gbuffer.bind_frag_data_location(2, "FragSpecularLevel");
-	gbuffer.bind_frag_data_location(3, "FragSelfIllumination");
-	gbuffer.bind_frag_data_location(4, "FragNormal");
+	gbuffer->bind_frag_data_location(0, "FragDiffuseColor");
+	gbuffer->bind_frag_data_location(1, "FragSpecularColor");
+	gbuffer->bind_frag_data_location(2, "FragSpecularLevel");
+	gbuffer->bind_frag_data_location(3, "FragSelfIllumination");
+	gbuffer->bind_frag_data_location(4, "FragNormal");
 
-	gbuffer.bind_attribute_location(0, "AttrPositionInObject");
-	gbuffer.bind_attribute_location(1, "AttrNormal");
-	gbuffer.bind_attribute_location(2, "AttrBitangent");
-	gbuffer.bind_attribute_location(3, "AttrTangent");
-	gbuffer.bind_attribute_location(4, "AttrBoneWeights");
-	gbuffer.bind_attribute_location(5, "AttrBoneSelectors");
+	gbuffer->bind_attribute_location(0, "AttrPositionInObject");
+	gbuffer->bind_attribute_location(1, "AttrNormal");
+	gbuffer->bind_attribute_location(2, "AttrBitangent");
+	gbuffer->bind_attribute_location(3, "AttrTangent");
+	gbuffer->bind_attribute_location(4, "AttrBoneWeights");
+	gbuffer->bind_attribute_location(5, "AttrBoneSelectors");
 	if (description.color_channel)
-		gbuffer.bind_attribute_location(6, "AttrColor");
+		gbuffer->bind_attribute_location(6, "AttrColor");
 	if (description.diffuse_channel)
-		gbuffer.bind_attribute_location(7, "AttrUVMapA");
+		gbuffer->bind_attribute_location(7, "AttrUVMapA");
 	if (description.bumpmap_channel)
-		gbuffer.bind_attribute_location(8, "AttrUVMapB");
+		gbuffer->bind_attribute_location(8, "AttrUVMapB");
 	if (description.self_illumination_channel)
-		gbuffer.bind_attribute_location(9, "AttrUVMapC");
+		gbuffer->bind_attribute_location(9, "AttrUVMapC");
 	if (description.specular_channel)
-		gbuffer.bind_attribute_location(10, "AttrUVMapD");
+		gbuffer->bind_attribute_location(10, "AttrUVMapD");
 	if (description.lightmap_channel)
-		gbuffer.bind_attribute_location(11, "AttrUVMapE");
+		gbuffer->bind_attribute_location(11, "AttrUVMapE");
 
 	ShaderSetup::link(gbuffer, "gbuffer program");
 
-	gbuffer.set_uniform1i("InstanceOffsets", 0);
-	gbuffer.set_uniform1i("InstanceVectors", 1);
-	gbuffer.set_uniform1i("DiffuseTexture", 2);
-	gbuffer.set_uniform1i("DiffuseSampler", 2);
-	gbuffer.set_uniform1i("BumpMapTexture", 3);
-	gbuffer.set_uniform1i("BumpMapSampler", 3);
-	gbuffer.set_uniform1i("SelfIlluminationTexture", 4);
-	gbuffer.set_uniform1i("SelfIlluminationSampler", 4);
-	gbuffer.set_uniform1i("SpecularTexture", 5);
-	gbuffer.set_uniform1i("SpecularSampler", 5);
-	gbuffer.set_uniform1i("LightMapTexture", 6);
-	gbuffer.set_uniform1i("LightMapSampler", 6);
-	gbuffer.set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	gbuffer->set_uniform1i("InstanceOffsets", 0);
+	gbuffer->set_uniform1i("InstanceVectors", 1);
+	gbuffer->set_uniform1i("DiffuseTexture", 2);
+	gbuffer->set_uniform1i("DiffuseSampler", 2);
+	gbuffer->set_uniform1i("BumpMapTexture", 3);
+	gbuffer->set_uniform1i("BumpMapSampler", 3);
+	gbuffer->set_uniform1i("SelfIlluminationTexture", 4);
+	gbuffer->set_uniform1i("SelfIlluminationSampler", 4);
+	gbuffer->set_uniform1i("SpecularTexture", 5);
+	gbuffer->set_uniform1i("SpecularSampler", 5);
+	gbuffer->set_uniform1i("LightMapTexture", 6);
+	gbuffer->set_uniform1i("LightMapSampler", 6);
+	gbuffer->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	return gbuffer;
 }
 
-ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, const ModelShaderDescription &description)
+ProgramObjectPtr ModelShaderCache::create_transparency_program(GraphicContext &gc, const ModelShaderDescription &description)
 {
 	std::string defines;
 	if (description.diffuse_channel)
@@ -356,88 +356,88 @@ ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, 
 	if (description.color_channel)
 		defines += " USE_COLORS";
 
-	ProgramObject transparency;
+	ProgramObjectPtr transparency;
 	if (gc.get_shader_language() == shader_glsl)
 		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.glsl", "Transparency/fragment.glsl", defines);
 	else
 		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.hlsl", "Transparency/fragment.hlsl", defines);
 
-	transparency.bind_frag_data_location(0, "FragColor");
-	transparency.bind_frag_data_location(1, "FragFaceNormal");
+	transparency->bind_frag_data_location(0, "FragColor");
+	transparency->bind_frag_data_location(1, "FragFaceNormal");
 
-	transparency.bind_frag_data_location(0, "FragDiffuseColor");
-	transparency.bind_frag_data_location(1, "FragSpecularColor");
-	transparency.bind_frag_data_location(2, "FragSpecularLevel");
-	transparency.bind_frag_data_location(3, "FragSelfIllumination");
-	transparency.bind_frag_data_location(4, "FragNormal");
+	transparency->bind_frag_data_location(0, "FragDiffuseColor");
+	transparency->bind_frag_data_location(1, "FragSpecularColor");
+	transparency->bind_frag_data_location(2, "FragSpecularLevel");
+	transparency->bind_frag_data_location(3, "FragSelfIllumination");
+	transparency->bind_frag_data_location(4, "FragNormal");
 
-	transparency.bind_attribute_location(0, "AttrPositionInObject");
-	transparency.bind_attribute_location(1, "AttrNormal");
-	transparency.bind_attribute_location(2, "AttrBitangent");
-	transparency.bind_attribute_location(3, "AttrTangent");
-	transparency.bind_attribute_location(4, "AttrBoneWeights");
-	transparency.bind_attribute_location(5, "AttrBoneSelectors");
+	transparency->bind_attribute_location(0, "AttrPositionInObject");
+	transparency->bind_attribute_location(1, "AttrNormal");
+	transparency->bind_attribute_location(2, "AttrBitangent");
+	transparency->bind_attribute_location(3, "AttrTangent");
+	transparency->bind_attribute_location(4, "AttrBoneWeights");
+	transparency->bind_attribute_location(5, "AttrBoneSelectors");
 	if (description.color_channel)
-		transparency.bind_attribute_location(6, "AttrColor");
+		transparency->bind_attribute_location(6, "AttrColor");
 	if (description.diffuse_channel)
-		transparency.bind_attribute_location(7, "AttrUVMapA");
+		transparency->bind_attribute_location(7, "AttrUVMapA");
 	if (description.bumpmap_channel)
-		transparency.bind_attribute_location(8, "AttrUVMapB");
+		transparency->bind_attribute_location(8, "AttrUVMapB");
 	if (description.self_illumination_channel)
-		transparency.bind_attribute_location(9, "AttrUVMapC");
+		transparency->bind_attribute_location(9, "AttrUVMapC");
 	if (description.specular_channel)
-		transparency.bind_attribute_location(10, "AttrUVMapD");
+		transparency->bind_attribute_location(10, "AttrUVMapD");
 	if (description.lightmap_channel)
-		transparency.bind_attribute_location(11, "AttrUVMapE");
+		transparency->bind_attribute_location(11, "AttrUVMapE");
 
 	ShaderSetup::link(transparency, "transparency program");
 
-	transparency.set_uniform1i("InstanceOffsets", 0);
-	transparency.set_uniform1i("InstanceVectors", 1);
-	transparency.set_uniform1i("DiffuseTexture", 2);
-	transparency.set_uniform1i("DiffuseSampler", 2);
-	transparency.set_uniform1i("BumpMapTexture", 3);
-	transparency.set_uniform1i("BumpMapSampler", 3);
-	transparency.set_uniform1i("SelfIlluminationTexture", 4);
-	transparency.set_uniform1i("SelfIlluminationSampler", 4);
-	transparency.set_uniform1i("SpecularTexture", 5);
-	transparency.set_uniform1i("SpecularSampler", 5);
-	transparency.set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	transparency->set_uniform1i("InstanceOffsets", 0);
+	transparency->set_uniform1i("InstanceVectors", 1);
+	transparency->set_uniform1i("DiffuseTexture", 2);
+	transparency->set_uniform1i("DiffuseSampler", 2);
+	transparency->set_uniform1i("BumpMapTexture", 3);
+	transparency->set_uniform1i("BumpMapSampler", 3);
+	transparency->set_uniform1i("SelfIlluminationTexture", 4);
+	transparency->set_uniform1i("SelfIlluminationSampler", 4);
+	transparency->set_uniform1i("SpecularTexture", 5);
+	transparency->set_uniform1i("SpecularSampler", 5);
+	transparency->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	return transparency;
 }
 
-ProgramObject ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses_bones)
+ProgramObjectPtr ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses_bones)
 {
-	if (!uses_bones && !shadow_program.is_null())
+	if (!uses_bones && shadow_program)
 		return shadow_program;
-	else if (uses_bones && !shadow_bones_program.is_null())
+	else if (uses_bones && shadow_bones_program)
 		return shadow_bones_program;
 
 	std::string defines;
 	if (uses_bones)
 		defines += " USE_BONES";
 
-	ProgramObject program;
+	ProgramObjectPtr program;
 	if (gc.get_shader_language() == shader_glsl)
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "SceneLights/fragment_shadow.glsl", defines);
 	else
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "SceneLights/fragment_shadow.hlsl", defines);
 
-	program.bind_frag_data_location(0, "FragMoment");
+	program->bind_frag_data_location(0, "FragMoment");
 
-	program.bind_attribute_location(0, "AttrPositionInObject");
-	program.bind_attribute_location(1, "AttrNormal");
-	program.bind_attribute_location(2, "AttrBitangent");
-	program.bind_attribute_location(3, "AttrTangent");
-	program.bind_attribute_location(4, "AttrBoneWeights");
-	program.bind_attribute_location(5, "AttrBoneSelectors");
+	program->bind_attribute_location(0, "AttrPositionInObject");
+	program->bind_attribute_location(1, "AttrNormal");
+	program->bind_attribute_location(2, "AttrBitangent");
+	program->bind_attribute_location(3, "AttrTangent");
+	program->bind_attribute_location(4, "AttrBoneWeights");
+	program->bind_attribute_location(5, "AttrBoneSelectors");
 
 	ShaderSetup::link(program, "shadow program");
 
-	program.set_uniform1i("InstanceOffsets", 0);
-	program.set_uniform1i("InstanceVectors", 1);
-	program.set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	program->set_uniform1i("InstanceOffsets", 0);
+	program->set_uniform1i("InstanceVectors", 1);
+	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	if (!uses_bones)
 		shadow_program = program;
@@ -447,37 +447,37 @@ ProgramObject ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses
 	return program;
 }
 
-ProgramObject ModelShaderCache::get_early_z_program(GraphicContext &gc, bool uses_bones)
+ProgramObjectPtr ModelShaderCache::get_early_z_program(GraphicContext &gc, bool uses_bones)
 {
-	if (!uses_bones && !early_z_program.is_null())
+	if (!uses_bones && early_z_program)
 		return early_z_program;
-	else if (uses_bones && !early_z_bones_program.is_null())
+	else if (uses_bones && early_z_bones_program)
 		return early_z_bones_program;
 
 	std::string defines;
 	if (uses_bones)
 		defines += " USE_BONES";
 
-	ProgramObject program;
+	ProgramObjectPtr program;
 	if (gc.get_shader_language() == shader_glsl)
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "", defines);
 	else
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "", defines);
 
-	program.bind_frag_data_location(0, "FragMoment");
+	program->bind_frag_data_location(0, "FragMoment");
 
-	program.bind_attribute_location(0, "AttrPositionInObject");
-	program.bind_attribute_location(1, "AttrNormal");
-	program.bind_attribute_location(2, "AttrBitangent");
-	program.bind_attribute_location(3, "AttrTangent");
-	program.bind_attribute_location(4, "AttrBoneWeights");
-	program.bind_attribute_location(5, "AttrBoneSelectors");
+	program->bind_attribute_location(0, "AttrPositionInObject");
+	program->bind_attribute_location(1, "AttrNormal");
+	program->bind_attribute_location(2, "AttrBitangent");
+	program->bind_attribute_location(3, "AttrTangent");
+	program->bind_attribute_location(4, "AttrBoneWeights");
+	program->bind_attribute_location(5, "AttrBoneSelectors");
 
 	ShaderSetup::link(program, "early_z program");
 
-	program.set_uniform1i("InstanceOffsets", 0);
-	program.set_uniform1i("InstanceVectors", 1);
-	program.set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	program->set_uniform1i("InstanceOffsets", 0);
+	program->set_uniform1i("InstanceVectors", 1);
+	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	if (!uses_bones)
 		early_z_program = program;
@@ -489,15 +489,15 @@ ProgramObject ModelShaderCache::get_early_z_program(GraphicContext &gc, bool use
 
 void ModelShaderCache::create_states(GraphicContext &gc)
 {
-	if (rasterizer_state.is_null())
+	if (!rasterizer_state)
 	{
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_front_face(face_clockwise);
 		rasterizer_desc.set_culled(true);
-		rasterizer_state = RasterizerState(gc, rasterizer_desc);
+		rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
 
 		rasterizer_desc.set_culled(false);
-		two_sided_rasterizer_state = RasterizerState(gc, rasterizer_desc);
+		two_sided_rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
 	}
 }
 

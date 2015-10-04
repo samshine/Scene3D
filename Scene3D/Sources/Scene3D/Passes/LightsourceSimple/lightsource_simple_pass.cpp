@@ -39,30 +39,30 @@ LightsourceSimplePass::~LightsourceSimplePass()
 {
 }
 
-ProgramObject LightsourceSimplePass::compile_and_link(GraphicContext &gc, const std::string &shader_path, const std::string &type)
+ProgramObjectPtr LightsourceSimplePass::compile_and_link(GraphicContext &gc, const std::string &shader_path, const std::string &type)
 {
-	ProgramObject program;
+	ProgramObjectPtr program;
 
 	std::string vertex_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/vertex_%1.%2", type, gc.get_shader_language() == shader_glsl ? "glsl" : "hlsl"));
 	std::string fragment_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/fragment_light.%1", gc.get_shader_language() == shader_glsl ? "glsl" : "hlsl"));
 
 	program = ShaderSetup::compile(gc, "", vertex_filename, fragment_filename, type == "rect" ? "RECT_PASS" : "");
 
-	program.bind_frag_data_location(0, "FragColor");
+	program->bind_frag_data_location(0, "FragColor");
 
-	if (!program.link())
+	if (!program->try_link())
 		throw Exception("Shader linking failed!");
 
-	program.bind_attribute_location(0, "AttrPositionInObject");
-	program.set_uniform_buffer_index("Uniforms", 0);
-	program.set_uniform1i("InstanceTexture", 0);
-	program.set_uniform1i("NormalZTexture", 1);
-	program.set_uniform1i("DiffuseColorTexture", 2);
-	program.set_uniform1i("SpecularColorTexture", 3);
-	program.set_uniform1i("SpecularLevelTexture", 4);
-	program.set_uniform1i("ShadowMapsTexture", 5);
-	program.set_uniform1i("ShadowMapsTextureSampler", 5);
-	program.set_uniform1i("SelfIlluminationTexture", 6);
+	program->bind_attribute_location(0, "AttrPositionInObject");
+	program->set_uniform_buffer_index("Uniforms", 0);
+	program->set_uniform1i("InstanceTexture", 0);
+	program->set_uniform1i("NormalZTexture", 1);
+	program->set_uniform1i("DiffuseColorTexture", 2);
+	program->set_uniform1i("SpecularColorTexture", 3);
+	program->set_uniform1i("SpecularLevelTexture", 4);
+	program->set_uniform1i("ShadowMapsTexture", 5);
+	program->set_uniform1i("ShadowMapsTextureSampler", 5);
+	program->set_uniform1i("SelfIlluminationTexture", 6);
 
 	return program;
 }
@@ -85,26 +85,26 @@ void LightsourceSimplePass::setup(GraphicContext &gc)
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_one, blend_one, blend_one, blend_one);
-		blend_state = BlendState(gc, blend_desc);
+		blend_state = gc.create_blend_state(blend_desc);
 
 		DepthStencilStateDescription icosahedron_depth_stencil_desc;
 		icosahedron_depth_stencil_desc.enable_depth_write(false);
 		icosahedron_depth_stencil_desc.enable_depth_test(true);
 		icosahedron_depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		icosahedron_depth_stencil_state = DepthStencilState(gc, icosahedron_depth_stencil_desc);
+		icosahedron_depth_stencil_state = gc.create_depth_stencil_state(icosahedron_depth_stencil_desc);
 
 		RasterizerStateDescription icosahedron_rasterizer_desc;
 		icosahedron_rasterizer_desc.set_culled(true);
-		icosahedron_rasterizer_state = RasterizerState(gc, icosahedron_rasterizer_desc);
+		icosahedron_rasterizer_state = gc.create_rasterizer_state(icosahedron_rasterizer_desc);
 
 		DepthStencilStateDescription rect_depth_stencil_desc;
 		rect_depth_stencil_desc.enable_depth_write(false);
 		rect_depth_stencil_desc.enable_depth_test(false);
-		rect_depth_stencil_state = DepthStencilState(gc, rect_depth_stencil_desc);
+		rect_depth_stencil_state = gc.create_depth_stencil_state(rect_depth_stencil_desc);
 
 		RasterizerStateDescription rect_rasterizer_desc;
 		rect_rasterizer_desc.set_culled(false);
-		rect_rasterizer_state = RasterizerState(gc, rect_rasterizer_desc);
+		rect_rasterizer_state = gc.create_rasterizer_state(rect_rasterizer_desc);
 
 		uniforms = UniformVector<Uniforms>(gc, 1);
 

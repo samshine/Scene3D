@@ -23,7 +23,7 @@ private:
 	void upload(uicore::GraphicContext &gc);
 	void render(uicore::GraphicContext &gc, GPUTimer &timer);
 	void update_buffers(uicore::GraphicContext &gc);
-	uicore::ProgramObject compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
+	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
 	// SceneLightVisitor
 	void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
@@ -71,8 +71,8 @@ private:
 	uicore::TransferVector<GPULight> transfer_lights;
 	uicore::StorageVector<unsigned int> compute_visible_lights;
 
-	uicore::ProgramObject cull_tiles_program;
-	uicore::ProgramObject render_tiles_program;
+	uicore::ProgramObjectPtr cull_tiles_program;
+	uicore::ProgramObjectPtr render_tiles_program;
 
 	std::vector<SceneLight_Impl *> lights;
 

@@ -21,9 +21,9 @@ private:
 	Resource<uicore::Texture2D> ssao_contribution;
 
 	GaussianBlur blur;
-	uicore::ProgramObject extract_shader;
+	uicore::ProgramObjectPtr extract_shader;
 	uicore::FrameBuffer fb;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 	uicore::PrimitivesArray rect_primarray;
-	uicore::BlendState blend_state;
+	uicore::BlendStatePtr blend_state;
 };

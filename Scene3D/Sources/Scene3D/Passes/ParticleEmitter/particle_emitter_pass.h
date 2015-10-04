@@ -35,10 +35,10 @@ private:
 
 	MaterialCache &texture_cache;
 	uicore::FrameBuffer fb;
-	uicore::BlendState blend_state;
-	uicore::DepthStencilState depth_stencil_state;
-	uicore::RasterizerState rasterizer_state;
-	uicore::ProgramObject program;
+	uicore::BlendStatePtr blend_state;
+	uicore::DepthStencilStatePtr depth_stencil_state;
+	uicore::RasterizerStatePtr rasterizer_state;
+	uicore::ProgramObjectPtr program;
 
 	uicore::PrimitivesArray prim_array;
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;

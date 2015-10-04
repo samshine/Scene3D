@@ -69,18 +69,18 @@ void DiffuseGIPassCS::update_buffers(GraphicContext &gc)
 	}
 }
 
-ProgramObject DiffuseGIPassCS::compile_and_link(GraphicContext &gc, const std::string &compute_filename)
+ProgramObjectPtr DiffuseGIPassCS::compile_and_link(GraphicContext &gc, const std::string &compute_filename)
 {
 	std::string source = File::read_all_text(compute_filename);
 
-	ShaderObject compute_shader(gc, shadertype_compute, source);
-	if (!compute_shader.compile())
-		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader.get_info_log()));
+	auto compute_shader = ShaderObject::create(gc, ShaderType::compute, source);
+	if (!compute_shader->try_compile())
+		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader->info_log()));
 
-	ProgramObject program(gc);
-	program.attach(compute_shader);
-	if (!program.link())
-		throw Exception(string_format("Failed to link %1: %2", compute_filename, program.get_info_log()));
+	auto program = ProgramObject::create(gc);
+	program->attach(compute_shader);
+	if (!program->try_link())
+		throw Exception(string_format("Failed to link %1: %2", compute_filename, program->get_info_log()));
 
 	// Uniforms
 	//program.set_uniform_buffer_index("Uniforms", 0);

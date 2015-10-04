@@ -24,7 +24,7 @@ private:
 	GaussianBlur bloom_blur;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 	uicore::PrimitivesArray rect_primarray;
-	uicore::ProgramObject bloom_shader;
+	uicore::ProgramObjectPtr bloom_shader;
 	uicore::FrameBuffer fb_bloom_extract;
-	uicore::BlendState blend_state;
+	uicore::BlendStatePtr blend_state;
 };

@@ -16,13 +16,13 @@ VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout)
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = BlendState(gc, blend_desc);
+	blend_state = gc.create_blend_state(blend_desc);
 
 	DepthStencilStateDescription depth_stencil_desc;
 	depth_stencil_desc.enable_depth_write(true);
 	depth_stencil_desc.enable_depth_test(true);
 	depth_stencil_desc.set_depth_compare_function(compare_lequal);
-	depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
+	depth_stencil_state = gc.create_depth_stencil_state(depth_stencil_desc);
 }
 
 void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)

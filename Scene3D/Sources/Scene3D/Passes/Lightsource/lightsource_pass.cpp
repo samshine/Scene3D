@@ -235,7 +235,7 @@ void LightsourcePass::update_buffers(GraphicContext &gc)
 	}
 }
 
-ProgramObject LightsourcePass::compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines)
+ProgramObjectPtr LightsourcePass::compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines)
 {
 	std::string source = File::read_all_text(compute_filename);
 
@@ -245,36 +245,36 @@ ProgramObject LightsourcePass::compile_and_link(GraphicContext &gc, const std::s
 		prefix += string_format("#define %1\r\n", define_list[i]);
 	prefix += "#line 0\r\n";
 
-	ShaderObject compute_shader(gc, shadertype_compute, prefix + source);
-	if (!compute_shader.compile())
-		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader.get_info_log()));
+	auto compute_shader = ShaderObject::create(gc, ShaderType::compute, prefix + source);
+	if (!compute_shader->try_compile())
+		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader->info_log()));
 
-	ProgramObject program(gc);
-	program.attach(compute_shader);
-	if (!program.link())
-		throw Exception(string_format("Failed to link %1: %2", compute_filename, program.get_info_log()));
+	auto program = ProgramObject::create(gc);
+	program->attach(compute_shader);
+	if (!program->try_link())
+		throw Exception(string_format("Failed to link %1: %2", compute_filename, program->get_info_log()));
 
 	// Uniforms
-	program.set_uniform_buffer_index("Uniforms", 0);
+	program->set_uniform_buffer_index("Uniforms", 0);
 
 	// Storage buffers
-	program.set_storage_buffer_index("Lights", 0);
-	program.set_storage_buffer_index("VisibleLightIndices", 1);
+	program->set_storage_buffer_index("Lights", 0);
+	program->set_storage_buffer_index("VisibleLightIndices", 1);
 
 	// Textures
-	program.set_uniform1i("zminmax", 0);
-	program.set_uniform1i("normal_z", 1);
-	program.set_uniform1i("diffuse", 2);
-	program.set_uniform1i("specular", 3);
-	program.set_uniform1i("specular_level", 4);
-	program.set_uniform1i("shadow_maps", 5);
-	program.set_uniform1i("self_illumination", 6);
+	program->set_uniform1i("zminmax", 0);
+	program->set_uniform1i("normal_z", 1);
+	program->set_uniform1i("diffuse", 2);
+	program->set_uniform1i("specular", 3);
+	program->set_uniform1i("specular_level", 4);
+	program->set_uniform1i("shadow_maps", 5);
+	program->set_uniform1i("self_illumination", 6);
 
 	// Samplers
-	program.set_uniform1i("shadow_maps_sampler", 5);
+	program->set_uniform1i("shadow_maps_sampler", 5);
 
 	// Images
-	program.set_uniform1i("out_final", 0);
+	program->set_uniform1i("out_final", 0);
 
 	return program;
 }

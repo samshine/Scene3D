@@ -15,7 +15,7 @@ BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, Resourc
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.glsl"), "");
-		bloom_shader.bind_frag_data_location(0, "FragColor");
+		bloom_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
@@ -24,10 +24,10 @@ BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, Resourc
 
 	ShaderSetup::link(bloom_shader, "bloom extract program");
 
-	bloom_shader.bind_attribute_location(0, "PositionInProjection");
-	bloom_shader.set_uniform1i("FinalColors", 0);
-	bloom_shader.set_uniform1i("FinalColorsSampler", 0);
-	bloom_shader.set_uniform1i("LogAverageLight", 1);
+	bloom_shader->bind_attribute_location(0, "PositionInProjection");
+	bloom_shader->set_uniform1i("FinalColors", 0);
+	bloom_shader->set_uniform1i("FinalColorsSampler", 0);
+	bloom_shader->set_uniform1i("LogAverageLight", 1);
 
 	Vec4f positions[6] =
 	{
@@ -46,7 +46,7 @@ BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, Resourc
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = BlendState(gc, blend_desc);
+	blend_state = gc.create_blend_state(blend_desc);
 }
 
 void BloomPass::run(GraphicContext &gc)

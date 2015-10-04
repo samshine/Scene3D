@@ -29,6 +29,6 @@ private:
 	Scene_Impl *scene;
 	uicore::FrameBuffer fb_transparency;
 	uicore::GraphicContext gc;
-	uicore::BlendState blend_state;
-	uicore::DepthStencilState depth_stencil_state;
+	uicore::BlendStatePtr blend_state;
+	uicore::DepthStencilStatePtr depth_stencil_state;
 };
