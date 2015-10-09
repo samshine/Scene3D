@@ -9,7 +9,7 @@ class GameScreenController : public ScreenViewController
 public:
 	GameScreenController(uicore::Canvas &canvas);
 	bool cursor_hidden() override { return true; }
-	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
+	void update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
 	std::unique_ptr<Game> client_game;
@@ -29,7 +29,7 @@ public:
 	bool pressed() const { return is_down; }
 	bool clicked() const { return is_click; }
 
-	void update(uicore::DisplayWindow &ic)
+	void update(const uicore::DisplayWindowPtr &ic)
 	{
 		if (ic.get_keyboard().get_keycode(keycode))
 		{

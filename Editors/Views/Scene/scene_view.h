@@ -12,23 +12,23 @@ public:
 
 	Scene &get_scene() { return scene; }
 
-	uicore::Signal<void(Scene &, uicore::GraphicContext &, uicore::DisplayWindow &, const uicore::Vec2i &)> sig_update_scene;
+	uicore::Signal<void(Scene &, const uicore::GraphicContextPtr &, const uicore::DisplayWindowPtr &, const uicore::Vec2i &)> sig_update_scene;
 
 private:
 	void pointer_press(uicore::PointerEvent &e);
 	void pointer_release(uicore::PointerEvent &e);
 	void pointer_move(uicore::PointerEvent &e);
 
-	void setup_scene(uicore::GraphicContext &gc);
+	void setup_scene(const uicore::GraphicContextPtr &gc);
 
-	uicore::Timer timer;
+	uicore::TimerPtr timer;
 	MouseMovement mouse_movement;
 	uicore::Pointf mouse_down_pos;
 	bool mouse_down = false;
 	uicore::Point last_mouse_movement;
 
-	uicore::Texture2D scene_texture;
-	uicore::FrameBuffer scene_frame_buffer;
+	uicore::Texture2DPtr scene_texture;
+	uicore::FrameBufferPtr scene_frame_buffer;
 
 	SceneCache cache;
 	Scene scene;

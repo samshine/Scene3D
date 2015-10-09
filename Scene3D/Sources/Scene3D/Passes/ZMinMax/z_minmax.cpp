@@ -10,58 +10,54 @@ ZMinMax::ZMinMax(int tile_size)
 {
 }
 
-void ZMinMax::minmax(GraphicContext &gc)
+void ZMinMax::minmax(const GraphicContextPtr &gc)
 {
 	update_buffers(gc);
 
-	normal_z->set_min_filter(filter_nearest);
-	normal_z->set_mag_filter(filter_nearest);
-	normal_z->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	normal_z.get()->set_min_filter(filter_nearest);
+	normal_z.get()->set_mag_filter(filter_nearest);
+	normal_z.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
-	gc.set_primitives_array(prim_array);
-	gc.set_program_object(program0);
-	gc.set_blend_state(blend_state);
+	gc->set_primitives_array(prim_array);
+	gc->set_program_object(program0);
+	gc->set_blend_state(blend_state);
 
 	Size texture_size = find_texture_size(normal_z.get());
 
 	for (int i = 0; i < iterations; i++)
 	{
 		if (i == 1)
-			gc.set_program_object(program1);
+			gc->set_program_object(program1);
 
 		int iteration_width = texture_size.width >> i;
 		int iteration_height = texture_size.height >> i;
 
-		gc.set_frame_buffer((i % 2 == 0) ? fb0 : fb1);
-		gc.set_viewport(Size(iteration_width, iteration_height));
+		gc->set_frame_buffer((i % 2 == 0) ? fb0 : fb1);
+		gc->set_viewport(Size(iteration_width, iteration_height), gc->texture_image_y_axis());
 		if (i == 0)
-			gc.set_texture(0, normal_z.get());
+			gc->set_texture(0, normal_z.get());
 		else
-			gc.set_texture(0, (i % 2 == 0) ? texture1 : texture0);
-		gc.draw_primitives_array(type_triangles, 6);
+			gc->set_texture(0, (i % 2 == 0) ? texture1 : texture0);
+		gc->draw_primitives_array(type_triangles, 6);
 	}
 
-	gc.reset_texture(0);
-	gc.reset_program_object();
-	gc.reset_primitives_array();
-	gc.reset_frame_buffer();
-	gc.set_viewport(viewport->get_size());
+	gc->reset_texture(0);
+	gc->reset_program_object();
+	gc->reset_primitives_array();
+	gc->reset_frame_buffer();
+	gc->set_viewport(viewport->get_size(), gc->texture_image_y_axis());
 }
 
-void ZMinMax::update_buffers(GraphicContext &gc)
+void ZMinMax::update_buffers(const GraphicContextPtr &gc)
 {
 	if (normal_z.updated())
 	{
 		Size texture_size = find_texture_size(normal_z.get());
 
-		Size texture0_size;
-		if (!texture0.is_null())
-			texture0_size = texture0.get_size();
-
-		if (texture0_size != texture_size)
+		if (!texture0 || texture0->size() != texture_size)
 		{ 
 			std::string vertex_shader, fragment_shader0, fragment_shader1;
-			if (gc.get_shader_language() == shader_glsl)
+			if (gc->shader_language() == shader_glsl)
 				get_shader_glsl(vertex_shader, fragment_shader0, fragment_shader1);
 			else
 				get_shader_hlsl(vertex_shader, fragment_shader0, fragment_shader1);
@@ -80,42 +76,42 @@ void ZMinMax::update_buffers(GraphicContext &gc)
 			};
 			vertices = VertexArrayVector<Vec4f>(gc, positions, 6);
 
-			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, vertices);
+			prim_array = PrimitivesArray::create(gc);
+			prim_array->set_attributes(0, vertices);
 
-			texture0 = Texture2D(gc, texture_size.width, texture_size.height, tf_rg32f);
-			texture0.set_min_filter(filter_nearest);
-			texture0.set_mag_filter(filter_nearest);
-			texture0.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+			texture0 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
+			texture0->set_min_filter(filter_nearest);
+			texture0->set_mag_filter(filter_nearest);
+			texture0->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
-			texture1 = Texture2D(gc, texture_size.width, texture_size.height, tf_rg32f);
-			texture1.set_min_filter(filter_nearest);
-			texture1.set_mag_filter(filter_nearest);
-			texture1.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+			texture1 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
+			texture1->set_min_filter(filter_nearest);
+			texture1->set_mag_filter(filter_nearest);
+			texture1->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
-			fb0 = FrameBuffer(gc);
-			fb0.attach_color(0, texture0);
+			fb0 = FrameBuffer::create(gc);
+			fb0->attach_color(0, texture0);
 
-			fb1 = FrameBuffer(gc);
-			fb1.attach_color(0, texture1);
+			fb1 = FrameBuffer::create(gc);
+			fb1->attach_color(0, texture1);
 
 			BlendStateDescription blend_desc;
 			blend_desc.enable_blending(false);
-			blend_state = gc.create_blend_state(blend_desc);
+			blend_state = gc->create_blend_state(blend_desc);
 		}
 
 		result.set((iterations % 2 == 0) ? texture1 : texture0);
 	}
 }
 
-Size ZMinMax::find_texture_size(Texture2D &normal_z)
+Size ZMinMax::find_texture_size(const Texture2DPtr &normal_z)
 {
-	Size framebuffer_size = normal_z.get_size();
+	Size framebuffer_size = normal_z->size();
 	Size tile_dimensions = (framebuffer_size + (tile_size - 1)) / tile_size;
 	return tile_dimensions * tile_size / 2;
 }
 
-ProgramObjectPtr ZMinMax::compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source)
+ProgramObjectPtr ZMinMax::compile_and_link(const GraphicContextPtr &gc, const std::string &vertex_source, const std::string &fragment_source)
 {
 	auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_source);
 	auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_source);
@@ -223,7 +219,7 @@ void ZMinMax::get_shader_hlsl(std::string &out_vertex_shader, std::string &out_f
 		"	float4 FragMinMax : SV_Target0;\r\n"
 		"};\r\n"
 		"\r\n"
-		"Texture2D Texture;\r\n"
+		"Texture2DPtr Texture;\r\n"
 		"\r\n"
 		"PixelOut main(PixelIn input)\r\n"
 		"{\r\n"
@@ -254,7 +250,7 @@ void ZMinMax::get_shader_hlsl(std::string &out_vertex_shader, std::string &out_f
 		"	float4 FragMinMax : SV_Target0;\r\n"
 		"};\r\n"
 		"\r\n"
-		"Texture2D Texture;\r\n"
+		"Texture2DPtr Texture;\r\n"
 		"\r\n"
 		"PixelOut main(PixelIn input)\r\n"
 		"{\r\n"

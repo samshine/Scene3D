@@ -21,7 +21,7 @@ bool ScenePass::is_null() const
 	return !impl;
 }
 
-std::function<void(GraphicContext &)> &ScenePass::func_run()
+std::function<void(const GraphicContextPtr &)> &ScenePass::func_run()
 {
 	return impl->cb_run;
 }

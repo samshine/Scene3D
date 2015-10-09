@@ -16,16 +16,16 @@ void ScreenViewController::render_scene(uicore::Canvas &canvas, Scene &scene)
 {
 	using namespace uicore;
 
-	GraphicContext gc = canvas.get_gc();
+	GraphicContextPtr gc = canvas.get_gc();
 
 	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-	Sizef viewport_size = gc.get_size();
+	Sizef viewport_size = gc->size();
 	Size viewport_size_i = Size(viewport_size);
 
 	scene.set_viewport(viewport_size_i);
 	scene.render(gc);
 
-	gc.set_viewport(gc.get_size());
+	gc->set_viewport(gc->size(), y_axis_top_down);
 
 	canvas.reset_blend_state();
 }

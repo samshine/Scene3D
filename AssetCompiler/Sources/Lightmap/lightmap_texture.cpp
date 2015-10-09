@@ -468,7 +468,7 @@ void LightmapTexture::save_lightmaps()
 		auto &texture = model_data->textures[it.first];
 		auto &buffer = it.second;
 
-		PixelBuffer pixelbuffer = PixelBuffer(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true);
+		PixelBufferPtr pixelbuffer = PixelBuffer::create(buffer->light.width(), buffer->light.height(), tf_rgb32f, buffer->light.data(), true);
 		PNGFormat::save(pixelbuffer, texture.name);
 	}
 }

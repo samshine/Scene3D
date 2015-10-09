@@ -14,8 +14,8 @@ SceneView::SceneView()
 	slots.connect(sig_pointer_release(), this, &SceneView::pointer_release);
 	slots.connect(sig_pointer_move(), this, &SceneView::pointer_move);
 
-	timer = Timer();
-	timer.func_expired() = [this]()
+	timer = Timer::create();
+	timer->func_expired() = [this]()
 	{
 		set_needs_render();
 	};
@@ -27,8 +27,8 @@ void SceneView::pointer_press(PointerEvent &e)
 
 	if (!mouse_down)
 	{
-		view_tree()->get_display_window().hide_cursor();
-		mouse_down_pos = view_tree()->get_display_window().get_mouse().get_position();
+		view_tree()->get_display_window()->hide_cursor();
+		mouse_down_pos = view_tree()->get_display_window()->mouse()->position();
 		mouse_down = true;
 	}
 }
@@ -37,8 +37,8 @@ void SceneView::pointer_release(PointerEvent &e)
 {
 	if (mouse_down)
 	{
-		view_tree()->get_display_window().get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
-		view_tree()->get_display_window().show_cursor();
+		view_tree()->get_display_window()->mouse()->set_position(mouse_down_pos.x, mouse_down_pos.y);
+		view_tree()->get_display_window()->show_cursor();
 		mouse_down = false;
 	}
 }
@@ -47,8 +47,8 @@ void SceneView::pointer_move(PointerEvent &e)
 {
 	if (mouse_down)
 	{
-		Sizef size = view_tree()->get_display_window().get_geometry().get_size();
-		view_tree()->get_display_window().get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
+		Sizef size = view_tree()->get_display_window()->geometry().get_size();
+		view_tree()->get_display_window()->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
 	}
 }
 
@@ -69,8 +69,8 @@ void SceneView::render_content(Canvas &canvas)
 	viewport_size_i.height = std::max(viewport_size_i.height, 16);
 
 	canvas.flush();
-	GraphicContext gc = canvas.get_gc();
-	DisplayWindow window = view_tree()->get_display_window();
+	auto gc = canvas.get_gc();
+	auto window = view_tree()->get_display_window();
 
 	Point move = mouse_movement.pos();
 	Vec2i delta_mouse_move;
@@ -84,22 +84,22 @@ void SceneView::render_content(Canvas &canvas)
 	setup_scene(gc);
 	sig_update_scene(scene, gc, window, delta_mouse_move);
 
-	if (scene_frame_buffer.is_null() || scene_texture.is_null() || scene_texture.get_size() != viewport_size_i)
+	if (!scene_frame_buffer || !scene_texture || scene_texture->size() != viewport_size_i)
 	{
-		scene_frame_buffer = FrameBuffer();
-		scene_texture = Texture2D();
-		gc.flush();
+		scene_frame_buffer.reset();
+		scene_texture.reset();
+		gc->flush();
 
-		scene_texture = Texture2D(gc, viewport_size_i);
-		scene_frame_buffer = FrameBuffer(gc);
-		scene_frame_buffer.attach_color(0, scene_texture);
+		scene_texture = Texture2D::create(gc, viewport_size_i);
+		scene_frame_buffer = FrameBuffer::create(gc);
+		scene_frame_buffer->attach_color(0, scene_texture);
 	}
 
 	//scene.set_viewport(RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
 	scene.set_viewport(viewport_size_i, scene_frame_buffer);
 	scene.render(gc);
 
-	gc.set_viewport(gc.get_size());
+	gc->set_viewport(gc->size(), y_axis_top_down);
 
 	if (supersampling)
 	{
@@ -118,10 +118,10 @@ void SceneView::render_content(Canvas &canvas)
 		}, scene_texture);
 	}
 
-	timer.start(10, true);
+	timer->start(10, true);
 }
 
-void SceneView::setup_scene(GraphicContext &gc)
+void SceneView::setup_scene(const GraphicContextPtr &gc)
 {
 	if (!scene.is_null()) return;
 

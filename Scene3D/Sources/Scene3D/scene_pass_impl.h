@@ -10,5 +10,5 @@ public:
 
 	Scene_Impl *scene_impl;
 	const std::string name;
-	std::function<void(uicore::GraphicContext &)> cb_run;
+	std::function<void(const uicore::GraphicContextPtr &)> cb_run;
 };

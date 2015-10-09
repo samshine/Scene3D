@@ -10,23 +10,23 @@ class Scene_Impl;
 class DiffuseGIPassCS
 {
 public:
-	DiffuseGIPassCS(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
+	DiffuseGIPassCS(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~DiffuseGIPassCS();
 
-	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
 
 private:
-	void update_buffers(uicore::GraphicContext &gc);
-	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename);
+	void update_buffers(const uicore::GraphicContextPtr &gc);
+	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename);
 
 	// In:
 	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2D> diffuse_color_gbuffer;
-	Resource<uicore::Texture2D> normal_z_gbuffer;
-	Resource<uicore::Texture2DArray> shadow_maps;
+	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
+	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
+	Resource<uicore::Texture2DArrayPtr> shadow_maps;
 
 	// Out:
-	Resource<uicore::Texture2D> final_color;
+	Resource<uicore::Texture2DPtr> final_color;
 
 	uicore::ProgramObjectPtr init_lpv_program;
 	uicore::ProgramObjectPtr init_gv_program;

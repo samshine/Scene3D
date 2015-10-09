@@ -4,7 +4,7 @@
 
 using namespace uicore;
 
-Level::Level(GraphicContext &gc, std::shared_ptr<LevelData> level_data)
+Level::Level(const GraphicContextPtr &gc, std::shared_ptr<LevelData> level_data)
 : level_data(level_data)
 {
 }

@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-SceneCacheImpl::SceneCacheImpl(GraphicContext &gc, const std::string &shader_path)
+SceneCacheImpl::SceneCacheImpl(const GraphicContextPtr &gc, const std::string &shader_path)
 	: gc(gc), shader_path(shader_path)
 {
 }
@@ -15,7 +15,7 @@ std::shared_ptr<ModelData> SceneCacheImpl::get_model_data(const std::string &nam
 	return ModelData::load(PathHelp::combine("Resources/Assets", name));
 }
 
-void SceneCacheImpl::update_textures(GraphicContext &gc, float time_elapsed)
+void SceneCacheImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)
 {
 	//for (size_t i = 0; i < video_textures.size(); i++)
 	//	video_textures[i].update(gc, time_elapsed);
@@ -26,11 +26,11 @@ std::string SceneCacheImpl::to_key(const std::string &material_name, bool linear
 	return material_name + (linear ? "__linear" : "__srgb");
 }
 
-Resource<Texture> SceneCacheImpl::get_texture(GraphicContext &gc, const std::string &material_name, bool linear)
+Resource<TexturePtr> SceneCacheImpl::get_texture(const GraphicContextPtr &gc, const std::string &material_name, bool linear)
 {
 	std::string key = to_key(material_name, linear);
-	Resource<Texture> texture = textures[key];
-	if (texture.get().is_null())
+	Resource<TexturePtr> texture = textures[key];
+	if (!texture.get())
 	{
 		texture.set(get_dummy_texture(gc));
 		textures[key] = texture;
@@ -40,16 +40,16 @@ Resource<Texture> SceneCacheImpl::get_texture(GraphicContext &gc, const std::str
 	return texture;
 }
 
-Texture2D SceneCacheImpl::get_dummy_texture(GraphicContext &gc)
+Texture2DPtr SceneCacheImpl::get_dummy_texture(const GraphicContextPtr &gc)
 {
-	if (dummy_texture.is_null())
+	if (!dummy_texture)
 	{
 		int width = 64;
 		int height = 64;
 		int grid_width = 16;
 		int grid_height = 16;
-		PixelBuffer image(width, height, tf_srgb8_alpha8);
-		Vec4ub *pixels = image.get_data<Vec4ub>();
+		auto image = PixelBuffer::create(width, height, tf_srgb8_alpha8);
+		Vec4ub *pixels = image->data<Vec4ub>();
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
@@ -64,20 +64,20 @@ Texture2D SceneCacheImpl::get_dummy_texture(GraphicContext &gc)
 				pixels[x+y*width] = color;
 			}
 		}
-		dummy_texture = Texture2D(gc, image.get_size(), tf_srgb8_alpha8, 0);
-		dummy_texture.set_image(gc, image);
-		dummy_texture.set_mag_filter(filter_linear);
-		dummy_texture.set_min_filter(filter_linear_mipmap_linear);
-		dummy_texture.set_wrap_mode(wrap_repeat, wrap_repeat);
-		dummy_texture.set_max_anisotropy(4.0f);
-		dummy_texture.generate_mipmap();
+		dummy_texture = Texture2D::create(gc, image->size(), tf_srgb8_alpha8, 0);
+		dummy_texture->set_image(gc, image);
+		dummy_texture->set_mag_filter(filter_linear);
+		dummy_texture->set_min_filter(filter_linear_mipmap_linear);
+		dummy_texture->set_wrap_mode(wrap_repeat, wrap_repeat);
+		dummy_texture->set_max_anisotropy(4.0f);
+		dummy_texture->generate_mipmap();
 	}
 	return dummy_texture;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CacheLoadTexture::CacheLoadTexture(SceneCacheImpl *cache, Resource<Texture> texture, const std::string &material_name, bool linear)
+CacheLoadTexture::CacheLoadTexture(SceneCacheImpl *cache, Resource<TexturePtr> texture, const std::string &material_name, bool linear)
 : cache(cache), texture(texture), material_name(material_name), linear(linear)
 {
 }
@@ -114,35 +114,35 @@ void CacheLoadTexture::work_completed()
 	{
 		//cache->video_textures.push_back(VideoTexture(video_file, texture));
 	}
-	else if (!pixelbuffer_set.is_null())
+	else if (pixelbuffer_set)
 	{
-		if (pixelbuffer_set.get_dimensions() == texture_2d && pixelbuffer_set.get_max_level() == 0)
+		if (pixelbuffer_set->dimensions() == texture_2d && pixelbuffer_set->max_level() == 0)
 		{
-			PixelBuffer pixelbuffer = pixelbuffer_set.get_image(0, 0);
-			bool has_mipmaps = is_power_of_two(pixelbuffer.get_width(), pixelbuffer.get_height());
+			PixelBufferPtr pixelbuffer = pixelbuffer_set->image(0, 0);
+			bool has_mipmaps = is_power_of_two(pixelbuffer->width(), pixelbuffer->height());
 
 			// A very rough calculation of much memory we used so far (doesn't take mipmaps or 16 bit textures properly into account)
-			cache->memory_used += pixelbuffer.get_width() * pixelbuffer.get_height() * 4;
+			cache->memory_used += pixelbuffer->width() * pixelbuffer->height() * 4;
 
 			try
 			{
-				Texture2D loaded_texture = Texture2D(cache->gc, pixelbuffer.get_width(), pixelbuffer.get_height(), pixelbuffer.get_format(), has_mipmaps ? 0 : 1);
-				loaded_texture.set_image(cache->gc, pixelbuffer);
+				Texture2DPtr loaded_texture = Texture2D::create(cache->gc, pixelbuffer->width(), pixelbuffer->height(), pixelbuffer->format(), has_mipmaps ? 0 : 1);
+				loaded_texture->set_image(cache->gc, pixelbuffer);
 
-				if (is_power_of_two(pixelbuffer.get_width(), pixelbuffer.get_height()))
+				if (is_power_of_two(pixelbuffer->width(), pixelbuffer->height()))
 				{
-					loaded_texture.set_min_filter(filter_linear_mipmap_linear);
-					loaded_texture.set_mag_filter(filter_linear);
-					loaded_texture.generate_mipmap();
-					loaded_texture.set_max_anisotropy(4.0f);
+					loaded_texture->set_min_filter(filter_linear_mipmap_linear);
+					loaded_texture->set_mag_filter(filter_linear);
+					loaded_texture->generate_mipmap();
+					loaded_texture->set_max_anisotropy(4.0f);
 				}
 				else
 				{
-					loaded_texture.set_min_filter(filter_linear);
-					loaded_texture.set_mag_filter(filter_linear);
+					loaded_texture->set_min_filter(filter_linear);
+					loaded_texture->set_mag_filter(filter_linear);
 				}
 
-				loaded_texture.set_wrap_mode(wrap_repeat, wrap_repeat);
+				loaded_texture->set_wrap_mode(wrap_repeat, wrap_repeat);
 				texture.set(loaded_texture);
 			}
 			catch (const Exception &e)
@@ -189,12 +189,12 @@ void CacheLoadTexture::work_completed()
 					info_queue->ClearStoredMessages();
 				}
 
-				throw Exception(string_format("Could not create texture for %1 (%2x%3): %4\r\nApprox memory used: %5 MB, textures loaded: %6%7", material_name, pixelbuffer.get_width(), pixelbuffer.get_height(), e.message, cache->memory_used / (double)(1024*1024), cache->textures.size(), debug_text));
+				throw Exception(string_format("Could not create texture for %1 (%2x%3): %4\r\nApprox memory used: %5 MB, textures loaded: %6%7", material_name, pixelbuffer->width(), pixelbuffer->height(), e.message, cache->memory_used / (double)(1024*1024), cache->textures.size(), debug_text));
 			}
 		}
 		else
 		{
-			Texture loaded_texture(cache->gc, pixelbuffer_set);
+			auto loaded_texture = Texture::create(cache->gc, pixelbuffer_set);
 			texture.set(loaded_texture);
 		}
 	}
@@ -226,11 +226,11 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 
 			std::string basepath = PathHelp::get_fullpath(material_name);
 			std::vector<DomNode> frames = xml.select_nodes("/ctexture/frames/frame");
-			std::vector<PixelBuffer> images;
+			std::vector<PixelBufferPtr> images;
 			for (size_t i = 0; i < frames.size(); i++)
 			{
 				std::string filename = frames[i].select_string("filename/text()");
-				PixelBuffer image = ImageProviderFactory::load(PathHelp::combine(basepath, filename), std::string(), !linear);
+				PixelBufferPtr image = ImageProviderFactory::load(PathHelp::combine(basepath, filename), std::string(), !linear);
 				image.flip_vertical();
 				image.premultiply_alpha();
 				if (image.get_format() == tf_rgba16 && !linear)
@@ -239,7 +239,7 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 				images.push_back(image);
 			}
 
-			pixelbuffer_set = PixelBufferSet(texture_3d, linear ? tf_rgba8 : tf_srgb8_alpha8, images.front().get_width(), images.front().get_height(), (int)frames.size());
+			pixelbuffer_set = PixelBufferSetPtr(texture_3d, linear ? tf_rgba8 : tf_srgb8_alpha8, images.front().get_width(), images.front().get_height(), (int)frames.size());
 			for (size_t i = 0; i < images.size(); i++)
 			{
 				pixelbuffer_set.set_image((int)i, 0, images[i]);
@@ -262,7 +262,7 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 			int height = 64;
 			int grid_width = 16;
 			int grid_height = 16;
-			PixelBuffer image(width, height, tf_srgb8_alpha8);
+			PixelBufferPtr image(width, height, tf_srgb8_alpha8);
 			Vec4ub *pixels = image.get_data<Vec4ub>();
 			for (int y = 0; y < height; y++)
 			{
@@ -279,7 +279,7 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 				}
 			}
 
-			pixelbuffer_set = PixelBufferSet(image);
+			pixelbuffer_set = PixelBufferSetPtr(image);
 			return;
 		}*/
 
@@ -287,13 +287,13 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		import_desc.set_premultiply_alpha(true);
 		import_desc.set_flip_vertical(true);
 		import_desc.set_srgb(true);*/
-		PixelBuffer image = ImageFile::load(material_name, std::string(), !linear);
+		PixelBufferPtr image = ImageFile::load(material_name, std::string(), !linear);
 
-		if (image.get_width() > 1024 || image.get_height() > 1024)
+		if (image->width() > 1024 || image->height() > 1024)
 			return; // Limit textures to 1024 for now
 
-		image.flip_vertical();
-		image.premultiply_alpha();
+		image->flip_vertical();
+		image->premultiply_alpha();
 
 		// Convert to DXT
 		/*if (is_power_of_two(image.get_width(), image.get_height()))
@@ -320,7 +320,7 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 			{
 				DataBuffer buffer(dds_file_data, dds_file_size);
 				IODevice_Memory file(buffer);
-				PixelBufferSet set = DDSProvider::load(file);
+				PixelBufferSetPtr set = DDSProvider::load(file);
 				int levels = set.get_max_level();
 				for (int i = 0; i < levels; i++)
 				{
@@ -337,10 +337,10 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		else*/
 		{
 			// Convert sRGB 16 bit image to linear:
-			if (image.get_format() == tf_rgba16 && !linear)
-				image.premultiply_gamma(2.2f);
+			if (image->format() == tf_rgba16 && !linear)
+				image->premultiply_gamma(2.2f);
 
-			pixelbuffer_set = PixelBufferSet(image);
+			pixelbuffer_set = PixelBufferSet::create(image);
 		}
 	}
 	catch (const Exception &)
@@ -386,10 +386,10 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 		file.read(palette_argb, 256 * sizeof(unsigned int));
 		if (type == 0)
 		{
-			PixelBuffer image(1, 1, tf_rgba8);
+			PixelBufferPtr image(1, 1, tf_rgba8);
 			image.get_data_uint32()[0] = 0xff0000ff;
 
-			pixelbuffer_set = PixelBufferSet(image);
+			pixelbuffer_set = PixelBufferSetPtr(image);
 			//throw Exception("Unsupported JPEG compression type");
 		}
 		else if (type == 1)
@@ -402,8 +402,8 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 					file.seek(mipmap_offsets[level]);
 					file.read(image_data.get_data(), image_data.get_size());
 
-					PixelBuffer image(width, height, tf_srgb8_alpha8);
-					PixelBufferLock4ub output(image);
+					PixelBufferPtr image(width, height, tf_srgb8_alpha8);
+					PixelBufferPtrLock4ub output(image);
 
 					for (unsigned int y = 0; y < height; y++)
 					{
@@ -523,7 +523,7 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 	catch (const Exception &)
 	{
 		loaded_levels.clear();
-		PixelBuffer image(1, 1, tf_rgba8);
+		PixelBufferPtr image(1, 1, tf_rgba8);
 		image.get_data_uint32()[0] = 0xff0000ff;
 		loaded_levels.push_back(TextureLevel(image));
 	}

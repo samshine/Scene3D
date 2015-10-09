@@ -15,7 +15,7 @@ public:
 	virtual void set_model_data(std::shared_ptr<ModelData> model_data) = 0;
 	virtual void set_attachments(std::vector<SceneModelAttachment> attachments) = 0;
 
-	virtual void update(Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta) = 0;
+	virtual void update(Scene &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta) = 0;
 };
 
 class SceneModelAttachment

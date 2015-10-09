@@ -23,12 +23,12 @@ public:
 	const SceneCamera &get_camera() const;
 	SceneCamera &get_camera();
 
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBuffer &fb = uicore::FrameBuffer());
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
 	void set_camera(const SceneCamera &camera);
 
-	void render(uicore::GraphicContext &gc);
+	void render(const uicore::GraphicContextPtr &gc);
 
-	void update(uicore::GraphicContext &gc, float time_elapsed);
+	void update(const uicore::GraphicContextPtr &gc, float time_elapsed);
 
 	uicore::Mat4f world_to_eye() const;
 	uicore::Mat4f eye_to_projection() const;
@@ -44,7 +44,7 @@ public:
 	void remove_pass(const std::string &name);
 
 	void show_skybox_stars(bool enable);
-	void set_skybox_gradient(uicore::GraphicContext &gc, std::vector<uicore::Colorf> &colors);
+	void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors);
 
 	int models_drawn() const;
 	int instances_drawn() const;

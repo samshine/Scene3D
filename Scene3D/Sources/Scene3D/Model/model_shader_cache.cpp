@@ -14,7 +14,7 @@ ModelShaderCache::ModelShaderCache(const std::string &shader_path)
 {
 }
 
-void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model, int level)
+void ModelShaderCache::create_gbuffer_commands(const GraphicContextPtr &gc, Model *model, int level)
 {
 	create_states(gc);
 
@@ -36,7 +36,7 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
-		bool uses_color_channel = !mesh_buffers[i].colors.is_null();
+		bool uses_color_channel = (bool)mesh_buffers[i].colors.buffer();
 
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
@@ -93,7 +93,7 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 	}
 }
 
-void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *model, int level)
+void ModelShaderCache::create_transparency_commands(const GraphicContextPtr &gc, Model *model, int level)
 {
 	create_states(gc);
 
@@ -115,7 +115,7 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
-		bool uses_color_channel = !mesh_buffers[i].colors.is_null();
+		bool uses_color_channel = (bool)mesh_buffers[i].colors.buffer();
 		bool buffers_set = false;
 
 		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
@@ -184,7 +184,7 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 	}
 }
 
-void ModelShaderCache::create_shadow_commands(GraphicContext &gc, Model *model, int level)
+void ModelShaderCache::create_shadow_commands(const GraphicContextPtr &gc, Model *model, int level)
 {
 	create_states(gc);
 
@@ -207,7 +207,7 @@ void ModelShaderCache::create_shadow_commands(GraphicContext &gc, Model *model, 
 	}
 }
 
-void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model, int level)
+void ModelShaderCache::create_early_z_commands(const GraphicContextPtr &gc, Model *model, int level)
 {
 	create_states(gc);
 
@@ -252,7 +252,7 @@ void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model,
 	}
 }
 
-ModelShaderCache::Shaderset ModelShaderCache::get_shader(GraphicContext &gc, const ModelShaderDescription &description)
+ModelShaderCache::Shaderset ModelShaderCache::get_shader(const GraphicContextPtr &gc, const ModelShaderDescription &description)
 {
 	std::map<ModelShaderDescription, Shaderset>::iterator it = shaders.find(description);
 	if (it == shaders.end())
@@ -267,7 +267,7 @@ ModelShaderCache::Shaderset ModelShaderCache::get_shader(GraphicContext &gc, con
 	}
 }
 
-ProgramObjectPtr ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const ModelShaderDescription &description)
+ProgramObjectPtr ModelShaderCache::create_gbuffer_program(const GraphicContextPtr &gc, const ModelShaderDescription &description)
 {
 	std::string defines;
 	if (description.diffuse_channel)
@@ -286,7 +286,7 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(GraphicContext &gc, co
 		defines += " USE_COLORS";
 
 	ProgramObjectPtr gbuffer;
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.glsl", "GBuffer/fragment_gbuffer.glsl", defines);
 	else
 		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.hlsl", "GBuffer/fragment_gbuffer.hlsl", defines);
@@ -338,7 +338,7 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(GraphicContext &gc, co
 	return gbuffer;
 }
 
-ProgramObjectPtr ModelShaderCache::create_transparency_program(GraphicContext &gc, const ModelShaderDescription &description)
+ProgramObjectPtr ModelShaderCache::create_transparency_program(const GraphicContextPtr &gc, const ModelShaderDescription &description)
 {
 	std::string defines;
 	if (description.diffuse_channel)
@@ -357,7 +357,7 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(GraphicContext &g
 		defines += " USE_COLORS";
 
 	ProgramObjectPtr transparency;
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.glsl", "Transparency/fragment.glsl", defines);
 	else
 		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.hlsl", "Transparency/fragment.hlsl", defines);
@@ -407,7 +407,7 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(GraphicContext &g
 	return transparency;
 }
 
-ProgramObjectPtr ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses_bones)
+ProgramObjectPtr ModelShaderCache::get_shadow_program(const GraphicContextPtr &gc, bool uses_bones)
 {
 	if (!uses_bones && shadow_program)
 		return shadow_program;
@@ -419,7 +419,7 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(GraphicContext &gc, bool u
 		defines += " USE_BONES";
 
 	ProgramObjectPtr program;
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "SceneLights/fragment_shadow.glsl", defines);
 	else
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "SceneLights/fragment_shadow.hlsl", defines);
@@ -447,7 +447,7 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(GraphicContext &gc, bool u
 	return program;
 }
 
-ProgramObjectPtr ModelShaderCache::get_early_z_program(GraphicContext &gc, bool uses_bones)
+ProgramObjectPtr ModelShaderCache::get_early_z_program(const GraphicContextPtr &gc, bool uses_bones)
 {
 	if (!uses_bones && early_z_program)
 		return early_z_program;
@@ -459,7 +459,7 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(GraphicContext &gc, bool 
 		defines += " USE_BONES";
 
 	ProgramObjectPtr program;
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "", defines);
 	else
 		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "", defines);
@@ -487,17 +487,17 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(GraphicContext &gc, bool 
 	return program;
 }
 
-void ModelShaderCache::create_states(GraphicContext &gc)
+void ModelShaderCache::create_states(const GraphicContextPtr &gc)
 {
 	if (!rasterizer_state)
 	{
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_front_face(face_clockwise);
 		rasterizer_desc.set_culled(true);
-		rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
+		rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
 
 		rasterizer_desc.set_culled(false);
-		two_sided_rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
+		two_sided_rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
 	}
 }
 

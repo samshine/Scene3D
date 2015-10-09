@@ -9,7 +9,7 @@ class ModelMeshVisitor;
 class Level
 {
 public:
-	Level(uicore::GraphicContext &gc, std::shared_ptr<LevelData> level_data);
+	Level(const uicore::GraphicContextPtr &gc, std::shared_ptr<LevelData> level_data);
 	void visit(ModelMeshVisitor *visitor, const LevelInstance &instance);
 
 private:

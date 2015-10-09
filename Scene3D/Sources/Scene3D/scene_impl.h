@@ -43,17 +43,17 @@ public:
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBuffer &fb = uicore::FrameBuffer());
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
 	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
 	void set_camera_position(const uicore::Vec3f &position);
 	void set_camera_orientation(const uicore::Quaternionf &orientation);
 	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
-	void render(uicore::GraphicContext &gc);
-	void update(uicore::GraphicContext &gc, float time_elapsed);
+	void render(const uicore::GraphicContextPtr &gc);
+	void update(const uicore::GraphicContextPtr &gc, float time_elapsed);
 
-	void visit(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, ModelMeshVisitor *visitor);
-	void visit_lights(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneLightVisitor *visitor);
-	void visit_emitters(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
+	void visit(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, ModelMeshVisitor *visitor);
+	void visit_lights(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneLightVisitor *visitor);
+	void visit_emitters(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
 
 	SceneLightProbe_Impl *find_nearest_probe(const uicore::Vec3f &position);
 
@@ -95,7 +95,7 @@ private:
 	SceneCamera camera;
 
 	Resource<float> camera_field_of_view;
-	Resource<uicore::FrameBuffer> viewport_fb;
+	Resource<uicore::FrameBufferPtr> viewport_fb;
 	Resource<uicore::Rect> viewport;
 	Resource<uicore::Mat4f> out_world_to_eye;
 

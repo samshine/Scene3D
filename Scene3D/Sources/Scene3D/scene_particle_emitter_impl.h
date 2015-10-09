@@ -38,5 +38,5 @@ public:
 class SceneParticleEmitterVisitor
 {
 public:
-	virtual void emitter(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter) = 0;
+	virtual void emitter(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter) = 0;
 };

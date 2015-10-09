@@ -4,10 +4,10 @@
 
 using namespace uicore;
 
-ProgramObjectPtr ShaderSetup::compile(GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)
+ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)
 {
 	std::string prefix;
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		prefix += "#version 330\r\n";
 	std::vector<std::string> define_list = Text::split(defines, " ");
 	for (size_t i = 0; i < define_list.size(); i++)

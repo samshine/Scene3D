@@ -10,9 +10,9 @@ class MaterialCache : public ModelMaterialCache
 {
 public:
 	MaterialCache(Scene_Impl *scene);
-	Resource<uicore::Texture> get_texture(uicore::GraphicContext &gc, const std::string &material_name, bool linear);
+	Resource<uicore::TexturePtr> get_texture(const uicore::GraphicContextPtr &gc, const std::string &material_name, bool linear);
 
-	void update(uicore::GraphicContext &gc, float time_elapsed);
+	void update(const uicore::GraphicContextPtr &gc, float time_elapsed);
 
 private:
 	Scene_Impl *scene;

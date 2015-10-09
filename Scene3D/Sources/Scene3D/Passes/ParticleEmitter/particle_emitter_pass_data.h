@@ -21,8 +21,8 @@ public:
 
 	SceneParticleEmitter_Impl *emitter;
 
-	Resource<uicore::Texture> life_color_gradient;
-	Resource<uicore::Texture> particle_animation;
+	Resource<uicore::TexturePtr> life_color_gradient;
+	Resource<uicore::TexturePtr> particle_animation;
 	uicore::UniformVector<ParticleUniforms> gpu_uniforms;
 
 private:

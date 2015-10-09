@@ -12,11 +12,11 @@ class GBufferPass : ModelMeshVisitor
 {
 public:
 	GBufferPass(ResourceContainer &inout);
-	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
 
 private:
-	void setup_gbuffer(uicore::GraphicContext &gc);
-	void render(uicore::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void setup_gbuffer(const uicore::GraphicContextPtr &gc);
+	void render(const uicore::GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -24,15 +24,15 @@ private:
 	Resource<uicore::Mat4f> world_to_eye;
 
 	// Out:
-	Resource<uicore::Texture2D> diffuse_color_gbuffer;
-	Resource<uicore::Texture2D> specular_color_gbuffer;
-	Resource<uicore::Texture2D> specular_level_gbuffer;
-	Resource<uicore::Texture2D> self_illumination_gbuffer;
-	Resource<uicore::Texture2D> normal_z_gbuffer;
-	Resource<uicore::Texture2D> zbuffer;
+	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
+	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
+	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
+	Resource<uicore::Texture2DPtr> zbuffer;
 
-	uicore::FrameBuffer fb_gbuffer;
-	uicore::GraphicContext gc;
+	uicore::FrameBufferPtr fb_gbuffer;
+	uicore::GraphicContextPtr gc;
 	Scene_Impl *scene;
 	uicore::BlendStatePtr blend_state;
 	uicore::BlendStatePtr early_z_blend_state;

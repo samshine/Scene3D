@@ -18,7 +18,7 @@ public:
 		ComPtr<ID3D11Query> disjoint_query;
 	};
 
-	void timestamp(GraphicContext &gc);
+	void timestamp(const GraphicContextPtr &gc);
 
 	std::vector<ComPtr<ID3D11Query> > unused_queries;
 	std::vector<ComPtr<ID3D11Query> > unused_disjoint_queries;
@@ -34,7 +34,7 @@ GPUTimer::GPUTimer()
 {
 }
 
-void GPUTimer::begin_frame(GraphicContext &gc)
+void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	if (impl->unused_disjoint_queries.empty())
@@ -62,7 +62,7 @@ void GPUTimer::begin_frame(GraphicContext &gc)
 #endif
 }
 
-void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
+void GPUTimer::begin_time(const GraphicContextPtr &gc, const std::string &name)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	impl->frames.back()->names.push_back(name);
@@ -70,14 +70,14 @@ void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
 #endif
 }
 
-void GPUTimer::end_time(GraphicContext &gc)
+void GPUTimer::end_time(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	impl->timestamp(gc);
 #endif
 }
 
-void GPUTimer::end_frame(GraphicContext &gc)
+void GPUTimer::end_frame(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
@@ -85,7 +85,7 @@ void GPUTimer::end_frame(GraphicContext &gc)
 #endif
 }
 
-std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
+std::vector<GPUTimer::Result> GPUTimer::get_results(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
@@ -121,7 +121,7 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 }
 
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
-void GPUTimer_Impl::timestamp(GraphicContext &gc)
+void GPUTimer_Impl::timestamp(const GraphicContextPtr &gc)
 {
 	if (unused_queries.empty())
 	{

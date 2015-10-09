@@ -9,7 +9,7 @@ class ModelData;
 class ModelLOD
 {
 public:
-	ModelLOD(uicore::GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data);
+	ModelLOD(const uicore::GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data);
 
 	std::vector<ModelMeshBuffers> mesh_buffers;
 
@@ -20,8 +20,8 @@ public:
 
 private:
 	template<typename Type>
-	uicore::VertexArrayVector<Type> upload_vector(uicore::GraphicContext &gc, uicore::PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec);
+	uicore::VertexArrayVector<Type> upload_vector(const uicore::GraphicContextPtr &gc, const uicore::PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec);
 
 	template<typename Type>
-	uicore::VertexArrayVector<Type> upload_vector(uicore::GraphicContext &gc, uicore::PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec, bool normalize);
+	uicore::VertexArrayVector<Type> upload_vector(const uicore::GraphicContextPtr &gc, const uicore::PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec, bool normalize);
 };

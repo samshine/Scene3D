@@ -8,22 +8,22 @@
 class SSAOPass
 {
 public:
-	SSAOPass(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
-	void run(uicore::GraphicContext &gc);
+	SSAOPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
+	void run(const uicore::GraphicContextPtr &gc);
 
 private:
 	static float random_value();
 
 	// In:
-	Resource<uicore::Texture2D> normal_z_gbuffer;
+	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
 
 	// Out:
-	Resource<uicore::Texture2D> ssao_contribution;
+	Resource<uicore::Texture2DPtr> ssao_contribution;
 
 	GaussianBlur blur;
 	uicore::ProgramObjectPtr extract_shader;
-	uicore::FrameBuffer fb;
+	uicore::FrameBufferPtr fb;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArray rect_primarray;
+	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::BlendStatePtr blend_state;
 };

@@ -7,13 +7,13 @@ class GaussianBlur
 {
 public:
 	GaussianBlur();
-	void blur(uicore::GraphicContext &gc, uicore::TextureFormat format, float blur_amount, int sample_count = 15);
+	void blur(const uicore::GraphicContextPtr &gc, uicore::TextureFormat format, float blur_amount, int sample_count = 15);
 
-	Resource<uicore::Texture2D> input;
-	Resource<uicore::FrameBuffer> output;
+	Resource<uicore::Texture2DPtr> input;
+	Resource<uicore::FrameBufferPtr> output;
 
 private:
-	void setup(uicore::GraphicContext &gc, uicore::Size new_size, uicore::TextureFormat new_format, float blur_amount, int sample_count);
+	void setup(const uicore::GraphicContextPtr &gc, uicore::Size new_size, uicore::TextureFormat new_format, float blur_amount, int sample_count);
 
 	void get_shader_glsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
 	void get_shader_hlsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
@@ -30,10 +30,10 @@ private:
 		uicore::ProgramObjectPtr horizontal_blur_program;
 	};
 
-	uicore::PrimitivesArray prim_array;
+	uicore::PrimitivesArrayPtr prim_array;
 	uicore::VertexArrayVector<uicore::Vec4f> gpu_positions;
-	uicore::FrameBuffer fb0;
-	uicore::Texture2D pass0_texture;
+	uicore::FrameBufferPtr fb0;
+	uicore::Texture2DPtr pass0_texture;
 	uicore::Size size;
 	uicore::TextureFormat format;
 	std::vector<BlurSetup> blur_setups;

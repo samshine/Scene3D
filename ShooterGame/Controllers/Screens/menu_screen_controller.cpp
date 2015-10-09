@@ -38,7 +38,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 
 	texture_view->add_subview(menu_box);
 
-	GraphicContext gc = canvas.get_gc();
+	GraphicContextPtr gc = canvas.get_gc();
 
 	scene = Scene(Screen::scene_cache());
 	scene.set_camera(SceneCamera(scene));
@@ -68,7 +68,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 	map_object = SceneObject(scene, model);
 }
 
-void MenuScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
+void MenuScreenController::update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
 	canvas.flush();
 

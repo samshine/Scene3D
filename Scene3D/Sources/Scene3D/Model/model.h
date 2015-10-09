@@ -15,7 +15,7 @@ class InstancesBuffer;
 class Model
 {
 public:
-	Model(uicore::GraphicContext &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index);
+	Model(const uicore::GraphicContextPtr &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index);
 	const std::vector<ModelDataLight> &get_lights();
 	const std::shared_ptr<ModelData> &get_model_data() const { return model_data; }
 
@@ -25,7 +25,7 @@ public:
 	int get_vectors_per_instance() const;
 	void upload(InstancesBuffer &instances_buffer, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection);
 
-	void visit(uicore::GraphicContext &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor);
+	void visit(const uicore::GraphicContextPtr &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor);
 
 	static const int vectors_per_bone = 3;
 	static const int instance_base_vectors = 16;
@@ -34,7 +34,7 @@ public:
 private:
 	ModelShaderCache &shader_cache;
 	std::shared_ptr<ModelData> model_data;
-	std::vector<Resource<uicore::Texture> > textures;
+	std::vector<Resource<uicore::TexturePtr> > textures;
 
 	std::vector<std::shared_ptr<ModelLOD> > levels;
 
@@ -43,8 +43,8 @@ private:
 	std::vector<uicore::Mat4f> instances_object_to_world;
 	std::vector<uicore::Vec3f> instances_light_probe_color;
 
-	uicore::PixelBuffer instance_bones_transfer;
-	uicore::Texture2D instance_bones;
+	uicore::PixelBufferPtr instance_bones_transfer;
+	uicore::Texture2DPtr instance_bones;
 	int max_instances;
 
 	int model_index;

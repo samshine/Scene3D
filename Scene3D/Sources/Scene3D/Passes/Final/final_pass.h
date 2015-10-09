@@ -7,19 +7,19 @@
 class FinalPass
 {
 public:
-	FinalPass(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
-	void run(uicore::GraphicContext &gc);
+	FinalPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
+	void run(const uicore::GraphicContextPtr &gc);
 
 private:
 	// In:
-	Resource<uicore::FrameBuffer> viewport_fb;
+	Resource<uicore::FrameBufferPtr> viewport_fb;
 	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2D> final_color;
-	Resource<uicore::Texture2D> bloom_blur_texture;
-	Resource<uicore::Texture2D> ambient_occlusion;
+	Resource<uicore::Texture2DPtr> final_color;
+	Resource<uicore::Texture2DPtr> bloom_blur_texture;
+	Resource<uicore::Texture2DPtr> ambient_occlusion;
 
 	uicore::ProgramObjectPtr present_shader;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArray rect_primarray;
+	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::RasterizerStatePtr rasterizer_state;
 };

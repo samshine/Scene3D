@@ -15,12 +15,12 @@ SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)
 	field_of_view = inout.get<float>("FieldOfView");
 	world_to_eye = inout.get<Mat4f>("WorldToEye");
 
-	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2D>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2D>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
-	zbuffer = inout.get<Texture2D>("ZBuffer");
+	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
+	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
+	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
+	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
+	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
+	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
 }
 
 void SkyboxPass::show_skybox_stars(bool enable)
@@ -28,66 +28,66 @@ void SkyboxPass::show_skybox_stars(bool enable)
 	show_stars = enable;
 }
 
-void SkyboxPass::set_skybox_texture(Texture2D texture)
+void SkyboxPass::set_skybox_texture(Texture2DPtr texture)
 {
 	cloud_texture = texture;
 }
 
-void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
+void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	setup(gc);
 
-	gc.set_frame_buffer(fb);
+	gc->set_frame_buffer(fb);
 
 	Size viewport_size = viewport->get_size();
-	gc.set_viewport(viewport_size);
+	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
-	gc.set_depth_stencil_state(depth_stencil_state);
-	gc.set_blend_state(blend_state);
-	gc.set_rasterizer_state(rasterizer_state);
+	gc->set_depth_stencil_state(depth_stencil_state);
+	gc->set_blend_state(blend_state);
+	gc->set_rasterizer_state(rasterizer_state);
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc.get_clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
 	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera().get_orientation()).to_matrix();
 	uniforms.upload_data(gc, &cpu_uniforms, 1);
 
-	gc.set_depth_range(0.9f, 1.0f);
+	gc->set_depth_range(0.9f, 1.0f);
 
 	if (show_stars)
 	{
-		gc.set_program_object(billboard_program);
-		gc.set_primitives_array(billboard_prim_array);
-		gc.set_uniform_buffer(0, uniforms);
-		gc.set_texture(0, star_instance_texture);
-		gc.set_texture(1, star_texture);
-		gc.draw_primitives_array_instanced(type_triangles, 0, 6, num_star_instances);
-		gc.reset_primitives_array();
+		gc->set_program_object(billboard_program);
+		gc->set_primitives_array(billboard_prim_array);
+		gc->set_uniform_buffer(0, uniforms);
+		gc->set_texture(0, star_instance_texture);
+		gc->set_texture(1, star_texture);
+		gc->draw_primitives_array_instanced(type_triangles, 0, 6, num_star_instances);
+		gc->reset_primitives_array();
 	}
 
-	gc.set_program_object(cube_program);
-	gc.set_primitives_array(cube_prim_array);
-	gc.set_uniform_buffer(0, uniforms);
-	gc.set_texture(0, cloud_texture);
-	gc.draw_primitives_array(type_triangles, 0, 6*6);
-	gc.reset_primitives_array();
+	gc->set_program_object(cube_program);
+	gc->set_primitives_array(cube_prim_array);
+	gc->set_uniform_buffer(0, uniforms);
+	gc->set_texture(0, cloud_texture);
+	gc->draw_primitives_array(type_triangles, 0, 6*6);
+	gc->reset_primitives_array();
 
-	gc.set_depth_range(0.0f, 1.0f);
+	gc->set_depth_range(0.0f, 1.0f);
 
-	gc.reset_blend_state();
-	gc.reset_rasterizer_state();
-	gc.reset_depth_stencil_state();
-	gc.reset_program_object();
-	gc.reset_primitives_elements();
-	gc.reset_texture(0);
-	gc.reset_texture(1);
-	gc.reset_uniform_buffer(0);
+	gc->reset_blend_state();
+	gc->reset_rasterizer_state();
+	gc->reset_depth_stencil_state();
+	gc->reset_program_object();
+	gc->reset_primitives_elements();
+	gc->reset_texture(0);
+	gc->reset_texture(1);
+	gc->reset_uniform_buffer(0);
 
-	gc.reset_frame_buffer();
+	gc->reset_frame_buffer();
 }
 
-void SkyboxPass::setup(GraphicContext &gc)
+void SkyboxPass::setup(const GraphicContextPtr &gc)
 {
 	if (!cube_program)
 	{
@@ -97,49 +97,49 @@ void SkyboxPass::setup(GraphicContext &gc)
 	}
 
 	Size viewport_size = viewport->get_size();
-	if (fb.is_null() || !gc.is_frame_buffer_owner(fb) || zbuffer.updated())
+	if (!fb || !gc->is_frame_buffer_owner(fb) || zbuffer.updated())
 	{
-		fb = FrameBuffer(gc);
-		fb.attach_color(0, self_illumination_gbuffer.get());
+		fb = FrameBuffer::create(gc);
+		fb->attach_color(0, self_illumination_gbuffer.get());
 /*
-		fb.attach_color(0, diffuse_color_gbuffer.get());
-		fb.attach_color(1, specular_color_gbuffer.get());
-		fb.attach_color(2, specular_level_gbuffer.get());
-		fb.attach_color(3, self_illumination_gbuffer.get());
-		fb.attach_color(4, normal_z_gbuffer.get());
+		fb->attach_color(0, diffuse_color_gbuffer.get());
+		fb->attach_color(1, specular_color_gbuffer.get());
+		fb->attach_color(2, specular_level_gbuffer.get());
+		fb->attach_color(3, self_illumination_gbuffer.get());
+		fb->attach_color(4, normal_z_gbuffer.get());
 */
-		fb.attach_depth(zbuffer.get());
+		fb->attach_depth(zbuffer.get());
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
-		blend_state = gc.create_blend_state(blend_desc);
+		blend_state = gc->create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(false);
 		depth_stencil_desc.enable_depth_test(true);
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		depth_stencil_state = gc.create_depth_stencil_state(depth_stencil_desc);
+		depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_culled(false);
-		rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
+		rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
 
-		billboard_prim_array = PrimitivesArray(gc);
-		billboard_prim_array.set_attributes(0, billboard_positions);
+		billboard_prim_array = PrimitivesArray::create(gc);
+		billboard_prim_array->set_attributes(0, billboard_positions);
 
-		cube_prim_array = PrimitivesArray(gc);
-		cube_prim_array.set_attributes(0, cube_positions);
+		cube_prim_array = PrimitivesArray::create(gc);
+		cube_prim_array->set_attributes(0, cube_positions);
 	}
 }
 
-void SkyboxPass::create_clouds(GraphicContext &gc)
+void SkyboxPass::create_clouds(const GraphicContextPtr &gc)
 {
-	if (cloud_texture.is_null())
+	if (!cloud_texture)
 		create_cloud_texture(gc);
 }
 
-void SkyboxPass::create_cloud_texture(GraphicContext &gc)
+void SkyboxPass::create_cloud_texture(const GraphicContextPtr &gc)
 {
 	int width = 512;
 	int height = 512;
@@ -147,8 +147,8 @@ void SkyboxPass::create_cloud_texture(GraphicContext &gc)
 	Color color = Color::mediumslateblue;
 
 	Noise2D noise(width, height);
-	PixelBuffer cloud(width, height, tf_rgba16);
-	Vec4us *cloud_data = cloud.get_data<Vec4us>();
+	auto cloud = PixelBuffer::create(width, height, tf_rgba16);
+	Vec4us *cloud_data = cloud->data<Vec4us>();
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
@@ -157,17 +157,17 @@ void SkyboxPass::create_cloud_texture(GraphicContext &gc)
 			cloud_data[x+y*512] = Vec4us(color.r * 64, color.g * 64, color.b * 64, alpha);
 		}
 	}
-	cloud_texture = Texture2D(gc, width, height, tf_rgba16, 0);
-	cloud_texture.set_image(gc, cloud);
-	cloud_texture.generate_mipmap();
+	cloud_texture = Texture2D::create(gc, width, height, tf_rgba16, 0);
+	cloud_texture->set_image(gc, cloud);
+	cloud_texture->generate_mipmap();
 }
 
-void SkyboxPass::create_stars(GraphicContext &gc)
+void SkyboxPass::create_stars(const GraphicContextPtr &gc)
 {
 	create_star_texture(gc);
 
-	PixelBuffer instances(num_star_instances, 1, tf_rgba32f);
-	Vec4f *instances_data = instances.get_data<Vec4f>();
+	auto instances = PixelBuffer::create(num_star_instances, 1, tf_rgba32f);
+	Vec4f *instances_data = instances->data<Vec4f>();
 	for (size_t i = 0; i < num_star_instances; i++)
 	{
 		float range = 700.0f;
@@ -177,14 +177,14 @@ void SkyboxPass::create_stars(GraphicContext &gc)
 		} while (instances_data[i].length3() < range * 0.5f);
 	}
 
-	star_instance_texture = Texture2D(gc, num_star_instances, 1, tf_rgba32f);
-	star_instance_texture.set_image(gc, instances);
+	star_instance_texture = Texture2D::create(gc, num_star_instances, 1, tf_rgba32f);
+	star_instance_texture->set_image(gc, instances);
 }
 
-void SkyboxPass::create_star_texture(GraphicContext &gc)
+void SkyboxPass::create_star_texture(const GraphicContextPtr &gc)
 {
-	PixelBuffer star_icon(512, 512, tf_rgba16);
-	Vec4us *star_icon_data = star_icon.get_data<Vec4us>();
+	auto star_icon = PixelBuffer::create(512, 512, tf_rgba16);
+	Vec4us *star_icon_data = star_icon->data<Vec4us>();
 	for (int y = 0; y < 512; y++)
 	{
 		for (int x = 0; x < 512; x++)
@@ -196,19 +196,19 @@ void SkyboxPass::create_star_texture(GraphicContext &gc)
 			star_icon_data[x + y * 512] = Vec4us(230*256, 230*256, 255*256, clamp((int)(distance * 65535.0f + 0.5f), 0, 65535));
 		}
 	}
-	star_texture = Texture2D(gc, 512, 512, tf_rgba16);
-	star_texture.set_image(gc, star_icon);
-	star_texture.generate_mipmap();
+	star_texture = Texture2D::create(gc, 512, 512, tf_rgba16);
+	star_texture->set_image(gc, star_icon);
+	star_texture->generate_mipmap();
 }
 
-void SkyboxPass::create_programs(GraphicContext &gc)
+void SkyboxPass::create_programs(const GraphicContextPtr &gc)
 {
 	uniforms = UniformVector<Uniforms>(gc, 1);
 	create_billboard_program(gc);
 	create_cube_program(gc);
 }
 
-void SkyboxPass::create_billboard_program(GraphicContext &gc)
+void SkyboxPass::create_billboard_program(const GraphicContextPtr &gc)
 {
 	billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 
@@ -223,7 +223,7 @@ void SkyboxPass::create_billboard_program(GraphicContext &gc)
 	billboard_program->set_uniform_buffer_index("Uniforms", 0);
 }
 
-void SkyboxPass::create_cube_program(GraphicContext &gc)
+void SkyboxPass::create_cube_program(const GraphicContextPtr &gc)
 {
 	cube_positions = VertexArrayVector<Vec3f>(gc, cpu_cube_positions, 36);
 

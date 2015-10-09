@@ -10,7 +10,7 @@ class SceneCache
 {
 public:
 	SceneCache();
-	SceneCache(uicore::GraphicContext &gc, const std::string &shader_path);
+	SceneCache(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
 	bool is_null() const { return !impl; }
 
 private:

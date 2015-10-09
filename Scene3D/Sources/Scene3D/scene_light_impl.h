@@ -41,5 +41,5 @@ public:
 class SceneLightVisitor
 {
 public:
-	virtual void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light) = 0;
+	virtual void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light) = 0;
 };

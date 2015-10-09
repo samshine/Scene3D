@@ -4,7 +4,7 @@
 class Icosahedron
 {
 public:
-	Icosahedron(uicore::GraphicContext &gc, bool use_radius_of_inscribed_sphere = false);
+	Icosahedron(const uicore::GraphicContextPtr &gc, bool use_radius_of_inscribed_sphere = false);
 
 	uicore::VertexArrayVector<uicore::Vec3f> vertices;
 	uicore::ElementArrayVector<unsigned int> elements;
@@ -13,7 +13,7 @@ public:
 	static const int num_elements = 20 * 3;
 };
 
-inline Icosahedron::Icosahedron(uicore::GraphicContext &gc, bool use_radius_of_inscribed_sphere)
+inline Icosahedron::Icosahedron(const uicore::GraphicContextPtr &gc, bool use_radius_of_inscribed_sphere)
 {
 	// radius of a circumscribed sphere (one that touches the icosahedron at all vertices)
 	float x = 0.525731112119133606f;

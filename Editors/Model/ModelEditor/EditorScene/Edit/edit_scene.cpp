@@ -8,17 +8,17 @@ EditScene::EditScene()
 {
 }
 
-void EditScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	setup_default_scene(scene, gc);
 
-	auto keyboard = ic.get_keyboard();
+	auto keyboard = ic->keyboard();
 
-	button_strafe_left = has_focus && keyboard.get_keycode(keycode_left);
-	button_strafe_right = has_focus && keyboard.get_keycode(keycode_right);
-	button_jump = has_focus && keyboard.get_keycode(keycode_space);
-	button_run_forward = has_focus && keyboard.get_keycode(keycode_up);
-	button_run_backward = has_focus && keyboard.get_keycode(keycode_down);
+	button_strafe_left = has_focus && keyboard->keycode(keycode_left);
+	button_strafe_right = has_focus && keyboard->keycode(keycode_right);
+	button_jump = has_focus && keyboard->keycode(keycode_space);
+	button_run_forward = has_focus && keyboard->keycode(keycode_up);
+	button_run_backward = has_focus && keyboard->keycode(keycode_down);
 
 	int input_x = button_strafe_left ? -1 : button_strafe_right ? 1 : 0;
 	int input_y = button_run_forward ? 1 : button_run_backward ? -1 : 0;
@@ -79,7 +79,7 @@ void EditScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool
 	scene.update(gc, gametime.get_time_elapsed());
 }
 
-void EditScene::setup_default_scene(Scene &scene, GraphicContext &gc)
+void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (!light1.is_null())
 		return;
@@ -148,7 +148,7 @@ void EditScene::set_attachments(std::vector<SceneModelAttachment> new_attachment
 	model_data_updated = true;
 }
 
-void EditScene::update_map(Scene &scene, GraphicContext &gc)
+void EditScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (!map_model_updated) return;
 	map_model_updated = false;
@@ -171,7 +171,7 @@ void EditScene::update_map(Scene &scene, GraphicContext &gc)
 	}
 }
 
-void EditScene::update_model(Scene &scene, GraphicContext &gc)
+void EditScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (!model_data_updated) return;
 	model_data_updated = false;

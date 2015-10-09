@@ -28,6 +28,6 @@ public:
 	std::map<std::string, InputButton> buttons;
 
 	void input_disabled();
-	void update(uicore::DisplayWindow &ic);
-	void load(uicore::DisplayWindow &ic, uicore::JsonValue buttons_node);
+	void update(const uicore::DisplayWindowPtr &ic);
+	void load(const uicore::DisplayWindowPtr &ic, uicore::JsonValue buttons_node);
 };

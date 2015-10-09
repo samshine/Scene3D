@@ -16,7 +16,7 @@ private:
 
 	void model_data_updated();
 	void map_model_updated();
-	void update_scene(Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &);
+	void update_scene(Scene &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &);
 
 	uicore::SlotContainer slots;
 };

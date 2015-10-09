@@ -8,7 +8,7 @@ GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewControlle
 {
 }
 
-void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
+void GameScreenController::update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
 	if (desktop_exception_flag)
 	{
@@ -23,7 +23,7 @@ void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::Displa
 			std::string hostname = "localhost";
 			std::string port = "5004";
 
-			GraphicContext gc = canvas.get_gc();
+			GraphicContextPtr gc = canvas.get_gc();
 
 			server_game = std::make_unique<Game>(hostname, port, true);
 			client_game = std::make_unique<Game>(hostname, port, false, Screen::scene_cache(), Screen::sound_cache(), gc, ic);
@@ -45,7 +45,7 @@ void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::Displa
 /*
 GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewController(canvas), game_time(60), character_controller(collision_world)
 {
-	GraphicContext gc = canvas.get_gc();
+	GraphicContextPtr gc = canvas.get_gc();
 
 	scene = create_scene(canvas);
 	scene.set_camera(SceneCamera(scene));
@@ -77,7 +77,7 @@ GameScreenController::GameScreenController(Canvas &canvas) : ScreenViewControlle
 	map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
 }
 
-void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta)
+void GameScreenController::update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
 	update_look_dir(mouse_delta);
 	update_game(ic);
@@ -85,7 +85,7 @@ void GameScreenController::update_desktop(uicore::Canvas &canvas, uicore::Displa
 	render_scene(canvas, scene);
 }
 
-void GameScreenController::update_game(uicore::DisplayWindow &ic)
+void GameScreenController::update_game(const uicore::DisplayWindowPtr &ic)
 {
 	game_time.update();
 

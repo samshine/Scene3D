@@ -29,7 +29,7 @@ public:
 	uicore::VertexArrayVector<uicore::Vec4ub> bone_selectors;
 	uicore::VertexArrayVector<uicore::Vec4ub> colors;
 	uicore::ElementArrayVector<unsigned int> elements;
-	std::vector<uicore::VertexArrayBuffer> channels;
+	std::vector<uicore::VertexArrayBufferPtr> channels;
 	std::vector<uicore::UniformVector<ModelMaterialUniforms> > uniforms;
-	uicore::PrimitivesArray primitives_array;
+	uicore::PrimitivesArrayPtr primitives_array;
 };

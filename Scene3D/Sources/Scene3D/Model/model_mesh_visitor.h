@@ -8,5 +8,5 @@ class ModelLOD;
 class ModelMeshVisitor
 {
 public:
-	virtual void render(uicore::GraphicContext &gc, ModelLOD *model_lod, int num_instances) = 0;
+	virtual void render(const uicore::GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances) = 0;
 };

@@ -9,7 +9,7 @@ class ModelRenderCommand
 {
 public:
 	virtual ~ModelRenderCommand() { }
-	virtual void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances) = 0;
+	virtual void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances) = 0;
 };
 
 class ModelRenderCommandList
@@ -21,7 +21,7 @@ public:
 			delete commands[i];
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
 		for (size_t i = 0; i < commands.size(); i++)
 			commands[i]->execute(scene, gc, num_instances);
@@ -37,10 +37,10 @@ public:
 	{
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
-		gc.set_primitives_array(buffers->primitives_array);
-		gc.set_primitives_elements(buffers->elements);
+		gc->set_primitives_array(buffers->primitives_array);
+		gc->set_primitives_elements(buffers->elements);
 	}
 
 	ModelMeshBuffers *buffers;
@@ -53,9 +53,9 @@ public:
 	{
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
-		gc.set_program_object(shader);
+		gc->set_program_object(shader);
 	}
 
 	uicore::ProgramObjectPtr shader;
@@ -64,18 +64,18 @@ public:
 class ModelRenderCommand_BindTexture : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindTexture(int bind_index, Resource<uicore::Texture> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
+	ModelRenderCommand_BindTexture(int bind_index, Resource<uicore::TexturePtr> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
 	{
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
-		texture.get().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
-		gc.set_texture(bind_index, texture.get());
+		std::dynamic_pointer_cast<uicore::Texture2D>(texture.get())->set_wrap_mode(wrap_u, wrap_v);
+		gc->set_texture(bind_index, texture.get());
 	}
 
 	int bind_index;
-	Resource<uicore::Texture> texture;
+	Resource<uicore::TexturePtr> texture;
 	uicore::TextureWrapMode wrap_u, wrap_v;
 };
 
@@ -86,9 +86,9 @@ public:
 	{
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
-		gc.set_rasterizer_state(state);
+		gc->set_rasterizer_state(state);
 	}
 
 	uicore::RasterizerStatePtr state;
@@ -102,10 +102,10 @@ public:
 	{
 	}
 
-	void execute(Scene_Impl *scene, uicore::GraphicContext &gc, int num_instances)
+	void execute(Scene_Impl *scene, const uicore::GraphicContextPtr &gc, int num_instances)
 	{
-		gc.set_uniform_buffer(0, uniforms);
-		gc.draw_primitives_elements_instanced(uicore::type_triangles, num_elements, uicore::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
+		gc->set_uniform_buffer(0, uniforms);
+		gc->draw_primitives_elements_instanced(uicore::type_triangles, num_elements, uicore::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
 		scene->draw_calls++;
 		scene->triangles_drawn += num_elements / 3;

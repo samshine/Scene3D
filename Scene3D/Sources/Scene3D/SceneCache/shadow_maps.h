@@ -11,7 +11,7 @@ class ShadowMapEntry_Impl;
 class ShadowMaps
 {
 public:
-	ShadowMaps(uicore::GraphicContext &gc, const Resource<uicore::Texture2DArray> &shadow_maps, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
+	ShadowMaps(const uicore::GraphicContextPtr &gc, const Resource<uicore::Texture2DArrayPtr> &shadow_maps, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
 	~ShadowMaps();
 
 	void start_frame();
@@ -25,10 +25,10 @@ private:
 	void add_unused(ShadowMapEntry_Impl *entry);
 	void unlink(ShadowMapEntry_Impl *entry);
 
-	Resource<uicore::Texture2DArray> shadow_maps;
+	Resource<uicore::Texture2DArrayPtr> shadow_maps;
 
-	std::vector<uicore::FrameBuffer> framebuffers;
-	std::vector<uicore::Texture2D> views;
+	std::vector<uicore::FrameBufferPtr> framebuffers;
+	std::vector<uicore::Texture2DPtr> views;
 
 	ShadowMapEntry_Impl *used_entries;
 	ShadowMapEntry_Impl *unused_entries;
@@ -48,8 +48,8 @@ public:
 	void use_in_frame();
 
 	int get_index() const;
-	uicore::FrameBuffer get_framebuffer() const;
-	uicore::Texture2D get_view() const;
+	uicore::FrameBufferPtr get_framebuffer() const;
+	uicore::Texture2DPtr get_view() const;
 
 private:
 	std::shared_ptr<ShadowMapEntry_Impl> impl;

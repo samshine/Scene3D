@@ -11,7 +11,7 @@
 
 using namespace uicore;
 
-Model::Model(GraphicContext &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index)
+Model::Model(const GraphicContextPtr &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index)
 : shader_cache(shader_cache), model_data(model_data), frame(-1), max_instances(0), model_index(model_index)
 {
 /*
@@ -176,9 +176,9 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 	}
 }
 
-void Model::visit(GraphicContext &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor)
+void Model::visit(const GraphicContextPtr &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor)
 {
-	gc.set_texture(0, instances_buffer.get_indexes());
-	gc.set_texture(1, instances_buffer.get_vectors());
+	gc->set_texture(0, instances_buffer.get_indexes());
+	gc->set_texture(1, instances_buffer.get_vectors());
 	visitor->render(gc, levels[0].get(), instances.size());
 }

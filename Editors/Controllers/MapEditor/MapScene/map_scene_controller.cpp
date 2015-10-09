@@ -19,7 +19,7 @@ void MapSceneController::map_model_data_updated()
 	map_object = SceneObject();
 }
 
-void MapSceneController::update_scene(Scene &scene, uicore::GraphicContext &gc, uicore::DisplayWindow &ic, const uicore::Vec2i &)
+void MapSceneController::update_scene(Scene &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &)
 {
 	if (map_object.is_null())
 	{

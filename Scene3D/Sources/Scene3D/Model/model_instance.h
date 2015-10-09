@@ -12,7 +12,7 @@ class ModelReplacedMaterial
 {
 public:
 	size_t texture_index;
-	Resource<uicore::Texture> replaced_texture;
+	Resource<uicore::TexturePtr> replaced_texture;
 };
 
 class ModelAnimationTime

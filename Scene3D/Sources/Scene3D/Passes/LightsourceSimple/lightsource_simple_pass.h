@@ -13,36 +13,36 @@ class Scene_Impl;
 class LightsourceSimplePass : SceneLightVisitor
 {
 public:
-	LightsourceSimplePass(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
+	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourceSimplePass();
 
-	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
 
 private:
-	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &shader_path, const std::string &type);
+	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &shader_path, const std::string &type);
 
-	void setup(uicore::GraphicContext &gc);
-	void find_lights(uicore::GraphicContext &gc, Scene_Impl *scene);
-	void upload(uicore::GraphicContext &gc, Scene_Impl *scene);
-	void render(uicore::GraphicContext &gc, GPUTimer &timer);
+	void setup(const uicore::GraphicContextPtr &gc);
+	void find_lights(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	void upload(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
 
 	// SceneLightVisitor
-	void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
 	Resource<uicore::Rect> viewport;
 	Resource<float> field_of_view;
 	Resource<uicore::Mat4f> world_to_eye;
-	Resource<uicore::Texture2D> diffuse_color_gbuffer;
-	Resource<uicore::Texture2D> specular_color_gbuffer;
-	Resource<uicore::Texture2D> specular_level_gbuffer;
-	Resource<uicore::Texture2D> self_illumination_gbuffer;
-	Resource<uicore::Texture2D> normal_z_gbuffer;
-	Resource<uicore::Texture2DArray> shadow_maps;
-	Resource<uicore::Texture2D> zbuffer;
+	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
+	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
+	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
+	Resource<uicore::Texture2DArrayPtr> shadow_maps;
+	Resource<uicore::Texture2DPtr> zbuffer;
 
 	// Out:
-	Resource<uicore::Texture2D> final_color;
+	Resource<uicore::Texture2DPtr> final_color;
 
 	static const int max_lights = 1023;
 	static const int vectors_per_light = 6;
@@ -56,7 +56,7 @@ private:
 		uicore::Vec2f two_rcp_viewport_size;
 	};
 
-	uicore::FrameBuffer fb;
+	uicore::FrameBufferPtr fb;
 	uicore::BlendStatePtr blend_state;
 
 	uicore::DepthStencilStatePtr icosahedron_depth_stencil_state;
@@ -65,16 +65,16 @@ private:
 	uicore::DepthStencilStatePtr rect_depth_stencil_state;
 	uicore::RasterizerStatePtr rect_rasterizer_state;
 
-	uicore::PrimitivesArray icosahedron_prim_array;
-	uicore::PrimitivesArray rect_prim_array;
+	uicore::PrimitivesArrayPtr icosahedron_prim_array;
+	uicore::PrimitivesArrayPtr rect_prim_array;
 
 	uicore::UniformVector<Uniforms> uniforms;
 
 	std::unique_ptr<Icosahedron> icosahedron;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 
-	uicore::PixelBuffer light_instance_transfer;
-	uicore::Texture1D light_instance_texture;
+	uicore::PixelBufferPtr light_instance_transfer;
+	uicore::Texture1DPtr light_instance_texture;
 
 	uicore::ProgramObjectPtr icosahedron_light_program;
 	uicore::ProgramObjectPtr rect_light_program;

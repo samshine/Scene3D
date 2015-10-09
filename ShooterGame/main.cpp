@@ -19,17 +19,17 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	window_desc.set_allow_resize();
 	window_desc.set_visible(false);
 
-	DisplayWindow window(window_desc);
-	GraphicContext gc = window.get_gc();
+	DisplayWindowPtr window = DisplayWindow::create(window_desc);
+	GraphicContextPtr gc = window->gc();
 	Canvas canvas(window);
 
-	window.set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
-	window.set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
+	window->set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
+	window->set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
 
-	Slot close_slot = window.sig_window_close().connect([]() { RunLoop::exit(); });
+	Slot close_slot = window->sig_window_close().connect([]() { RunLoop::exit(); });
 
-	window.maximize();
-	window.show();
+	window->maximize();
+	window->show();
 
 	SoundOutput sound_output(44100);
 
@@ -39,23 +39,23 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Screen::sound_cache() = std::make_shared<SoundCache>();
 
 	SlotContainer slots;
-	slots.connect(window.get_keyboard().sig_key_down(), [&](const InputEvent &e) {
+	slots.connect(window->keyboard()->sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_key_down(e);
 	});
-	slots.connect(window.get_keyboard().sig_key_up(), [&](const InputEvent &e) {
+	slots.connect(window->keyboard()->sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_key_down(e);
 	});
-	slots.connect(window.get_mouse().sig_key_down(), [&](const InputEvent &e) {
+	slots.connect(window->mouse()->sig_key_down(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_down(e);
 	});
-	slots.connect(window.get_mouse().sig_key_up(), [&](const InputEvent &e) {
+	slots.connect(window->mouse()->sig_key_up(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_up(e);
 	});
-	slots.connect(window.get_mouse().sig_pointer_move(), [&](const InputEvent &e) {
+	slots.connect(window->mouse()->sig_pointer_move(), [&](const InputEvent &e) {
 		auto screen = Screen::controller();
 		if (screen) screen->texture_view->on_mouse_move(e);
 	});
@@ -72,7 +72,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		while (RunLoop::process())
 		{
-			gc.clear();
+			gc->clear();
 
 			auto screen = Screen::controller();
 			if (screen)
@@ -82,13 +82,13 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					if (hide_cursor)
 					{
-						window.hide_cursor();
-						mouse_down_pos = window.get_mouse().get_position();
+						window->hide_cursor();
+						mouse_down_pos = window->mouse()->position();
 					}
 					else
 					{
-						window.get_mouse().set_position(mouse_down_pos.x, mouse_down_pos.y);
-						window.show_cursor();
+						window->mouse()->set_position(mouse_down_pos.x, mouse_down_pos.y);
+						window->show_cursor();
 					}
 					cursor_hidden = hide_cursor;
 				}
@@ -96,7 +96,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (cursor_hidden)
 				{
 					Sizef size = canvas.get_size();
-					window.get_mouse().set_position(size.width * 0.5f, size.height * 0.5f);
+					window->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
 				}
 
 				Point move = mouse_movement.pos();
@@ -109,7 +109,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			canvas.flush();
-			window.flip(1);
+			window->flip(1);
 		}
 
 		Screen::controller().reset();

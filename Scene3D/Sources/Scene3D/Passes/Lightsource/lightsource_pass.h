@@ -13,34 +13,34 @@ class Scene_Impl;
 class LightsourcePass : SceneLightVisitor
 {
 public:
-	LightsourcePass(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
+	LightsourcePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourcePass();
 
-	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
 
 private:
-	void find_lights(uicore::GraphicContext &gc, Scene_Impl *scene);
-	void upload(uicore::GraphicContext &gc);
-	void render(uicore::GraphicContext &gc, GPUTimer &timer);
-	void update_buffers(uicore::GraphicContext &gc);
-	uicore::ProgramObjectPtr compile_and_link(uicore::GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
+	void find_lights(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	void upload(const uicore::GraphicContextPtr &gc);
+	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
+	void update_buffers(const uicore::GraphicContextPtr &gc);
+	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
 	// SceneLightVisitor
-	void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
 	Resource<uicore::Rect> viewport;
 	Resource<float> field_of_view;
 	Resource<uicore::Mat4f> world_to_eye;
-	Resource<uicore::Texture2D> diffuse_color_gbuffer;
-	Resource<uicore::Texture2D> specular_color_gbuffer;
-	Resource<uicore::Texture2D> specular_level_gbuffer;
-	Resource<uicore::Texture2D> self_illumination_gbuffer;
-	Resource<uicore::Texture2D> normal_z_gbuffer;
-	Resource<uicore::Texture2DArray> shadow_maps;
+	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
+	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
+	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
+	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
+	Resource<uicore::Texture2DArrayPtr> shadow_maps;
 
 	// Out:
-	Resource<uicore::Texture2D> final_color;
+	Resource<uicore::Texture2DPtr> final_color;
 
 	static const int max_lights = 1023;
 	static const int light_slots_per_tile = 128;

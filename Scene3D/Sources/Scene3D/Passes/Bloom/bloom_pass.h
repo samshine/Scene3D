@@ -8,23 +8,23 @@
 class BloomPass
 {
 public:
-	BloomPass(uicore::GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
-	void run(uicore::GraphicContext &gc);
+	BloomPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
+	void run(const uicore::GraphicContextPtr &gc);
 
 private:
-	void setup_bloom_extract(uicore::GraphicContext &gc);
+	void setup_bloom_extract(const uicore::GraphicContextPtr &gc);
 
 	// In:
 	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2D> final_color;
+	Resource<uicore::Texture2DPtr> final_color;
 
 	// Out:
-	Resource<uicore::Texture2D> bloom_contribution;
+	Resource<uicore::Texture2DPtr> bloom_contribution;
 
 	GaussianBlur bloom_blur;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArray rect_primarray;
+	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::ProgramObjectPtr bloom_shader;
-	uicore::FrameBuffer fb_bloom_extract;
+	uicore::FrameBufferPtr fb_bloom_extract;
 	uicore::BlendStatePtr blend_state;
 };

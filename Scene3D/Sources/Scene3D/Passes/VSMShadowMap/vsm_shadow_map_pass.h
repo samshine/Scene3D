@@ -15,8 +15,8 @@ class VSMShadowMapPassLightData;
 class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
 {
 public:
-	VSMShadowMapPass(uicore::GraphicContext &gc, ResourceContainer &inout);
-	void run(uicore::GraphicContext &gc, Scene_Impl *scene);
+	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, ResourceContainer &inout);
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
 
 private:
 	void find_lights(Scene_Impl *scene);
@@ -25,10 +25,10 @@ private:
 	void blur_maps();
 
 	// ModelMeshVisitor
-	void render(uicore::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void render(const uicore::GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances);
 
 	// SceneLightVisitor
-	void light(uicore::GraphicContext &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -42,7 +42,7 @@ private:
 	ShadowMaps maps;
 	GaussianBlur blur;
 	Scene_Impl *scene;
-	uicore::GraphicContext gc;
+	uicore::GraphicContextPtr gc;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 

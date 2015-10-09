@@ -6,13 +6,13 @@
 
 using namespace uicore;
 
-ModelLOD::ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data)
+ModelLOD::ModelLOD(const GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data)
 {
 	mesh_buffers.reserve(model_data->meshes.size());
 	for (size_t i = 0; i < model_data->meshes.size(); i++)
 	{
 		ModelMeshBuffers buffers;
-		buffers.primitives_array = PrimitivesArray(gc);
+		buffers.primitives_array = PrimitivesArray::create(gc);
 		buffers.vertices = upload_vector(gc, buffers.primitives_array, 0, model_data->meshes[i].vertices);
 		buffers.normals = upload_vector(gc, buffers.primitives_array, 1, model_data->meshes[i].normals);
 		buffers.bitangents = upload_vector(gc, buffers.primitives_array, 2, model_data->meshes[i].bitangents);
@@ -53,12 +53,12 @@ ModelLOD::ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelDat
 }
 
 template<typename Type>
-VertexArrayVector<Type> ModelLOD::upload_vector(GraphicContext &gc, PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec)
+VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec)
 {
 	if (!vec.empty())
 	{
 		VertexArrayVector<Type> buffer(gc, vec);
-		primitives_array.set_attributes(index, buffer);
+		primitives_array->set_attributes(index, buffer);
 		return buffer;
 	}
 	else
@@ -68,12 +68,12 @@ VertexArrayVector<Type> ModelLOD::upload_vector(GraphicContext &gc, PrimitivesAr
 }
 
 template<typename Type>
-VertexArrayVector<Type> ModelLOD::upload_vector(GraphicContext &gc, PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec, bool normalize)
+VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec, bool normalize)
 {
 	if (!vec.empty())
 	{
 		VertexArrayVector<Type> buffer(gc, vec);
-		primitives_array.set_attributes(index, buffer, normalize);
+		primitives_array->set_attributes(index, buffer, normalize);
 		return buffer;
 	}
 	else

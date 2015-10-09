@@ -7,8 +7,8 @@
 
 using namespace uicore;
 
-VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout)
-: maps(gc, inout.get<Texture2DArray>("ShadowMaps"), 512, 64, tf_rg32f), round_robin(0)
+VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, ResourceContainer &inout)
+: maps(gc, inout.get<Texture2DArrayPtr>("ShadowMaps"), 512, 64, tf_rg32f), round_robin(0)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
@@ -16,16 +16,16 @@ VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout)
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = gc.create_blend_state(blend_desc);
+	blend_state = gc->create_blend_state(blend_desc);
 
 	DepthStencilStateDescription depth_stencil_desc;
 	depth_stencil_desc.enable_depth_write(true);
 	depth_stencil_desc.enable_depth_test(true);
 	depth_stencil_desc.set_depth_compare_function(compare_lequal);
-	depth_stencil_state = gc.create_depth_stencil_state(depth_stencil_desc);
+	depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 }
 
-void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)
+void VSMShadowMapPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_scene)
 {
 	gc = render_gc;
 	scene = render_scene;
@@ -35,7 +35,7 @@ void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *render_scene)
 	render_maps(scene);
 	blur_maps();
 
-	gc = GraphicContext();
+	gc.reset();
 }
 
 void VSMShadowMapPass::find_lights(Scene_Impl *scene)
@@ -44,13 +44,13 @@ void VSMShadowMapPass::find_lights(Scene_Impl *scene)
 
 	Size viewport_size = viewport->get_size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 	scene->visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 }
 
-void VSMShadowMapPass::light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
+void VSMShadowMapPass::light(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
 {
 	// Create data always needed by lightsource pass:
 
@@ -63,11 +63,11 @@ void VSMShadowMapPass::light(GraphicContext &gc, const Mat4f &world_to_eye, cons
 	if (light->type == SceneLight::type_spot)
 	{
 		float field_of_view = light->falloff;
-		light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
+		light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	}
 	else if (light->type == SceneLight::type_directional)
 	{
-		light->vsm_data->eye_to_projection = Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
+		light->vsm_data->eye_to_projection = Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	}
 	else
 	{
@@ -98,8 +98,8 @@ void VSMShadowMapPass::assign_shadow_map_indexes()
 
 void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 {
-	gc.set_depth_stencil_state(depth_stencil_state);
-	gc.set_blend_state(blend_state);
+	gc->set_depth_stencil_state(depth_stencil_state);
+	gc->set_blend_state(blend_state);
 
 	const size_t max_lights_per_frame = 4;
 	round_robin += max_lights_per_frame;
@@ -111,9 +111,9 @@ void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 
 		if (lights[i]->vsm_data->shadow_map.get_index() != -1)
 		{
-			gc.set_frame_buffer(lights[i]->vsm_data->shadow_map.get_framebuffer());
-			gc.set_viewport(lights[i]->vsm_data->shadow_map.get_view().get_size());
-			gc.clear_depth(1.0f);
+			gc->set_frame_buffer(lights[i]->vsm_data->shadow_map.get_framebuffer());
+			gc->set_viewport(lights[i]->vsm_data->shadow_map.get_view()->size(), gc->texture_image_y_axis());
+			gc->clear_depth(1.0f);
 
 			float field_of_view = lights[i]->falloff;
 			Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view, lights[i]->aspect_ratio, 0.1f, lights[i]->attenuation_end + 5.0f, handed_left, clip_negative_positive_w);
@@ -124,23 +124,23 @@ void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 		}
 	}
 
-	gc.reset_rasterizer_state();
-	gc.reset_depth_stencil_state();
+	gc->reset_rasterizer_state();
+	gc->reset_depth_stencil_state();
 
-	gc.reset_program_object();
-	gc.reset_primitives_elements();
-	gc.reset_texture(0);
-	gc.reset_texture(1);
-	gc.reset_texture(2);
-	gc.reset_texture(3);
-	gc.reset_texture(4);
-	gc.reset_texture(5);
-	gc.reset_uniform_buffer(0);
-	gc.reset_uniform_buffer(1);
-	gc.reset_frame_buffer();
+	gc->reset_program_object();
+	gc->reset_primitives_elements();
+	gc->reset_texture(0);
+	gc->reset_texture(1);
+	gc->reset_texture(2);
+	gc->reset_texture(3);
+	gc->reset_texture(4);
+	gc->reset_texture(5);
+	gc->reset_uniform_buffer(0);
+	gc->reset_uniform_buffer(1);
+	gc->reset_frame_buffer();
 }
 
-void VSMShadowMapPass::render(GraphicContext &gc, ModelLOD *model_lod, int num_instances)
+void VSMShadowMapPass::render(const GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances)
 {
 	model_lod->shadow_commands.execute(scene, gc, num_instances);
 }

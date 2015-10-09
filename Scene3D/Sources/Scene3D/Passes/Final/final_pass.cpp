@@ -6,15 +6,15 @@
 
 using namespace uicore;
 
-FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
+FinalPass::FinalPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
 {
-	viewport_fb = inout.get<FrameBuffer>("ViewportFrameBuffer");
+	viewport_fb = inout.get<FrameBufferPtr>("ViewportFrameBuffer");
 	viewport = inout.get<Rect>("Viewport");
-	final_color = inout.get<Texture2D>("FinalColor");
-	bloom_blur_texture = inout.get<Texture2D>("BloomContribution");
-	ambient_occlusion = inout.get<Texture2D>("AmbientOcclusion");
+	final_color = inout.get<Texture2DPtr>("FinalColor");
+	bloom_blur_texture = inout.get<Texture2DPtr>("BloomContribution");
+	ambient_occlusion = inout.get<Texture2DPtr>("AmbientOcclusion");
 
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 	{
 		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");
 		present_shader->bind_frag_data_location(0, "FragColor");
@@ -43,33 +43,33 @@ FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, Resourc
 		Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
 	};
 	rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
-	rect_primarray  = PrimitivesArray(gc);
-	rect_primarray.set_attributes(0, rect_positions);
+	rect_primarray = PrimitivesArray::create(gc);
+	rect_primarray->set_attributes(0, rect_positions);
 
 	RasterizerStateDescription rasterizer_desc;
 	rasterizer_desc.set_culled(false);
-	rasterizer_state = gc.create_rasterizer_state(rasterizer_desc);
+	rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
 }
 
-void FinalPass::run(GraphicContext &gc)
+void FinalPass::run(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
-	//Texture2D &log_average_light_texture = log_average_light.find_log_average_light(gc, lightsource_pass.final_color);
+	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(gc, lightsource_pass.final_color);
 
-	bloom_blur_texture->set_min_filter(filter_linear);
-	bloom_blur_texture->set_mag_filter(filter_linear);
-	final_color->set_min_filter(filter_nearest);
-	final_color->set_mag_filter(filter_nearest);
+	bloom_blur_texture.get()->set_min_filter(filter_linear);
+	bloom_blur_texture.get()->set_mag_filter(filter_linear);
+	final_color.get()->set_min_filter(filter_nearest);
+	final_color.get()->set_mag_filter(filter_nearest);
 
-	if (!viewport_fb.get().is_null()) gc.set_frame_buffer(viewport_fb.get());
-	gc.set_viewport(viewport.get());
-	gc.set_texture(0, final_color.get());
-	gc.set_texture(2, bloom_blur_texture.get());
-	gc.set_program_object(present_shader);
-	gc.set_rasterizer_state(rasterizer_state);
-	gc.draw_primitives(type_triangles, 6, rect_primarray);
-	gc.reset_program_object();
-	gc.reset_texture(0);
-	gc.reset_texture(2);
-	gc.reset_frame_buffer();
+	if (viewport_fb.get()) gc->set_frame_buffer(viewport_fb.get());
+	gc->set_viewport(viewport.get(), gc->texture_image_y_axis());
+	gc->set_texture(0, final_color.get());
+	gc->set_texture(2, bloom_blur_texture.get());
+	gc->set_program_object(present_shader);
+	gc->set_rasterizer_state(rasterizer_state);
+	gc->draw_primitives(type_triangles, 6, rect_primarray);
+	gc->reset_program_object();
+	gc->reset_texture(0);
+	gc->reset_texture(2);
+	gc->reset_frame_buffer();
 }

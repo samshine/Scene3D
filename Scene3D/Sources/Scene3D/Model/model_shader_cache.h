@@ -11,10 +11,10 @@ class ModelShaderCache
 public:
 	ModelShaderCache(const std::string &shader_path);
 
-	void create_gbuffer_commands(uicore::GraphicContext &gc, Model *model, int level);
-	void create_transparency_commands(uicore::GraphicContext &gc, Model *model, int level);
-	void create_shadow_commands(uicore::GraphicContext &gc, Model *model, int level);
-	void create_early_z_commands(uicore::GraphicContext &gc, Model *model, int level);
+	void create_gbuffer_commands(const uicore::GraphicContextPtr &gc, Model *model, int level);
+	void create_transparency_commands(const uicore::GraphicContextPtr &gc, Model *model, int level);
+	void create_shadow_commands(const uicore::GraphicContextPtr &gc, Model *model, int level);
+	void create_early_z_commands(const uicore::GraphicContextPtr &gc, Model *model, int level);
 
 private:
 	struct Shaderset
@@ -23,12 +23,12 @@ private:
 		uicore::ProgramObjectPtr transparency;
 	};
 
-	Shaderset get_shader(uicore::GraphicContext &gc, const ModelShaderDescription &description);
-	uicore::ProgramObjectPtr create_gbuffer_program(uicore::GraphicContext &gc, const ModelShaderDescription &description);
-	uicore::ProgramObjectPtr create_transparency_program(uicore::GraphicContext &gc, const ModelShaderDescription &description);
-	uicore::ProgramObjectPtr get_shadow_program(uicore::GraphicContext &gc, bool uses_bones);
-	uicore::ProgramObjectPtr get_early_z_program(uicore::GraphicContext &gc, bool uses_bones);
-	void create_states(uicore::GraphicContext &gc);
+	Shaderset get_shader(const uicore::GraphicContextPtr &gc, const ModelShaderDescription &description);
+	uicore::ProgramObjectPtr create_gbuffer_program(const uicore::GraphicContextPtr &gc, const ModelShaderDescription &description);
+	uicore::ProgramObjectPtr create_transparency_program(const uicore::GraphicContextPtr &gc, const ModelShaderDescription &description);
+	uicore::ProgramObjectPtr get_shadow_program(const uicore::GraphicContextPtr &gc, bool uses_bones);
+	uicore::ProgramObjectPtr get_early_z_program(const uicore::GraphicContextPtr &gc, bool uses_bones);
+	void create_states(const uicore::GraphicContextPtr &gc);
 	static uicore::TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
 
 	std::string base_path;

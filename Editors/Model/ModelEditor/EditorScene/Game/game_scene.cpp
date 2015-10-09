@@ -26,7 +26,7 @@ void GameScene::set_attachments(std::vector<SceneModelAttachment> attachments)
 	model_updated = true;
 }
 
-void GameScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void GameScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	gametime.update();
 	update_map(scene, gc);
@@ -37,7 +37,7 @@ void GameScene::update(Scene &scene, GraphicContext &gc, DisplayWindow &ic, bool
 	scene.update(gc, gametime.get_time_elapsed());
 }
 
-void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	if (!has_focus)
 		return;
@@ -47,21 +47,21 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 	float time_elapsed = gametime.get_time_elapsed();
 
 	float dir_speed = 50.0f;
-	if (ic.get_keyboard().get_keycode(keycode_left))
+	if (ic->keyboard()->keycode(keycode_left))
 	{
 		rotation.dir = std::fmod(rotation.dir - time_elapsed * dir_speed, 360.0f);
 	}
-	else if (ic.get_keyboard().get_keycode(keycode_right))
+	else if (ic->keyboard()->keycode(keycode_right))
 	{
 		rotation.dir = std::fmod(rotation.dir + time_elapsed * dir_speed, 360.0f);
 	}
 
 	float up_speed = 50.0f;
-	if (ic.get_keyboard().get_keycode(keycode_up))
+	if (ic->keyboard()->keycode(keycode_up))
 	{
 		rotation.up = clamp(rotation.up - time_elapsed * up_speed, -90.0f, 90.0f);
 	}
-	else if (ic.get_keyboard().get_keycode(keycode_down))
+	else if (ic->keyboard()->keycode(keycode_down))
 	{
 		rotation.up = clamp(rotation.up + time_elapsed * up_speed, -90.0f, 90.0f);
 	}
@@ -74,13 +74,13 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 	character_controller.look(rotation);
 
 	Vec2f thrust;
-	if (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q))
+	if (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q))
 		thrust.x -= 1.0f;
-	if (ic.get_keyboard().get_keycode(keycode_d))
+	if (ic->keyboard()->keycode(keycode_d))
 		thrust.x += 1.0f;
-	if (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z))
+	if (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z))
 		thrust.y += 1.0f;
-	if (ic.get_keyboard().get_keycode(keycode_s))
+	if (ic->keyboard()->keycode(keycode_s))
 		thrust.y -= 1.0f;
 	thrust.normalize();
 
@@ -95,7 +95,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 		anim = "backward";
 
 	bool flying = character_controller.is_flying();
-	bool space_is_down = ic.get_keyboard().get_keycode(keycode_space);
+	bool space_is_down = ic->keyboard()->keycode(keycode_space);
 	if (space_is_down && !space_was_down && !flying)
 	{
 		character_controller.apply_impulse(Vec3f(0.0f, 500.0f, 0.0f));
@@ -111,7 +111,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 
 	if (dodge_cooldown == 0.0f)
 	{
-		if (double_tap_up_elapsed < 0.3f && (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z)) && !was_down_up && !flying)
+		if (double_tap_up_elapsed < 0.3f && (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z)) && !was_down_up && !flying)
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
@@ -120,7 +120,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 			anim = "dodge-forward";
 		}
 
-		if (double_tap_down_elapsed < 0.3f && ic.get_keyboard().get_keycode(keycode_s) && !was_down_down && !flying)
+		if (double_tap_down_elapsed < 0.3f && ic->keyboard()->keycode(keycode_s) && !was_down_down && !flying)
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
@@ -129,7 +129,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 			anim = "dodge-backward";
 		}
 
-		if (double_tap_left_elapsed < 0.3f && (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q)) && !was_down_left && !flying)
+		if (double_tap_left_elapsed < 0.3f && (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q)) && !was_down_left && !flying)
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
@@ -138,7 +138,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 			anim = "dodge-left";
 		}
 
-		if (double_tap_right_elapsed < 0.3f && ic.get_keyboard().get_keycode(keycode_d) && !was_down_right && !flying)
+		if (double_tap_right_elapsed < 0.3f && ic->keyboard()->keycode(keycode_d) && !was_down_right && !flying)
 		{
 			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 
@@ -148,15 +148,15 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 		}
 	}
 
-	if ((ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q)) && !was_down_left) double_tap_left_elapsed = 0.0f;
-	if (ic.get_keyboard().get_keycode(keycode_d) && !was_down_right) double_tap_right_elapsed = 0.0f;
-	if ((ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z)) && !was_down_up) double_tap_up_elapsed = 0.0f;
-	if (ic.get_keyboard().get_keycode(keycode_s) && !was_down_down) double_tap_down_elapsed = 0.0f;
+	if ((ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q)) && !was_down_left) double_tap_left_elapsed = 0.0f;
+	if (ic->keyboard()->keycode(keycode_d) && !was_down_right) double_tap_right_elapsed = 0.0f;
+	if ((ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z)) && !was_down_up) double_tap_up_elapsed = 0.0f;
+	if (ic->keyboard()->keycode(keycode_s) && !was_down_down) double_tap_down_elapsed = 0.0f;
 
-	was_down_left = (ic.get_keyboard().get_keycode(keycode_a) || ic.get_keyboard().get_keycode(keycode_q));
-	was_down_right = ic.get_keyboard().get_keycode(keycode_d);
-	was_down_up = (ic.get_keyboard().get_keycode(keycode_w) || ic.get_keyboard().get_keycode(keycode_z));
-	was_down_down = ic.get_keyboard().get_keycode(keycode_s);
+	was_down_left = (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q));
+	was_down_right = ic->keyboard()->keycode(keycode_d);
+	was_down_up = (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z));
+	was_down_down = ic->keyboard()->keycode(keycode_s);
 
 	if (!model_object.is_null() && anim != last_anim && !flying)
 	{
@@ -167,7 +167,7 @@ void GameScene::update_input(DisplayWindow &ic, bool has_focus, const uicore::Ve
 	character_controller.thrust(thrust);
 }
 
-void GameScene::update_camera(Scene &scene, GraphicContext &gc)
+void GameScene::update_camera(Scene &scene, const GraphicContextPtr &gc)
 {
 	Physics3DSweepTest sweep_test(collision_world);
 	Physics3DShape sphere_shape = Physics3DShape::sphere(0.25f);
@@ -188,7 +188,7 @@ void GameScene::update_camera(Scene &scene, GraphicContext &gc)
 	camera.set_position(camera_pos);
 }
 
-void GameScene::update_map(Scene &scene, GraphicContext &gc)
+void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (map_updated)
 	{
@@ -211,7 +211,7 @@ void GameScene::update_map(Scene &scene, GraphicContext &gc)
 	}
 }
 
-void GameScene::update_model(Scene &scene, GraphicContext &gc)
+void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (model_updated)
 	{

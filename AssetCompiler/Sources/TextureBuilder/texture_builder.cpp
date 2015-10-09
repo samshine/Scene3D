@@ -10,7 +10,7 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 	{
 		try
 		{
-			PixelBufferSet pixelbuffer_set;
+			PixelBufferSetPtr pixelbuffer_set;
 
 			std::string filetype = PathHelp::get_extension(texture.name);
 			if (Text::equal_caseless(filetype, "dds"))
@@ -19,13 +19,13 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 			}
 			else
 			{
-				pixelbuffer_set = PixelBufferSet(ImageFile::load(texture.name, std::string(), texture.gamma != 1.0f));
+				pixelbuffer_set = PixelBufferSet::create(ImageFile::load(texture.name, std::string(), texture.gamma != 1.0f));
 			}
 
-			auto pixels = pixelbuffer_set.get_image(0, 0);
+			auto pixels = pixelbuffer_set->image(0, 0);
 
 			auto file_data = MemoryDevice::create();
-			file_data->buffer()->set_capacity(pixels.get_data_size());
+			file_data->buffer()->set_capacity(pixels->data_size());
 			PNGFormat::save(pixels, *file_data);
 
 			auto sha1 = SHA1::create();

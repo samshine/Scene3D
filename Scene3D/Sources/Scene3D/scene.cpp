@@ -38,7 +38,7 @@ SceneCamera &Scene::get_camera()
 	return impl->get_camera();
 }
 
-void Scene::set_viewport(const Rect &box, const FrameBuffer &fb)
+void Scene::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
 	impl->set_viewport(box, fb);
 }
@@ -48,12 +48,12 @@ void Scene::set_camera(const SceneCamera &camera)
 	impl->set_camera(camera);
 }
 
-void Scene::render(GraphicContext &gc)
+void Scene::render(const GraphicContextPtr &gc)
 {
 	impl->render(gc);
 }
 
-void Scene::update(GraphicContext &gc, float time_elapsed)
+void Scene::update(const GraphicContextPtr &gc, float time_elapsed)
 {
 	impl->update(gc, time_elapsed);
 }
@@ -138,20 +138,20 @@ void Scene::show_skybox_stars(bool enable)
 	impl->skybox_pass->show_skybox_stars(enable);
 }
 
-void Scene::set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors)
+void Scene::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
 {
-	PixelBuffer pb(1, colors.size(), tf_rgba32f);
-	Vec4f *pixels = pb.get_data<Vec4f>();
+	auto pb = PixelBuffer::create(1, colors.size(), tf_rgba32f);
+	Vec4f *pixels = pb->data<Vec4f>();
 
 	for (size_t i = 0; i < colors.size(); i++)
 	{
 		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
 	}
 
-	Texture2D texture(gc, pb.get_size(), tf_rgba32f);
-	texture.set_image(gc, pb);
-	texture.set_min_filter(filter_linear);
-	texture.set_mag_filter(filter_linear);
+	auto texture = Texture2D::create(gc, pb->size(), tf_rgba32f);
+	texture->set_image(gc, pb);
+	texture->set_min_filter(filter_linear);
+	texture->set_mag_filter(filter_linear);
 
 	impl->skybox_pass->set_skybox_texture(texture);
 }
@@ -208,7 +208,7 @@ Scene_Impl::Scene_Impl(const SceneCache &cache) : cache(cache)
 	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path, inout_data));
 	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path, inout_data));
 
-	viewport_fb = inout_data.get<FrameBuffer>("ViewportFrameBuffer");
+	viewport_fb = inout_data.get<FrameBufferPtr>("ViewportFrameBuffer");
 	viewport = inout_data.get<Rect>("Viewport");
 	camera_field_of_view = inout_data.get<float>("FieldOfView");
 	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
@@ -218,13 +218,13 @@ Scene_Impl::Scene_Impl(const SceneCache &cache) : cache(cache)
 
 	bool use_compute_shader_pass = true;
 
-	if (gc.get_shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
+	if (gc->shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
 	{
-		use_compute_shader_pass = gc.has_compute_shader_support();
+		use_compute_shader_pass = gc->has_compute_shader_support();
 	}
-	else if (gc.get_shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 11
+	else if (gc->shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 11
 	{
-		use_compute_shader_pass = gc.get_major_version() > 10;
+		use_compute_shader_pass = gc->major_version() > 10;
 	}
 
 	// use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
@@ -238,18 +238,18 @@ Scene_Impl::Scene_Impl(const SceneCache &cache) : cache(cache)
 		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
 	}
 
-	add_pass("gbuffer").func_run() = [=](uicore::GraphicContext &gc){gbuffer_pass->run(gc, this);};
-	add_pass("skybox").func_run() = [=](uicore::GraphicContext &gc){skybox_pass->run(gc, this); };
-	add_pass("vsm").func_run() = [=](uicore::GraphicContext &gc){vsm_shadow_map_pass->run(gc, this); };
+	add_pass("gbuffer").func_run() = [=](const uicore::GraphicContextPtr &gc){gbuffer_pass->run(gc, this);};
+	add_pass("skybox").func_run() = [=](const uicore::GraphicContextPtr &gc){skybox_pass->run(gc, this); };
+	add_pass("vsm").func_run() = [=](const uicore::GraphicContextPtr &gc){vsm_shadow_map_pass->run(gc, this); };
 	if (lightsource_pass)
-		add_pass("light").func_run() = [=](uicore::GraphicContext &gc){lightsource_pass->run(gc, this); };
+		add_pass("light").func_run() = [=](const uicore::GraphicContextPtr &gc){lightsource_pass->run(gc, this); };
 	else
-		add_pass("light").func_run() = [=](uicore::GraphicContext &gc){lightsource_simple_pass->run(gc, this); };
-	add_pass("transparency").func_run() = [=](uicore::GraphicContext &gc){transparency_pass->run(gc, this); };
-	add_pass("particles").func_run() = [=](uicore::GraphicContext &gc){particle_emitter_pass->run(gc, this); };
-	add_pass("bloom").func_run() = [=](uicore::GraphicContext &gc){bloom_pass->run(gc); };
-	//add_pass("ssao").func_run() = [=](uicore::GraphicContext &gc){ssao_pass->run(gc);};
-	add_pass("final").func_run() = [=](uicore::GraphicContext &gc){final_pass->run(gc); };
+		add_pass("light").func_run() = [=](const uicore::GraphicContextPtr &gc){lightsource_simple_pass->run(gc, this); };
+	add_pass("transparency").func_run() = [=](const uicore::GraphicContextPtr &gc){transparency_pass->run(gc, this); };
+	add_pass("particles").func_run() = [=](const uicore::GraphicContextPtr &gc){particle_emitter_pass->run(gc, this); };
+	add_pass("bloom").func_run() = [=](const uicore::GraphicContextPtr &gc){bloom_pass->run(gc); };
+	//add_pass("ssao").func_run() = [=](const uicore::GraphicContextPtr &gc){ssao_pass->run(gc);};
+	add_pass("final").func_run() = [=](const uicore::GraphicContextPtr &gc){final_pass->run(gc); };
 }
 
 ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)
@@ -274,13 +274,13 @@ ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &inser
 	}
 }
 
-void Scene_Impl::set_viewport(const Rect &box, const FrameBuffer &fb)
+void Scene_Impl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
 	viewport.set(box);
 	viewport_fb.set(fb);
 }
 
-void Scene_Impl::render(GraphicContext &gc)
+void Scene_Impl::render(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
 
@@ -314,11 +314,11 @@ void Scene_Impl::render(GraphicContext &gc)
 
 	gpu_results = gpu_timer.get_results(gc);
 
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 		OpenGL::check_error();
 }
 
-void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
+void Scene_Impl::update(const GraphicContextPtr &gc, float time_elapsed)
 {
 	get_cache()->process_work_completed();
 	material_cache->update(gc, time_elapsed);
@@ -326,7 +326,7 @@ void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 	// To do: update scene object animations here too
 }
 
-void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
+void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
 	scene_visits++;
@@ -375,7 +375,7 @@ void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4
 		models[i]->visit(gc, instances_buffer, visitor);
 }
 
-void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor)
+void Scene_Impl::visit_lights(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor)
 {
 	ScopeTimeFunction();
 
@@ -390,7 +390,7 @@ void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, con
 	}
 }
 
-void Scene_Impl::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor)
+void Scene_Impl::visit_emitters(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor)
 {
 	ScopeTimeFunction();
 

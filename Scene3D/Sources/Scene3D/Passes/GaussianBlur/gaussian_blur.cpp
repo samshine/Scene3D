@@ -9,38 +9,38 @@ GaussianBlur::GaussianBlur()
 {
 }
 
-void GaussianBlur::blur(GraphicContext &gc, TextureFormat format, float blur_amount, int sample_count)
+void GaussianBlur::blur(const GraphicContextPtr &gc, TextureFormat format, float blur_amount, int sample_count)
 {
-	setup(gc, input->get_size(), format, blur_amount, sample_count);
+	setup(gc, input.get()->size(), format, blur_amount, sample_count);
 
-	input->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
-	input->set_mag_filter(filter_nearest);
-	input->set_min_filter(filter_nearest);
+	input.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	input.get()->set_mag_filter(filter_nearest);
+	input.get()->set_min_filter(filter_nearest);
 
-	gc.set_blend_state(blend_state);
+	gc->set_blend_state(blend_state);
 
 	// Horizontal blur
-	gc.set_program_object(current_blur_setup->horizontal_blur_program);
-	gc.set_frame_buffer(fb0);
-	gc.set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height));
-	gc.set_texture(0, input.get());
-	gc.draw_primitives(type_triangles, 6, prim_array);
-	gc.reset_texture(0);
-	gc.reset_frame_buffer();
+	gc->set_program_object(current_blur_setup->horizontal_blur_program);
+	gc->set_frame_buffer(fb0);
+	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
+	gc->set_texture(0, input.get());
+	gc->draw_primitives(type_triangles, 6, prim_array);
+	gc->reset_texture(0);
+	gc->reset_frame_buffer();
 
 	// Vertical blur
-	gc.set_program_object(current_blur_setup->vertical_blur_program);
-	gc.set_frame_buffer(output.get());
-	gc.set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height));
-	gc.set_texture(0, pass0_texture);
-	gc.draw_primitives(type_triangles, 6, prim_array);
-	gc.reset_texture(0);
-	gc.reset_frame_buffer();
+	gc->set_program_object(current_blur_setup->vertical_blur_program);
+	gc->set_frame_buffer(output.get());
+	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
+	gc->set_texture(0, pass0_texture);
+	gc->draw_primitives(type_triangles, 6, prim_array);
+	gc->reset_texture(0);
+	gc->reset_frame_buffer();
 
-	gc.reset_program_object();
+	gc->reset_program_object();
 }
 
-void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_format, float blur_amount, int sample_count)
+void GaussianBlur::setup(const GraphicContextPtr &gc, Size new_size, TextureFormat new_format, float blur_amount, int sample_count)
 {
 	size = new_size;
 
@@ -53,7 +53,7 @@ void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_fo
 	if (current_blur_setup == blur_setups.end())
 	{
 		std::string vertex_shader, vertical_fragment_shader, horizontal_fragment_shader;
-		if (gc.get_shader_language() == shader_glsl)
+		if (gc->shader_language() == shader_glsl)
 			get_shader_glsl(blur_amount, sample_count, vertex_shader, vertical_fragment_shader, horizontal_fragment_shader);
 		else
 			get_shader_hlsl(blur_amount, sample_count, vertex_shader, vertical_fragment_shader, horizontal_fragment_shader);
@@ -91,28 +91,28 @@ void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_fo
 		current_blur_setup = blur_setups.begin() + (blur_setups.size() - 1);
 	}
 
-	if ((!pass0_texture.is_null() && (pass0_texture.get_width() != size.width || pass0_texture.get_height() != size.height)) || format != new_format)
+	if ((pass0_texture && (pass0_texture->width() != size.width || pass0_texture->height() != size.height)) || format != new_format)
 	{
-		pass0_texture = Texture2D();
-		fb0 = FrameBuffer();
+		pass0_texture.reset();
+		fb0.reset();
 		format = new_format;
 	}
 
-	if (pass0_texture.is_null())
+	if (!pass0_texture)
 	{
-		pass0_texture = Texture2D(gc, size.width, size.height, format);
-		pass0_texture.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
-		pass0_texture.set_mag_filter(filter_nearest);
-		pass0_texture.set_min_filter(filter_nearest);
+		pass0_texture = Texture2D::create(gc, size.width, size.height, format);
+		pass0_texture->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+		pass0_texture->set_mag_filter(filter_nearest);
+		pass0_texture->set_min_filter(filter_nearest);
 	}
 
-	if (fb0.is_null() || !gc.is_frame_buffer_owner(fb0))
+	if (!fb0 || !gc->is_frame_buffer_owner(fb0))
 	{
-		fb0 = FrameBuffer(gc);
-		fb0.attach_color(0, pass0_texture);
+		fb0 = FrameBuffer::create(gc);
+		fb0->attach_color(0, pass0_texture);
 	}
 
-	if (gpu_positions.is_null())
+	if (!gpu_positions.buffer())
 	{
 		Vec4f positions[6] =
 		{
@@ -125,12 +125,12 @@ void GaussianBlur::setup(GraphicContext &gc, Size new_size, TextureFormat new_fo
 		};
 		gpu_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
 
-		prim_array = PrimitivesArray(gc);
-		prim_array.set_attributes(0, gpu_positions);
+		prim_array = PrimitivesArray::create(gc);
+		prim_array->set_attributes(0, gpu_positions);
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
-		blend_state = gc.create_blend_state(blend_desc);
+		blend_state = gc->create_blend_state(blend_desc);
 	}
 }
 
@@ -222,7 +222,7 @@ void GaussianBlur::get_shader_hlsl(float blur_amount, int sample_count, std::str
 		"	float4 FragColor : SV_Target0;\r\n"
 		"};\r\n"
 		"\r\n"
-		"Texture2D SourceTexture;\r\n"
+		"Texture2DPtr SourceTexture;\r\n"
 		"SamplerState SourceSampler;\r\n"
 		"\r\n"
 		"PixelOut main(PixelIn input)\r\n"

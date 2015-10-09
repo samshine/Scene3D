@@ -12,21 +12,21 @@
 
 using namespace uicore;
 
-LightsourcePass::LightsourcePass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
+LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
 	world_to_eye = inout.get<Mat4f>("WorldToEye");
-	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2D>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2D>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
-	shadow_maps = inout.get<Texture2DArray>("ShadowMaps");
+	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
+	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
+	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
+	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
+	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
+	shadow_maps = inout.get<Texture2DArrayPtr>("ShadowMaps");
 
-	final_color = inout.get<Texture2D>("FinalColor");
+	final_color = inout.get<Texture2DPtr>("FinalColor");
 
-	if (gc.get_shader_language() == shader_glsl)
+	if (gc->shader_language() == shader_glsl)
 	{
 		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.glsl"));
 		render_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/render_tiles.glsl"));
@@ -49,26 +49,26 @@ LightsourcePass::~LightsourcePass()
 {
 }
 
-void LightsourcePass::run(GraphicContext &gc, Scene_Impl *scene)
+void LightsourcePass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	find_lights(gc, scene);
 	upload(gc);
 	render(gc, scene->get_gpu_timer());
 }
 
-void LightsourcePass::find_lights(GraphicContext &gc, Scene_Impl *scene)
+void LightsourcePass::find_lights(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	lights.clear();
 
 	Size viewport_size = viewport->get_size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 	scene->visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 }
 
-void LightsourcePass::light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
+void LightsourcePass::light(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
 {
 	if ((light->type == SceneLight::type_omni || light->type == SceneLight::type_spot) && light->light_caster && lights.size() < max_lights - 1)
 	{
@@ -97,7 +97,7 @@ public:
 	}
 };
 
-void LightsourcePass::upload(GraphicContext &gc)
+void LightsourcePass::upload(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
 
@@ -126,7 +126,7 @@ void LightsourcePass::upload(GraphicContext &gc)
 	Mat4f eye_to_world = Mat4f::inverse(world_to_eye.get());
 
 	transfer_lights.lock(gc, access_write_only);
-	MappedBuffer<GPULight> data(transfer_lights.get_data(), max_lights);
+	MappedBuffer<GPULight> data(transfer_lights.data(), max_lights);
 	for (int i = 0; i < num_lights; i++)
 	{
 		float radius = lights[i]->attenuation_end;
@@ -174,7 +174,7 @@ void LightsourcePass::upload(GraphicContext &gc)
 	compute_lights.copy_from(gc, transfer_lights, 0, 0, num_lights + 1);
 }
 
-void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
+void LightsourcePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 {
 	ScopeTimeFunction();
 	zminmax.minmax(gc);
@@ -182,60 +182,60 @@ void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
 
 	//timer.begin_time(gc, "light(cull)");
 
-	gc.set_uniform_buffer(0, compute_uniforms);
-	gc.set_storage_buffer(0, compute_lights);
-	gc.set_storage_buffer(1, compute_visible_lights);
-	gc.set_texture(0, zminmax.result.get());
-	gc.set_texture(1, normal_z_gbuffer.get());
-	gc.set_texture(2, diffuse_color_gbuffer.get());
-	gc.set_texture(3, specular_color_gbuffer.get());
-	gc.set_texture(4, specular_level_gbuffer.get());
-	gc.set_texture(5, shadow_maps.get());
-	gc.set_texture(6, self_illumination_gbuffer.get());
-	gc.set_image_texture(0, final_color.get());
+	gc->set_uniform_buffer(0, compute_uniforms);
+	gc->set_storage_buffer(0, compute_lights);
+	gc->set_storage_buffer(1, compute_visible_lights);
+	gc->set_texture(0, zminmax.result.get());
+	gc->set_texture(1, normal_z_gbuffer.get());
+	gc->set_texture(2, diffuse_color_gbuffer.get());
+	gc->set_texture(3, specular_color_gbuffer.get());
+	gc->set_texture(4, specular_level_gbuffer.get());
+	gc->set_texture(5, shadow_maps.get());
+	gc->set_texture(6, self_illumination_gbuffer.get());
+	gc->set_image_texture(0, final_color.get());
 
-	gc.set_program_object(cull_tiles_program);
-	gc.dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
+	gc->set_program_object(cull_tiles_program);
+	gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
 
 	//timer.end_time(gc);
 	//timer.begin_time(gc, "light(render)");
 
-	gc.set_program_object(render_tiles_program);
-	gc.dispatch(num_tiles_x, num_tiles_y);
+	gc->set_program_object(render_tiles_program);
+	gc->dispatch(num_tiles_x, num_tiles_y);
 
-	gc.reset_image_texture(0);
-	gc.reset_texture(6);
-	gc.reset_texture(5);
-	gc.reset_texture(4);
-	gc.reset_texture(3);
-	gc.reset_texture(2);
-	gc.reset_texture(1);
-	gc.reset_texture(0);
-	gc.reset_uniform_buffer(2);
-	gc.reset_uniform_buffer(1);
-	gc.reset_uniform_buffer(0);
+	gc->reset_image_texture(0);
+	gc->reset_texture(6);
+	gc->reset_texture(5);
+	gc->reset_texture(4);
+	gc->reset_texture(3);
+	gc->reset_texture(2);
+	gc->reset_texture(1);
+	gc->reset_texture(0);
+	gc->reset_uniform_buffer(2);
+	gc->reset_uniform_buffer(1);
+	gc->reset_uniform_buffer(0);
 
 	//timer.end_time(gc);
 }
 
-void LightsourcePass::update_buffers(GraphicContext &gc)
+void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
 {
 	if (diffuse_color_gbuffer.updated())
 	{
-		final_color.set(Texture2D());
+		final_color.set(nullptr);
 		compute_visible_lights = StorageVector<unsigned int>();
-		gc.flush();
+		gc->flush();
 
 		tile_size = 16;
 		num_tiles_x = (viewport->get_width() + tile_size - 1) / tile_size;
 		num_tiles_y = (viewport->get_height() + tile_size - 1) / tile_size;
-		final_color.set(Texture2D(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
+		final_color.set(Texture2D::create(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
 
 		compute_visible_lights = StorageVector<unsigned int>(gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 	}
 }
 
-ProgramObjectPtr LightsourcePass::compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines)
+ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines)
 {
 	std::string source = File::read_all_text(compute_filename);
 

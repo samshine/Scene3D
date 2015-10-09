@@ -10,12 +10,12 @@ class GPUTimer
 public:
 	GPUTimer();
 
-	void begin_frame(uicore::GraphicContext &gc);
+	void begin_frame(const uicore::GraphicContextPtr &gc);
 
-	void begin_time(uicore::GraphicContext &gc, const std::string &name);
-	void end_time(uicore::GraphicContext &gc);
+	void begin_time(const uicore::GraphicContextPtr &gc, const std::string &name);
+	void end_time(const uicore::GraphicContextPtr &gc);
 
-	void end_frame(uicore::GraphicContext &gc);
+	void end_frame(const uicore::GraphicContextPtr &gc);
 
 	struct Result
 	{
@@ -24,7 +24,7 @@ public:
 		float time_elapsed;
 	};
 
-	std::vector<Result> get_results(uicore::GraphicContext &gc);
+	std::vector<Result> get_results(const uicore::GraphicContextPtr &gc);
 
 private:
 	std::shared_ptr<GPUTimer_Impl> impl;

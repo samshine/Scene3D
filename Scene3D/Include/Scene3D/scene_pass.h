@@ -15,7 +15,7 @@ public:
 
 	bool is_null() const;
 
-	std::function<void(uicore::GraphicContext &)> &func_run();
+	std::function<void(const uicore::GraphicContextPtr &)> &func_run();
 
 	const std::string &get_name() const;
 

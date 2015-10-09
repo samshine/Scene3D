@@ -11,12 +11,12 @@ MaterialCache::MaterialCache(Scene_Impl *scene)
 {
 }
 
-void MaterialCache::update(GraphicContext &gc, float time_elapsed)
+void MaterialCache::update(const GraphicContextPtr &gc, float time_elapsed)
 {
 	scene->get_cache()->update_textures(gc, time_elapsed);
 }
 
-Resource<Texture> MaterialCache::get_texture(GraphicContext &gc, const std::string &material_name, bool linear)
+Resource<TexturePtr> MaterialCache::get_texture(const GraphicContextPtr &gc, const std::string &material_name, bool linear)
 {
 	return scene->get_cache()->get_texture(gc, material_name, linear);
 }
