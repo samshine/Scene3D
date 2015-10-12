@@ -71,7 +71,7 @@ void BloomPass::run(const GraphicContextPtr &gc)
 
 void BloomPass::setup_bloom_extract(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	Size bloom_size = viewport_size / 2;
 	if (!bloom_contribution.get() || bloom_contribution.get()->size() != bloom_size || !gc->is_frame_buffer_owner(fb_bloom_extract))
 	{

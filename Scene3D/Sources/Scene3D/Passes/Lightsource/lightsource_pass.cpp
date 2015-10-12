@@ -60,7 +60,7 @@ void LightsourcePass::find_lights(const GraphicContextPtr &gc, Scene_Impl *scene
 {
 	lights.clear();
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
@@ -105,13 +105,13 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 
 	std::sort(lights.begin(), lights.end(), LightsourcePass_LightCompare());
 
-	float aspect = viewport->get_width()/(float)viewport->get_height();
+	float aspect = viewport->width()/(float)viewport->height();
 	float field_of_view_y_degrees = field_of_view.get();
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	Vec2f two_rcp_viewport_size(2.0f / viewport->get_width(), 2.0f / viewport->get_height());
+	Vec2f two_rcp_viewport_size(2.0f / viewport->width(), 2.0f / viewport->height());
 
 	Uniforms uniforms;
 	uniforms.rcp_f = rcp_f;
@@ -227,9 +227,9 @@ void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
 		gc->flush();
 
 		tile_size = 16;
-		num_tiles_x = (viewport->get_width() + tile_size - 1) / tile_size;
-		num_tiles_y = (viewport->get_height() + tile_size - 1) / tile_size;
-		final_color.set(Texture2D::create(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
+		num_tiles_x = (viewport->width() + tile_size - 1) / tile_size;
+		num_tiles_y = (viewport->height() + tile_size - 1) / tile_size;
+		final_color.set(Texture2D::create(gc, viewport->width(), viewport->height(), tf_rgba16f));
 
 		compute_visible_lights = StorageVector<unsigned int>(gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 	}

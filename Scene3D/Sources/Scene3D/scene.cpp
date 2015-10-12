@@ -66,7 +66,7 @@ Mat4f Scene::world_to_eye() const
 
 Mat4f Scene::eye_to_projection() const
 {
-	Size viewport_size = impl->viewport->get_size();
+	Size viewport_size = impl->viewport->size();
 	return Mat4f::perspective(impl->camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
 }
 
@@ -77,9 +77,9 @@ Mat4f Scene::world_to_projection() const
 
 void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
 {
-	Size viewport_size = impl->viewport->get_size();
+	Size viewport_size = impl->viewport->size();
 
-	float aspect = impl->viewport->get_width()/(float)impl->viewport->get_height();
+	float aspect = impl->viewport->width()/(float)impl->viewport->height();
 	float field_of_view_y_degrees = impl->camera_field_of_view.get();
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
@@ -88,7 +88,7 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 
 	Vec2f pos((float)(screen_pos.x - impl->viewport->left), (float)(impl->viewport->bottom - screen_pos.y));
 
-	Vec2f normalized(pos.x * 2.0f / impl->viewport->get_width(), pos.y * 2.0f / impl->viewport->get_height());
+	Vec2f normalized(pos.x * 2.0f / impl->viewport->width(), pos.y * 2.0f / impl->viewport->height());
 	normalized -= 1.0f;
 
 	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);

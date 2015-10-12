@@ -47,7 +47,7 @@ void SceneView::pointer_move(PointerEvent &e)
 {
 	if (mouse_down)
 	{
-		Sizef size = view_tree()->get_display_window()->geometry().get_size();
+		Sizef size = view_tree()->get_display_window()->geometry().size();
 		view_tree()->get_display_window()->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
 	}
 }

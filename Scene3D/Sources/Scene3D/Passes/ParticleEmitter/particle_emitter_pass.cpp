@@ -25,7 +25,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	setup(gc);
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
@@ -154,7 +154,7 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 		billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 	}
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	if (!fb || !gc->is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated())
 	{
 		fb = FrameBuffer::create(gc);

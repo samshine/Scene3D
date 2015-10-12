@@ -69,14 +69,14 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 
 void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	if (!fb || !gc->is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated() || diffuse_color_gbuffer.updated())
 	{
 		final_color.set(nullptr);
 		fb = nullptr;
 		gc->flush();
 
-		final_color.set(Texture2D::create(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
+		final_color.set(Texture2D::create(gc, viewport->width(), viewport->height(), tf_rgba16f));
 
 		fb = FrameBuffer::create(gc);
 		fb->attach_color(0, final_color.get());
@@ -139,7 +139,7 @@ void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, Scene_Impl 
 {
 	lights.clear();
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
@@ -159,16 +159,16 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, Scene_Impl *scen
 {
 	ScopeTimeFunction();
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
 
-	float aspect = viewport->get_width()/(float)viewport->get_height();
+	float aspect = viewport->width()/(float)viewport->height();
 	float field_of_view_y_degrees = field_of_view.get();
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	Vec2f two_rcp_viewport_size(2.0f / viewport->get_width(), 2.0f / viewport->get_height());
+	Vec2f two_rcp_viewport_size(2.0f / viewport->width(), 2.0f / viewport->height());
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
@@ -244,7 +244,7 @@ void LightsourceSimplePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 
 	gc->set_frame_buffer(fb);
 
-	gc->set_viewport(viewport->get_size(), gc->texture_image_y_axis());
+	gc->set_viewport(viewport->size(), gc->texture_image_y_axis());
 
 	gc->set_depth_range(0.0f, 0.9f);
 

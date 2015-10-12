@@ -37,7 +37,7 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_sce
 		glDrawBuffers(4, buffers);
 	}
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->clear_depth(1.0f);
@@ -94,7 +94,7 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_sce
 
 void GBufferPass::setup_gbuffer(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	if (!diffuse_color_gbuffer.get() || diffuse_color_gbuffer.get()->size() != viewport_size || !gc->is_frame_buffer_owner(fb_gbuffer))
 	{
 		diffuse_color_gbuffer.set(nullptr);

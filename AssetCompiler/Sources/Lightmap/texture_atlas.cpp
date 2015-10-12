@@ -91,11 +91,11 @@ TextureAtlasNode *TextureAtlasNode::insert(const Size &texture_size, int texture
 			return nullptr;
 
 		// If we're too small, return
-		if (texture_size.width > node_rect.get_width() || texture_size.height > node_rect.get_height())
+		if (texture_size.width > node_rect.width() || texture_size.height > node_rect.height())
 			return nullptr;
 
 		// If we're just right, accept
-		if (texture_size.width == node_rect.get_width() && texture_size.height == node_rect.get_height())
+		if (texture_size.width == node_rect.width() && texture_size.height == node_rect.height())
 		{
 			id = texture_id;
 			image_rect = node_rect;
@@ -103,8 +103,8 @@ TextureAtlasNode *TextureAtlasNode::insert(const Size &texture_size, int texture
 		}
 
 		// Otherwise, decide which way to split
-		int dw = node_rect.get_width() - texture_size.width;
-		int dh = node_rect.get_height() - texture_size.height;
+		int dw = node_rect.width() - texture_size.width;
+		int dh = node_rect.height() - texture_size.height;
 
 		if (dw > dh)
 		{

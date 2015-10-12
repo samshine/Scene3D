@@ -39,7 +39,7 @@ void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 
 	gc->set_frame_buffer(fb);
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->set_depth_stencil_state(depth_stencil_state);
@@ -96,7 +96,7 @@ void SkyboxPass::setup(const GraphicContextPtr &gc)
 		create_programs(gc);
 	}
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	if (!fb || !gc->is_frame_buffer_owner(fb) || zbuffer.updated())
 	{
 		fb = FrameBuffer::create(gc);

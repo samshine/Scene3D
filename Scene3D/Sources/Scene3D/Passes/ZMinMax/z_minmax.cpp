@@ -45,7 +45,7 @@ void ZMinMax::minmax(const GraphicContextPtr &gc)
 	gc->reset_program_object();
 	gc->reset_primitives_array();
 	gc->reset_frame_buffer();
-	gc->set_viewport(viewport->get_size(), gc->texture_image_y_axis());
+	gc->set_viewport(viewport->size(), gc->texture_image_y_axis());
 }
 
 void ZMinMax::update_buffers(const GraphicContextPtr &gc)

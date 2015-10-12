@@ -25,7 +25,7 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, Scene_Impl *rende
 
 	gc->set_frame_buffer(fb_transparency);
 
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->set_depth_range(0.0f, 0.9f);
@@ -57,7 +57,7 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, Scene_Impl *rende
 
 void TransparencyPass::setup(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->get_size();
+	Size viewport_size = viewport->size();
 	if (!fb_transparency || !gc->is_frame_buffer_owner(fb_transparency) || final_color.updated() || zbuffer.updated())
 	{
 		fb_transparency = FrameBuffer::create(gc);

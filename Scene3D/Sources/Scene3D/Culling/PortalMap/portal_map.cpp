@@ -94,7 +94,7 @@ void PortalMap::cull_sector(const PortalClipping &clipping, PortalSector *sector
 	for (size_t i = 0; i < sector->portals.size(); i++)
 	{
 		Rectf portal_box = clipping.intersect(box, sector->portals[i]->points);
-		if (portal_box.get_size() != Sizef())
+		if (portal_box.size() != Sizef())
 		{
 			// To do: modify frustum clipping planes to only cover the portal box
 
