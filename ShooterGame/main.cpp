@@ -35,7 +35,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	MouseMovement mouse_movement;
 
-	Screen::scene_cache() = SceneCache(gc, "Resources/Scene3D");
+	Screen::scene_cache() = SceneCache::create(gc, "Resources/Scene3D");
 	Screen::sound_cache() = std::make_shared<SoundCache>();
 
 	SlotContainer slots;

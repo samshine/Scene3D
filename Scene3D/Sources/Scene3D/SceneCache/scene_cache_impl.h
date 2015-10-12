@@ -1,13 +1,14 @@
 
 #pragma once
 
+#include "Scene3D/scene_cache.h"
 #include "resource.h"
 #include "work_queue.h"
 #include <unordered_map>
 
 class ModelData;
 
-class SceneCacheImpl
+class SceneCacheImpl : public SceneCache
 {
 public:
 	SceneCacheImpl(const uicore::GraphicContextPtr &gc, const std::string &shader_path);

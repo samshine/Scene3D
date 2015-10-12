@@ -17,7 +17,7 @@ Scene::Scene()
 {
 }
 
-Scene::Scene(const SceneCache &cache)
+Scene::Scene(const SceneCachePtr &cache)
 : impl(std::make_shared<Scene_Impl>(cache))
 {
 	impl->set_camera(SceneCamera(*this));
@@ -188,7 +188,7 @@ const std::vector<GPUTimer::Result> &Scene::gpu_results() const
 
 /////////////////////////////////////////////////////////////////////////////
 
-Scene_Impl::Scene_Impl(const SceneCache &cache) : cache(cache)
+Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_cast<SceneCacheImpl>(cache))
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
 

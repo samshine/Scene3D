@@ -4,17 +4,12 @@
 #include <memory>
 #include <string>
 
-class SceneCacheImpl;
-
 class SceneCache
 {
 public:
-	SceneCache();
-	SceneCache(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
-	bool is_null() const { return !impl; }
+	static std::shared_ptr<SceneCache> create(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
 
-private:
-	std::shared_ptr<SceneCacheImpl> impl;
-
-	friend class Scene_Impl;
+	virtual ~SceneCache() { }
 };
+
+typedef std::shared_ptr<SceneCache> SceneCachePtr;

@@ -38,9 +38,9 @@ std::shared_ptr<ScreenViewController> &Screen::controller()
 	return screen_controller;
 }
 
-SceneCache &Screen::scene_cache()
+SceneCachePtr &Screen::scene_cache()
 {
-	static SceneCache cache;
+	static SceneCachePtr cache;
 	return cache;
 }
 

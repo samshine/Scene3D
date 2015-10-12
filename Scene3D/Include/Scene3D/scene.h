@@ -5,6 +5,7 @@
 #include <memory>
 
 class SceneCache;
+typedef std::shared_ptr<SceneCache> SceneCachePtr;
 class Scene_Impl;
 class SceneLight;
 class SceneParticleEmitter;
@@ -16,7 +17,7 @@ class Scene
 {
 public:
 	Scene();
-	Scene(const SceneCache &cache);
+	Scene(const SceneCachePtr &cache);
 
 	bool is_null() const;
 

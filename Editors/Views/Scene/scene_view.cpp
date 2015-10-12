@@ -114,7 +114,7 @@ void SceneView::setup_scene(const GraphicContextPtr &gc)
 {
 	if (!scene.is_null()) return;
 
-	cache = SceneCache(gc, "Resources/Scene3D");
+	cache = SceneCache::create(gc, "Resources/Scene3D");
 	scene = Scene(cache);
 
 	scene.set_camera(SceneCamera(scene));

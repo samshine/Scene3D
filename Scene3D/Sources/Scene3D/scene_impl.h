@@ -27,6 +27,7 @@
 
 class SceneCache;
 class SceneCacheImpl;
+typedef std::shared_ptr<SceneCache> SceneCachePtr;
 class ModelMeshVisitor;
 class SceneObject_Impl;
 class SceneLight_Impl;
@@ -39,7 +40,7 @@ class SceneLightProbe_Impl;
 class Scene_Impl
 {
 public:
-	Scene_Impl(const SceneCache &cache);
+	Scene_Impl(const SceneCachePtr &cache);
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
@@ -59,7 +60,7 @@ public:
 
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
-	SceneCacheImpl *get_cache() const { return cache.impl.get(); }
+	SceneCacheImpl *get_cache() const { return cache.get(); }
 
 	const SceneCamera &get_camera() const { return camera; }
 	SceneCamera &get_camera() { return camera; }
@@ -76,7 +77,7 @@ public:
 	std::vector<GPUTimer::Result> gpu_results;
 
 private:
-	SceneCache cache;
+	std::shared_ptr<SceneCacheImpl> cache;
 
 	int frame = 0;
 	InstancesBuffer instances_buffer;

@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-Game::Game(std::string hostname, std::string port, bool server, SceneCache scene_cache, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContextPtr gc, uicore::DisplayWindowPtr ic) : server(server), scene_cache(scene_cache), gc(gc), ic(ic)
+Game::Game(std::string hostname, std::string port, bool server, SceneCachePtr scene_cache, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContextPtr gc, uicore::DisplayWindowPtr ic) : server(server), scene_cache(scene_cache), gc(gc), ic(ic)
 {
 	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
 

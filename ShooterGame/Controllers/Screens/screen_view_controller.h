@@ -19,6 +19,6 @@ class Screen
 public:
 	static std::shared_ptr<ScreenViewController> &controller();
 
-	static SceneCache &scene_cache();
+	static SceneCachePtr &scene_cache();
 	static std::shared_ptr<SoundCache> &sound_cache();
 };
