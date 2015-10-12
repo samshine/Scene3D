@@ -26,7 +26,7 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 
 			auto file_data = MemoryDevice::create();
 			file_data->buffer()->set_capacity(pixels->data_size());
-			PNGFormat::save(pixels, *file_data);
+			PNGFormat::save(pixels, file_data);
 
 			auto sha1 = SHA1::create();
 			sha1->add(file_data->buffer());

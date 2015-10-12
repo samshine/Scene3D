@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewController(canvas)
+MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenViewController(canvas)
 {
 	auto menu_box = std::make_shared<View>();
 
@@ -38,7 +38,7 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 
 	texture_view->add_subview(menu_box);
 
-	GraphicContextPtr gc = canvas.get_gc();
+	GraphicContextPtr gc = canvas->gc();
 
 	scene = Scene(Screen::scene_cache());
 	scene.set_camera(SceneCamera(scene));
@@ -68,10 +68,8 @@ MenuScreenController::MenuScreenController(Canvas &canvas) : ScreenViewControlle
 	map_object = SceneObject(scene, model);
 }
 
-void MenuScreenController::update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void MenuScreenController::update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
-	canvas.flush();
-
 	game_time.update();
 
 	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
@@ -79,7 +77,7 @@ void MenuScreenController::update_desktop(uicore::Canvas &canvas, const uicore::
 	float t2 = t > 1.0f ? 2.0f - t : t;
 	scene.get_camera().set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
 
-	scene.update(canvas.get_gc(), game_time.get_time_elapsed());
+	scene.update(canvas->gc(), game_time.get_time_elapsed());
 
 	render_scene(canvas, scene);
 }

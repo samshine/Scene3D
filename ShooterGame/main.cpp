@@ -21,7 +21,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	DisplayWindowPtr window = DisplayWindow::create(window_desc);
 	GraphicContextPtr gc = window->gc();
-	Canvas canvas(window);
+	CanvasPtr canvas = Canvas::create(window);
 
 	window->set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
 	window->set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
@@ -74,6 +74,8 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 			gc->clear();
 
+			canvas->begin();
+
 			auto screen = Screen::controller();
 			if (screen)
 			{
@@ -95,7 +97,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 				if (cursor_hidden)
 				{
-					Sizef size = canvas.get_size();
+					Sizef size = canvas->size();
 					window->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
 				}
 
@@ -104,11 +106,11 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				last_mouse_movement = move;
 
 				screen->update_desktop(canvas, window, delta_mouse_move);
-				screen->texture_view->set_viewport(canvas.get_size());
+				screen->texture_view->set_viewport(canvas->size());
 				screen->texture_view->update();
 			}
 
-			canvas.flush();
+			canvas->end();
 			window->flip(1);
 		}
 

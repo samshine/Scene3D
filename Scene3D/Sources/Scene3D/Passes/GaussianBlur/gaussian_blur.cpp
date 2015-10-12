@@ -222,7 +222,7 @@ void GaussianBlur::get_shader_hlsl(float blur_amount, int sample_count, std::str
 		"	float4 FragColor : SV_Target0;\r\n"
 		"};\r\n"
 		"\r\n"
-		"Texture2DPtr SourceTexture;\r\n"
+		"Texture2D SourceTexture;\r\n"
 		"SamplerState SourceSampler;\r\n"
 		"\r\n"
 		"PixelOut main(PixelIn input)\r\n"

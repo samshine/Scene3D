@@ -8,7 +8,7 @@ class SceneView : public uicore::ColumnView
 {
 public:
 	SceneView();
-	void render_content(uicore::Canvas &canvas) override;
+	void render_content(const uicore::CanvasPtr &canvas) override;
 
 	Scene &get_scene() { return scene; }
 

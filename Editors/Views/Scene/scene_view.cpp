@@ -52,9 +52,9 @@ void SceneView::pointer_move(PointerEvent &e)
 	}
 }
 
-void SceneView::render_content(Canvas &canvas)
+void SceneView::render_content(const CanvasPtr &canvas)
 {
-	Pointf viewport_pos = Vec2f(canvas.get_transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+	Pointf viewport_pos = Vec2f(canvas->transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content_size();
 	//Size viewport_size_i = Size(2400*2 + rand() % 160 * 2, 1300*2 + rand() % 160 * 2);
 	Size viewport_size_i = Size(viewport_size) * 2;
@@ -68,8 +68,9 @@ void SceneView::render_content(Canvas &canvas)
 	viewport_size_i.width = std::max(viewport_size_i.width, 16);
 	viewport_size_i.height = std::max(viewport_size_i.height, 16);
 
-	canvas.flush();
-	auto gc = canvas.get_gc();
+	canvas->end();
+
+	auto gc = canvas->gc();
 	auto window = view_tree()->get_display_window();
 
 	Point move = mouse_movement.pos();
@@ -101,22 +102,10 @@ void SceneView::render_content(Canvas &canvas)
 
 	gc->set_viewport(gc->size(), y_axis_top_down);
 
-	if (supersampling)
-	{
-		canvas.fill_triangles(
-		{
-			Vec2f(0.0f, 0.0f), Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f),
-			Vec2f(viewport_size_i.width / 2.0f, 0.0f), Vec2f(0.0f, viewport_size_i.height / 2.0f), Vec2f(viewport_size_i.width / 2.0f, viewport_size_i.height / 2.0f)
-		}, scene_texture);
-	}
-	else
-	{
-		canvas.fill_triangles(
-		{
-			Vec2f(0.0f, 0.0f), Vec2f((float)viewport_size_i.width, 0.0f), Vec2f(0.0f, (float)viewport_size_i.height),
-			Vec2f((float)viewport_size_i.width, 0.0f), Vec2f(0.0f, (float)viewport_size_i.height), Vec2f((float)viewport_size_i.width, (float)viewport_size_i.height)
-		}, scene_texture);
-	}
+	canvas->begin();
+
+	auto image = Image::create(scene_texture, scene_texture->size(), gc->pixel_ratio());
+	image->draw(canvas, geometry().content_size());
 
 	timer->start(10, true);
 }

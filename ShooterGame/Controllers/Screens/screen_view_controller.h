@@ -4,14 +4,14 @@
 class ScreenViewController
 {
 public:
-	ScreenViewController(uicore::Canvas &canvas);
+	ScreenViewController(const uicore::CanvasPtr &canvas);
 
 	std::shared_ptr<uicore::TextureWindow> texture_view;
 
 	virtual bool cursor_hidden() { return false; }
-	virtual void update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) { }
+	virtual void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) { }
 
-	void render_scene(uicore::Canvas &canvas, Scene &scene);
+	void render_scene(const uicore::CanvasPtr &canvas, Scene &scene);
 };
 
 class Screen

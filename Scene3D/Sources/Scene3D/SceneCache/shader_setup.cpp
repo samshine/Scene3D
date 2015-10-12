@@ -26,6 +26,7 @@ ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, std::string s
 	if (!fragment.empty())
 	{
 		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + File::read_all_text(PathHelp::combine(shader_path, fragment)));
+		fragment_shader->compile();
 		program->attach(fragment_shader);
 	}
 

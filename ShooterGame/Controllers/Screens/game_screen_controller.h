@@ -7,9 +7,9 @@
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController(uicore::Canvas &canvas);
+	GameScreenController(const uicore::CanvasPtr &canvas);
 	bool cursor_hidden() override { return true; }
-	void update_desktop(uicore::Canvas &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
+	void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
 	std::unique_ptr<Game> client_game;
@@ -75,9 +75,9 @@ private:
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController(uicore::Canvas &canvas);
+	GameScreenController(const uicore::CanvasPtr &canvas);
 	bool cursor_hidden() override { return true; }
-	void update_desktop(uicore::Canvas &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
+	void update_desktop(const uicore::CanvasPtr &canvas, uicore::DisplayWindow &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
 	void update_game(uicore::DisplayWindow &ic);

@@ -22,8 +22,8 @@ public:
 
 private:
 	enum { num_buffers = 4 };
-	uicore::PixelBufferPtr indexes_transfer[num_buffers];
-	uicore::PixelBufferPtr vectors_transfer[num_buffers];
+	uicore::TransferTexturePtr indexes_transfer[num_buffers];
+	uicore::TransferTexturePtr vectors_transfer[num_buffers];
 
 	int max_offset_indexes;
 	int next_offset_index;
