@@ -7,62 +7,17 @@
 
 using namespace uicore;
 
-SceneLightProbe::SceneLightProbe()
+std::shared_ptr<SceneLightProbe> SceneLightProbe::create(Scene &scene)
 {
+	return std::make_shared<SceneLightProbe_Impl>(scene.impl.get());
 }
-
-SceneLightProbe::SceneLightProbe(Scene &scene)
-	: impl(std::make_shared<SceneLightProbe_Impl>(scene.impl.get()))
-{
-	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
-}
-
-Vec3f SceneLightProbe::get_position() const
-{
-	return impl->position;
-}
-
-float SceneLightProbe::get_radius() const
-{
-	return impl->radius;
-}
-
-Vec3f SceneLightProbe::get_color() const
-{
-	return impl->color;
-}
-
-void SceneLightProbe::set_position(const Vec3f &position)
-{
-	if (impl->position != position)
-	{
-		impl->position = position;
-		if (impl->cull_proxy)
-			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
-	}
-}
-
-void SceneLightProbe::set_radius(float radius)
-{
-	if (impl->radius != radius)
-	{
-		impl->radius = radius;
-		if (impl->cull_proxy)
-			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
-	}
-}
-
-void SceneLightProbe::set_color(const Vec3f &color)
-{
-	impl->color = color;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 SceneLightProbe_Impl::SceneLightProbe_Impl(Scene_Impl *scene)
-: scene(scene), cull_proxy(0), radius(1.0f)
+: scene(scene)
 {
 	it = scene->light_probes.insert(scene->light_probes.end(), this);
+
+	cull_proxy = scene->cull_provider->create_proxy(this, get_aabb());
 }
 
 SceneLightProbe_Impl::~SceneLightProbe_Impl()
@@ -72,10 +27,30 @@ SceneLightProbe_Impl::~SceneLightProbe_Impl()
 	scene->light_probes.erase(it);
 }
 
+void SceneLightProbe_Impl::set_position(const Vec3f &position)
+{
+	if (_position != position)
+	{
+		_position = position;
+		if (cull_proxy)
+			scene->cull_provider->set_aabb(cull_proxy, get_aabb());
+	}
+}
+
+void SceneLightProbe_Impl::set_radius(float radius)
+{
+	if (_radius != radius)
+	{
+		_radius = radius;
+		if (cull_proxy)
+			scene->cull_provider->set_aabb(cull_proxy, get_aabb());
+	}
+}
+
 AxisAlignedBoundingBox SceneLightProbe_Impl::get_aabb()
 {
 	AxisAlignedBoundingBox aabb;
-	aabb.aabb_min = position - radius * 1.73205081f;
-	aabb.aabb_max = position + radius * 1.73205081f;
+	aabb.aabb_min = _position - _radius * 1.73205081f;
+	aabb.aabb_max = _position + _radius * 1.73205081f;
 	return aabb;
 }

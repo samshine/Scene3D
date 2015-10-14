@@ -4,23 +4,19 @@
 #include <memory>
 
 class Scene;
-class SceneLightProbe_Impl;
 
 class SceneLightProbe
 {
 public:
-	SceneLightProbe();
-	SceneLightProbe(Scene &scene);
-	bool is_null() const { return !impl; }
+	static std::shared_ptr<SceneLightProbe> create(Scene &scene);
 
-	uicore::Vec3f get_position() const;
-	float get_radius() const;
-	uicore::Vec3f get_color() const;
+	virtual uicore::Vec3f position() const = 0;
+	virtual float radius() const = 0;
+	virtual uicore::Vec3f color() const = 0;
 
-	void set_position(const uicore::Vec3f &position);
-	void set_radius(float radius);
-	void set_color(const uicore::Vec3f &color);
-
-private:
-	std::shared_ptr<SceneLightProbe_Impl> impl;
+	virtual void set_position(const uicore::Vec3f &position) = 0;
+	virtual void set_radius(float radius) = 0;
+	virtual void set_color(const uicore::Vec3f &color) = 0;
 };
+
+typedef std::shared_ptr<SceneLightProbe> SceneLightProbePtr;

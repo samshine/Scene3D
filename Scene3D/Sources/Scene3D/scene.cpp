@@ -341,7 +341,7 @@ void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, c
 				{
 					SceneLightProbe_Impl *probe = find_nearest_probe(object->position);
 					if (probe)
-						light_probe_color = probe->color;
+						light_probe_color = probe->color();
 				}
 
 				instances_drawn++;
@@ -411,7 +411,7 @@ SceneLightProbe_Impl *Scene_Impl::find_nearest_probe(const Vec3f &position)
 		SceneLightProbe_Impl *current_probe = dynamic_cast<SceneLightProbe_Impl*>(visible_objects[i]);
 		if (current_probe)
 		{
-			Vec3f delta = current_probe->position - position;
+			Vec3f delta = current_probe->position() - position;
 			float current_sqr_distance = Vec3f::dot(delta, delta);
 			if (probe == 0 || current_sqr_distance < sqr_distance)
 			{
