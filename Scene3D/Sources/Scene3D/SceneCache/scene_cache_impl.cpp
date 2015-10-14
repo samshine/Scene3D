@@ -36,6 +36,9 @@ Resource<TexturePtr> SceneCacheImpl::get_texture(const GraphicContextPtr &gc, co
 		textures[key] = texture;
 
 		work_queue.queue(new CacheLoadTexture(this, texture, material_name, linear));
+		//CacheLoadTexture t(this, texture, material_name, linear);
+		//t.process_work();
+		//t.work_completed();
 	}
 	return texture;
 }
@@ -289,10 +292,10 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		import_desc.set_srgb(true);*/
 		PixelBufferPtr image = ImageFile::load(material_name, std::string(), !linear);
 
-		if (image->width() > 1024 || image->height() > 1024)
-			return; // Limit textures to 1024 for now
+		//if (image->width() > 1024 || image->height() > 1024)
+		//	return; // Limit textures to 1024 for now
 
-		image->flip_vertical();
+		//image->flip_vertical();
 		image->premultiply_alpha();
 
 		// Convert to DXT

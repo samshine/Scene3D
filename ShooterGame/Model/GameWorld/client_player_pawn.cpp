@@ -361,20 +361,18 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (scene_object.is_null())
 		{
-			SceneModel model(world()->game()->scene, "Models/Thalania/Thalania.cmodel");
+			SceneModel model(world()->game()->scene, "Models/Kachujin/Kachujin.cmodel");
 			scene_object = SceneObject(world()->game()->scene, model);
-			scene_object.set_scale(Vec3f(0.075f));
 
 			if (animation_move_speed > 0.0f)
-				scene_object.play_animation("run", true);
+				scene_object.play_animation("forward", false);
 			else
-				scene_object.play_animation("static", true);
+				scene_object.play_animation("default", false);
 		}
 
 		scene_object.set_position(mix(last_position, next_position, interpolated_time) + Vec3f(0.0f, 0.3f, 0.0f));
 		scene_object.set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
-		//scene_object.update(time_elapsed);
-		scene_object.moved(animation_move_speed * time_elapsed);
+		scene_object.update(time_elapsed);
 	}
 	else
 	{

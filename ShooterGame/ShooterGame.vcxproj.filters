@@ -139,6 +139,9 @@
     <ClInclude Include="Model\Network\NetGame\server_impl.h">
       <Filter>Model\Network\NetGame</Filter>
     </ClInclude>
+    <ClInclude Include="Model\GameWorld\robot_player_pawn.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -242,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="Model\Network\NetGame\server.cpp">
       <Filter>Model\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\robot_player_pawn.cpp">
+      <Filter>Model\GameWorld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

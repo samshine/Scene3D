@@ -12,6 +12,7 @@
 #include "flag.h"
 #include "spawn_point.h"
 #include "player_ragdoll.h"
+#include "robot_player_pawn.h"
 
 using namespace uicore;
 
@@ -93,7 +94,7 @@ void GameWorld::init(bool init_is_server)
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-		ServerPlayerPawn *pawn = new ServerPlayerPawn(this, "server", spawn_points[spawn_index]);
+		RobotPlayerPawn *pawn = new RobotPlayerPawn(this, "server", spawn_points[spawn_index]);
 		add(pawn);
 		server_player_pawns["server"] = pawn;
 	}
