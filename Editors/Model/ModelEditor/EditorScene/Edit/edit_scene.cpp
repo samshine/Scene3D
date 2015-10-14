@@ -81,26 +81,26 @@ void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayW
 
 void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
 {
-	if (!light1.is_null())
+	if (light1)
 		return;
 
-	light1 = SceneLight(scene);
-	light1.set_position(Vec3f(30.0f, 42.0f, -30.0f));
-	light1.set_orientation(Quaternionf(45.0f, 315.0f, 0.0f, angle_degrees, order_YXZ));
-	light1.set_type(SceneLight::type_spot);
-	light1.set_attenuation_start(900.0f);
-	light1.set_attenuation_end(1000.0f);
-	light1.set_color(Vec3f(1.0f, 0.95f, 0.90f));
-	light1.set_shadow_caster(true);
-	light1.set_hotspot(10.0f);
-	light1.set_falloff(45.0f);
+	light1 = SceneLight::create(scene);
+	light1->set_position(Vec3f(30.0f, 42.0f, -30.0f));
+	light1->set_orientation(Quaternionf(45.0f, 315.0f, 0.0f, angle_degrees, order_YXZ));
+	light1->set_type(SceneLight::type_spot);
+	light1->set_attenuation_start(900.0f);
+	light1->set_attenuation_end(1000.0f);
+	light1->set_color(Vec3f(1.0f, 0.95f, 0.90f));
+	light1->set_shadow_caster(true);
+	light1->set_hotspot(10.0f);
+	light1->set_falloff(45.0f);
 
-	light2 = SceneLight(scene);
-	light2.set_position(Vec3f(-100.0f, -100.0f, -100.0f));
-	light2.set_type(SceneLight::type_omni);
-	light2.set_attenuation_start(900.0f);
-	light2.set_attenuation_end(1000.0f);
-	light2.set_color(Vec3f(0.1f, 0.1f, 0.12f));
+	light2 = SceneLight::create(scene);
+	light2->set_position(Vec3f(-100.0f, -100.0f, -100.0f));
+	light2->set_type(SceneLight::type_omni);
+	light2->set_attenuation_start(900.0f);
+	light2->set_attenuation_end(1000.0f);
+	light2->set_color(Vec3f(0.1f, 0.1f, 0.12f));
 
 	camera = SceneCamera::create(scene);
 	scene.set_camera(camera);

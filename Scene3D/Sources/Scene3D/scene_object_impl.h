@@ -35,5 +35,5 @@ public:
 	bool light_probe_receiver;
 
 	ModelInstance instance;
-	std::vector<SceneLight> lights;
+	std::vector<SceneLightPtr> lights;
 };

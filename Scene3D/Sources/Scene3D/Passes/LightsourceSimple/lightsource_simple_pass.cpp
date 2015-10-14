@@ -149,7 +149,7 @@ void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, Scene_Impl 
 
 void LightsourceSimplePass::light(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
 {
-	if ((light->type == SceneLight::type_omni || light->type == SceneLight::type_spot) && light->light_caster && lights.size() < max_lights - 1)
+	if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
 	{
 		lights.push_back(light);
 	}
@@ -187,11 +187,11 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, Scene_Impl *scen
 
 	for (int i = 0; i < num_lights; i++)
 	{
-		float radius = lights[i]->attenuation_end;
-		if (lights[i]->rectangle_shape)
+		float radius = lights[i]->attenuation_end();
+		if (lights[i]->rectangle_shape())
 			radius *= 1.414213562373f;
 
-		float attenuation_delta = lights[i]->attenuation_end - lights[i]->attenuation_start;
+		float attenuation_delta = lights[i]->attenuation_end() - lights[i]->attenuation_start();
 		if (attenuation_delta == 0.0f)
 			attenuation_delta = 1e-6f;
 		float sqr_radius = radius * radius;
@@ -199,23 +199,23 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, Scene_Impl *scen
 		float sqr_attenuation_start = lights[i]->attenuation_start * lights[i]->attenuation_start;
 		float sqr_attenuation_delta = attenuation_delta * attenuation_delta;
 #else
-		float attenuation_start = lights[i]->attenuation_start;
+		float attenuation_start = lights[i]->attenuation_start();
 #endif
 		float sqr_falloff_begin = 0.0f;
 		float light_type = 0.0f;
-		if (lights[i]->type == SceneLight::type_spot)
+		if (lights[i]->type() == SceneLight::type_spot)
 		{
-			light_type = lights[i]->rectangle_shape ? 2.0f : 1.0f;
-			float falloff_begin = lights[i]->hotspot / lights[i]->falloff;
+			light_type = lights[i]->rectangle_shape() ? 2.0f : 1.0f;
+			float falloff_begin = lights[i]->hotspot() / lights[i]->falloff();
 			sqr_falloff_begin = falloff_begin * falloff_begin;
 		}
-		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position, 1.0f));
+		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position(), 1.0f));
 		Mat4f eye_to_shadow_projection = lights[i]->vsm_data->world_to_shadow_projection * eye_to_world;
 
 		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
 
 		instance_data[i * vectors_per_light + 0] = Vec4f(position_in_eye, (float)shadow_map_index);
-		instance_data[i * vectors_per_light + 1] = Vec4f(lights[i]->color, lights[i]->ambient_illumination);
+		instance_data[i * vectors_per_light + 1] = Vec4f(lights[i]->color(), lights[i]->ambient_illumination());
 #ifdef USE_QUADRATIC_ATTENUATION
 		instance_data[i * vectors_per_light + 2] = Vec4f(sqr_radius, sqr_attenuation_start, 1.0f / sqr_attenuation_delta, sqr_falloff_begin);
 #else

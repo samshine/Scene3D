@@ -145,7 +145,7 @@ void SceneObject_Impl::create_lights(Scene &scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)
-		lights.push_back(SceneLight(scene_base));
+		lights.push_back(SceneLight::create(scene_base));
 	update_lights();
 }
 
@@ -161,19 +161,19 @@ void SceneObject_Impl::update_lights()
 		for (size_t i = 0; i < model_lights.size(); i++)
 		{
 			// To do: apply bone_selector
-			lights[i].set_type(model_lights[i].falloff.get_value(animation_index, animation_time) == 0.0f ? SceneLight::type_omni : SceneLight::type_spot);
-			lights[i].set_position(Vec3f(object_to_world * Vec4f(model_lights[i].position.get_value(animation_index, animation_time), 1.0f)));
-			lights[i].set_orientation(orientation * model_lights[i].orientation.get_value(animation_index, animation_time));
-			lights[i].set_attenuation_start(model_lights[i].attenuation_start.get_value(animation_index, animation_time) * scale.y);
-			lights[i].set_attenuation_end(model_lights[i].attenuation_end.get_value(animation_index, animation_time) * scale.y);
-			lights[i].set_color(model_lights[i].color.get_value(animation_index, animation_time));
-			lights[i].set_aspect_ratio(model_lights[i].aspect.get_value(animation_index, animation_time));
-			lights[i].set_falloff(model_lights[i].falloff.get_value(animation_index, animation_time));
-			lights[i].set_hotspot(model_lights[i].hotspot.get_value(animation_index, animation_time));
-			lights[i].set_ambient_illumination(model_lights[i].ambient_illumination.get_value(animation_index, animation_time));
-			lights[i].set_shadow_caster(model_lights[i].casts_shadows);
-			lights[i].set_light_caster(true);
-			lights[i].set_rectangle_shape(model_lights[i].rectangle);
+			lights[i]->set_type(model_lights[i].falloff.get_value(animation_index, animation_time) == 0.0f ? SceneLight::type_omni : SceneLight::type_spot);
+			lights[i]->set_position(Vec3f(object_to_world * Vec4f(model_lights[i].position.get_value(animation_index, animation_time), 1.0f)));
+			lights[i]->set_orientation(orientation * model_lights[i].orientation.get_value(animation_index, animation_time));
+			lights[i]->set_attenuation_start(model_lights[i].attenuation_start.get_value(animation_index, animation_time) * scale.y);
+			lights[i]->set_attenuation_end(model_lights[i].attenuation_end.get_value(animation_index, animation_time) * scale.y);
+			lights[i]->set_color(model_lights[i].color.get_value(animation_index, animation_time));
+			lights[i]->set_aspect_ratio(model_lights[i].aspect.get_value(animation_index, animation_time));
+			lights[i]->set_falloff(model_lights[i].falloff.get_value(animation_index, animation_time));
+			lights[i]->set_hotspot(model_lights[i].hotspot.get_value(animation_index, animation_time));
+			lights[i]->set_ambient_illumination(model_lights[i].ambient_illumination.get_value(animation_index, animation_time));
+			lights[i]->set_shadow_caster(model_lights[i].casts_shadows);
+			lights[i]->set_light_caster(true);
+			lights[i]->set_rectangle_shape(model_lights[i].rectangle);
 		}
 	}
 }

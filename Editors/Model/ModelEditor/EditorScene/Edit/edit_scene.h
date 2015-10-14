@@ -30,8 +30,8 @@ private:
 
 	uicore::GameTime gametime;
 
-	SceneLight light1;
-	SceneLight light2;
+	SceneLightPtr light1;
+	SceneLightPtr light2;
 	SceneModel model1;
 	SceneObject object1;
 	SceneCameraPtr camera;

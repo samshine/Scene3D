@@ -57,15 +57,15 @@ void VSMShadowMapPass::light(const GraphicContextPtr &gc, const Mat4f &world_to_
 	if (!light->vsm_data)
 		light->vsm_data.reset(new VSMShadowMapPassLightData(this, light));
 
-	Quaternionf inv_orientation = Quaternionf::inverse(light->orientation);
-	light->vsm_data->world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-light->position);
+	Quaternionf inv_orientation = Quaternionf::inverse(light->orientation());
+	light->vsm_data->world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-light->position());
 
-	if (light->type == SceneLight::type_spot)
+	if (light->type() == SceneLight::type_spot)
 	{
-		float field_of_view = light->falloff;
-		light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+		float field_of_view = light->falloff();
+		light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio(), 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	}
-	else if (light->type == SceneLight::type_directional)
+	else if (light->type() == SceneLight::type_directional)
 	{
 		light->vsm_data->eye_to_projection = Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	}
@@ -77,7 +77,7 @@ void VSMShadowMapPass::light(const GraphicContextPtr &gc, const Mat4f &world_to_
 	light->vsm_data->world_to_shadow_projection = light->vsm_data->eye_to_projection * light->vsm_data->world_to_eye;
 
 	// Only spot lights with shadow casting enabled uses shadow maps right now, so only generate for those
-	if (light->type == SceneLight::type_spot && light->shadow_caster)
+	if (light->type() == SceneLight::type_spot && light->shadow_caster())
 	{
 		// skip shadow maps far away
 		//float dist = (world_to_eye * Vec4f(light->position, 1.0f)).length3() - light->attenuation_end;
@@ -115,8 +115,8 @@ void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 			gc->set_viewport(lights[i]->vsm_data->shadow_map.get_view()->size(), gc->texture_image_y_axis());
 			gc->clear_depth(1.0f);
 
-			float field_of_view = lights[i]->falloff;
-			Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view, lights[i]->aspect_ratio, 0.1f, lights[i]->attenuation_end + 5.0f, handed_left, clip_negative_positive_w);
+			float field_of_view = lights[i]->falloff();
+			Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view, lights[i]->aspect_ratio(), 0.1f, lights[i]->attenuation_end() + 5.0f, handed_left, clip_negative_positive_w);
 
 			FrustumPlanes frustum(eye_to_cull_projection * lights[i]->vsm_data->world_to_eye);
 			scene->visit(gc, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, this);

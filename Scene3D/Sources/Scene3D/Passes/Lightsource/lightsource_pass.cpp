@@ -70,7 +70,7 @@ void LightsourcePass::find_lights(const GraphicContextPtr &gc, Scene_Impl *scene
 
 void LightsourcePass::light(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
 {
-	if ((light->type == SceneLight::type_omni || light->type == SceneLight::type_spot) && light->light_caster && lights.size() < max_lights - 1)
+	if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
 	{
 #ifdef TEST_LIGHT_DISTANCE
 		float dist = (world_to_eye * Vec4f(light->position, 1.0f)).length3() - light->attenuation_end;
@@ -93,7 +93,7 @@ public:
 		if (a_has_shadow != b_has_shadow)
 			return a_has_shadow < b_has_shadow;
 		else
-			return a->type < b->type;
+			return a->type() < b->type();
 	}
 };
 
@@ -129,11 +129,11 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 	MappedBuffer<GPULight> data(transfer_lights.data(), max_lights);
 	for (int i = 0; i < num_lights; i++)
 	{
-		float radius = lights[i]->attenuation_end;
-		if (lights[i]->rectangle_shape)
+		float radius = lights[i]->attenuation_end();
+		if (lights[i]->rectangle_shape())
 			radius *= 1.414213562373f;
 
-		float attenuation_delta = lights[i]->attenuation_end - lights[i]->attenuation_start;
+		float attenuation_delta = lights[i]->attenuation_end() - lights[i]->attenuation_start();
 		if (attenuation_delta == 0.0f)
 			attenuation_delta = 1e-6f;
 		float sqr_radius = radius * radius;
@@ -141,23 +141,23 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 		float sqr_attenuation_start = lights[i]->attenuation_start * lights[i]->attenuation_start;
 		float sqr_attenuation_delta = attenuation_delta * attenuation_delta;
 #else
-		float attenuation_start = lights[i]->attenuation_start;
+		float attenuation_start = lights[i]->attenuation_start();
 #endif
 		float sqr_falloff_begin = 0.0f;
 		float light_type = 0.0f;
-		if (lights[i]->type == SceneLight::type_spot)
+		if (lights[i]->type() == SceneLight::type_spot)
 		{
-			light_type = lights[i]->rectangle_shape ? 2.0f : 1.0f;
-			float falloff_begin = lights[i]->hotspot / lights[i]->falloff;
+			light_type = lights[i]->rectangle_shape() ? 2.0f : 1.0f;
+			float falloff_begin = lights[i]->hotspot() / lights[i]->falloff();
 			sqr_falloff_begin = falloff_begin * falloff_begin;
 		}
-		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position, 1.0f));
+		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position(), 1.0f));
 		Mat4f eye_to_shadow_projection = lights[i]->vsm_data->world_to_shadow_projection * eye_to_world;
 
 		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
 
 		data[i].position = Vec4f(position_in_eye, (float)shadow_map_index);
-		data[i].color = Vec4f(lights[i]->color, lights[i]->ambient_illumination);
+		data[i].color = Vec4f(lights[i]->color(), lights[i]->ambient_illumination());
 #ifdef USE_QUADRATIC_ATTENUATION
 		data[i].range = Vec4f(sqr_radius, sqr_attenuation_start, 1.0f / sqr_attenuation_delta, sqr_falloff_begin);
 #else
