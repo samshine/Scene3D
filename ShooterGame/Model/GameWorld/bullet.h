@@ -25,7 +25,7 @@ private:
 	Physics3DRayTest ray_test;
 
 	SceneObject scene_object;
-	SceneParticleEmitter emitter;
+	SceneParticleEmitterPtr emitter;
 	AudioObject sound;
 
 	float gravity = 0.0f;

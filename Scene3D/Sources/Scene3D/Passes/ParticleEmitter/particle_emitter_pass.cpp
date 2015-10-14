@@ -187,8 +187,8 @@ void ParticleEmitterPass::emitter(const GraphicContextPtr &gc, const Mat4f &worl
 	{
 		emitter->pass_data.reset(new ParticleEmitterPassData());
 		emitter->pass_data->emitter = emitter;
-		emitter->pass_data->life_color_gradient = texture_cache.get_texture(gc, emitter->gradient_texture, false);
-		emitter->pass_data->particle_animation = texture_cache.get_texture(gc, emitter->particle_texture, false);
+		emitter->pass_data->life_color_gradient = texture_cache.get_texture(gc, emitter->gradient_texture(), false);
+		emitter->pass_data->particle_animation = texture_cache.get_texture(gc, emitter->particle_texture(), false);
 		emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(gc, 1);
 	}
 

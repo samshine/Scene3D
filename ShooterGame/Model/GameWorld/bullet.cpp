@@ -48,17 +48,17 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 
 		if (!desc["particleEmitter"].is_undefined())
 		{
-			emitter = SceneParticleEmitter(world->game()->scene);
-			emitter.set_type(SceneParticleEmitter::type_omni);
-			emitter.set_position(pos);
-			emitter.set_orientation(orientation);
-			emitter.set_particles_per_second(desc["particleEmitter"]["particlesPerSecond"].to_float());
-			emitter.set_life_span(desc["particleEmitter"]["lifespan"].to_float());
-			emitter.set_start_size(desc["particleEmitter"]["startSize"].to_float());
-			emitter.set_end_size(desc["particleEmitter"]["endSize"].to_float());
-			emitter.set_speed(desc["particleEmitter"]["speed"].to_float());
-			emitter.set_particle_texture(desc["particleEmitter"]["particleTexture"].to_string());
-			emitter.set_gradient_texture(desc["particleEmitter"]["gradientTexture"].to_string());
+			emitter = SceneParticleEmitter::create(world->game()->scene);
+			emitter->set_type(SceneParticleEmitter::type_omni);
+			emitter->set_position(pos);
+			emitter->set_orientation(orientation);
+			emitter->set_particles_per_second(desc["particleEmitter"]["particlesPerSecond"].to_float());
+			emitter->set_life_span(desc["particleEmitter"]["lifespan"].to_float());
+			emitter->set_start_size(desc["particleEmitter"]["startSize"].to_float());
+			emitter->set_end_size(desc["particleEmitter"]["endSize"].to_float());
+			emitter->set_speed(desc["particleEmitter"]["speed"].to_float());
+			emitter->set_particle_texture(desc["particleEmitter"]["particleTexture"].to_string());
+			emitter->set_gradient_texture(desc["particleEmitter"]["gradientTexture"].to_string());
 		}
 	}
 }
@@ -147,10 +147,10 @@ void Bullet::frame(float time_elapsed, float interpolated_time)
 		scene_object.update(time_elapsed);
 	}
 
-	if (!emitter.is_null())
+	if (emitter)
 	{
-		emitter.set_position(mix(last_pos, pos, interpolated_time));
-		emitter.set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
+		emitter->set_position(mix(last_pos, pos, interpolated_time));
+		emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
 	}
 
 	if (!sound.is_null())

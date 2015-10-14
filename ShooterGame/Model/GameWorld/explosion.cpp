@@ -41,17 +41,17 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 		if (!desc["particleEmitter"].is_undefined())
 		{
-			emitter = SceneParticleEmitter(world->game()->scene);
-			emitter.set_type(SceneParticleEmitter::type_omni);
-			emitter.set_position(pos);
-			emitter.set_orientation(orientation);
-			emitter.set_particles_per_second(desc["particleEmitter"]["particlesPerSecond"].to_float());
-			emitter.set_life_span(desc["particleEmitter"]["lifespan"].to_float());
-			emitter.set_start_size(desc["particleEmitter"]["startSize"].to_float());
-			emitter.set_end_size(desc["particleEmitter"]["endSize"].to_float());
-			emitter.set_speed(desc["particleEmitter"]["speed"].to_float());
-			emitter.set_particle_texture(desc["particleEmitter"]["particleTexture"].to_string());
-			emitter.set_gradient_texture(desc["particleEmitter"]["gradientTexture"].to_string());
+			emitter = SceneParticleEmitter::create(world->game()->scene);
+			emitter->set_type(SceneParticleEmitter::type_omni);
+			emitter->set_position(pos);
+			emitter->set_orientation(orientation);
+			emitter->set_particles_per_second(desc["particleEmitter"]["particlesPerSecond"].to_float());
+			emitter->set_life_span(desc["particleEmitter"]["lifespan"].to_float());
+			emitter->set_start_size(desc["particleEmitter"]["startSize"].to_float());
+			emitter->set_end_size(desc["particleEmitter"]["endSize"].to_float());
+			emitter->set_speed(desc["particleEmitter"]["speed"].to_float());
+			emitter->set_particle_texture(desc["particleEmitter"]["particleTexture"].to_string());
+			emitter->set_gradient_texture(desc["particleEmitter"]["gradientTexture"].to_string());
 		}
 	}
 
