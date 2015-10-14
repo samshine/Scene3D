@@ -59,21 +59,21 @@ void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayW
 
 	gametime.update();
 
-	if (!object1.is_null())
+	if (object1)
 	{
-		object1.update(gametime.get_time_elapsed());
+		object1->update(gametime.get_time_elapsed());
 		for (auto &attachment : attachments)
 		{
-			if (attachment.object.is_null())
+			if (!attachment.object)
 				continue;
 
 			Vec3f attach_pos, attach_scale;
 			Quaternionf attach_orientation;
-			object1.get_attachment_location(attachment.attachment_name, attach_pos, attach_orientation, attach_scale);
-			attachment.object.set_position(attach_pos);
-			attachment.object.set_orientation(attach_orientation);
-			attachment.object.set_scale(attach_scale * attachment.model_scale);
-			attachment.object.update(gametime.get_time_elapsed());
+			object1->attachment_location(attachment.attachment_name, attach_pos, attach_orientation, attach_scale);
+			attachment.object->set_position(attach_pos);
+			attachment.object->set_orientation(attach_orientation);
+			attachment.object->set_scale(attach_scale * attachment.model_scale);
+			attachment.object->update(gametime.get_time_elapsed());
 		}
 	}
 	scene.update(gc, gametime.get_time_elapsed());
@@ -110,8 +110,8 @@ void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
 
 std::string EditScene::get_animation() const
 {
-	if (!object1.is_null())
-		return object1.get_animation();
+	if (object1)
+		return object1->animation();
 	else
 		return current_animation;
 }
@@ -119,15 +119,15 @@ std::string EditScene::get_animation() const
 void EditScene::play_animation(const std::string &name, bool instant)
 {
 	current_animation = name;
-	if (!object1.is_null())
-		object1.play_animation(current_animation, instant);
+	if (object1)
+		object1->play_animation(current_animation, instant);
 }
 
 void EditScene::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
 {
 	current_animation = anim2;
-	if (!object1.is_null())
-		object1.play_transition(anim1, anim2, instant);
+	if (object1)
+		object1->play_transition(anim1, anim2, instant);
 }
 
 void EditScene::set_map_model(const std::string &new_map_model)
@@ -154,7 +154,7 @@ void EditScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 	map_model_updated = false;
 
 	map_model = nullptr;
-	map_object = SceneObject();
+	map_object = nullptr;
 
 	try
 	{
@@ -164,7 +164,7 @@ void EditScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 		auto attachment_model_data = fbx_model.convert(model_desc);
 
 		map_model = SceneModel::create(scene, attachment_model_data);
-		map_object = SceneObject(scene, map_model);
+		map_object = SceneObject::create(scene, map_model);
 	}
 	catch (Exception &)
 	{
@@ -177,13 +177,13 @@ void EditScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 	model_data_updated = false;
 
 	model1 = nullptr;
-	object1 = SceneObject();
+	object1 = nullptr;
 
 	if (model_data)
 	{
 		model1 = SceneModel::create(scene, model_data);
-		object1 = SceneObject(scene, model1, Vec3f(), Quaternionf(), Vec3f(1.0f));
-		object1.play_animation(current_animation, true);
+		object1 = SceneObject::create(scene, model1, Vec3f(), Quaternionf(), Vec3f(1.0f));
+		object1->play_animation(current_animation, true);
 
 		for (auto &attachment : attachments)
 		{
@@ -195,7 +195,7 @@ void EditScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 				auto attachment_model_data = fbx_model.convert(model_desc);
 
 				attachment.model = SceneModel::create(scene, attachment_model_data);
-				attachment.object = SceneObject(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
+				attachment.object = SceneObject::create(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
 			}
 			catch (Exception &)
 			{
@@ -205,6 +205,6 @@ void EditScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 	else
 	{
 		model1 = nullptr;
-		object1 = SceneObject();
+		object1 = nullptr;
 	}
 }

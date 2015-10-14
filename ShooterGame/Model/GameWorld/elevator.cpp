@@ -20,7 +20,7 @@ Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const 
 	if (!world->is_server)
 	{
 		auto model = SceneModel::create(world->game()->scene, model_name);
-		scene_object = SceneObject(world->game()->scene, model, pos1, orientation, Vec3f(scale));
+		scene_object = SceneObject::create(world->game()->scene, model, pos1, orientation, Vec3f(scale));
 
 		// For debugging collision box
 		//SceneModel model(world->game()->gc(), *world->game()->scene, create_box());
@@ -93,8 +93,8 @@ void Elevator::tick_start_triggered(const GameTick &tick)
 	{
 		state = state_moving_up;
 
-		if (!scene_object.is_null())
-			scene_object.play_animation("up", true);
+		if (scene_object)
+			scene_object->play_animation("up", true);
 
 		if (world()->is_server)
 			send_net_update(tick, "all");
@@ -105,10 +105,10 @@ void Elevator::tick_moving_up(const GameTick &tick)
 {
 	float new_time = std::min(time + tick.time_elapsed * speed, 1.0f);
 
-	if (!scene_object.is_null())
+	if (scene_object)
 	{
 		float distance = std::abs((new_time - time) * pos1.distance(pos2));
-		scene_object.moved(distance);
+		scene_object->moved(distance);
 	}
 
 	Vec3f from_pos = mix(pos1, pos2, time);
@@ -132,16 +132,16 @@ void Elevator::tick_moving_up(const GameTick &tick)
 
 	Vec3f obj_pos = mix(pos1, pos2, time);
 	body.set_position(obj_pos);
-	if (!scene_object.is_null())
-		scene_object.set_position(obj_pos);
+	if (scene_object)
+		scene_object->set_position(obj_pos);
 
 	if (time == 1.0f)
 	{
 		state = state_up;
 		time = wait_time;
 
-		if (!scene_object.is_null())
-			scene_object.play_animation("default", true);
+		if (scene_object)
+			scene_object->play_animation("default", true);
 
 		if (world()->is_server)
 			send_net_update(tick, "all");
@@ -157,8 +157,8 @@ void Elevator::tick_up(const GameTick &tick)
 		state = state_moving_down;
 		time = 1.0f;
 
-		if (!scene_object.is_null())
-			scene_object.play_animation("down", true);
+		if (scene_object)
+			scene_object->play_animation("down", true);
 
 		if (world()->is_server)
 			send_net_update(tick, "all");
@@ -169,25 +169,25 @@ void Elevator::tick_moving_down(const GameTick &tick)
 {
 	float new_time = std::max(time - tick.time_elapsed * speed, 0.0f);
 
-	if (!scene_object.is_null())
+	if (scene_object)
 	{
 		float distance = std::abs((new_time - time) * pos1.distance(pos2));
-		scene_object.moved(distance);
+		scene_object->moved(distance);
 	}
 
 	time = new_time;
 
 	Vec3f obj_pos = mix(pos1, pos2, time);
 	body.set_position(obj_pos);
-	if (!scene_object.is_null())
-		scene_object.set_position(obj_pos);
+	if (scene_object)
+		scene_object->set_position(obj_pos);
 
 	if (time == 0.0f)
 	{
 		state = state_down;
 
-		if (!scene_object.is_null())
-			scene_object.play_animation("default", true);
+		if (scene_object)
+			scene_object->play_animation("default", true);
 
 		if (world()->is_server)
 			send_net_update(tick, "all");

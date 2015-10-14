@@ -15,7 +15,7 @@ public:
 protected:
 	uicore::Vec3f pos;
 	uicore::Quaternionf orientation;
-	SceneObject scene_object;
+	SceneObjectPtr scene_object;
 	SceneParticleEmitterPtr emitter;
 	AudioObject sound;
 

@@ -33,7 +33,7 @@ protected:
 	Physics3DShape box_shape;
 	Physics3DObject body;
 
-	SceneObject scene_object;
+	SceneObjectPtr scene_object;
 
 	enum State
 	{

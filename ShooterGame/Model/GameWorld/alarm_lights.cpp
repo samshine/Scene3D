@@ -15,11 +15,11 @@ AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 		std::string group = item["fields"]["group"].to_string();
 
 		auto model = SceneModel::create(world->game()->scene, item["mesh"].to_string());
-		SceneObject light(world->game()->scene, model);
-		light.set_scale(Vec3f(item["scale"].to_float()));
-		light.set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));
-		light.set_orientation(Quaternionf(item["up"].to_float(), item["dir"].to_float(), item["tilt"].to_float(), angle_degrees, order_YXZ));
-		light.play_animation("blinking", true);
+		auto light = SceneObject::create(world->game()->scene, model);
+		light->set_scale(Vec3f(item["scale"].to_float()));
+		light->set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));
+		light->set_orientation(Quaternionf(item["up"].to_float(), item["dir"].to_float(), item["tilt"].to_float(), angle_degrees, order_YXZ));
+		light->play_animation("blinking", true);
 
 		groups[group].push_back(light);
 	}
@@ -37,9 +37,9 @@ void AlarmLights::frame(float time_elapsed, float interpolated_time)
 {
 	for (auto it : groups)
 	{
-		for (SceneObject &obj : it.second)
+		for (SceneObjectPtr &obj : it.second)
 		{
-			obj.update(time_elapsed);
+			obj->update(time_elapsed);
 		}
 	}
 }
@@ -49,9 +49,9 @@ void AlarmLights::play_group_animation(const std::string &group_id, const std::s
 	auto it = groups.find(group_id);
 	if (it != groups.end())
 	{
-		for (SceneObject &obj : it->second)
+		for (SceneObjectPtr &obj : it->second)
 		{
-			obj.play_animation(animation_name, true);
+			obj->play_animation(animation_name, true);
 		}
 	}
 }

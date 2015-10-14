@@ -12,7 +12,7 @@ public:
 
 private:
 	Scene scene;
-	SceneObject map_object;
+	SceneObjectPtr map_object;
 
 	float t = 0.0f;
 	uicore::GameTime game_time;

@@ -33,8 +33,8 @@ public:
 	uicore::JsonValue game_data;
 	uicore::JsonValue level_data;
 
-	SceneObject level_instance;
-	std::vector<SceneObject> objects;
+	SceneObjectPtr level_instance;
+	std::vector<SceneObjectPtr> objects;
 
 	std::vector<Physics3DObject> level_collision_objects;
 

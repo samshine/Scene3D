@@ -25,7 +25,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 			Vec3f offset(desc["model"]["offset"]["x"].to_float(), desc["model"]["offset"]["y"].to_float(), desc["model"]["offset"]["z"].to_float());
 
 			auto model = SceneModel::create(world->game()->scene, model_name);
-			scene_object = SceneObject(world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
+			scene_object = SceneObject::create(world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
 		}
 
 		if (!desc["sound"].is_undefined())
@@ -96,8 +96,8 @@ void Explosion::tick(const GameTick &tick)
 
 void Explosion::frame(float time_elapsed, float interpolated_time)
 {
-	if (!scene_object.is_null())
+	if (scene_object)
 	{
-		scene_object.update(time_elapsed);
+		scene_object->update(time_elapsed);
 	}
 }

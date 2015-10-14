@@ -158,9 +158,9 @@ void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const u
 	was_down_up = (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z));
 	was_down_down = ic->keyboard()->keycode(keycode_s);
 
-	if (!model_object.is_null() && anim != last_anim && !flying)
+	if (model_object && anim != last_anim && !flying)
 	{
-		model_object.play_animation(anim, false);
+		model_object->play_animation(anim, false);
 		last_anim = anim;
 	}
 
@@ -192,7 +192,7 @@ void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (map_updated)
 	{
-		map_object = SceneObject();
+		map_object = nullptr;
 		map_collision = Physics3DObject();
 		map_updated = false;
 
@@ -202,7 +202,7 @@ void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 			FBXModel fbx_model(model_desc.fbx_filename);
 			auto model_data = fbx_model.convert(model_desc);
 
-			map_object = SceneObject(scene, SceneModel::create(scene, model_data));
+			map_object = SceneObject::create(scene, SceneModel::create(scene, model_data));
 			map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
 		}
 		catch (Exception &)
@@ -215,12 +215,12 @@ void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 {
 	if (model_updated)
 	{
-		model_object = SceneObject();
+		model_object = nullptr;
 		model_updated = false;
 
 		if (model_data)
 		{
-			model_object = SceneObject(scene, SceneModel::create(scene, model_data));
+			model_object = SceneObject::create(scene, SceneModel::create(scene, model_data));
 		}
 
 		for (auto &attachment : model_attachments)
@@ -233,7 +233,7 @@ void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 				auto attachment_model_data = fbx_model.convert(model_desc);
 
 				attachment.model = SceneModel::create(scene, attachment_model_data);
-				attachment.object = SceneObject(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
+				attachment.object = SceneObject::create(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
 			}
 			catch (Exception &)
 			{
@@ -241,29 +241,29 @@ void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 		}
 	}
 
-	if (!model_object.is_null())
+	if (model_object)
 	{
-		model_object.set_position(character_controller.get_position());
+		model_object->set_position(character_controller.get_position());
 
 		EulerRotation rotation = character_controller.get_rotation();
 		rotation.up = 0.0f;
 		rotation.dir += 180.0f;
-		model_object.set_orientation(rotation.to_quaternionf());
+		model_object->set_orientation(rotation.to_quaternionf());
 
-		model_object.update(gametime.get_time_elapsed());
+		model_object->update(gametime.get_time_elapsed());
 
 		for (auto &attachment : model_attachments)
 		{
-			if (attachment.object.is_null())
+			if (!attachment.object)
 				continue;
 
 			Vec3f attach_pos, attach_scale;
 			Quaternionf attach_orientation;
-			model_object.get_attachment_location(attachment.attachment_name, attach_pos, attach_orientation, attach_scale);
-			attachment.object.set_position(attach_pos);
-			attachment.object.set_orientation(attach_orientation);
-			attachment.object.set_scale(attach_scale * attachment.model_scale);
-			attachment.object.update(gametime.get_time_elapsed());
+			model_object->attachment_location(attachment.attachment_name, attach_pos, attach_orientation, attach_scale);
+			attachment.object->set_position(attach_pos);
+			attachment.object->set_orientation(attach_orientation);
+			attachment.object->set_scale(attach_scale * attachment.model_scale);
+			attachment.object->update(gametime.get_time_elapsed());
 		}
 	}
 }

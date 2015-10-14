@@ -337,9 +337,9 @@ void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, c
 			if (object->instance.get_renderer())
 			{
 				Vec3f light_probe_color;
-				if (object->light_probe_receiver)
+				if (object->light_probe_receiver())
 				{
-					SceneLightProbe_Impl *probe = find_nearest_probe(object->position);
+					SceneLightProbe_Impl *probe = find_nearest_probe(object->position());
 					if (probe)
 						light_probe_color = probe->color();
 				}

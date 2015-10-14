@@ -19,13 +19,13 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	//scene_object1.set_scale(Vec3f(0.15f));
 	//scene_object1.play_animation("static");
 
-	scene_object1 = SceneObject(world->game()->scene, model);
-	scene_object1.set_position(pos);
-	scene_object1.set_orientation(orientation);
+	scene_object1 = SceneObject::create(world->game()->scene, model);
+	scene_object1->set_position(pos);
+	scene_object1->set_orientation(orientation);
 
-	scene_object2 = SceneObject(world->game()->scene, model);
-	scene_object2.set_position(pos);
-	scene_object2.set_orientation(orientation);
+	scene_object2 = SceneObject::create(world->game()->scene, model);
+	scene_object2->set_position(pos);
+	scene_object2->set_orientation(orientation);
 
 	Physics3DShape shape = Physics3DShape::box(box_size);
 	physics_object1 = Physics3DObject::rigid_body(world->game()->collision, shape, 1.0f, pos, orientation);
@@ -124,13 +124,13 @@ void PlayerRagdoll::tick(const GameTick &tick)
 
 void PlayerRagdoll::frame(float time_elapsed, float interpolated_time)
 {
-	scene_object1.update(time_elapsed);
-	scene_object1.set_position(mix(prev_pos1, next_pos1, interpolated_time));
-	scene_object1.set_orientation(Quaternionf::slerp(prev_orientation1, next_orientation1, interpolated_time));
+	scene_object1->update(time_elapsed);
+	scene_object1->set_position(mix(prev_pos1, next_pos1, interpolated_time));
+	scene_object1->set_orientation(Quaternionf::slerp(prev_orientation1, next_orientation1, interpolated_time));
 
-	scene_object2.update(time_elapsed);
-	scene_object2.set_position(mix(prev_pos2, next_pos2, interpolated_time));
-	scene_object2.set_orientation(Quaternionf::slerp(prev_orientation2, next_orientation2, interpolated_time));
+	scene_object2->update(time_elapsed);
+	scene_object2->set_position(mix(prev_pos2, next_pos2, interpolated_time));
+	scene_object2->set_orientation(Quaternionf::slerp(prev_orientation2, next_orientation2, interpolated_time));
 }
 
 std::shared_ptr<ModelData> PlayerRagdoll::create_box(const Vec3f &box_size)

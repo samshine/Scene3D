@@ -16,17 +16,17 @@ MapSceneController::MapSceneController()
 
 void MapSceneController::map_model_data_updated()
 {
-	map_object = SceneObject();
+	map_object = nullptr;
 }
 
 void MapSceneController::update_scene(Scene &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &)
 {
-	if (map_object.is_null())
+	if (!map_object)
 	{
 		if (!MapAppModel::instance()->map_model_data)
 			return;
 
 		auto model = SceneModel::create(scene, MapAppModel::instance()->map_model_data);
-		map_object = SceneObject(scene, model);
+		map_object = SceneObject::create(scene, model);
 	}
 }

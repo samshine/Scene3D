@@ -91,8 +91,8 @@ void Weapon::tick_ready(const GameTick &tick)
 	{
 		if (!weapon_type.empty())
 		{
-			if (!weapon_object.is_null())
-				weapon_object.play_animation("hide", true);
+			if (weapon_object)
+				weapon_object->play_animation("hide", true);
 			animation_timer = player->world()->weapon_data["weapons"][weapon_type]["hideTime"].to_float();
 		}
 		else
@@ -132,15 +132,15 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 			float tilt = weapon_description["firstPersonView"]["orientation"]["tilt"].to_float();
 
 			auto model = SceneModel::create(player->world()->game()->scene, weapon_description["firstPersonView"]["mesh"].to_string());
-			weapon_object = SceneObject(player->world()->game()->scene, model);
-			weapon_object.set_scale(Vec3f(weapon_description["firstPersonView"]["scale"].to_float()));
+			weapon_object = SceneObject::create(player->world()->game()->scene, model);
+			weapon_object->set_scale(Vec3f(weapon_description["firstPersonView"]["scale"].to_float()));
 			/*
-			weapon_object.set_position(static_cast<ClientPlayerPawn*>(player)->camera.get_position());
-			weapon_object.set_orientation(static_cast<ClientPlayerPawn*>(player)->camera.get_orientation());
-			weapon_object.move(weapon_offset);
-			weapon_object.rotate(dir, up, tilt);
+			weapon_object->set_position(static_cast<ClientPlayerPawn*>(player)->camera.get_position());
+			weapon_object->set_orientation(static_cast<ClientPlayerPawn*>(player)->camera.get_orientation());
+			weapon_object->move(weapon_offset);
+			weapon_object->rotate(dir, up, tilt);
 			*/
-			weapon_object.play_animation("show", true);
+			weapon_object->play_animation("show", true);
 		}
 	}
 }
@@ -151,8 +151,8 @@ void Weapon::tick_showing_new_weapon(const GameTick &tick)
 	{
 		weapon_state = ready;
 
-		if (!weapon_object.is_null())
-			weapon_object.play_animation("default", true);
+		if (weapon_object)
+			weapon_object->play_animation("default", true);
 	}
 }
 
@@ -179,7 +179,7 @@ void Weapon::tick_firing(const GameTick &tick)
 
 void Weapon::frame(float time_elapsed, float interpolated_time)
 {
-	if (!weapon_object.is_null())
+	if (weapon_object)
 	{
 		JsonValue weapon_description = player->world()->weapon_data["weapons"][weapon_type];
 
@@ -192,11 +192,11 @@ void Weapon::frame(float time_elapsed, float interpolated_time)
 		float up = weapon_description["firstPersonView"]["orientation"]["up"].to_float();
 		float tilt = weapon_description["firstPersonView"]["orientation"]["tilt"].to_float();
 
-		weapon_object.set_position(static_cast<ClientPlayerPawn*>(player)->camera->position());
-		weapon_object.set_orientation(static_cast<ClientPlayerPawn*>(player)->camera->orientation());
-		weapon_object.move(weapon_offset);
-		weapon_object.rotate(dir, up, tilt);
+		weapon_object->set_position(static_cast<ClientPlayerPawn*>(player)->camera->position());
+		weapon_object->set_orientation(static_cast<ClientPlayerPawn*>(player)->camera->orientation());
+		weapon_object->move(weapon_offset);
+		weapon_object->rotate(dir, up, tilt);
 
-		weapon_object.update(time_elapsed);
+		weapon_object->update(time_elapsed);
 	}
 }

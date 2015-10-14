@@ -33,7 +33,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 	if (!world->is_server)
 	{
 		auto model = SceneModel::create(world->game()->scene, model_name);
-		scene_object = SceneObject(world->game()->scene, model, pos, orientation, Vec3f(scale));
+		scene_object = SceneObject::create(world->game()->scene, model, pos, orientation, Vec3f(scale));
 
 		if (!desc["fireSound"].is_undefined())
 		{
@@ -140,11 +140,11 @@ void Bullet::tick(const GameTick &tick)
 
 void Bullet::frame(float time_elapsed, float interpolated_time)
 {
-	if (!scene_object.is_null())
+	if (scene_object)
 	{
-		scene_object.set_position(mix(last_pos, pos, interpolated_time));
-		scene_object.set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
-		scene_object.update(time_elapsed);
+		scene_object->set_position(mix(last_pos, pos, interpolated_time));
+		scene_object->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
+		scene_object->update(time_elapsed);
 	}
 
 	if (emitter)
@@ -154,5 +154,5 @@ void Bullet::frame(float time_elapsed, float interpolated_time)
 	}
 
 	if (!sound.is_null())
-		scene_object.set_position(mix(last_pos, pos, interpolated_time));
+		scene_object->set_position(mix(last_pos, pos, interpolated_time));
 }

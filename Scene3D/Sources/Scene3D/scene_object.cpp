@@ -11,125 +11,21 @@
 
 using namespace uicore;
 
-SceneObject::SceneObject()
+std::shared_ptr<SceneObject> SceneObject::create(Scene &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
 {
-}
-
-SceneObject::SceneObject(Scene &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-	: impl(std::make_shared<SceneObject_Impl>(scene.impl.get()))
-{
-	impl->position = position;
-	impl->orientation = orientation;
-	impl->scale = scale;
+	auto impl = std::make_shared<SceneObject_Impl>(scene.impl.get());
+	impl->_position = position;
+	impl->_orientation = orientation;
+	impl->_scale = scale;
 	impl->instance.set_renderer(static_cast<SceneModel_Impl*>(model.get())->model);
 	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);
+
+	return impl;
 }
 
-Vec3f SceneObject::get_position() const
-{
-	return impl->position;
-}
-
-Quaternionf SceneObject::get_orientation() const
-{
-	return impl->orientation;
-}
-
-Vec3f SceneObject::get_scale() const
-{
-	return impl->scale;
-}
-
-void SceneObject::set_position(const Vec3f &position)
-{
-	if (impl->position != position)
-	{
-		impl->position = position;
-		if (impl->cull_proxy)
-			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
-		impl->update_lights();
-	}
-}
-
-void SceneObject::set_orientation(const Quaternionf &orientation)
-{
-	impl->orientation = orientation;
-	impl->update_lights();
-}
-
-void SceneObject::set_scale(const Vec3f &scale)
-{
-	if (impl->scale != scale)
-	{
-		impl->scale = scale;
-		if (impl->cull_proxy)
-			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
-		impl->update_lights();
-	}
-}
-
-void SceneObject::set_light_probe_receiver(bool enable)
-{
-	impl->light_probe_receiver = enable;
-}
-
-std::string SceneObject::get_animation() const
-{
-	return impl->instance.get_animation();
-}
-
-void SceneObject::play_animation(const std::string &name, bool instant)
-{
-	impl->instance.play_animation(name, instant);
-	impl->update_lights();
-}
-
-void SceneObject::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
-{
-	impl->instance.play_transition(anim1, anim2, instant);
-	impl->update_lights();
-}
-
-void SceneObject::update(float time_elapsed)
-{
-	impl->instance.update(time_elapsed);
-	impl->update_lights();
-}
-
-void SceneObject::moved(float units_moved)
-{
-	impl->instance.moved(units_moved / impl->scale.y);
-	impl->update_lights();
-}
-
-SceneObject &SceneObject::move(Vec3f offset)
-{
-	set_position(get_position() + get_orientation().rotate_vector(offset));
-	return *this;
-}
-
-SceneObject &SceneObject::rotate(float dir, float up, float tilt)
-{
-	set_orientation(get_orientation() * Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
-	return *this;
-}
-
-void SceneObject::get_attachment_location(const std::string &name, Vec3f &position, Quaternionf &orientation, Vec3f &scale) const
-{
-	Vec3f local_position;
-	Quaternionf local_orientation;
-	impl->instance.get_attachment_location(name, local_position, local_orientation);
-	position = get_position() + get_orientation().rotate_vector(local_position) * get_scale();
-	orientation = get_orientation() * local_orientation;
-	scale = get_scale();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene)
-: scene(scene), cull_proxy(0), scale(1.0f), light_probe_receiver(false)
+SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene) : scene(scene)
 {
 	it = scene->objects.insert(scene->objects.end(), this);
 }
@@ -139,6 +35,88 @@ SceneObject_Impl::~SceneObject_Impl()
 	if (cull_proxy)
 		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->objects.erase(it);
+}
+
+void SceneObject_Impl::set_position(const Vec3f &position)
+{
+	if (_position != position)
+	{
+		_position = position;
+		if (cull_proxy)
+			scene->cull_provider->set_aabb(cull_proxy, get_aabb());
+		update_lights();
+	}
+}
+
+void SceneObject_Impl::set_orientation(const Quaternionf &orientation)
+{
+	_orientation = orientation;
+	update_lights();
+}
+
+void SceneObject_Impl::set_scale(const Vec3f &scale)
+{
+	if (_scale != scale)
+	{
+		_scale = scale;
+		if (cull_proxy)
+			scene->cull_provider->set_aabb(cull_proxy, get_aabb());
+		update_lights();
+	}
+}
+
+void SceneObject_Impl::set_light_probe_receiver(bool enable)
+{
+	_light_probe_receiver = enable;
+}
+
+std::string SceneObject_Impl::animation() const
+{
+	return instance.get_animation();
+}
+
+void SceneObject_Impl::play_animation(const std::string &name, bool instant)
+{
+	instance.play_animation(name, instant);
+	update_lights();
+}
+
+void SceneObject_Impl::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
+{
+	instance.play_transition(anim1, anim2, instant);
+	update_lights();
+}
+
+void SceneObject_Impl::update(float time_elapsed)
+{
+	instance.update(time_elapsed);
+	update_lights();
+}
+
+void SceneObject_Impl::moved(float units_moved)
+{
+	instance.moved(units_moved / _scale.y);
+	update_lights();
+}
+
+void SceneObject_Impl::move(Vec3f offset)
+{
+	set_position(position() + orientation().rotate_vector(offset));
+}
+
+void SceneObject_Impl::rotate(float dir, float up, float tilt)
+{
+	set_orientation(orientation() * Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
+}
+
+void SceneObject_Impl::attachment_location(const std::string &name, Vec3f &attach_position, Quaternionf &attach_orientation, Vec3f &attach_scale) const
+{
+	Vec3f local_position;
+	Quaternionf local_orientation;
+	instance.get_attachment_location(name, local_position, local_orientation);
+	attach_position = position() + orientation().rotate_vector(local_position) * scale();
+	attach_orientation = orientation() * local_orientation;
+	attach_scale = scale();
 }
 
 void SceneObject_Impl::create_lights(Scene &scene_base)
@@ -163,9 +141,9 @@ void SceneObject_Impl::update_lights()
 			// To do: apply bone_selector
 			lights[i]->set_type(model_lights[i].falloff.get_value(animation_index, animation_time) == 0.0f ? SceneLight::type_omni : SceneLight::type_spot);
 			lights[i]->set_position(Vec3f(object_to_world * Vec4f(model_lights[i].position.get_value(animation_index, animation_time), 1.0f)));
-			lights[i]->set_orientation(orientation * model_lights[i].orientation.get_value(animation_index, animation_time));
-			lights[i]->set_attenuation_start(model_lights[i].attenuation_start.get_value(animation_index, animation_time) * scale.y);
-			lights[i]->set_attenuation_end(model_lights[i].attenuation_end.get_value(animation_index, animation_time) * scale.y);
+			lights[i]->set_orientation(orientation() * model_lights[i].orientation.get_value(animation_index, animation_time));
+			lights[i]->set_attenuation_start(model_lights[i].attenuation_start.get_value(animation_index, animation_time) * _scale.y);
+			lights[i]->set_attenuation_end(model_lights[i].attenuation_end.get_value(animation_index, animation_time) * _scale.y);
 			lights[i]->set_color(model_lights[i].color.get_value(animation_index, animation_time));
 			lights[i]->set_aspect_ratio(model_lights[i].aspect.get_value(animation_index, animation_time));
 			lights[i]->set_falloff(model_lights[i].falloff.get_value(animation_index, animation_time));
@@ -181,7 +159,7 @@ void SceneObject_Impl::update_lights()
 AxisAlignedBoundingBox SceneObject_Impl::get_aabb() const
 {
 	if (instance.get_renderer())
-		return AxisAlignedBoundingBox(instance.get_renderer()->get_model_data()->aabb_min * scale + position, instance.get_renderer()->get_model_data()->aabb_max * scale + position);
+		return AxisAlignedBoundingBox(instance.get_renderer()->get_model_data()->aabb_min * _scale + _position, instance.get_renderer()->get_model_data()->aabb_max * _scale + _position);
 	else
 		return AxisAlignedBoundingBox();
 }

@@ -24,7 +24,7 @@ private:
 
 	Physics3DRayTest ray_test;
 
-	SceneObject scene_object;
+	SceneObjectPtr scene_object;
 	SceneParticleEmitterPtr emitter;
 	AudioObject sound;
 

@@ -33,13 +33,13 @@ private:
 	SceneLightPtr light1;
 	SceneLightPtr light2;
 	SceneModelPtr model1;
-	SceneObject object1;
+	SceneObjectPtr object1;
 	SceneCameraPtr camera;
 
 	std::string map_model_filename;
 	bool map_model_updated = true;
 	SceneModelPtr map_model;
-	SceneObject map_object;
+	SceneObjectPtr map_object;
 
 	std::vector<SceneModelAttachment> attachments;
 

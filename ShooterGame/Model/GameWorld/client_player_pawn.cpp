@@ -279,8 +279,8 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 			sound.play();
 		}
 
-		if (!scene_object.is_null())
-			scene_object.play_animation(anim, false);
+		if (scene_object)
+			scene_object->play_animation(anim, false);
 	}
 
 
@@ -359,24 +359,24 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 
 	if (show_mesh)
 	{
-		if (scene_object.is_null())
+		if (!scene_object)
 		{
 			auto model = SceneModel::create(world()->game()->scene, "Models/Kachujin/Kachujin.cmodel");
-			scene_object = SceneObject(world()->game()->scene, model);
+			scene_object = SceneObject::create(world()->game()->scene, model);
 
 			if (animation_move_speed > 0.0f)
-				scene_object.play_animation("forward", false);
+				scene_object->play_animation("forward", false);
 			else
-				scene_object.play_animation("default", false);
+				scene_object->play_animation("default", false);
 		}
 
-		scene_object.set_position(mix(last_position, next_position, interpolated_time) + Vec3f(0.0f, 0.3f, 0.0f));
-		scene_object.set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
-		scene_object.update(time_elapsed);
+		scene_object->set_position(mix(last_position, next_position, interpolated_time) + Vec3f(0.0f, 0.3f, 0.0f));
+		scene_object->set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
+		scene_object->update(time_elapsed);
 	}
 	else
 	{
-		scene_object = SceneObject();
+		scene_object = nullptr;
 	}
 
 	camera->set_position(look_pos);

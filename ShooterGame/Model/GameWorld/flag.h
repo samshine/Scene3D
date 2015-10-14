@@ -13,5 +13,5 @@ public:
 	void frame(float time_elapsed, float interpolated_time) override;
 
 protected:
-	SceneObject scene_object;
+	SceneObjectPtr scene_object;
 };

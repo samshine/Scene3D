@@ -49,5 +49,5 @@ private:
 	std::string weapon_subtype = "primary";
 	bool should_stop_fire = false;
 
-	SceneObject weapon_object;
+	SceneObjectPtr weapon_object;
 };

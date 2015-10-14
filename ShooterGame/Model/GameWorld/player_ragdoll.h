@@ -15,8 +15,8 @@ public:
 protected:
 	std::shared_ptr<ModelData> create_box(const uicore::Vec3f &box_size);
 
-	SceneObject scene_object1;
-	SceneObject scene_object2;
+	SceneObjectPtr scene_object1;
+	SceneObjectPtr scene_object2;
 
 	Physics3DConstraint hinge_constraint;
 	Physics3DObject physics_object1;

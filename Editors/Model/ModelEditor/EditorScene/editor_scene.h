@@ -29,5 +29,5 @@ public:
 	float model_scale = 1.0f;
 
 	SceneModelPtr model;
-	SceneObject object;
+	SceneObjectPtr object;
 };

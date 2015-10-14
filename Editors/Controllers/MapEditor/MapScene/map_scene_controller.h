@@ -18,5 +18,5 @@ private:
 
 	uicore::SlotContainer slots;
 
-	SceneObject map_object;
+	SceneObjectPtr map_object;
 };
