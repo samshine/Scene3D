@@ -1,15 +1,17 @@
 
 #pragma once
 
+#include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/SceneCache/resource_container.h"
 #include "Scene3D/SceneCache/resource.h"
 
-class BloomPass
+class BloomPass : public ScenePass
 {
 public:
 	BloomPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
-	void run(const uicore::GraphicContextPtr &gc);
+	std::string name() const override { return "bloom"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void setup_bloom_extract(const uicore::GraphicContextPtr &gc);

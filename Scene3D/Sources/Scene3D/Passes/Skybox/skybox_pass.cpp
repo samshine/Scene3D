@@ -8,8 +8,7 @@
 
 using namespace uicore;
 
-SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)
-	: shader_path(shader_path), show_stars(true)
+SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout) : shader_path(shader_path)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
@@ -21,16 +20,9 @@ SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)
 	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
 	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
 	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
-}
 
-void SkyboxPass::show_skybox_stars(bool enable)
-{
-	show_stars = enable;
-}
-
-void SkyboxPass::set_skybox_texture(Texture2DPtr texture)
-{
-	cloud_texture = texture;
+	cloud_texture = inout.get<Texture2DPtr>("SkyboxTexture");
+	show_stars = inout.get<bool>("ShowSkyboxStars");
 }
 
 void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
@@ -55,7 +47,7 @@ void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 
 	gc->set_depth_range(0.9f, 1.0f);
 
-	if (show_stars)
+	if (show_stars.get())
 	{
 		gc->set_program_object(billboard_program);
 		gc->set_primitives_array(billboard_prim_array);
@@ -69,7 +61,7 @@ void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 	gc->set_program_object(cube_program);
 	gc->set_primitives_array(cube_prim_array);
 	gc->set_uniform_buffer(0, uniforms);
-	gc->set_texture(0, cloud_texture);
+	gc->set_texture(0, cloud_texture.get());
 	gc->draw_primitives_array(type_triangles, 0, 6*6);
 	gc->reset_primitives_array();
 
@@ -135,7 +127,7 @@ void SkyboxPass::setup(const GraphicContextPtr &gc)
 
 void SkyboxPass::create_clouds(const GraphicContextPtr &gc)
 {
-	if (!cloud_texture)
+	if (!cloud_texture.get())
 		create_cloud_texture(gc);
 }
 
@@ -157,9 +149,10 @@ void SkyboxPass::create_cloud_texture(const GraphicContextPtr &gc)
 			cloud_data[x+y*512] = Vec4us(color.r * 64, color.g * 64, color.b * 64, alpha);
 		}
 	}
-	cloud_texture = Texture2D::create(gc, width, height, tf_rgba16, 0);
-	cloud_texture->set_image(gc, cloud);
-	cloud_texture->generate_mipmap();
+	auto texture = Texture2D::create(gc, width, height, tf_rgba16, 0);
+	texture->set_image(gc, cloud);
+	texture->generate_mipmap();
+	cloud_texture.set(texture);
 }
 
 void SkyboxPass::create_stars(const GraphicContextPtr &gc)

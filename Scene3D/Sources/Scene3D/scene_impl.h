@@ -3,8 +3,6 @@
 
 #include "Scene3D/scene_cache.h"
 #include "Scene3D/scene_camera.h"
-#include "Scene3D/scene_pass.h"
-#include "Scene3D/scene_cull_provider.h"
 #include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/SceneCache/material_cache.h"
 #include "Scene3D/SceneCache/instances_buffer.h"
@@ -23,6 +21,7 @@
 #include "Scene3D/Passes/Final/final_pass.h"
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
+#include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 
 class SceneCache;
@@ -41,8 +40,6 @@ class Scene_Impl
 {
 public:
 	Scene_Impl(const SceneCachePtr &cache);
-
-	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
 	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
 	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
@@ -66,7 +63,7 @@ public:
 	void set_camera(const SceneCameraPtr &cam) { camera = cam; }
 
 	ResourceContainer inout_data;
-	std::vector<ScenePass> passes;
+	std::vector<std::shared_ptr<ScenePass>> passes;
 
 	int models_drawn = 0;
 	int instances_drawn = 0;
@@ -98,17 +95,8 @@ private:
 	Resource<uicore::FrameBufferPtr> viewport_fb;
 	Resource<uicore::Rect> viewport;
 	Resource<uicore::Mat4f> out_world_to_eye;
-
-	std::unique_ptr<VSMShadowMapPass> vsm_shadow_map_pass;
-	std::unique_ptr<GBufferPass> gbuffer_pass;
-	std::unique_ptr<SkyboxPass> skybox_pass;
-	std::unique_ptr<LightsourcePass> lightsource_pass;
-	std::unique_ptr<LightsourceSimplePass> lightsource_simple_pass;
-	std::unique_ptr<TransparencyPass> transparency_pass;
-	std::unique_ptr<ParticleEmitterPass> particle_emitter_pass;
-	std::unique_ptr<BloomPass> bloom_pass;
-	//std::unique_ptr<SSAOPass> ssao_pass;
-	std::unique_ptr<FinalPass> final_pass;
+	Resource<uicore::Texture2DPtr> skybox_texture;
+	Resource<bool> show_skybox_stars;
 
 	GPUTimer gpu_timer;
 

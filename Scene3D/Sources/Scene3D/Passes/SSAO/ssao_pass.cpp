@@ -54,7 +54,7 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, 
 	blend_state = gc->create_blend_state(blend_desc);
 }
 
-void SSAOPass::run(const GraphicContextPtr &gc)
+void SSAOPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	Size viewport_size = normal_z_gbuffer.get()->size();
 	if (!ssao_contribution.get() || ssao_contribution.get()->size() != viewport_size || !gc->is_frame_buffer_owner(fb))

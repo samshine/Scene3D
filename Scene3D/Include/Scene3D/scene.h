@@ -41,9 +41,6 @@ public:
 	void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max);
 	void set_cull_oct_tree(float max_size);
 
-	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
-	void remove_pass(const std::string &name);
-
 	void show_skybox_stars(bool enable);
 	void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors);
 

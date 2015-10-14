@@ -4,16 +4,18 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/SceneCache/resource_container.h"
 #include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/Passes/scene_pass.h"
 
 class Scene_Impl;
 
-class DiffuseGIPassCS
+class DiffuseGIPassCS : public ScenePass
 {
 public:
 	DiffuseGIPassCS(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~DiffuseGIPassCS();
 
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	std::string name() const override { return "diffuse_gi"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);

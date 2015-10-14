@@ -225,9 +225,6 @@
     <ClInclude Include="Include\Scene3D\scene_camera.h">
       <Filter>Include\Scene3D</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene3D\scene_cull_provider.h">
-      <Filter>Include\Scene3D</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene3D\scene_light.h">
       <Filter>Include\Scene3D</Filter>
     </ClInclude>
@@ -241,9 +238,6 @@
       <Filter>Include\Scene3D</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene3D\scene_particle_emitter.h">
-      <Filter>Include\Scene3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Scene3D\scene_pass.h">
       <Filter>Include\Scene3D</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene3D\LevelData\level_data.h">
@@ -325,9 +319,6 @@
       <Filter>Sources\Scene3D</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\scene_particle_emitter_impl.h">
-      <Filter>Sources\Scene3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\scene_pass_impl.h">
       <Filter>Sources\Scene3D</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Culling\OctTree\oct_tree.h">
@@ -1269,6 +1260,9 @@
     <ClInclude Include="Sources\Scene3D\SceneCache\work_queue.h">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\Passes\scene_pass.h">
+      <Filter>Sources\Scene3D\Passes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1290,9 +1284,6 @@
       <Filter>Sources\Scene3D</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\scene_particle_emitter.cpp">
-      <Filter>Sources\Scene3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\scene_pass.cpp">
       <Filter>Sources\Scene3D</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

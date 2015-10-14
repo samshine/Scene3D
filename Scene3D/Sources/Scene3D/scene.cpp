@@ -9,7 +9,6 @@
 #include "scene_impl.h"
 #include "scene_object_impl.h"
 #include "scene_light_probe_impl.h"
-#include "scene_pass_impl.h"
 
 using namespace uicore;
 
@@ -110,27 +109,9 @@ void Scene::set_cull_oct_tree(float max_size)
 	set_cull_oct_tree(AxisAlignedBoundingBox(Vec3f(-max_size), Vec3f(max_size)));
 }
 
-ScenePass Scene::add_pass(const std::string &name, const std::string &insert_before)
-{
-	return impl->add_pass(name, insert_before);
-}
-
-void Scene::remove_pass(const std::string &name)
-{
-	for (size_t i = 0; i < impl->passes.size(); i++)
-	{
-		if (impl->passes[i].get_name() == name)
-		{
-			impl->passes.erase(impl->passes.begin() + i);
-			return;
-		}
-	}
-	throw Exception(string_format("Pass %1 not found", name));
-}
-
 void Scene::show_skybox_stars(bool enable)
 {
-	impl->skybox_pass->show_skybox_stars(enable);
+	impl->show_skybox_stars.set(enable);
 }
 
 void Scene::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
@@ -148,7 +129,7 @@ void Scene::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf>
 	texture->set_min_filter(filter_linear);
 	texture->set_mag_filter(filter_linear);
 
-	impl->skybox_pass->set_skybox_texture(texture);
+	impl->skybox_texture.set(texture);
 }
 
 int Scene::models_drawn() const
@@ -194,19 +175,13 @@ Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
 	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, *material_cache, *model_shader_cache, instances_buffer));
 
-	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc, inout_data));
-	gbuffer_pass = std::unique_ptr<GBufferPass>(new GBufferPass(inout_data));
-	skybox_pass = std::unique_ptr<SkyboxPass>(new SkyboxPass(shader_path, inout_data));
-	transparency_pass = std::unique_ptr<TransparencyPass>(new TransparencyPass(inout_data));
-	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path, inout_data));
-	bloom_pass = std::unique_ptr<BloomPass>(new BloomPass(gc, shader_path, inout_data));
-	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path, inout_data));
-	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path, inout_data));
-
 	viewport_fb = inout_data.get<FrameBufferPtr>("ViewportFrameBuffer");
 	viewport = inout_data.get<Rect>("Viewport");
 	camera_field_of_view = inout_data.get<float>("FieldOfView");
 	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
+
+	skybox_texture = inout_data.get<Texture2DPtr>("SkyboxTexture");
+	show_skybox_stars = inout_data.get<bool>("ShowSkyboxStars");
 
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);
@@ -224,49 +199,24 @@ Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_
 
 	// use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
 
+	passes.push_back(std::make_shared<GBufferPass>(inout_data));
+	passes.push_back(std::make_shared<SkyboxPass>(shader_path, inout_data));
+	passes.push_back(std::make_shared<VSMShadowMapPass>(gc, inout_data));
+
 	if (use_compute_shader_pass)
 	{
-		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
+		passes.push_back(std::make_shared<LightsourcePass>(gc, shader_path, inout_data));
 	}
 	else
 	{
-		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
+		passes.push_back(std::make_shared<LightsourceSimplePass>(gc, shader_path, inout_data));
 	}
 
-	add_pass("gbuffer").func_run() = [=](const uicore::GraphicContextPtr &gc){gbuffer_pass->run(gc, this);};
-	add_pass("skybox").func_run() = [=](const uicore::GraphicContextPtr &gc){skybox_pass->run(gc, this); };
-	add_pass("vsm").func_run() = [=](const uicore::GraphicContextPtr &gc){vsm_shadow_map_pass->run(gc, this); };
-	if (lightsource_pass)
-		add_pass("light").func_run() = [=](const uicore::GraphicContextPtr &gc){lightsource_pass->run(gc, this); };
-	else
-		add_pass("light").func_run() = [=](const uicore::GraphicContextPtr &gc){lightsource_simple_pass->run(gc, this); };
-	add_pass("transparency").func_run() = [=](const uicore::GraphicContextPtr &gc){transparency_pass->run(gc, this); };
-	add_pass("particles").func_run() = [=](const uicore::GraphicContextPtr &gc){particle_emitter_pass->run(gc, this); };
-	add_pass("bloom").func_run() = [=](const uicore::GraphicContextPtr &gc){bloom_pass->run(gc); };
-	//add_pass("ssao").func_run() = [=](const uicore::GraphicContextPtr &gc){ssao_pass->run(gc);};
-	add_pass("final").func_run() = [=](const uicore::GraphicContextPtr &gc){final_pass->run(gc); };
-}
-
-ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)
-{
-	ScenePass pass(std::shared_ptr<ScenePass_Impl>(new ScenePass_Impl(this, name)));
-	if (insert_before.empty())
-	{
-		passes.push_back(pass);
-		return pass;
-	}
-	else
-	{
-		for (size_t i = 0; i < passes.size(); i++)
-		{
-			if (passes[i].get_name() == insert_before)
-			{
-				passes.insert(passes.begin() + i, pass);
-				return pass;
-			}
-		}
-		throw Exception(string_format("Pass %1 not found", insert_before));
-	}
+	passes.push_back(std::make_shared<TransparencyPass>(inout_data));
+	passes.push_back(std::make_shared<ParticleEmitterPass>(*material_cache, shader_path, inout_data));
+	passes.push_back(std::make_shared<BloomPass>(gc, shader_path, inout_data));
+	//passes.push_back(std::make_shared<SSAOPass>(gc, shader_path, inout_data));
+	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, inout_data));
 }
 
 void Scene_Impl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
@@ -295,14 +245,11 @@ void Scene_Impl::render(const GraphicContextPtr &gc)
 
 	out_world_to_eye.set(world_to_eye);
 
-	for (size_t i = 0; i < passes.size(); i++)
+	for (const auto &pass : passes)
 	{
-		if (passes[i].func_run())
-		{
-			gpu_timer.begin_time(gc, passes[i].get_name());
-			passes[i].func_run()(gc);
-			gpu_timer.end_time(gc);
-		}
+		gpu_timer.begin_time(gc, pass->name());
+		pass->run(gc, this);
+		gpu_timer.end_time(gc);
 	}
 
 	gpu_timer.end_frame(gc);
@@ -317,7 +264,8 @@ void Scene_Impl::update(const GraphicContextPtr &gc, float time_elapsed)
 {
 	get_cache()->process_work_completed();
 	material_cache->update(gc, time_elapsed);
-	particle_emitter_pass->update(gc, time_elapsed);
+	for (const auto &pass : passes)
+		pass->update(gc, time_elapsed);
 	// To do: update scene object animations here too
 }
 

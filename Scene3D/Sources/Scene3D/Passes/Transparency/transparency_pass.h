@@ -1,17 +1,19 @@
 
 #pragma once
 
+#include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/SceneCache/resource.h"
 #include "Scene3D/SceneCache/resource_container.h"
 
 class Scene_Impl;
 
-class TransparencyPass : ModelMeshVisitor
+class TransparencyPass : public ScenePass, ModelMeshVisitor
 {
 public:
 	TransparencyPass(ResourceContainer &inout);
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	std::string name() const override { return "transparency"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void setup(const uicore::GraphicContextPtr &gc);

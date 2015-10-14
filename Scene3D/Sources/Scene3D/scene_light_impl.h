@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Scene3D/scene_light.h"
-#include "Scene3D/scene_cull_provider.h"
+#include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 
 class VSMShadowMapPassLightData;

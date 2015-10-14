@@ -3,7 +3,7 @@
 
 #include "Scene3D/scene_object.h"
 #include "Scene3D/scene_light.h"
-#include "Scene3D/scene_cull_provider.h"
+#include "Scene3D/Culling/scene_cull_provider.h"
 #include "Model/model_instance.h"
 #include <list>
 

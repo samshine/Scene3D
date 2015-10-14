@@ -54,13 +54,11 @@
     <ClInclude Include="Include\Scene3D\scene.h" />
     <ClInclude Include="Include\Scene3D\scene_cache.h" />
     <ClInclude Include="Include\Scene3D\scene_camera.h" />
-    <ClInclude Include="Include\Scene3D\scene_cull_provider.h" />
     <ClInclude Include="Include\Scene3D\scene_light.h" />
     <ClInclude Include="Include\Scene3D\scene_light_probe.h" />
     <ClInclude Include="Include\Scene3D\scene_model.h" />
     <ClInclude Include="Include\Scene3D\scene_object.h" />
     <ClInclude Include="Include\Scene3D\scene_particle_emitter.h" />
-    <ClInclude Include="Include\Scene3D\scene_pass.h" />
     <ClInclude Include="Include\sound.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_definition.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
@@ -331,6 +329,7 @@
     <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass_data.h" />
     <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_uniforms.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\scene_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_2d.h" />
     <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_3d.h" />
     <ClInclude Include="Sources\Scene3D\Passes\Skybox\skybox_pass.h" />
@@ -356,7 +355,6 @@
     <ClInclude Include="Sources\Scene3D\scene_model_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_object_impl.h" />
     <ClInclude Include="Sources\Scene3D\scene_particle_emitter_impl.h" />
-    <ClInclude Include="Sources\Scene3D\scene_pass_impl.h" />
     <ClInclude Include="Sources\Sound\AudioWorld\audio_definition_impl.h" />
     <ClInclude Include="Sources\Sound\AudioWorld\audio_object_impl.h" />
     <ClInclude Include="Sources\Sound\AudioWorld\audio_world_impl.h" />
@@ -567,7 +565,6 @@
     <ClCompile Include="Sources\Scene3D\scene_model.cpp" />
     <ClCompile Include="Sources\Scene3D\scene_object.cpp" />
     <ClCompile Include="Sources\Scene3D\scene_particle_emitter.cpp" />
-    <ClCompile Include="Sources\Scene3D\scene_pass.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_definition.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp" />

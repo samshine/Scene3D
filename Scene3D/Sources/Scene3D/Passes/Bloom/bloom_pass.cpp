@@ -49,7 +49,7 @@ BloomPass::BloomPass(const GraphicContextPtr &gc, const std::string &shader_path
 	blend_state = gc->create_blend_state(blend_desc);
 }
 
-void BloomPass::run(const GraphicContextPtr &gc)
+void BloomPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 {
 	final_color.get()->set_min_filter(filter_linear);
 	final_color.get()->set_mag_filter(filter_linear);

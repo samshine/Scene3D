@@ -3,12 +3,14 @@
 
 #include "Scene3D/SceneCache/resource_container.h"
 #include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/Passes/scene_pass.h"
 
-class FinalPass
+class FinalPass : public ScenePass
 {
 public:
 	FinalPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
-	void run(const uicore::GraphicContextPtr &gc);
+	std::string name() const override { return "final"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	// In:

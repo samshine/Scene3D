@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/SceneCache/resource_container.h"
@@ -8,11 +9,12 @@
 
 class Scene_Impl;
 
-class GBufferPass : ModelMeshVisitor
+class GBufferPass : public ScenePass, ModelMeshVisitor
 {
 public:
 	GBufferPass(ResourceContainer &inout);
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	std::string name() const override { return "gbuffer"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void setup_gbuffer(const uicore::GraphicContextPtr &gc);

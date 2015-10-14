@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/Passes/ZMinMax/z_minmax.h"
 #include "Scene3D/SceneCache/resource_container.h"
 #include "Scene3D/SceneCache/resource.h"
@@ -10,13 +11,14 @@
 class GPUTimer;
 class Scene_Impl;
 
-class LightsourcePass : SceneLightVisitor
+class LightsourcePass : public ScenePass, SceneLightVisitor
 {
 public:
 	LightsourcePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourcePass();
 
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	std::string name() const override { return "light"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void find_lights(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);

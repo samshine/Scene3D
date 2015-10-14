@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/SceneCache/shadow_maps.h"
 #include "Scene3D/SceneCache/resource.h"
 #include "Scene3D/SceneCache/resource_container.h"
@@ -12,11 +13,12 @@
 class Scene_Impl;
 class VSMShadowMapPassLightData;
 
-class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
+class VSMShadowMapPass : public ScenePass, ModelMeshVisitor, SceneLightVisitor
 {
 public:
 	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, ResourceContainer &inout);
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	std::string name() const override { return "shadow"; }
+	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
 
 private:
 	void find_lights(Scene_Impl *scene);
