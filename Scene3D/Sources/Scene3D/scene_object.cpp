@@ -15,13 +15,13 @@ SceneObject::SceneObject()
 {
 }
 
-SceneObject::SceneObject(Scene &scene, const SceneModel &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
+SceneObject::SceneObject(Scene &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
 	: impl(std::make_shared<SceneObject_Impl>(scene.impl.get()))
 {
 	impl->position = position;
 	impl->orientation = orientation;
 	impl->scale = scale;
-	impl->instance.set_renderer(model.impl->model);
+	impl->instance.set_renderer(static_cast<SceneModel_Impl*>(model.get())->model);
 	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);

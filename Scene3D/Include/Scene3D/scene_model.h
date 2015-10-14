@@ -6,19 +6,17 @@
 
 class Scene;
 class ModelData;
-class SceneModel_Impl;
 
 class SceneModel
 {
 public:
-	SceneModel();
-	SceneModel(Scene &scene, const std::string &model_name);
-	SceneModel(Scene &scene, std::shared_ptr<ModelData> model_data);
+	static std::shared_ptr<SceneModel> create(Scene &scene, const std::string &model_name);
+	static std::shared_ptr<SceneModel> create(Scene &scene, std::shared_ptr<ModelData> model_data);
 
-	bool is_null() const;
+	virtual ~SceneModel() { }
 
-private:
-	std::shared_ptr<SceneModel_Impl> impl;
-
-	friend class SceneObject;
+protected:
+	SceneModel() { }
 };
+
+typedef std::shared_ptr<SceneModel> SceneModelPtr;

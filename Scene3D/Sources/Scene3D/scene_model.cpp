@@ -8,25 +8,15 @@
 
 using namespace uicore;
 
-SceneModel::SceneModel()
+std::shared_ptr<SceneModel> SceneModel::create(Scene &scene, const std::string &model_name)
 {
+	auto scene_impl = scene.impl.get();
+	return std::make_shared<SceneModel_Impl>(scene_impl, scene_impl->model_cache->get_model(model_name));
 }
 
-SceneModel::SceneModel(Scene &scene, const std::string &model_name)
-: impl(std::make_shared<SceneModel_Impl>())
+std::shared_ptr<SceneModel> SceneModel::create(Scene &scene, std::shared_ptr<ModelData> model_data)
 {
-	impl->scene = scene.impl.get();
-	impl->model = impl->scene->model_cache->get_model(model_name);
-}
-
-SceneModel::SceneModel(Scene &scene, std::shared_ptr<ModelData> model_data)
-: impl(std::make_shared<SceneModel_Impl>())
-{
-	impl->scene = scene.impl.get();
-	impl->model = std::shared_ptr<Model>(new Model(impl->scene->get_cache()->get_gc(), *impl->scene->material_cache, *impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
-}
-
-bool SceneModel::is_null() const
-{
-	return !impl;
+	auto scene_impl = scene.impl.get();
+	auto model = std::make_shared<Model>(scene_impl->get_cache()->get_gc(), *scene_impl->material_cache, *scene_impl->model_shader_cache, model_data, scene_impl->instances_buffer.new_offset_index());
+	return std::make_shared<SceneModel_Impl>(scene_impl, model);
 }

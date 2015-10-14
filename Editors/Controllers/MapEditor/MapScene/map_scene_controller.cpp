@@ -26,7 +26,7 @@ void MapSceneController::update_scene(Scene &scene, const uicore::GraphicContext
 		if (!MapAppModel::instance()->map_model_data)
 			return;
 
-		SceneModel model(scene, MapAppModel::instance()->map_model_data);
+		auto model = SceneModel::create(scene, MapAppModel::instance()->map_model_data);
 		map_object = SceneObject(scene, model);
 	}
 }

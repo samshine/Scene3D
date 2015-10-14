@@ -64,7 +64,7 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 	}
 	scene.set_skybox_gradient(gc, gradient);
 
-	SceneModel model(scene, "Levels/Liandri/liandri.cmodel");
+	auto model = SceneModel::create(scene, "Levels/Liandri/liandri.cmodel");
 	map_object = SceneObject(scene, model);
 }
 

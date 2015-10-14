@@ -361,7 +361,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (scene_object.is_null())
 		{
-			SceneModel model(world()->game()->scene, "Models/Kachujin/Kachujin.cmodel");
+			auto model = SceneModel::create(world()->game()->scene, "Models/Kachujin/Kachujin.cmodel");
 			scene_object = SceneObject(world()->game()->scene, model);
 
 			if (animation_move_speed > 0.0f)

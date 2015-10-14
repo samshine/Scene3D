@@ -28,6 +28,6 @@ public:
 	std::string model_name;
 	float model_scale = 1.0f;
 
-	SceneModel model;
+	SceneModelPtr model;
 	SceneObject object;
 };

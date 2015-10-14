@@ -14,7 +14,7 @@ AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 
 		std::string group = item["fields"]["group"].to_string();
 
-		SceneModel model(world->game()->scene, item["mesh"].to_string());
+		auto model = SceneModel::create(world->game()->scene, item["mesh"].to_string());
 		SceneObject light(world->game()->scene, model);
 		light.set_scale(Vec3f(item["scale"].to_float()));
 		light.set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));

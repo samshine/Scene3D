@@ -32,7 +32,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 
 	if (!world->is_server)
 	{
-		SceneModel model(world->game()->scene, model_name);
+		auto model = SceneModel::create(world->game()->scene, model_name);
 		scene_object = SceneObject(world->game()->scene, model, pos, orientation, Vec3f(scale));
 
 		if (!desc["fireSound"].is_undefined())

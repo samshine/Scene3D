@@ -5,13 +5,14 @@
 
 class Scene;
 class SceneModel;
+typedef std::shared_ptr<SceneModel> SceneModelPtr;
 class SceneObject_Impl;
 
 class SceneObject
 {
 public:
 	SceneObject();
-	SceneObject(Scene &scene, const SceneModel &model, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &scale = uicore::Vec3f(1.0f));
+	SceneObject(Scene &scene, const SceneModelPtr &model, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &scale = uicore::Vec3f(1.0f));
 	bool is_null() const { return !impl; }
 
 	uicore::Vec3f get_position() const;

@@ -202,7 +202,7 @@ void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 			FBXModel fbx_model(model_desc.fbx_filename);
 			auto model_data = fbx_model.convert(model_desc);
 
-			map_object = SceneObject(scene, SceneModel(scene, model_data));
+			map_object = SceneObject(scene, SceneModel::create(scene, model_data));
 			map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
 		}
 		catch (Exception &)
@@ -220,7 +220,7 @@ void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 
 		if (model_data)
 		{
-			model_object = SceneObject(scene, SceneModel(scene, model_data));
+			model_object = SceneObject(scene, SceneModel::create(scene, model_data));
 		}
 
 		for (auto &attachment : model_attachments)
@@ -232,7 +232,7 @@ void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
 				FBXModel fbx_model(model_desc.fbx_filename);
 				auto attachment_model_data = fbx_model.convert(model_desc);
 
-				attachment.model = SceneModel(scene, attachment_model_data);
+				attachment.model = SceneModel::create(scene, attachment_model_data);
 				attachment.object = SceneObject(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
 			}
 			catch (Exception &)
