@@ -41,9 +41,9 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 	GraphicContextPtr gc = canvas->gc();
 
 	scene = Scene(Screen::scene_cache());
-	scene.set_camera(SceneCamera(scene));
-	scene.get_camera().set_position(Vec3f(0.0f, 1.8f, -3.0f));
-	//scene.get_camera().set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
+	scene.set_camera(SceneCamera::create(scene));
+	scene.get_camera()->set_position(Vec3f(0.0f, 1.8f, -3.0f));
+	//scene.get_camera()->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
 
 	scene.show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -75,7 +75,7 @@ void MenuScreenController::update_desktop(const uicore::CanvasPtr &canvas, const
 	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
-	scene.get_camera().set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
+	scene.get_camera()->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
 
 	scene.update(canvas->gc(), game_time.get_time_elapsed());
 

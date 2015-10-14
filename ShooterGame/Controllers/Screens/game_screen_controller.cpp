@@ -146,9 +146,9 @@ void GameScreenController::update_camera()
 		camera_pos = sweep_test.get_hit_position(0);
 	}
 
-	SceneCamera camera = scene.get_camera();
-	camera.set_orientation(camera_orientation);
-	camera.set_position(camera_pos);
+	SceneCameraPtr camera = scene.get_camera();
+	camera->set_orientation(camera_orientation);
+	camera->set_position(camera_pos);
 }
 
 void GameScreenController::update_character_controller()

@@ -10,7 +10,7 @@ using namespace uicore;
 
 ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
-	camera = SceneCamera(world->game()->scene);
+	camera = SceneCamera::create(world->game()->scene);
 	camera_shape = Physics3DShape::sphere(0.5f);
 	camera_sweep_test = Physics3DSweepTest(world->game()->collision);
 }
@@ -379,8 +379,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		scene_object = SceneObject();
 	}
 
-	camera.set_position(look_pos);
-	camera.set_orientation(look_dir);
+	camera->set_position(look_pos);
+	camera->set_orientation(look_dir);
 
 	weapon->frame(time_elapsed, interpolated_time);
 }

@@ -20,7 +20,7 @@ Scene::Scene()
 Scene::Scene(const SceneCachePtr &cache)
 : impl(std::make_shared<Scene_Impl>(cache))
 {
-	impl->set_camera(SceneCamera(*this));
+	impl->set_camera(SceneCamera::create(*this));
 }
 
 bool Scene::is_null() const
@@ -28,12 +28,7 @@ bool Scene::is_null() const
 	return !impl;
 }
 
-const SceneCamera &Scene::get_camera() const
-{
-	return impl->get_camera();
-}
-
-SceneCamera &Scene::get_camera()
+const SceneCameraPtr &Scene::get_camera() const
 {
 	return impl->get_camera();
 }
@@ -43,7 +38,7 @@ void Scene::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 	impl->set_viewport(box, fb);
 }
 
-void Scene::set_camera(const SceneCamera &camera)
+void Scene::set_camera(const SceneCameraPtr &camera)
 {
 	impl->set_camera(camera);
 }
@@ -60,8 +55,8 @@ void Scene::update(const GraphicContextPtr &gc, float time_elapsed)
 
 Mat4f Scene::world_to_eye() const
 {
-	Quaternionf inv_orientation = Quaternionf::inverse(impl->camera.get_orientation());
-	return inv_orientation.to_matrix() * Mat4f::translate(-impl->camera.get_position());
+	Quaternionf inv_orientation = Quaternionf::inverse(impl->camera->orientation());
+	return inv_orientation.to_matrix() * Mat4f::translate(-impl->camera->position());
 }
 
 Mat4f Scene::eye_to_projection() const
@@ -93,8 +88,8 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 
 	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
 
-	out_ray_start = impl->camera.get_position();
-	out_ray_direction = impl->camera.get_orientation().rotate_vector(ray_direction);
+	out_ray_start = impl->camera->position();
+	out_ray_direction = impl->camera->orientation().rotate_vector(ray_direction);
 }
 
 void Scene::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
@@ -292,11 +287,11 @@ void Scene_Impl::render(const GraphicContextPtr &gc)
 
 	gpu_timer.begin_frame(gc);
 
-	if (camera_field_of_view.get() != camera.get_field_of_view())
-		camera_field_of_view.set(camera.get_field_of_view());
+	if (camera_field_of_view.get() != camera->field_of_view())
+		camera_field_of_view.set(camera->field_of_view());
 
-	Quaternionf inv_orientation = Quaternionf::inverse(camera.get_orientation());
-	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera.get_position());
+	Quaternionf inv_orientation = Quaternionf::inverse(camera->orientation());
+	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera->position());
 
 	out_world_to_eye.set(world_to_eye);
 

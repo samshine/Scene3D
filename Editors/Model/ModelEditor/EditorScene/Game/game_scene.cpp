@@ -183,9 +183,9 @@ void GameScene::update_camera(Scene &scene, const GraphicContextPtr &gc)
 		camera_pos = sweep_test.get_hit_position(0);
 	}
 
-	SceneCamera camera = scene.get_camera();
-	camera.set_orientation(camera_orientation);
-	camera.set_position(camera_pos);
+	SceneCameraPtr camera = scene.get_camera();
+	camera->set_orientation(camera_orientation);
+	camera->set_position(camera_pos);
 }
 
 void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)

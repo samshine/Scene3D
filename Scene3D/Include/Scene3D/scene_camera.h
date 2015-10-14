@@ -4,29 +4,21 @@
 #include <memory>
 
 class Scene;
-class SceneCamera_Impl;
 
 class SceneCamera
 {
 public:
-	SceneCamera();
-	SceneCamera(Scene &scene);
+	static std::shared_ptr<SceneCamera> create(Scene &scene);
 
-	bool is_null() const;
+	virtual uicore::Vec3f position() const = 0;
+	virtual uicore::Quaternionf orientation() const = 0;
 
-	uicore::Vec3f get_position() const;
-	uicore::Quaternionf get_orientation() const;
+	virtual float field_of_view() const = 0;
 
-	float get_field_of_view() const;
+	virtual void set_position(const uicore::Vec3f &position) = 0;
+	virtual void set_orientation(const uicore::Quaternionf &orientation) = 0;
 
-	void set_position(const uicore::Vec3f &position);
-	void set_orientation(const uicore::Quaternionf &orientation);
-
-	void set_field_of_view(float fov);
-
-private:
-	std::shared_ptr<SceneCamera_Impl> impl;
-
-	friend class Scene;
-	friend class Scene_Impl;
+	virtual void set_field_of_view(float fov) = 0;
 };
+
+typedef std::shared_ptr<SceneCamera> SceneCameraPtr;

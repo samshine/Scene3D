@@ -62,9 +62,8 @@ public:
 
 	SceneCacheImpl *get_cache() const { return cache.get(); }
 
-	const SceneCamera &get_camera() const { return camera; }
-	SceneCamera &get_camera() { return camera; }
-	void set_camera(const SceneCamera &cam) { camera = cam; }
+	const SceneCameraPtr &get_camera() const { return camera; }
+	void set_camera(const SceneCameraPtr &cam) { camera = cam; }
 
 	ResourceContainer inout_data;
 	std::vector<ScenePass> passes;
@@ -93,7 +92,7 @@ private:
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
 
-	SceneCamera camera;
+	SceneCameraPtr camera;
 
 	Resource<float> camera_field_of_view;
 	Resource<uicore::FrameBufferPtr> viewport_fb;

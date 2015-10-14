@@ -17,7 +17,7 @@ public:
 	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event);
 	void net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event);
 
-	SceneCamera camera;
+	SceneCameraPtr camera;
 
 	bool get_is_owner() const { return is_owner; }
 

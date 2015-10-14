@@ -172,7 +172,7 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, Scene_Impl *scen
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
-	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera().get_orientation()).to_matrix();
+	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera()->orientation()).to_matrix();
 	cpu_uniforms.rcp_f = rcp_f;
 	cpu_uniforms.rcp_f_div_aspect = rcp_f_div_aspect;
 	cpu_uniforms.two_rcp_viewport_size = two_rcp_viewport_size;

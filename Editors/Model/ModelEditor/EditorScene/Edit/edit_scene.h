@@ -34,7 +34,7 @@ private:
 	SceneLight light2;
 	SceneModel model1;
 	SceneObject object1;
-	SceneCamera camera;
+	SceneCameraPtr camera;
 
 	std::string map_model_filename;
 	bool map_model_updated = true;

@@ -54,8 +54,8 @@ void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayW
 	update_map(scene, gc);
 	update_model(scene, gc);
 
-	camera.set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
-	camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 10.0f, -25.0f)));
+	camera->set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
+	camera->set_position(camera->orientation().rotate_vector(Vec3f(0.0f, 10.0f, -25.0f)));
 
 	gametime.update();
 
@@ -102,7 +102,7 @@ void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
 	light2.set_attenuation_end(1000.0f);
 	light2.set_color(Vec3f(0.1f, 0.1f, 0.12f));
 
-	camera = SceneCamera(scene);
+	camera = SceneCamera::create(scene);
 	scene.set_camera(camera);
 
 	gametime.reset();

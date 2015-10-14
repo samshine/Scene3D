@@ -117,7 +117,7 @@ void SceneView::setup_scene(const GraphicContextPtr &gc)
 	cache = SceneCache::create(gc, "Resources/Scene3D");
 	scene = Scene(cache);
 
-	scene.set_camera(SceneCamera(scene));
+	scene.set_camera(SceneCamera::create(scene));
 
 	scene.show_skybox_stars(false);
 	std::vector<Colorf> gradient;

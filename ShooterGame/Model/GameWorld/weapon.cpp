@@ -192,8 +192,8 @@ void Weapon::frame(float time_elapsed, float interpolated_time)
 		float up = weapon_description["firstPersonView"]["orientation"]["up"].to_float();
 		float tilt = weapon_description["firstPersonView"]["orientation"]["tilt"].to_float();
 
-		weapon_object.set_position(static_cast<ClientPlayerPawn*>(player)->camera.get_position());
-		weapon_object.set_orientation(static_cast<ClientPlayerPawn*>(player)->camera.get_orientation());
+		weapon_object.set_position(static_cast<ClientPlayerPawn*>(player)->camera->position());
+		weapon_object.set_orientation(static_cast<ClientPlayerPawn*>(player)->camera->orientation());
 		weapon_object.move(weapon_offset);
 		weapon_object.rotate(dir, up, tilt);
 

@@ -11,6 +11,7 @@ class SceneLight;
 class SceneParticleEmitter;
 class SceneObject;
 class SceneCamera;
+typedef std::shared_ptr<SceneCamera> SceneCameraPtr;
 class ScenePass;
 
 class Scene
@@ -21,11 +22,10 @@ public:
 
 	bool is_null() const;
 
-	const SceneCamera &get_camera() const;
-	SceneCamera &get_camera();
+	const SceneCameraPtr &get_camera() const;
 
 	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
-	void set_camera(const SceneCamera &camera);
+	void set_camera(const SceneCameraPtr &camera);
 
 	void render(const uicore::GraphicContextPtr &gc);
 

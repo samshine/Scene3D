@@ -165,7 +165,7 @@ void Game::update(uicore::Vec2i mouse_movement)
 		on_frame_update(time_elapsed, lock_step_time->get_tick_interpolation_time());
 
 		music_player->update();
-		audio->set_listener(scene.get_camera().get_position(), scene.get_camera().get_orientation());
+		audio->set_listener(scene.get_camera()->position(), scene.get_camera()->orientation());
 		audio->update();
 	}
 }
