@@ -87,7 +87,7 @@ void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 		}, true);
 	}
 
-	scene = Scene(scene_cache);
+	scene = Scene::create(scene_cache);
 
 	std::vector<Colorf> colors;
 	colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
@@ -95,7 +95,7 @@ void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 	colors.push_back(Colorf(0.001f, 0.002f, 0.005f, 1.0f));
 	colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
 	colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
-	scene.set_skybox_gradient(gc, colors);
+	scene->set_skybox_gradient(gc, colors);
 
 	create_scene_objects();
 	create_input_buttons();
@@ -165,7 +165,7 @@ void Game::update(uicore::Vec2i mouse_movement)
 		on_frame_update(time_elapsed, lock_step_time->get_tick_interpolation_time());
 
 		music_player->update();
-		audio->set_listener(scene.get_camera()->position(), scene.get_camera()->orientation());
+		audio->set_listener(scene->camera()->position(), scene->camera()->orientation());
 		audio->update();
 	}
 }
@@ -179,7 +179,7 @@ void Game::on_frame_update(float time_elapsed, float interpolated_time)
 {
 	game_world->frame(time_elapsed, interpolated_time);
 	if (!server)
-		scene.update(gc, time_elapsed);
+		scene->update(gc, time_elapsed);
 }
 
 void Game::on_game_tick(float time_elapsed, int receive_tick_time, int arrival_tick_time)

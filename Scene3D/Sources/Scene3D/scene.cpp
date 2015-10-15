@@ -12,157 +12,12 @@
 
 using namespace uicore;
 
-Scene::Scene()
+std::shared_ptr<Scene> Scene::create(const SceneCachePtr &cache)
 {
+	auto scene = std::make_shared<Scene_Impl>(cache);
+	scene->set_camera(SceneCamera::create(scene));
+	return scene;
 }
-
-Scene::Scene(const SceneCachePtr &cache)
-: impl(std::make_shared<Scene_Impl>(cache))
-{
-	impl->set_camera(SceneCamera::create(*this));
-}
-
-bool Scene::is_null() const
-{
-	return !impl;
-}
-
-const SceneCameraPtr &Scene::get_camera() const
-{
-	return impl->get_camera();
-}
-
-void Scene::set_viewport(const Rect &box, const FrameBufferPtr &fb)
-{
-	impl->set_viewport(box, fb);
-}
-
-void Scene::set_camera(const SceneCameraPtr &camera)
-{
-	impl->set_camera(camera);
-}
-
-void Scene::render(const GraphicContextPtr &gc)
-{
-	impl->render(gc);
-}
-
-void Scene::update(const GraphicContextPtr &gc, float time_elapsed)
-{
-	impl->update(gc, time_elapsed);
-}
-
-Mat4f Scene::world_to_eye() const
-{
-	Quaternionf inv_orientation = Quaternionf::inverse(impl->camera->orientation());
-	return inv_orientation.to_matrix() * Mat4f::translate(-impl->camera->position());
-}
-
-Mat4f Scene::eye_to_projection() const
-{
-	Size viewport_size = impl->viewport->size();
-	return Mat4f::perspective(impl->camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
-}
-
-Mat4f Scene::world_to_projection() const
-{
-	return eye_to_projection() * world_to_eye();
-}
-
-void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
-{
-	Size viewport_size = impl->viewport->size();
-
-	float aspect = impl->viewport->width()/(float)impl->viewport->height();
-	float field_of_view_y_degrees = impl->camera_field_of_view.get();
-	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
-	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
-	float rcp_f = 1.0f / f;
-	float rcp_f_div_aspect = 1.0f / (f / aspect);
-
-	Vec2f pos((float)(screen_pos.x - impl->viewport->left), (float)(impl->viewport->bottom - screen_pos.y));
-
-	Vec2f normalized(pos.x * 2.0f / impl->viewport->width(), pos.y * 2.0f / impl->viewport->height());
-	normalized -= 1.0f;
-
-	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
-
-	out_ray_start = impl->camera->position();
-	out_ray_direction = impl->camera->orientation().rotate_vector(ray_direction);
-}
-
-void Scene::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
-{
-	impl->cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree(aabb));
-}
-
-void Scene::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
-{
-	if (!impl->objects.empty() || !impl->lights.empty() || !impl->emitters.empty() || !impl->light_probes.empty())
-		throw Exception("Cannot change scene culling strategy after objects have been added");
-
-	set_cull_oct_tree(AxisAlignedBoundingBox(aabb_min, aabb_max));
-}
-
-void Scene::set_cull_oct_tree(float max_size)
-{
-	set_cull_oct_tree(AxisAlignedBoundingBox(Vec3f(-max_size), Vec3f(max_size)));
-}
-
-void Scene::show_skybox_stars(bool enable)
-{
-	impl->show_skybox_stars.set(enable);
-}
-
-void Scene::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
-{
-	auto pb = PixelBuffer::create(1, colors.size(), tf_rgba32f);
-	Vec4f *pixels = pb->data<Vec4f>();
-
-	for (size_t i = 0; i < colors.size(); i++)
-	{
-		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
-	}
-
-	auto texture = Texture2D::create(gc, pb->size(), tf_rgba32f);
-	texture->set_image(gc, pb);
-	texture->set_min_filter(filter_linear);
-	texture->set_mag_filter(filter_linear);
-
-	impl->skybox_texture.set(texture);
-}
-
-int Scene::models_drawn() const
-{
-	return impl->models_drawn;
-}
-
-int Scene::instances_drawn() const
-{
-	return impl->instances_drawn;
-}
-
-int Scene::draw_calls() const
-{
-	return impl->draw_calls;
-}
-
-int Scene::triangles_drawn() const
-{
-	return impl->triangles_drawn;
-}
-
-int Scene::scene_visits() const
-{
-	return impl->scene_visits;
-}
-
-const std::vector<GPUTimer::Result> &Scene::gpu_results() const
-{
-	return impl->gpu_results;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_cast<SceneCacheImpl>(cache))
 {
@@ -181,7 +36,7 @@ Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_
 	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
 
 	skybox_texture = inout_data.get<Texture2DPtr>("SkyboxTexture");
-	show_skybox_stars = inout_data.get<bool>("ShowSkyboxStars");
+	_show_skybox_stars = inout_data.get<bool>("ShowSkyboxStars");
 
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);
@@ -219,6 +74,86 @@ Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_
 	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, inout_data));
 }
 
+Mat4f Scene_Impl::world_to_eye() const
+{
+	Quaternionf inv_orientation = Quaternionf::inverse(_camera->orientation());
+	return inv_orientation.to_matrix() * Mat4f::translate(_camera->position());
+}
+
+Mat4f Scene_Impl::eye_to_projection() const
+{
+	Size viewport_size = viewport->size();
+	return Mat4f::perspective(camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
+}
+
+Mat4f Scene_Impl::world_to_projection() const
+{
+	return eye_to_projection() * world_to_eye();
+}
+
+void Scene_Impl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
+{
+	Size viewport_size = viewport->size();
+
+	float aspect = viewport->width()/(float)viewport->height();
+	float field_of_view_y_degrees = camera_field_of_view.get();
+	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
+	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+	float rcp_f = 1.0f / f;
+	float rcp_f_div_aspect = 1.0f / (f / aspect);
+
+	Vec2f pos((float)(screen_pos.x - viewport->left), (float)(viewport->bottom - screen_pos.y));
+
+	Vec2f normalized(pos.x * 2.0f / viewport->width(), pos.y * 2.0f / viewport->height());
+	normalized -= 1.0f;
+
+	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
+
+	out_ray_start = _camera->position();
+	out_ray_direction = _camera->orientation().rotate_vector(ray_direction);
+}
+
+void Scene_Impl::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
+{
+	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree(aabb));
+}
+
+void Scene_Impl::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
+{
+	if (!objects.empty() || !lights.empty() || !emitters.empty() || !light_probes.empty())
+		throw Exception("Cannot change scene culling strategy after objects have been added");
+
+	set_cull_oct_tree(AxisAlignedBoundingBox(aabb_min, aabb_max));
+}
+
+void Scene_Impl::set_cull_oct_tree(float max_size)
+{
+	set_cull_oct_tree(AxisAlignedBoundingBox(Vec3f(-max_size), Vec3f(max_size)));
+}
+
+void Scene_Impl::show_skybox_stars(bool enable)
+{
+	_show_skybox_stars.set(enable);
+}
+
+void Scene_Impl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
+{
+	auto pb = PixelBuffer::create(1, colors.size(), tf_rgba32f);
+	Vec4f *pixels = pb->data<Vec4f>();
+
+	for (size_t i = 0; i < colors.size(); i++)
+	{
+		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
+	}
+
+	auto texture = Texture2D::create(gc, pb->size(), tf_rgba32f);
+	texture->set_image(gc, pb);
+	texture->set_min_filter(filter_linear);
+	texture->set_mag_filter(filter_linear);
+
+	skybox_texture.set(texture);
+}
+
 void Scene_Impl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
 	viewport.set(box);
@@ -229,19 +164,19 @@ void Scene_Impl::render(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
 
-	models_drawn = 0;
-	instances_drawn = 0;
-	draw_calls = 0;
-	triangles_drawn = 0;
-	scene_visits = 0;
+	_models_drawn = 0;
+	_instances_drawn = 0;
+	_draw_calls = 0;
+	_triangles_drawn = 0;
+	_scene_visits = 0;
 
 	gpu_timer.begin_frame(gc);
 
-	if (camera_field_of_view.get() != camera->field_of_view())
-		camera_field_of_view.set(camera->field_of_view());
+	if (camera_field_of_view.get() != _camera->field_of_view())
+		camera_field_of_view.set(_camera->field_of_view());
 
-	Quaternionf inv_orientation = Quaternionf::inverse(camera->orientation());
-	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera->position());
+	Quaternionf inv_orientation = Quaternionf::inverse(_camera->orientation());
+	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-_camera->position());
 
 	out_world_to_eye.set(world_to_eye);
 
@@ -254,7 +189,7 @@ void Scene_Impl::render(const GraphicContextPtr &gc)
 
 	gpu_timer.end_frame(gc);
 
-	gpu_results = gpu_timer.get_results(gc);
+	_gpu_results = gpu_timer.get_results(gc);
 
 	if (gc->shader_language() == shader_glsl)
 		OpenGL::check_error();
@@ -272,7 +207,7 @@ void Scene_Impl::update(const GraphicContextPtr &gc, float time_elapsed)
 void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
-	scene_visits++;
+	_scene_visits++;
 
 	std::vector<Model *> models;
 
@@ -292,12 +227,12 @@ void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, c
 						light_probe_color = probe->color();
 				}
 
-				instances_drawn++;
+				_instances_drawn++;
 				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 				if (first_instance)
 				{
 					models.push_back(object->instance.get_renderer().get());
-					models_drawn++;
+					_models_drawn++;
 				}
 			}
 		}

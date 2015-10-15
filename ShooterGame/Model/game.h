@@ -18,7 +18,7 @@ public:
 	uicore::DisplayWindowPtr ic;
 
 	SceneCachePtr scene_cache;
-	Scene scene;
+	ScenePtr scene;
 
 	std::unique_ptr<AudioWorld> audio;
 	std::unique_ptr<MusicPlayer> music_player;

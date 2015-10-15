@@ -4,11 +4,12 @@
 #include <memory>
 
 class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
 
 class SceneCamera
 {
 public:
-	static std::shared_ptr<SceneCamera> create(Scene &scene);
+	static std::shared_ptr<SceneCamera> create(const ScenePtr &scene);
 
 	virtual uicore::Vec3f position() const = 0;
 	virtual uicore::Quaternionf orientation() const = 0;

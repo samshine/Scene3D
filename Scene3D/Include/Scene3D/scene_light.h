@@ -4,11 +4,12 @@
 #include <memory>
 
 class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
 
 class SceneLight
 {
 public:
-	static std::shared_ptr<SceneLight> create(Scene &scene);
+	static std::shared_ptr<SceneLight> create(const ScenePtr &scene);
 
 	enum Type
 	{

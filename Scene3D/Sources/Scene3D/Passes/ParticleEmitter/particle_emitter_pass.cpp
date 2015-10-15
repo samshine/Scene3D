@@ -70,7 +70,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 		if (active_emitters[j]->cpu_particles.empty() && active_emitters[j]->emitter)
 			continue;
 
-		Vec3f eye_pos = scene->get_camera()->position();
+		Vec3f eye_pos = scene->camera()->position();
 		std::vector<ParticleOrderIndex> sorted_particles;
 		sorted_particles.reserve(active_emitters[j]->cpu_particles.size());
 		for (size_t i = 0; i < active_emitters[j]->cpu_particles.size(); i++)

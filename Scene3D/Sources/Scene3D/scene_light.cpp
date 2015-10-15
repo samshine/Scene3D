@@ -8,9 +8,9 @@
 
 using namespace uicore;
 
-std::shared_ptr<SceneLight> SceneLight::create(Scene &scene)
+std::shared_ptr<SceneLight> SceneLight::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneLight_Impl>(scene.impl.get());
+	return std::make_shared<SceneLight_Impl>(static_cast<Scene_Impl*>(scene.get()));
 }
 
 SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene) : scene(scene)

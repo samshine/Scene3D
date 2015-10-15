@@ -11,9 +11,9 @@
 
 using namespace uicore;
 
-std::shared_ptr<SceneObject> SceneObject::create(Scene &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
+std::shared_ptr<SceneObject> SceneObject::create(const ScenePtr &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
 {
-	auto impl = std::make_shared<SceneObject_Impl>(scene.impl.get());
+	auto impl = std::make_shared<SceneObject_Impl>(static_cast<Scene_Impl*>(scene.get()));
 	impl->_position = position;
 	impl->_orientation = orientation;
 	impl->_scale = scale;
@@ -119,7 +119,7 @@ void SceneObject_Impl::attachment_location(const std::string &name, Vec3f &attac
 	attach_scale = scale();
 }
 
-void SceneObject_Impl::create_lights(Scene &scene_base)
+void SceneObject_Impl::create_lights(const ScenePtr &scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)

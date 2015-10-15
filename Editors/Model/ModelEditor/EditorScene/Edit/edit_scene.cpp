@@ -8,7 +8,7 @@ EditScene::EditScene()
 {
 }
 
-void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void EditScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	setup_default_scene(scene, gc);
 
@@ -76,10 +76,10 @@ void EditScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayW
 			attachment.object->update(gametime.get_time_elapsed());
 		}
 	}
-	scene.update(gc, gametime.get_time_elapsed());
+	scene->update(gc, gametime.get_time_elapsed());
 }
 
-void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
+void EditScene::setup_default_scene(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	if (light1)
 		return;
@@ -103,7 +103,7 @@ void EditScene::setup_default_scene(Scene &scene, const GraphicContextPtr &gc)
 	light2->set_color(Vec3f(0.1f, 0.1f, 0.12f));
 
 	camera = SceneCamera::create(scene);
-	scene.set_camera(camera);
+	scene->set_camera(camera);
 
 	gametime.reset();
 }
@@ -148,7 +148,7 @@ void EditScene::set_attachments(std::vector<SceneModelAttachment> new_attachment
 	model_data_updated = true;
 }
 
-void EditScene::update_map(Scene &scene, const GraphicContextPtr &gc)
+void EditScene::update_map(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	if (!map_model_updated) return;
 	map_model_updated = false;
@@ -171,7 +171,7 @@ void EditScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 	}
 }
 
-void EditScene::update_model(Scene &scene, const GraphicContextPtr &gc)
+void EditScene::update_model(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	if (!model_data_updated) return;
 	model_data_updated = false;

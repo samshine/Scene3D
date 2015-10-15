@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Scene3D/scene.h"
 #include "Scene3D/scene_cache.h"
 #include "Scene3D/scene_camera.h"
 #include "Scene3D/Performance/gpu_timer.h"
@@ -36,18 +37,43 @@ class SceneParticleEmitter_Impl;
 class SceneParticleEmitterVisitor;
 class SceneLightProbe_Impl;
 
-class Scene_Impl
+class Scene_Impl : public Scene
 {
 public:
 	Scene_Impl(const SceneCachePtr &cache);
 
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
+	const SceneCameraPtr &camera() const override { return _camera; }
+	void set_camera(const SceneCameraPtr &camera) override { _camera = camera; }
+
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb) override;
+	void render(const uicore::GraphicContextPtr &gc) override;
+
+	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
+
+	uicore::Mat4f world_to_eye() const override;
+	uicore::Mat4f eye_to_projection() const override;
+	uicore::Mat4f world_to_projection() const override;
+
+	void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction) override;
+
+	void set_cull_oct_tree(const uicore::AxisAlignedBoundingBox &aabb) override;
+	void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max) override;
+	void set_cull_oct_tree(float max_size) override;
+
+	void show_skybox_stars(bool enable) override;
+	void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors) override;
+
+	int models_drawn() const override { return _models_drawn; }
+	int instances_drawn() const override { return _instances_drawn; }
+	int draw_calls() const override { return _draw_calls; }
+	int triangles_drawn() const override { return _triangles_drawn; }
+	int scene_visits() const override { return _scene_visits; }
+	const std::vector<GPUTimer::Result> &gpu_results() const override { return _gpu_results; }
+
 	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
 	void set_camera_position(const uicore::Vec3f &position);
 	void set_camera_orientation(const uicore::Quaternionf &orientation);
 	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
-	void render(const uicore::GraphicContextPtr &gc);
-	void update(const uicore::GraphicContextPtr &gc, float time_elapsed);
 
 	void visit(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, ModelMeshVisitor *visitor);
 	void visit_lights(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneLightVisitor *visitor);
@@ -59,18 +85,15 @@ public:
 
 	SceneCacheImpl *get_cache() const { return cache.get(); }
 
-	const SceneCameraPtr &get_camera() const { return camera; }
-	void set_camera(const SceneCameraPtr &cam) { camera = cam; }
-
 	ResourceContainer inout_data;
 	std::vector<std::shared_ptr<ScenePass>> passes;
 
-	int models_drawn = 0;
-	int instances_drawn = 0;
-	int draw_calls = 0;
-	int triangles_drawn = 0;
-	int scene_visits = 0;
-	std::vector<GPUTimer::Result> gpu_results;
+	int _models_drawn = 0;
+	int _instances_drawn = 0;
+	int _draw_calls = 0;
+	int _triangles_drawn = 0;
+	int _scene_visits = 0;
+	std::vector<GPUTimer::Result> _gpu_results;
 
 private:
 	std::shared_ptr<SceneCacheImpl> cache;
@@ -89,14 +112,14 @@ private:
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
 
-	SceneCameraPtr camera;
+	SceneCameraPtr _camera;
 
 	Resource<float> camera_field_of_view;
 	Resource<uicore::FrameBufferPtr> viewport_fb;
 	Resource<uicore::Rect> viewport;
 	Resource<uicore::Mat4f> out_world_to_eye;
 	Resource<uicore::Texture2DPtr> skybox_texture;
-	Resource<bool> show_skybox_stars;
+	Resource<bool> _show_skybox_stars;
 
 	GPUTimer gpu_timer;
 

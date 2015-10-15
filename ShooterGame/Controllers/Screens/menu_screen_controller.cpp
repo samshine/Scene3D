@@ -40,12 +40,12 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 
 	GraphicContextPtr gc = canvas->gc();
 
-	scene = Scene(Screen::scene_cache());
-	scene.set_camera(SceneCamera::create(scene));
-	scene.get_camera()->set_position(Vec3f(0.0f, 1.8f, -3.0f));
+	scene = Scene::create(Screen::scene_cache());
+	scene->set_camera(SceneCamera::create(scene));
+	scene->camera()->set_position(Vec3f(0.0f, 1.8f, -3.0f));
 	//scene.get_camera()->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
 
-	scene.show_skybox_stars(false);
+	scene->show_skybox_stars(false);
 	std::vector<Colorf> gradient;
 	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
 	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
@@ -62,7 +62,7 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 		g.g = std::pow(g.g, 2.2f);
 		g.b = std::pow(g.b, 2.2f);
 	}
-	scene.set_skybox_gradient(gc, gradient);
+	scene->set_skybox_gradient(gc, gradient);
 
 	auto model = SceneModel::create(scene, "Levels/Liandri/liandri.cmodel");
 	map_object = SceneObject::create(scene, model);
@@ -75,9 +75,9 @@ void MenuScreenController::update_desktop(const uicore::CanvasPtr &canvas, const
 	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
-	scene.get_camera()->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
+	scene->camera()->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
 
-	scene.update(canvas->gc(), game_time.get_time_elapsed());
+	scene->update(canvas->gc(), game_time.get_time_elapsed());
 
 	render_scene(canvas, scene);
 }

@@ -4,11 +4,12 @@
 #include <memory>
 
 class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
 
 class SceneParticleEmitter
 {
 public:
-	static std::shared_ptr<SceneParticleEmitter> create(Scene &scene);
+	static std::shared_ptr<SceneParticleEmitter> create(const ScenePtr &scene);
 
 	enum Type
 	{

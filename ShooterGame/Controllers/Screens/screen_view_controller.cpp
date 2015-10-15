@@ -12,7 +12,7 @@ ScreenViewController::ScreenViewController(const CanvasPtr &canvas)
 	texture_view->set_always_render(true);
 }
 
-void ScreenViewController::render_scene(const CanvasPtr &canvas, Scene &scene)
+void ScreenViewController::render_scene(const CanvasPtr &canvas, const ScenePtr &scene)
 {
 	using namespace uicore;
 
@@ -24,8 +24,8 @@ void ScreenViewController::render_scene(const CanvasPtr &canvas, Scene &scene)
 	Sizef viewport_size = gc->size();
 	Size viewport_size_i = Size(viewport_size);
 
-	scene.set_viewport(viewport_size_i);
-	scene.render(gc);
+	scene->set_viewport(viewport_size_i);
+	scene->render(gc);
 
 	canvas->begin();
 }

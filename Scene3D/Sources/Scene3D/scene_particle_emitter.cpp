@@ -8,9 +8,9 @@
 
 using namespace uicore;
 
-std::shared_ptr<SceneParticleEmitter> SceneParticleEmitter::create(Scene &scene)
+std::shared_ptr<SceneParticleEmitter> SceneParticleEmitter::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneParticleEmitter_Impl>(scene.impl.get());
+	return std::make_shared<SceneParticleEmitter_Impl>(static_cast<Scene_Impl*>(scene.get()));
 }
 
 SceneParticleEmitter_Impl::SceneParticleEmitter_Impl(Scene_Impl *scene) : scene(scene)

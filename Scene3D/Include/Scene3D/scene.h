@@ -6,59 +6,42 @@
 
 class SceneCache;
 typedef std::shared_ptr<SceneCache> SceneCachePtr;
-class Scene_Impl;
-class SceneLight;
-class SceneParticleEmitter;
-class SceneObject;
 class SceneCamera;
 typedef std::shared_ptr<SceneCamera> SceneCameraPtr;
-class ScenePass;
 
 class Scene
 {
 public:
-	Scene();
-	Scene(const SceneCachePtr &cache);
+	static std::shared_ptr<Scene> create(const SceneCachePtr &cache);
 
-	bool is_null() const;
+	virtual const SceneCameraPtr &camera() const = 0;
 
-	const SceneCameraPtr &get_camera() const;
+	virtual void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr) = 0;
+	virtual void set_camera(const SceneCameraPtr &camera) = 0;
 
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr);
-	void set_camera(const SceneCameraPtr &camera);
+	virtual void render(const uicore::GraphicContextPtr &gc) = 0;
 
-	void render(const uicore::GraphicContextPtr &gc);
+	virtual void update(const uicore::GraphicContextPtr &gc, float time_elapsed) = 0;
 
-	void update(const uicore::GraphicContextPtr &gc, float time_elapsed);
+	virtual uicore::Mat4f world_to_eye() const = 0;
+	virtual uicore::Mat4f eye_to_projection() const = 0;
+	virtual uicore::Mat4f world_to_projection() const = 0;
 
-	uicore::Mat4f world_to_eye() const;
-	uicore::Mat4f eye_to_projection() const;
-	uicore::Mat4f world_to_projection() const;
+	virtual void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction) = 0;
 
-	void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction);
+	virtual void set_cull_oct_tree(const uicore::AxisAlignedBoundingBox &aabb) = 0;
+	virtual void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max) = 0;
+	virtual void set_cull_oct_tree(float max_size) = 0;
 
-	void set_cull_oct_tree(const uicore::AxisAlignedBoundingBox &aabb);
-	void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max);
-	void set_cull_oct_tree(float max_size);
+	virtual void show_skybox_stars(bool enable) = 0;
+	virtual void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors) = 0;
 
-	void show_skybox_stars(bool enable);
-	void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors);
-
-	int models_drawn() const;
-	int instances_drawn() const;
-	int draw_calls() const;
-	int triangles_drawn() const;
-	int scene_visits() const;
-	const std::vector<GPUTimer::Result> &gpu_results() const;
-
-private:
-	std::shared_ptr<Scene_Impl> impl;
-
-	friend class SceneLight;
-	friend class SceneParticleEmitter;
-	friend class SceneObject;
-	friend class SceneCamera;
-	friend class SceneModel;
-	friend class SceneLightProbe;
-	friend class ScenePass;
+	virtual int models_drawn() const = 0;
+	virtual int instances_drawn() const = 0;
+	virtual int draw_calls() const = 0;
+	virtual int triangles_drawn() const = 0;
+	virtual int scene_visits() const = 0;
+	virtual const std::vector<GPUTimer::Result> &gpu_results() const = 0;
 };
+
+typedef std::shared_ptr<Scene> ScenePtr;

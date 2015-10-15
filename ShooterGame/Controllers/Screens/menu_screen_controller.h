@@ -11,7 +11,7 @@ public:
 	void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	Scene scene;
+	ScenePtr scene;
 	SceneObjectPtr map_object;
 
 	float t = 0.0f;

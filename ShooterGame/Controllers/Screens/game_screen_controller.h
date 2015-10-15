@@ -87,7 +87,7 @@ private:
 
 	uicore::GameTime game_time;
 
-	Scene scene;
+	ScenePtr scene;
 	uicore::Physics3DWorld collision_world;
 	CharacterController character_controller;
 

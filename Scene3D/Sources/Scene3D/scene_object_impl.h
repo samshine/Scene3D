@@ -34,7 +34,7 @@ public:
 
 
 
-	void create_lights(Scene &scene_base);
+	void create_lights(const ScenePtr &scene_base);
 	void update_lights();
 
 	uicore::Mat4f get_object_to_world() const

@@ -107,8 +107,8 @@ public:
 		gc->set_uniform_buffer(0, uniforms);
 		gc->draw_primitives_elements_instanced(uicore::type_triangles, num_elements, uicore::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
-		scene->draw_calls++;
-		scene->triangles_drawn += num_elements / 3;
+		scene->_draw_calls++;
+		scene->_triangles_drawn += num_elements / 3;
 	}
 
 	int start_element;

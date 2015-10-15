@@ -26,7 +26,7 @@ void GameScene::set_attachments(std::vector<SceneModelAttachment> attachments)
 	model_updated = true;
 }
 
-void GameScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void GameScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	gametime.update();
 	update_map(scene, gc);
@@ -34,7 +34,7 @@ void GameScene::update(Scene &scene, const GraphicContextPtr &gc, const DisplayW
 	update_character_controller();
 	update_model(scene, gc);
 	update_camera(scene, gc);
-	scene.update(gc, gametime.get_time_elapsed());
+	scene->update(gc, gametime.get_time_elapsed());
 }
 
 void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
@@ -167,7 +167,7 @@ void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const u
 	character_controller.thrust(thrust);
 }
 
-void GameScene::update_camera(Scene &scene, const GraphicContextPtr &gc)
+void GameScene::update_camera(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	Physics3DSweepTest sweep_test(collision_world);
 	Physics3DShape sphere_shape = Physics3DShape::sphere(0.25f);
@@ -183,12 +183,12 @@ void GameScene::update_camera(Scene &scene, const GraphicContextPtr &gc)
 		camera_pos = sweep_test.get_hit_position(0);
 	}
 
-	SceneCameraPtr camera = scene.get_camera();
+	SceneCameraPtr camera = scene->camera();
 	camera->set_orientation(camera_orientation);
 	camera->set_position(camera_pos);
 }
 
-void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
+void GameScene::update_map(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	if (map_updated)
 	{
@@ -211,7 +211,7 @@ void GameScene::update_map(Scene &scene, const GraphicContextPtr &gc)
 	}
 }
 
-void GameScene::update_model(Scene &scene, const GraphicContextPtr &gc)
+void GameScene::update_model(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	if (model_updated)
 	{

@@ -4,13 +4,14 @@
 #include <memory>
 
 class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
 class SceneModel;
 typedef std::shared_ptr<SceneModel> SceneModelPtr;
 
 class SceneObject
 {
 public:
-	static std::shared_ptr<SceneObject> create(Scene &scene, const SceneModelPtr &model, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &scale = uicore::Vec3f(1.0f));
+	static std::shared_ptr<SceneObject> create(const ScenePtr &scene, const SceneModelPtr &model, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &scale = uicore::Vec3f(1.0f));
 
 	virtual uicore::Vec3f position() const = 0;
 	virtual uicore::Quaternionf orientation() const = 0;

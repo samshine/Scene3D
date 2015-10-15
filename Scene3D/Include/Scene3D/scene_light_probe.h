@@ -4,11 +4,12 @@
 #include <memory>
 
 class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
 
 class SceneLightProbe
 {
 public:
-	static std::shared_ptr<SceneLightProbe> create(Scene &scene);
+	static std::shared_ptr<SceneLightProbe> create(const ScenePtr &scene);
 
 	virtual uicore::Vec3f position() const = 0;
 	virtual float radius() const = 0;

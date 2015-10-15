@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-std::shared_ptr<SceneCamera> SceneCamera::create(Scene &scene)
+std::shared_ptr<SceneCamera> SceneCamera::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneCamera_Impl>(scene.impl.get());
+	return std::make_shared<SceneCamera_Impl>(static_cast<Scene_Impl*>(scene.get()));
 }
