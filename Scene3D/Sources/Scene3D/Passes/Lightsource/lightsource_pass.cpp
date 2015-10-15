@@ -39,7 +39,7 @@ LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string 
 
 	compute_uniforms = UniformVector<Uniforms>(gc, 1);
 	compute_lights = StorageVector<GPULight>(gc, max_lights);
-	transfer_lights = TransferVector<GPULight>(gc, max_lights);
+	transfer_lights = StagingVector<GPULight>(gc, max_lights);
 
 	zminmax.viewport = viewport;
 	zminmax.normal_z = normal_z_gbuffer;

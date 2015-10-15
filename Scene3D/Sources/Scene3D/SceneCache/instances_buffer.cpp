@@ -38,7 +38,7 @@ void InstancesBuffer::lock(const GraphicContextPtr &gc)
 		for (int i = 0; i < num_buffers; i++)
 		{
 			vectors[i] = Texture2D::create(gc, pixels_width, pixels_height, tf_rgba32f);
-			vectors_transfer[i] = TransferTexture::create(gc, pixels_width, pixels_height, data_to_gpu, tf_rgba32f, 0, usage_stream_draw);
+			vectors_transfer[i] = StagingTexture::create(gc, pixels_width, pixels_height, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 		}
 	}
 
@@ -50,7 +50,7 @@ void InstancesBuffer::lock(const GraphicContextPtr &gc)
 		for (int i = 0; i < num_buffers; i++)
 		{
 			indexes[i] = Texture2D::create(gc, pixels_width, pixels_height, tf_r32f);
-			indexes_transfer[i] = TransferTexture::create(gc, pixels_width, pixels_height, data_to_gpu, tf_r32f, 0, usage_stream_draw);
+			indexes_transfer[i] = StagingTexture::create(gc, pixels_width, pixels_height, StagingDirection::to_gpu, tf_r32f, 0, usage_stream_draw);
 		}
 	}
 

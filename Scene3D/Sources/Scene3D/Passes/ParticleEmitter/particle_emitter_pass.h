@@ -47,7 +47,7 @@ private:
 	static uicore::Vec3f cpu_billboard_positions[6];
 
 	uicore::Texture2DPtr instance_texture;
-	uicore::TransferTexturePtr instance_transfer;
+	uicore::StagingTexturePtr instance_transfer;
 
 	std::vector< std::shared_ptr<ParticleEmitterPassData> > active_emitters;
 

@@ -59,7 +59,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 	if (!instance_texture || instance_texture->width() < (int)total_particle_count * vectors_per_particle)
 	{
 		instance_texture = Texture2D::create(gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
-		instance_transfer = TransferTexture::create(gc, total_particle_count * vectors_per_particle, 1, data_to_gpu, tf_rgba32f, 0, usage_stream_draw);
+		instance_transfer = StagingTexture::create(gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 	}
 
 	instance_transfer->lock(gc, access_write_discard);

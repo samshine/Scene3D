@@ -30,7 +30,7 @@ public:
 
 	/// \brief Queue some work to be executed on a worker thread
 	///
-	/// Transfers ownership of the item queued. WorkQueue will delete the item.
+	/// Stagings ownership of the item queued. WorkQueue will delete the item.
 	void queue(WorkItem *item);
 
 	/// \brief Queue some work to be executed on a worker thread

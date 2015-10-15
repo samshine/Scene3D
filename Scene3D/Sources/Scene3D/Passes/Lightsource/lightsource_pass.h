@@ -70,7 +70,7 @@ private:
 
 	uicore::UniformVector<Uniforms> compute_uniforms;
 	uicore::StorageVector<GPULight> compute_lights;
-	uicore::TransferVector<GPULight> transfer_lights;
+	uicore::StagingVector<GPULight> transfer_lights;
 	uicore::StorageVector<unsigned int> compute_visible_lights;
 
 	uicore::ProgramObjectPtr cull_tiles_program;
