@@ -22,6 +22,7 @@
 #include "Scene3D/Passes/Final/final_pass.h"
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
+#include "Scene3D/Passes/LensFlare/lens_flare_pass.h"
 #include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 

@@ -187,6 +187,9 @@
     <Filter Include="Sources\Scene3D\SceneCache">
       <UniqueIdentifier>{fd28d256-0b78-47d0-ad6f-d42b3801eee5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scene3D\Passes\LensFlare">
+      <UniqueIdentifier>{bb003ebd-eb99-4850-8871-e8df173e5392}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1260,6 +1263,9 @@
     <ClInclude Include="Sources\Scene3D\Passes\scene_pass.h">
       <Filter>Sources\Scene3D\Passes</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.h">
+      <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\scene.cpp">
@@ -1879,6 +1885,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneCache\work_queue.cpp">
       <Filter>Sources\Scene3D\SceneCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.cpp">
+      <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

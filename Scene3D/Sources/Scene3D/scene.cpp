@@ -69,6 +69,7 @@ SceneImpl::SceneImpl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_ca
 
 	passes.push_back(std::make_shared<TransparencyPass>(inout_data));
 	passes.push_back(std::make_shared<ParticleEmitterPass>(*material_cache, shader_path, inout_data));
+	passes.push_back(std::make_shared<LensFlarePass>(shader_path, inout_data));
 	passes.push_back(std::make_shared<BloomPass>(gc, shader_path, inout_data));
 	//passes.push_back(std::make_shared<SSAOPass>(gc, shader_path, inout_data));
 	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, inout_data));

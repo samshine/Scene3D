@@ -320,6 +320,7 @@
     <ClInclude Include="Sources\Scene3D\Passes\Final\final_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.h" />
     <ClInclude Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.h" />
+    <ClInclude Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\icosahedron.h" />
     <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.h" />
     <ClInclude Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.h" />
@@ -538,6 +539,7 @@
     <ClCompile Include="Sources\Scene3D\Passes\Final\final_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.cpp" />
     <ClCompile Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\Passes\LogAverageLight\log_average_light.cpp" />
