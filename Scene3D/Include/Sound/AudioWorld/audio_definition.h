@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class AudioDefinition_Impl;
+class AudioDefinitionImpl;
 
 class AudioDefinition
 {
@@ -31,5 +31,5 @@ public:
 	void set_ambience(bool ambience);
 
 private:
-	std::shared_ptr<AudioDefinition_Impl> impl;
+	std::shared_ptr<AudioDefinitionImpl> impl;
 };

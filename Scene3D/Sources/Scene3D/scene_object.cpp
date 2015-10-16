@@ -13,11 +13,11 @@ using namespace uicore;
 
 std::shared_ptr<SceneObject> SceneObject::create(const ScenePtr &scene, const SceneModelPtr &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
 {
-	auto impl = std::make_shared<SceneObject_Impl>(static_cast<Scene_Impl*>(scene.get()));
+	auto impl = std::make_shared<SceneObjectImpl>(static_cast<SceneImpl*>(scene.get()));
 	impl->_position = position;
 	impl->_orientation = orientation;
 	impl->_scale = scale;
-	impl->instance.set_renderer(static_cast<SceneModel_Impl*>(model.get())->model);
+	impl->instance.set_renderer(static_cast<SceneModelImpl*>(model.get())->model);
 	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);
@@ -25,19 +25,19 @@ std::shared_ptr<SceneObject> SceneObject::create(const ScenePtr &scene, const Sc
 	return impl;
 }
 
-SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene) : scene(scene)
+SceneObjectImpl::SceneObjectImpl(SceneImpl *scene) : scene(scene)
 {
 	it = scene->objects.insert(scene->objects.end(), this);
 }
 
-SceneObject_Impl::~SceneObject_Impl()
+SceneObjectImpl::~SceneObjectImpl()
 {
 	if (cull_proxy)
 		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->objects.erase(it);
 }
 
-void SceneObject_Impl::set_position(const Vec3f &position)
+void SceneObjectImpl::set_position(const Vec3f &position)
 {
 	if (_position != position)
 	{
@@ -48,13 +48,13 @@ void SceneObject_Impl::set_position(const Vec3f &position)
 	}
 }
 
-void SceneObject_Impl::set_orientation(const Quaternionf &orientation)
+void SceneObjectImpl::set_orientation(const Quaternionf &orientation)
 {
 	_orientation = orientation;
 	update_lights();
 }
 
-void SceneObject_Impl::set_scale(const Vec3f &scale)
+void SceneObjectImpl::set_scale(const Vec3f &scale)
 {
 	if (_scale != scale)
 	{
@@ -65,51 +65,51 @@ void SceneObject_Impl::set_scale(const Vec3f &scale)
 	}
 }
 
-void SceneObject_Impl::set_light_probe_receiver(bool enable)
+void SceneObjectImpl::set_light_probe_receiver(bool enable)
 {
 	_light_probe_receiver = enable;
 }
 
-std::string SceneObject_Impl::animation() const
+std::string SceneObjectImpl::animation() const
 {
 	return instance.get_animation();
 }
 
-void SceneObject_Impl::play_animation(const std::string &name, bool instant)
+void SceneObjectImpl::play_animation(const std::string &name, bool instant)
 {
 	instance.play_animation(name, instant);
 	update_lights();
 }
 
-void SceneObject_Impl::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
+void SceneObjectImpl::play_transition(const std::string &anim1, const std::string &anim2, bool instant)
 {
 	instance.play_transition(anim1, anim2, instant);
 	update_lights();
 }
 
-void SceneObject_Impl::update(float time_elapsed)
+void SceneObjectImpl::update(float time_elapsed)
 {
 	instance.update(time_elapsed);
 	update_lights();
 }
 
-void SceneObject_Impl::moved(float units_moved)
+void SceneObjectImpl::moved(float units_moved)
 {
 	instance.moved(units_moved / _scale.y);
 	update_lights();
 }
 
-void SceneObject_Impl::move(Vec3f offset)
+void SceneObjectImpl::move(Vec3f offset)
 {
 	set_position(position() + orientation().rotate_vector(offset));
 }
 
-void SceneObject_Impl::rotate(float dir, float up, float tilt)
+void SceneObjectImpl::rotate(float dir, float up, float tilt)
 {
 	set_orientation(orientation() * Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
 }
 
-void SceneObject_Impl::attachment_location(const std::string &name, Vec3f &attach_position, Quaternionf &attach_orientation, Vec3f &attach_scale) const
+void SceneObjectImpl::attachment_location(const std::string &name, Vec3f &attach_position, Quaternionf &attach_orientation, Vec3f &attach_scale) const
 {
 	Vec3f local_position;
 	Quaternionf local_orientation;
@@ -119,7 +119,7 @@ void SceneObject_Impl::attachment_location(const std::string &name, Vec3f &attac
 	attach_scale = scale();
 }
 
-void SceneObject_Impl::create_lights(const ScenePtr &scene_base)
+void SceneObjectImpl::create_lights(const ScenePtr &scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)
@@ -127,7 +127,7 @@ void SceneObject_Impl::create_lights(const ScenePtr &scene_base)
 	update_lights();
 }
 
-void SceneObject_Impl::update_lights()
+void SceneObjectImpl::update_lights()
 {
 	Mat4f object_to_world = get_object_to_world();
 
@@ -156,7 +156,7 @@ void SceneObject_Impl::update_lights()
 	}
 }
 
-AxisAlignedBoundingBox SceneObject_Impl::get_aabb() const
+AxisAlignedBoundingBox SceneObjectImpl::get_aabb() const
 {
 	if (instance.get_renderer())
 		return AxisAlignedBoundingBox(instance.get_renderer()->get_model_data()->aabb_min * _scale + _position, instance.get_renderer()->get_model_data()->aabb_max * _scale + _position);

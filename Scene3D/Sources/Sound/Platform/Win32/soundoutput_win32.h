@@ -5,7 +5,7 @@
 #include <mmdeviceapi.h>
 #include <audioclient.h>
 
-class SoundOutput_Win32 : public SoundOutput_Impl
+class SoundOutput_Win32 : public SoundOutputImpl
 {
 public:
 	SoundOutput_Win32(int mixing_frequency, int mixing_latency = 50);

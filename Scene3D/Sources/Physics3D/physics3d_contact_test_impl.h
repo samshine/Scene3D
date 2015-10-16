@@ -4,22 +4,22 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <map>
 
-class Physics3DObject_Impl;
-class Physics3DWorld_Impl;
+class Physics3DObjectImpl;
+class Physics3DWorldImpl;
 
-class Physics3DContactTest_Impl
+class Physics3DContactTestImpl
 {
 public:
-	Physics3DContactTest_Impl(Physics3DWorld_Impl *world);
-	~Physics3DContactTest_Impl();
+	Physics3DContactTestImpl(Physics3DWorldImpl *world);
+	~Physics3DContactTestImpl();
 
-	Physics3DWorld_Impl *world;
+	Physics3DWorldImpl *world;
 
 	struct Contact
 	{
-		Contact(Physics3DObject_Impl *object, const btVector3 &hit_point, const btVector3 &hit_normal, float hit_distance) : object(object), hit_position(hit_point), hit_normal(hit_normal), hit_distance(hit_distance) { }
+		Contact(Physics3DObjectImpl *object, const btVector3 &hit_point, const btVector3 &hit_normal, float hit_distance) : object(object), hit_position(hit_point), hit_normal(hit_normal), hit_distance(hit_distance) { }
 
-		Physics3DObject_Impl *object;
+		Physics3DObjectImpl *object;
 		btVector3 hit_position;
 		btVector3 hit_normal;
 		float hit_distance;
@@ -30,7 +30,7 @@ public:
 	class AllHitsContactResultCallback : public btCollisionWorld::ContactResultCallback
 	{
 	public:
-		AllHitsContactResultCallback(Physics3DContactTest_Impl *impl, btCollisionObject *test_object) : impl(impl), test_object(test_object)
+		AllHitsContactResultCallback(Physics3DContactTestImpl *impl, btCollisionObject *test_object) : impl(impl), test_object(test_object)
 		{
 		}
 
@@ -38,18 +38,18 @@ public:
 		{
 			if (colObj0Wrap->getCollisionObject() == test_object)
 			{
-				impl->contacts.push_back(Contact(static_cast<Physics3DObject_Impl*>(colObj1Wrap->getCollisionObject()->getUserPointer()), cp.getPositionWorldOnA(), -cp.m_normalWorldOnB, cp.getDistance()));
+				impl->contacts.push_back(Contact(static_cast<Physics3DObjectImpl*>(colObj1Wrap->getCollisionObject()->getUserPointer()), cp.getPositionWorldOnA(), -cp.m_normalWorldOnB, cp.getDistance()));
 			}
 			else
 			{
-				impl->contacts.push_back(Contact(static_cast<Physics3DObject_Impl*>(colObj0Wrap->getCollisionObject()->getUserPointer()), cp.getPositionWorldOnB(), cp.m_normalWorldOnB, cp.getDistance()));
+				impl->contacts.push_back(Contact(static_cast<Physics3DObjectImpl*>(colObj0Wrap->getCollisionObject()->getUserPointer()), cp.getPositionWorldOnB(), cp.m_normalWorldOnB, cp.getDistance()));
 			}
 
 			return btScalar(1.);
 		}
 
 	private:
-		Physics3DContactTest_Impl *impl;
+		Physics3DContactTestImpl *impl;
 		btCollisionObject *test_object;
 	};
 };

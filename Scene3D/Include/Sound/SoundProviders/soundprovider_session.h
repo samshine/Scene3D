@@ -4,7 +4,7 @@
 #include <memory>
 #include "../soundformat.h"
 
-class SoundProvider_Session_Impl;
+class SoundProvider_SessionImpl;
 
 class SoundProvider_Session
 {

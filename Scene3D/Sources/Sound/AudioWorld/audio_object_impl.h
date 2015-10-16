@@ -5,16 +5,16 @@
 #include "Sound/soundbuffer.h"
 #include "Sound/soundbuffer_session.h"
 
-class AudioWorld_Impl;
+class AudioWorldImpl;
 
-class AudioObject_Impl
+class AudioObjectImpl
 {
 public:
-	AudioObject_Impl(AudioWorld_Impl *world);
-	~AudioObject_Impl();
+	AudioObjectImpl(AudioWorldImpl *world);
+	~AudioObjectImpl();
 
-	AudioWorld_Impl *world;
-	std::list<AudioObject_Impl *>::iterator it;
+	AudioWorldImpl *world;
+	std::list<AudioObjectImpl *>::iterator it;
 
 	uicore::Vec3f position;
 	float attenuation_begin;

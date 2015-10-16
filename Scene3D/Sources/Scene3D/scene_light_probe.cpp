@@ -9,10 +9,10 @@ using namespace uicore;
 
 std::shared_ptr<SceneLightProbe> SceneLightProbe::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneLightProbe_Impl>(static_cast<Scene_Impl*>(scene.get()));
+	return std::make_shared<SceneLightProbeImpl>(static_cast<SceneImpl*>(scene.get()));
 }
 
-SceneLightProbe_Impl::SceneLightProbe_Impl(Scene_Impl *scene)
+SceneLightProbeImpl::SceneLightProbeImpl(SceneImpl *scene)
 : scene(scene)
 {
 	it = scene->light_probes.insert(scene->light_probes.end(), this);
@@ -20,14 +20,14 @@ SceneLightProbe_Impl::SceneLightProbe_Impl(Scene_Impl *scene)
 	cull_proxy = scene->cull_provider->create_proxy(this, get_aabb());
 }
 
-SceneLightProbe_Impl::~SceneLightProbe_Impl()
+SceneLightProbeImpl::~SceneLightProbeImpl()
 {
 	if (cull_proxy)
 		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->light_probes.erase(it);
 }
 
-void SceneLightProbe_Impl::set_position(const Vec3f &position)
+void SceneLightProbeImpl::set_position(const Vec3f &position)
 {
 	if (_position != position)
 	{
@@ -37,7 +37,7 @@ void SceneLightProbe_Impl::set_position(const Vec3f &position)
 	}
 }
 
-void SceneLightProbe_Impl::set_radius(float radius)
+void SceneLightProbeImpl::set_radius(float radius)
 {
 	if (_radius != radius)
 	{
@@ -47,7 +47,7 @@ void SceneLightProbe_Impl::set_radius(float radius)
 	}
 }
 
-AxisAlignedBoundingBox SceneLightProbe_Impl::get_aabb()
+AxisAlignedBoundingBox SceneLightProbeImpl::get_aabb()
 {
 	AxisAlignedBoundingBox aabb;
 	aabb.aabb_min = _position - _radius * 1.73205081f;

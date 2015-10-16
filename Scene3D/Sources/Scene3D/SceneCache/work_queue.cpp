@@ -31,11 +31,11 @@ private:
 	std::function<void()> func;
 };
 
-class WorkQueue_Impl
+class WorkQueueImpl
 {
 public:
-	WorkQueue_Impl(bool serial_queue);
-	~WorkQueue_Impl();
+	WorkQueueImpl(bool serial_queue);
+	~WorkQueueImpl();
 
 	void queue(WorkItem *item); // transfers ownership
 	void work_completed(WorkItem *item); // transfers ownership
@@ -58,7 +58,7 @@ private:
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
-	: impl(std::make_shared<WorkQueue_Impl>(serial_queue))
+	: impl(std::make_shared<WorkQueueImpl>(serial_queue))
 {
 }
 
@@ -93,12 +93,12 @@ void WorkQueue::process_work_completed()
 
 /////////////////////////////////////////////////////////////////////////////
 
-WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
+WorkQueueImpl::WorkQueueImpl(bool serial_queue)
 	: serial_queue(serial_queue)
 {
 }
 
-WorkQueue_Impl::~WorkQueue_Impl()
+WorkQueueImpl::~WorkQueueImpl()
 {
 	std::unique_lock<std::mutex> mutex_lock(mutex);
 	stop_flag = true;
@@ -113,14 +113,14 @@ WorkQueue_Impl::~WorkQueue_Impl()
 		delete elem;
 }
 
-void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
+void WorkQueueImpl::queue(WorkItem *item) // transfers ownership
 {
 	if (threads.empty())
 	{
 		int num_cores = serial_queue ? 1 : uicore::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
-			threads.push_back(std::thread(&WorkQueue_Impl::worker_main, this));
+			threads.push_back(std::thread(&WorkQueueImpl::worker_main, this));
 		}
 	}
 
@@ -131,14 +131,14 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 	worker_event.notify_one();
 }
 
-void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
+void WorkQueueImpl::work_completed(WorkItem *item) // transfers ownership
 {
 	std::unique_lock<std::mutex> mutex_lock(mutex);
 	finished_items.push_back(item);
 	++items_queued;
 }
 
-void WorkQueue_Impl::process_work_completed()
+void WorkQueueImpl::process_work_completed()
 {
 	std::unique_lock<std::mutex> mutex_lock(mutex);
 	std::vector<WorkItem *> items;
@@ -161,7 +161,7 @@ void WorkQueue_Impl::process_work_completed()
 	}
 }
 
-void WorkQueue_Impl::worker_main()
+void WorkQueueImpl::worker_main()
 {
 	while (true)
 	{

@@ -9,27 +9,24 @@
 #include "icosahedron.h"
 
 class GPUTimer;
-class Scene_Impl;
+class SceneImpl;
 
-class LightsourceSimplePass : public ScenePass, SceneLightVisitor
+class LightsourceSimplePass : public ScenePass
 {
 public:
 	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourceSimplePass();
 
 	std::string name() const override { return "light"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &shader_path, const std::string &type);
 
 	void setup(const uicore::GraphicContextPtr &gc);
-	void find_lights(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
-	void upload(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	void find_lights(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
+	void upload(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
 	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
-
-	// SceneLightVisitor
-	void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -81,5 +78,5 @@ private:
 	uicore::ProgramObjectPtr icosahedron_light_program;
 	uicore::ProgramObjectPtr rect_light_program;
 
-	std::vector<SceneLight_Impl *> lights;
+	std::vector<SceneLightImpl *> lights;
 };

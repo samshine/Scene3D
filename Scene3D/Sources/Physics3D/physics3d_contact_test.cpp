@@ -16,7 +16,7 @@ Physics3DContactTest::Physics3DContactTest()
 }
 
 Physics3DContactTest::Physics3DContactTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DContactTest_Impl>(world.impl.get()))
+	: impl(std::make_shared<Physics3DContactTestImpl>(world.impl.get()))
 {
 }
 
@@ -29,7 +29,7 @@ bool Physics3DContactTest::test(const Physics3DObject &object)
 {
 	impl->contacts.clear();
 
-	Physics3DContactTest_Impl::AllHitsContactResultCallback callback(impl.get(), object.impl->object.get());
+	Physics3DContactTestImpl::AllHitsContactResultCallback callback(impl.get(), object.impl->object.get());
 	impl->world->dynamics_world->contactTest(object.impl->object.get(), callback);
 
 	return !impl->contacts.empty();
@@ -43,7 +43,7 @@ bool Physics3DContactTest::test(const Physics3DShape &shape, const Vec3f &positi
 	obj.setCollisionShape(shape.impl->shape.get());
 	obj.setWorldTransform(transform);
 
-	Physics3DContactTest_Impl::AllHitsContactResultCallback callback(impl.get(), &obj);
+	Physics3DContactTestImpl::AllHitsContactResultCallback callback(impl.get(), &obj);
 	impl->world->dynamics_world->contactTest(&obj, callback);
 
 	return !impl->contacts.empty();
@@ -82,11 +82,11 @@ float Physics3DContactTest::get_hit_distance(int index) const
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DContactTest_Impl::Physics3DContactTest_Impl(Physics3DWorld_Impl *world)
+Physics3DContactTestImpl::Physics3DContactTestImpl(Physics3DWorldImpl *world)
 	: world(world)
 {
 }
 
-Physics3DContactTest_Impl::~Physics3DContactTest_Impl()
+Physics3DContactTestImpl::~Physics3DContactTestImpl()
 {
 }

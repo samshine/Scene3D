@@ -36,30 +36,30 @@
 
 namespace uicore
 {
-	NetGameConnection_Impl::NetGameConnection_Impl()
+	NetGameConnectionImpl::NetGameConnectionImpl()
 	{
 	}
 
-	void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const TCPConnectionPtr &xconnection)
+	void NetGameConnectionImpl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const TCPConnectionPtr &xconnection)
 	{
 		base = xbase;
 		site = xsite;
 		connection = xconnection;
 		socket_name = connection->remote_name();
 		is_connected = true;
-		thread = std::thread(&NetGameConnection_Impl::connection_main, this);
+		thread = std::thread(&NetGameConnectionImpl::connection_main, this);
 	}
 
-	void NetGameConnection_Impl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const SocketName &xsocket_name)
+	void NetGameConnectionImpl::start(NetGameConnection *xbase, NetGameConnectionSite *xsite, const SocketName &xsocket_name)
 	{
 		base = xbase;
 		site = xsite;
 		socket_name = xsocket_name;
 		is_connected = false;
-		thread = std::thread(&NetGameConnection_Impl::connection_main, this);
+		thread = std::thread(&NetGameConnectionImpl::connection_main, this);
 	}
 
-	NetGameConnection_Impl::~NetGameConnection_Impl()
+	NetGameConnectionImpl::~NetGameConnectionImpl()
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		stop_flag = true;
@@ -69,7 +69,7 @@ namespace uicore
 			thread.join();
 	}
 
-	void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)
+	void NetGameConnectionImpl::set_data(const std::string &name, void *new_data)
 	{
 		for (auto & elem : data)
 		{
@@ -85,7 +85,7 @@ namespace uicore
 		data.push_back(d);
 	}
 
-	void *NetGameConnection_Impl::get_data(const std::string &name) const
+	void *NetGameConnectionImpl::get_data(const std::string &name) const
 	{
 		for (const auto & elem : data)
 		{
@@ -95,7 +95,7 @@ namespace uicore
 		return nullptr;
 	}
 
-	void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)
+	void NetGameConnectionImpl::send_event(const NetGameEvent &game_event)
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		Message message;
@@ -106,7 +106,7 @@ namespace uicore
 		worker_event.notify();
 	}
 
-	void NetGameConnection_Impl::disconnect()
+	void NetGameConnectionImpl::disconnect()
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		Message message;
@@ -116,12 +116,12 @@ namespace uicore
 		worker_event.notify();
 	}
 
-	SocketName NetGameConnection_Impl::get_remote_name() const
+	SocketName NetGameConnectionImpl::get_remote_name() const
 	{
 		return socket_name;
 	}
 
-	bool NetGameConnection_Impl::read_connection_data(DataBuffer &receive_buffer, int &bytes_received)
+	bool NetGameConnectionImpl::read_connection_data(DataBuffer &receive_buffer, int &bytes_received)
 	{
 		while (true)
 		{
@@ -152,7 +152,7 @@ namespace uicore
 
 	}
 
-	bool NetGameConnection_Impl::write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close)
+	bool NetGameConnectionImpl::write_connection_data(DataBuffer &send_buffer, int &bytes_sent, bool &send_graceful_close)
 	{
 		while (true)
 		{
@@ -181,7 +181,7 @@ namespace uicore
 		}
 	}
 
-	void NetGameConnection_Impl::connection_main()
+	void NetGameConnectionImpl::connection_main()
 	{
 		try
 		{
@@ -220,7 +220,7 @@ namespace uicore
 		}
 	}
 
-	bool NetGameConnection_Impl::read_data(const void *data, int size, int &bytes_consumed)
+	bool NetGameConnectionImpl::read_data(const void *data, int size, int &bytes_consumed)
 	{
 		bytes_consumed = 0;
 		while (bytes_consumed != size)
@@ -243,7 +243,7 @@ namespace uicore
 		return false;
 	}
 
-	bool NetGameConnection_Impl::write_data(DataBuffer &buffer)
+	bool NetGameConnectionImpl::write_data(DataBuffer &buffer)
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		std::vector<Message> new_send_queue;

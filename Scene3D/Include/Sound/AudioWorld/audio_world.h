@@ -3,7 +3,7 @@
 
 class SoundBuffer;
 class SoundCache;
-class AudioWorld_Impl;
+class AudioWorldImpl;
 
 class AudioWorld
 {
@@ -21,8 +21,8 @@ public:
 	bool is_reverse_stereo_enabled() const;
 
 private:
-	std::shared_ptr<AudioWorld_Impl> impl;
+	std::shared_ptr<AudioWorldImpl> impl;
 
 	friend class AudioObject;
-	friend class AudioObject_Impl;
+	friend class AudioObjectImpl;
 };

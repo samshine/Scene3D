@@ -10,24 +10,24 @@ using namespace uicore;
 
 std::shared_ptr<SceneLight> SceneLight::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneLight_Impl>(static_cast<Scene_Impl*>(scene.get()));
+	return std::make_shared<SceneLightImpl>(static_cast<SceneImpl*>(scene.get()));
 }
 
-SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene) : scene(scene)
+SceneLightImpl::SceneLightImpl(SceneImpl *scene) : scene(scene)
 {
 	it = scene->lights.insert(scene->lights.end(), this);
 
 	cull_proxy = scene->cull_provider->create_proxy(this, get_aabb());
 }
 
-SceneLight_Impl::~SceneLight_Impl()
+SceneLightImpl::~SceneLightImpl()
 {
 	if (cull_proxy)
 		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->lights.erase(it);
 }
 
-void SceneLight_Impl::set_position(const uicore::Vec3f &position)
+void SceneLightImpl::set_position(const uicore::Vec3f &position)
 {
 	if (_position != position)
 	{
@@ -37,12 +37,12 @@ void SceneLight_Impl::set_position(const uicore::Vec3f &position)
 	}
 }
 
-void SceneLight_Impl::set_orientation(const uicore::Quaternionf &orientation)
+void SceneLightImpl::set_orientation(const uicore::Quaternionf &orientation)
 {
 	_orientation = orientation;
 }
 
-void SceneLight_Impl::set_attenuation_start(float attenuation_start)
+void SceneLightImpl::set_attenuation_start(float attenuation_start)
 {
 	if (_attenuation_start != attenuation_start)
 	{
@@ -52,7 +52,7 @@ void SceneLight_Impl::set_attenuation_start(float attenuation_start)
 	}
 }
 
-void SceneLight_Impl::set_attenuation_end(float attenuation_end)
+void SceneLightImpl::set_attenuation_end(float attenuation_end)
 {
 	if (_attenuation_end != attenuation_end)
 	{
@@ -62,7 +62,7 @@ void SceneLight_Impl::set_attenuation_end(float attenuation_end)
 	}
 }
 
-uicore::AxisAlignedBoundingBox SceneLight_Impl::get_aabb()
+uicore::AxisAlignedBoundingBox SceneLightImpl::get_aabb()
 {
 	uicore::AxisAlignedBoundingBox aabb;
 	aabb.aabb_min = _position - _attenuation_end * 1.73205081f;

@@ -1,6 +1,10 @@
 
 #include "precomp.h"
 #include "instances_buffer.h"
+#include "Scene3D/scene_object_impl.h"
+#include "Scene3D/scene_light_probe_impl.h"
+#include "Scene3D/scene_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -12,6 +16,78 @@ InstancesBuffer::InstancesBuffer()
 int InstancesBuffer::new_offset_index()
 {
 	return next_offset_index++;
+}
+
+void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
+{
+	ScopeTimeFunction();
+	scene->_scene_visits++;
+
+	std::vector<Model *> models;
+
+	scene->foreach_object(frustum, [&](SceneObjectImpl *object)
+	{
+		if (object->instance.get_renderer())
+		{
+			Vec3f light_probe_color;
+			if (object->light_probe_receiver())
+			{
+				SceneLightProbeImpl *probe = find_nearest_probe(scene, object->position());
+				if (probe)
+					light_probe_color = probe->color();
+			}
+
+			scene->_instances_drawn++;
+			bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
+			if (first_instance)
+			{
+				models.push_back(object->instance.get_renderer().get());
+				scene->_models_drawn++;
+			}
+		}
+	});
+
+	frame++;
+
+	clear();
+	for (size_t i = 0; i < models.size(); i++)
+		add(models[i]->get_instance_vectors_count());
+
+	lock(gc);
+	for (size_t i = 0; i < models.size(); i++)
+		models[i]->upload(*this, world_to_eye, eye_to_projection);
+	unlock(gc);
+
+	gc->set_texture(0, get_indexes());
+	gc->set_texture(1, get_vectors());
+
+	for (Model *model : models)
+	{
+		pass_callback(model->levels[0].get(), model->instances.size());
+	}
+
+	// We cannot reset those because GBufferPass::run contains a hack relying on them being bound
+	//gc->set_texture(0, nullptr);
+	//gc->set_texture(1, nullptr);
+}
+
+SceneLightProbeImpl *InstancesBuffer::find_nearest_probe(SceneImpl *scene, const Vec3f &position)
+{
+	SceneLightProbeImpl *probe = 0;
+	float sqr_distance = 0.0f;
+
+	scene->foreach_light_probe(position, [&](SceneLightProbeImpl *current_probe)
+	{
+		Vec3f delta = current_probe->position() - position;
+		float current_sqr_distance = Vec3f::dot(delta, delta);
+		if (probe == 0 || current_sqr_distance < sqr_distance)
+		{
+			probe = current_probe;
+			sqr_distance = current_sqr_distance;
+		}
+	});
+
+	return probe;
 }
 
 void InstancesBuffer::clear()

@@ -5,7 +5,7 @@
 #include <memory>
 #include <map>
 
-class ResourceContainer_Impl
+class ResourceContainerImpl
 {
 public:
 	std::map<std::string, ResourceObject> resources;
@@ -14,7 +14,7 @@ public:
 class ResourceContainer
 {
 public:
-	ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
+	ResourceContainer() : impl(std::make_shared<ResourceContainerImpl>())
 	{
 	}
 
@@ -31,5 +31,5 @@ public:
 	}
 
 private:
-	std::shared_ptr<ResourceContainer_Impl> impl;
+	std::shared_ptr<ResourceContainerImpl> impl;
 };

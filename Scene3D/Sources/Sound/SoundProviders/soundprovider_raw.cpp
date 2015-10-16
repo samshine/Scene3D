@@ -4,7 +4,7 @@
 #include "soundprovider_raw_impl.h"
 #include "soundprovider_raw_session.h"
 
-SoundProvider_Raw::SoundProvider_Raw(void *sound_data, int num_samples, int bytes_per_sample, bool stereo, int frequency) : impl(std::make_shared<SoundProvider_Raw_Impl>())
+SoundProvider_Raw::SoundProvider_Raw(void *sound_data, int num_samples, int bytes_per_sample, bool stereo, int frequency) : impl(std::make_shared<SoundProvider_RawImpl>())
 {
 	int data_size = num_samples * bytes_per_sample;
 	if (stereo) data_size *= 2;

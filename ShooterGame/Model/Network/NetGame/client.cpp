@@ -36,7 +36,7 @@
 namespace uicore
 {
 	NetGameClient::NetGameClient()
-		: impl(std::make_shared<NetGameClient_Impl>())
+		: impl(std::make_shared<NetGameClientImpl>())
 	{
 	}
 
@@ -91,7 +91,7 @@ namespace uicore
 		impl->events.push_back(e);
 	}
 
-	void NetGameClient_Impl::process()
+	void NetGameClientImpl::process()
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 		std::vector<NetGameNetworkEvent> new_events;

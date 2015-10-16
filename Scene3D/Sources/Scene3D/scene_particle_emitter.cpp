@@ -10,17 +10,17 @@ using namespace uicore;
 
 std::shared_ptr<SceneParticleEmitter> SceneParticleEmitter::create(const ScenePtr &scene)
 {
-	return std::make_shared<SceneParticleEmitter_Impl>(static_cast<Scene_Impl*>(scene.get()));
+	return std::make_shared<SceneParticleEmitterImpl>(static_cast<SceneImpl*>(scene.get()));
 }
 
-SceneParticleEmitter_Impl::SceneParticleEmitter_Impl(Scene_Impl *scene) : scene(scene)
+SceneParticleEmitterImpl::SceneParticleEmitterImpl(SceneImpl *scene) : scene(scene)
 {
 	it = scene->emitters.insert(scene->emitters.end(), this);
 
 	cull_proxy = scene->cull_provider->create_proxy(this, get_aabb());
 }
 
-SceneParticleEmitter_Impl::~SceneParticleEmitter_Impl()
+SceneParticleEmitterImpl::~SceneParticleEmitterImpl()
 {
 	if (cull_proxy)
 		scene->cull_provider->delete_proxy(cull_proxy);
@@ -33,7 +33,7 @@ SceneParticleEmitter_Impl::~SceneParticleEmitter_Impl()
 	}
 }
 
-void SceneParticleEmitter_Impl::set_position(const Vec3f &position)
+void SceneParticleEmitterImpl::set_position(const Vec3f &position)
 {
 	if (_position != position)
 	{
@@ -43,12 +43,12 @@ void SceneParticleEmitter_Impl::set_position(const Vec3f &position)
 	}
 }
 
-void SceneParticleEmitter_Impl::set_orientation(const Quaternionf &orientation)
+void SceneParticleEmitterImpl::set_orientation(const Quaternionf &orientation)
 {
 	_orientation = orientation;
 }
 
-AxisAlignedBoundingBox SceneParticleEmitter_Impl::get_aabb()
+AxisAlignedBoundingBox SceneParticleEmitterImpl::get_aabb()
 {
 	float attenuation_end = 30.0f;
 	AxisAlignedBoundingBox aabb;

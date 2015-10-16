@@ -4,7 +4,7 @@
 #include <memory>
 
 class SoundProvider_Session;
-class SoundProvider_Impl;
+class SoundProviderImpl;
 
 class SoundProvider
 {
@@ -16,5 +16,5 @@ public:
 	virtual void end_session(SoundProvider_Session *session) = 0;
 
 private:
-	std::shared_ptr<SoundProvider_Impl> impl;
+	std::shared_ptr<SoundProviderImpl> impl;
 };

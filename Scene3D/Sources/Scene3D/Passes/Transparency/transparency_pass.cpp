@@ -17,7 +17,7 @@ TransparencyPass::TransparencyPass(ResourceContainer &inout)
 	final_color = inout.get<Texture2DPtr>("FinalColor");
 }
 
-void TransparencyPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_scene)
+void TransparencyPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scene)
 {
 	gc = render_gc;
 	scene = render_scene;
@@ -35,7 +35,11 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, Scene_Impl *rende
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
-	scene->visit(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+
+	scene->instances_buffer.render_pass(gc, scene, world_to_eye.get(), eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	{
+		model_lod->transparency_commands.execute(scene, gc, num_instances);
+	});
 
 	gc->reset_rasterizer_state();
 	gc->reset_depth_stencil_state();
@@ -66,7 +70,8 @@ void TransparencyPass::setup(const GraphicContextPtr &gc)
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
-		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_zero, blend_zero);
+		//blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_zero, blend_zero);
+		blend_desc.set_blend_function(blend_one, blend_one, blend_zero, blend_one);
 		blend_state = gc->create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
@@ -75,9 +80,4 @@ void TransparencyPass::setup(const GraphicContextPtr &gc)
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
 		depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 	}
-}
-
-void TransparencyPass::render(const GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances)
-{
-	model_lod->transparency_commands.execute(scene, gc, num_instances);
 }

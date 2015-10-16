@@ -34,7 +34,7 @@ void ShadowMaps::start_frame()
 	// Move all entries to unused list:
 	while (used_entries)
 	{
-		ShadowMapEntry_Impl *entry = used_entries;
+		ShadowMapEntryImpl *entry = used_entries;
 		unlink(entry);
 		add_unused(entry);
 	}
@@ -43,7 +43,7 @@ void ShadowMaps::start_frame()
 void ShadowMaps::assign_indexes()
 {
 	// Assign an index to all used entries, or page them out if we run out of slots
-	ShadowMapEntry_Impl *entry = used_entries;
+	ShadowMapEntryImpl *entry = used_entries;
 	while (entry)
 	{
 		if (entry->index == -1)
@@ -61,14 +61,14 @@ void ShadowMaps::assign_indexes()
 			}
 		}
 
-		ShadowMapEntry_Impl *next_entry = entry->next;
+		ShadowMapEntryImpl *next_entry = entry->next;
 		if (entry->index == -1)
 			unlink(entry);
 		entry = next_entry;
 	}
 }
 
-void ShadowMaps::add_used(ShadowMapEntry_Impl *entry)
+void ShadowMaps::add_used(ShadowMapEntryImpl *entry)
 {
 	unlink(entry);
 	if (used_entries)
@@ -77,7 +77,7 @@ void ShadowMaps::add_used(ShadowMapEntry_Impl *entry)
 	used_entries = entry;
 }
 
-void ShadowMaps::add_unused(ShadowMapEntry_Impl *entry)
+void ShadowMaps::add_unused(ShadowMapEntryImpl *entry)
 {
 	unlink(entry);
 	if (unused_entries)
@@ -86,7 +86,7 @@ void ShadowMaps::add_unused(ShadowMapEntry_Impl *entry)
 	unused_entries = entry;
 }
 
-void ShadowMaps::unlink(ShadowMapEntry_Impl *entry)
+void ShadowMaps::unlink(ShadowMapEntryImpl *entry)
 {
 	if (used_entries == entry)
 		used_entries = entry->next;
@@ -102,13 +102,13 @@ void ShadowMaps::unlink(ShadowMapEntry_Impl *entry)
 	entry->next = 0;
 }
 
-void ShadowMaps::use_entry(ShadowMapEntry_Impl *entry)
+void ShadowMaps::use_entry(ShadowMapEntryImpl *entry)
 {
 	unlink(entry);
 	add_used(entry);
 }
 
-void ShadowMaps::entry_destroyed(ShadowMapEntry_Impl *entry)
+void ShadowMaps::entry_destroyed(ShadowMapEntryImpl *entry)
 {
 	unlink(entry);
 	if (entry->index != -1)
@@ -125,7 +125,7 @@ ShadowMapEntry::ShadowMapEntry()
 }
 
 ShadowMapEntry::ShadowMapEntry(ShadowMaps *shadow_maps)
-: impl(std::make_shared<ShadowMapEntry_Impl>(shadow_maps))
+: impl(std::make_shared<ShadowMapEntryImpl>(shadow_maps))
 {
 }
 

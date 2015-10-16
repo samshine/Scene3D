@@ -8,15 +8,15 @@
 #include <memory>
 #include <mutex>
 
-class SoundBuffer_Impl;
+class SoundBufferImpl;
 class SoundProvider_Session;
-class SoundOutput_Impl;
+class SoundOutputImpl;
 
-class SoundBuffer_Session_Impl
+class SoundBuffer_SessionImpl
 {
 public:
-	SoundBuffer_Session_Impl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output);
-	virtual ~SoundBuffer_Session_Impl();
+	SoundBuffer_SessionImpl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output);
+	virtual ~SoundBuffer_SessionImpl();
 
 	SoundBuffer soundbuffer;
 	SoundProvider_Session *provider_session;

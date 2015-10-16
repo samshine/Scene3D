@@ -6,13 +6,13 @@
 
 using namespace uicore;
 
-SoundProvider_Wave::SoundProvider_Wave(const std::string &filename, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
+SoundProvider_Wave::SoundProvider_Wave(const std::string &filename, bool stream) : impl(std::make_shared<SoundProvider_WaveImpl>())
 {
 	auto source = File::open_existing(filename);
 	impl->load(*source);
 }
 
-SoundProvider_Wave::SoundProvider_Wave(IODevice &file, bool stream) : impl(std::make_shared<SoundProvider_Wave_Impl>())
+SoundProvider_Wave::SoundProvider_Wave(IODevice &file, bool stream) : impl(std::make_shared<SoundProvider_WaveImpl>())
 {
 	impl->load(file);
 }
@@ -31,7 +31,7 @@ void SoundProvider_Wave::end_session(SoundProvider_Session *session)
 	delete session;
 }
 
-void SoundProvider_Wave_Impl::load(IODevice &source)
+void SoundProvider_WaveImpl::load(IODevice &source)
 {
 	char chunk_id[4];
 	source.read(chunk_id, 4);
@@ -69,7 +69,7 @@ void SoundProvider_Wave_Impl::load(IODevice &source)
 	num_samples = subchunk2_size / block_align;
 }
 
-unsigned int SoundProvider_Wave_Impl::find_subchunk(const char *chunk, IODevice &source, unsigned int file_offset, unsigned int max_offset)
+unsigned int SoundProvider_WaveImpl::find_subchunk(const char *chunk, IODevice &source, unsigned int file_offset, unsigned int max_offset)
 {
 	char subchunk1_id[4];
 

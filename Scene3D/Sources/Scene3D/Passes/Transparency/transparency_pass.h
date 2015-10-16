@@ -2,22 +2,20 @@
 #pragma once
 
 #include "Scene3D/Passes/scene_pass.h"
-#include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/SceneCache/resource.h"
 #include "Scene3D/SceneCache/resource_container.h"
 
-class Scene_Impl;
+class SceneImpl;
 
-class TransparencyPass : public ScenePass, ModelMeshVisitor
+class TransparencyPass : public ScenePass
 {
 public:
 	TransparencyPass(ResourceContainer &inout);
 	std::string name() const override { return "transparency"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
 	void setup(const uicore::GraphicContextPtr &gc);
-	void render(const uicore::GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -28,7 +26,7 @@ private:
 	// InOut:
 	Resource<uicore::Texture2DPtr> final_color;
 
-	Scene_Impl *scene;
+	SceneImpl *scene;
 	uicore::FrameBufferPtr fb_transparency;
 	uicore::GraphicContextPtr gc;
 	uicore::BlendStatePtr blend_state;

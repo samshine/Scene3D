@@ -24,7 +24,7 @@ public:
 	{
 		if (object)
 		{
-			std::shared_ptr<Resource_Impl<Type> > resource = std::dynamic_pointer_cast<Resource_Impl<Type>>(object);
+			std::shared_ptr<ResourceImpl<Type> > resource = std::dynamic_pointer_cast<ResourceImpl<Type>>(object);
 			if (!resource)
 				throw Exception("ResourceObject type mismatch");
 			return Resource<Type>(resource);

@@ -13,12 +13,12 @@ AudioObject::AudioObject()
 }
 
 AudioObject::AudioObject(AudioWorld &world)
-	: impl(std::make_shared<AudioObject_Impl>(world.impl.get()))
+	: impl(std::make_shared<AudioObjectImpl>(world.impl.get()))
 {
 }
 
 AudioObject::AudioObject(AudioWorld &world, AudioDefinition definition)
-	: impl(std::make_shared<AudioObject_Impl>(world.impl.get()))
+	: impl(std::make_shared<AudioObjectImpl>(world.impl.get()))
 {
 	set_attenuation_begin(definition.get_attenuation_begin());
 	set_attenuation_end(definition.get_attenuation_end());
@@ -125,13 +125,13 @@ void AudioObject::stop()
 
 /////////////////////////////////////////////////////////////////////////////
 
-AudioObject_Impl::AudioObject_Impl(AudioWorld_Impl *world)
+AudioObjectImpl::AudioObjectImpl(AudioWorldImpl *world)
 	: world(world), attenuation_begin(0.0f), attenuation_end(0.0f), volume(1.0f), looping(false), ambience(false)
 {
 	it = world->objects.insert(world->objects.end(), this);
 }
 
-AudioObject_Impl::~AudioObject_Impl()
+AudioObjectImpl::~AudioObjectImpl()
 {
 	world->objects.erase(it);
 }

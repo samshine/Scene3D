@@ -17,7 +17,7 @@ public:
 	virtual void work_completed() { }
 };
 
-class WorkQueue_Impl;
+class WorkQueueImpl;
 
 /// \brief Thread pool for worker threads
 class WorkQueue
@@ -48,5 +48,5 @@ public:
 	void process_work_completed();
 
 private:
-	std::shared_ptr<WorkQueue_Impl> impl;
+	std::shared_ptr<WorkQueueImpl> impl;
 };

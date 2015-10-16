@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class Physics3DWorld_Impl;
+class Physics3DWorldImpl;
 
 class Physics3DWorld
 {
@@ -18,7 +18,7 @@ public:
 	void step_simulation_once(float time_step);
 
 private:
-	std::shared_ptr<Physics3DWorld_Impl> impl;
+	std::shared_ptr<Physics3DWorldImpl> impl;
 
 	friend class Physics3DObject;
 	friend class Physics3DShape;

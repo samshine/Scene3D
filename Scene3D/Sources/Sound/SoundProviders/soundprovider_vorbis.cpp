@@ -6,13 +6,13 @@
 
 using namespace uicore;
 
-SoundProvider_Vorbis::SoundProvider_Vorbis(const std::string &filename, bool stream) : impl(std::make_shared<SoundProvider_Vorbis_Impl>())
+SoundProvider_Vorbis::SoundProvider_Vorbis(const std::string &filename, bool stream) : impl(std::make_shared<SoundProvider_VorbisImpl>())
 {
 	auto input = File::open_existing(filename);
 	impl->load(*input);
 }
 
-SoundProvider_Vorbis::SoundProvider_Vorbis(IODevice &file, bool stream) : impl(std::make_shared<SoundProvider_Vorbis_Impl>())
+SoundProvider_Vorbis::SoundProvider_Vorbis(IODevice &file, bool stream) : impl(std::make_shared<SoundProvider_VorbisImpl>())
 {
 	impl->load(file);
 }
@@ -31,7 +31,7 @@ void SoundProvider_Vorbis::end_session(SoundProvider_Session *session)
 	delete session;
 }
 
-void SoundProvider_Vorbis_Impl::load(IODevice &input)
+void SoundProvider_VorbisImpl::load(IODevice &input)
 {
 	int size = input.size();
 	buffer = DataBuffer::create(size);

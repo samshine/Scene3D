@@ -1,14 +1,14 @@
 
 #pragma once
 
-class SoundProvider_Raw_Impl
+class SoundProvider_RawImpl
 {
 public:
-	SoundProvider_Raw_Impl() : sound_data(nullptr)
+	SoundProvider_RawImpl() : sound_data(nullptr)
 	{
 	}
 
-	~SoundProvider_Raw_Impl()
+	~SoundProvider_RawImpl()
 	{
 		if (sound_data)
 			delete[] sound_data;

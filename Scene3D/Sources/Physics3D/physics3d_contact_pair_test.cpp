@@ -13,7 +13,7 @@ Physics3DContactPairTest::Physics3DContactPairTest()
 }
 
 Physics3DContactPairTest::Physics3DContactPairTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DContactPairTest_Impl>(world.impl.get()))
+	: impl(std::make_shared<Physics3DContactPairTestImpl>(world.impl.get()))
 {
 }
 
@@ -29,11 +29,11 @@ bool Physics3DContactPairTest::test(const Physics3DObject &object_a, const Physi
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DContactPairTest_Impl::Physics3DContactPairTest_Impl(Physics3DWorld_Impl *world)
+Physics3DContactPairTestImpl::Physics3DContactPairTestImpl(Physics3DWorldImpl *world)
 	: world(world)
 {
 }
 
-Physics3DContactPairTest_Impl::~Physics3DContactPairTest_Impl()
+Physics3DContactPairTestImpl::~Physics3DContactPairTestImpl()
 {
 }

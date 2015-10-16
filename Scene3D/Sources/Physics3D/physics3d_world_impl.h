@@ -5,11 +5,11 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include "Physics3D/Bullet/BulletCollision/CollisionDispatch/btGhostObject.h"
 
-class Physics3DWorld_Impl
+class Physics3DWorldImpl
 {
 public:
-	Physics3DWorld_Impl();
-	~Physics3DWorld_Impl();
+	Physics3DWorldImpl();
+	~Physics3DWorldImpl();
 
 	std::unique_ptr<btDefaultCollisionConfiguration> collision_configuration;
 	std::unique_ptr<btConstraintSolver> constraint_solver;

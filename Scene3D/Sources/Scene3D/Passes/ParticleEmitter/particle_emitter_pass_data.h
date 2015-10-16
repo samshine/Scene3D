@@ -9,17 +9,16 @@
 class ParticleEmitterPassData
 {
 public:
-	ParticleEmitterPassData();
 	bool update(float time_elapsed);
 
-	bool visible;
-	bool in_active_list;
+	bool visible = false;
+	bool in_active_list = false;
 
-	float time_to_next_emit;
+	float time_to_next_emit = 0.0f;
 	std::vector<Particle> cpu_particles;
-	int last_emitted_index;
+	int last_emitted_index = 0;
 
-	SceneParticleEmitter_Impl *emitter;
+	SceneParticleEmitterImpl *emitter = nullptr;
 
 	Resource<uicore::TexturePtr> life_color_gradient;
 	Resource<uicore::TexturePtr> particle_animation;

@@ -9,7 +9,7 @@
 using namespace uicore;
 
 AudioWorld::AudioWorld(const std::shared_ptr<SoundCache> &sound_cache)
-	: impl(std::make_shared<AudioWorld_Impl>(sound_cache))
+	: impl(std::make_shared<AudioWorldImpl>(sound_cache))
 {
 }
 
@@ -56,15 +56,15 @@ void AudioWorld::update()
 
 /////////////////////////////////////////////////////////////////////////////
 
-AudioWorld_Impl::AudioWorld_Impl(const std::shared_ptr<SoundCache> &sound_cache) : sound_cache(sound_cache)
+AudioWorldImpl::AudioWorldImpl(const std::shared_ptr<SoundCache> &sound_cache) : sound_cache(sound_cache)
 {
 }
 
-AudioWorld_Impl::~AudioWorld_Impl()
+AudioWorldImpl::~AudioWorldImpl()
 {
 }
 
-void AudioWorld_Impl::update_session(AudioObject_Impl *obj)
+void AudioWorldImpl::update_session(AudioObjectImpl *obj)
 {
 	if (obj->attenuation_begin != obj->attenuation_end)
 	{

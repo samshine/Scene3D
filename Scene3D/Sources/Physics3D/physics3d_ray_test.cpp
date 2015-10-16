@@ -12,7 +12,7 @@ Physics3DRayTest::Physics3DRayTest()
 }
 
 Physics3DRayTest::Physics3DRayTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DRayTest_Impl>(world.impl.get()))
+	: impl(std::make_shared<Physics3DRayTestImpl>(world.impl.get()))
 {
 }
 
@@ -36,7 +36,7 @@ bool Physics3DRayTest::test(const uicore::Vec3f &new_start, const uicore::Vec3f 
 		impl->has_hit = true;
 		impl->hit_fraction = callback.m_closestHitFraction;
 		impl->hit_normal = uicore::Vec3f(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
-		impl->hit_object = static_cast<Physics3DObject_Impl*>(callback.m_collisionObject->getUserPointer());
+		impl->hit_object = static_cast<Physics3DObjectImpl*>(callback.m_collisionObject->getUserPointer());
 	}
 	else
 	{
@@ -79,11 +79,11 @@ Physics3DObject Physics3DRayTest::get_hit_object() const
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DRayTest_Impl::Physics3DRayTest_Impl(Physics3DWorld_Impl *world)
+Physics3DRayTestImpl::Physics3DRayTestImpl(Physics3DWorldImpl *world)
 	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(0)
 {
 }
 
-Physics3DRayTest_Impl::~Physics3DRayTest_Impl()
+Physics3DRayTestImpl::~Physics3DRayTestImpl()
 {
 }

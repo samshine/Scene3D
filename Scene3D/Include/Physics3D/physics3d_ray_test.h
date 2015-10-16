@@ -5,7 +5,7 @@
 
 class Physics3DWorld;
 class Physics3DObject;
-class Physics3DRayTest_Impl;
+class Physics3DRayTestImpl;
 
 class Physics3DRayTest
 {
@@ -24,5 +24,5 @@ public:
 	Physics3DObject get_hit_object() const;
 
 private:
-	std::shared_ptr<Physics3DRayTest_Impl> impl;
+	std::shared_ptr<Physics3DRayTestImpl> impl;
 };

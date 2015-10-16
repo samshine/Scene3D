@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-class GPUTimer_Impl
+class GPUTimerImpl
 {
 public:
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
@@ -30,7 +30,7 @@ public:
 
 
 GPUTimer::GPUTimer()
-	: impl(std::make_shared<GPUTimer_Impl>())
+	: impl(std::make_shared<GPUTimerImpl>())
 {
 }
 
@@ -52,7 +52,7 @@ void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 		impl->unused_disjoint_queries.push_back(disjoint_query);
 	}
 
-	impl->frames.push_back(std::shared_ptr<GPUTimer_Impl::Frame>(new GPUTimer_Impl::Frame()));
+	impl->frames.push_back(std::shared_ptr<GPUTimerImpl::Frame>(new GPUTimerImpl::Frame()));
 	impl->frames.back()->queries.reserve(impl->unused_queries.capacity());
 	impl->frames.back()->disjoint_query = impl->unused_disjoint_queries.back();
 	impl->unused_disjoint_queries.pop_back();
@@ -121,7 +121,7 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(const GraphicContextPtr &gc)
 }
 
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
-void GPUTimer_Impl::timestamp(const GraphicContextPtr &gc)
+void GPUTimerImpl::timestamp(const GraphicContextPtr &gc)
 {
 	if (unused_queries.empty())
 	{

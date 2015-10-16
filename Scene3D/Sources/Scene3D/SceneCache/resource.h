@@ -11,11 +11,11 @@ public:
 };
 
 template<typename Type>
-class Resource_Impl : public Resource_BaseImpl
+class ResourceImpl : public Resource_BaseImpl
 {
 public:
-	Resource_Impl() : value(), generation(0) { }
-	Resource_Impl(const Type &initial_value) : value(initial_value), generation(0) { }
+	ResourceImpl() : value(), generation(0) { }
+	ResourceImpl(const Type &initial_value) : value(initial_value), generation(0) { }
 	Type value;
 	int generation;
 };
@@ -26,17 +26,17 @@ class Resource
 {
 public:
 	Resource()
-		: object(new Resource_Impl<Type>()), generation(-1)
+		: object(new ResourceImpl<Type>()), generation(-1)
 	{
 	}
 
-	Resource(std::shared_ptr<Resource_Impl<Type> > object)
+	Resource(std::shared_ptr<ResourceImpl<Type> > object)
 		: object(object), generation(-1)
 	{
 	}
 
 	Resource(const Type &initial_value)
-		: object(new Resource_Impl<Type>(initial_value)), generation(-1)
+		: object(new ResourceImpl<Type>(initial_value)), generation(-1)
 	{
 	}
 
@@ -76,7 +76,7 @@ public:
 	operator Type&() { return object->value; }
 	operator const Type&() const { return object->value; }
 
-	const std::shared_ptr<Resource_Impl<Type> > &handle() const { return object; }
+	const std::shared_ptr<ResourceImpl<Type> > &handle() const { return object; }
 
 	bool operator<(const Resource &other) const { return object < other.object; }
 	bool operator<=(const Resource &other) const { return object <= other.object; }
@@ -86,6 +86,6 @@ public:
 	bool operator!=(const Resource &other) const { return object != other.object; }
 
 private:
-	std::shared_ptr<Resource_Impl<Type> > object;
+	std::shared_ptr<ResourceImpl<Type> > object;
 	int generation;
 };

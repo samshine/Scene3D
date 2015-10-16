@@ -4,7 +4,7 @@
 #include "Sound/soundformat.h"
 #include <string>
 
-class SoundProvider_Vorbis_Impl
+class SoundProvider_VorbisImpl
 {
 public:
 	void load(uicore::IODevice &input);

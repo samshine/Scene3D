@@ -127,7 +127,7 @@ void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
 	}
 }
 
-void LightsourceSimplePass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
+void LightsourceSimplePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 	find_lights(gc, scene);
@@ -135,7 +135,7 @@ void LightsourceSimplePass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 	render(gc, scene->get_gpu_timer());
 }
 
-void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, Scene_Impl *scene)
+void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	lights.clear();
 
@@ -144,18 +144,16 @@ void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, Scene_Impl 
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
-	scene->visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
-}
-
-void LightsourceSimplePass::light(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
-{
-	if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
+	scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
-		lights.push_back(light);
-	}
+		if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
+		{
+			lights.push_back(light);
+		}
+	});
 }
 
-void LightsourceSimplePass::upload(const GraphicContextPtr &gc, Scene_Impl *scene)
+void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	ScopeTimeFunction();
 

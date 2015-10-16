@@ -11,7 +11,7 @@ class SSAOPass : public ScenePass
 public:
 	SSAOPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	std::string name() const override { return "ssao"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
 	static float random_value();

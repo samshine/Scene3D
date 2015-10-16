@@ -5,7 +5,7 @@
 
 class Physics3DWorld;
 class Physics3DObject;
-class Physics3DContactPairTest_Impl;
+class Physics3DContactPairTestImpl;
 
 class Physics3DContactPairTest
 {
@@ -18,5 +18,5 @@ public:
 	bool test(const Physics3DObject &object_a, const Physics3DObject &object_b);
 
 private:
-	std::shared_ptr<Physics3DContactPairTest_Impl> impl;
+	std::shared_ptr<Physics3DContactPairTestImpl> impl;
 };

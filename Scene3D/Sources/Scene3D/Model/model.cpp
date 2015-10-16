@@ -5,7 +5,6 @@
 #include "model_shader_cache.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
-#include "model_mesh_visitor.h"
 #include "model_lod.h"
 #include "Scene3D/SceneCache/instances_buffer.h"
 
@@ -174,11 +173,4 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 			}
 		}
 	}
-}
-
-void Model::visit(const GraphicContextPtr &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor)
-{
-	gc->set_texture(0, instances_buffer.get_indexes());
-	gc->set_texture(1, instances_buffer.get_vectors());
-	visitor->render(gc, levels[0].get(), instances.size());
 }

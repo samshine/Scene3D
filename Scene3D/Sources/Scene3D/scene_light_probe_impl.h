@@ -5,13 +5,13 @@
 #include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 
-class Scene_Impl;
+class SceneImpl;
 
-class SceneLightProbe_Impl : public SceneLightProbe, public SceneItem
+class SceneLightProbeImpl : public SceneLightProbe, public SceneItem
 {
 public:
-	SceneLightProbe_Impl(Scene_Impl *scene);
-	~SceneLightProbe_Impl();
+	SceneLightProbeImpl(SceneImpl *scene);
+	~SceneLightProbeImpl();
 
 	uicore::Vec3f position() const override { return _position; }
 	float radius() const override { return _radius; }
@@ -23,9 +23,9 @@ public:
 
 	uicore::AxisAlignedBoundingBox get_aabb();
 
-	Scene_Impl *scene = nullptr;
+	SceneImpl *scene = nullptr;
 	SceneCullProxy *cull_proxy = nullptr;
-	std::list<SceneLightProbe_Impl *>::iterator it;
+	std::list<SceneLightProbeImpl *>::iterator it;
 
 	uicore::Vec3f _position;
 	float _radius = 1.0f;

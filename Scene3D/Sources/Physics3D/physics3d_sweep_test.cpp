@@ -17,7 +17,7 @@ Physics3DSweepTest::Physics3DSweepTest()
 }
 
 Physics3DSweepTest::Physics3DSweepTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DSweepTest_Impl>(world.impl.get()))
+	: impl(std::make_shared<Physics3DSweepTestImpl>(world.impl.get()))
 {
 }
 
@@ -42,15 +42,15 @@ bool Physics3DSweepTest::test_any_hit(const Physics3DShape &shape, const Vec3f &
 	btTransform bt_from_transform(btQuaternion(from_orientation.x, from_orientation.y, from_orientation.z, from_orientation.w), bt_from_pos);
 	btTransform bt_to_transform(btQuaternion(to_orientation.x, to_orientation.y, to_orientation.z, to_orientation.w), bt_to_pos);
 
-	Physics3DSweepTest_Impl::AnyHitConvexResultCallback callback(bt_from_pos, bt_to_pos);
+	Physics3DSweepTestImpl::AnyHitConvexResultCallback callback(bt_from_pos, bt_to_pos);
 	impl->world->dynamics_world->convexSweepTest(convex_shape, bt_from_transform, bt_to_transform, callback, allowed_ccd_penetration);
 
 	if (callback.hasHit())
 	{
-		Physics3DSweepTest_Impl::SweepHit hit;
+		Physics3DSweepTestImpl::SweepHit hit;
 		hit.hit_fraction = callback.m_hitFraction;
 		hit.hit_normal = Vec3f(callback.m_hitNormalWorld.getX(), callback.m_hitNormalWorld.getY(), callback.m_hitNormalWorld.getZ());
-		hit.hit_collision_object = static_cast<Physics3DObject_Impl *>(callback.m_hitCollisionObject->getUserPointer());
+		hit.hit_collision_object = static_cast<Physics3DObjectImpl *>(callback.m_hitCollisionObject->getUserPointer());
 		impl->hits.push_back(hit);
 	}
 
@@ -78,10 +78,10 @@ bool Physics3DSweepTest::test_first_hit(const Physics3DShape &shape, const Vec3f
 
 	if (callback.hasHit())
 	{
-		Physics3DSweepTest_Impl::SweepHit hit;
+		Physics3DSweepTestImpl::SweepHit hit;
 		hit.hit_fraction = callback.m_closestHitFraction;
 		hit.hit_normal = Vec3f(callback.m_hitNormalWorld.getX(), callback.m_hitNormalWorld.getY(), callback.m_hitNormalWorld.getZ());
-		hit.hit_collision_object = static_cast<Physics3DObject_Impl *>(callback.m_hitCollisionObject->getUserPointer());
+		hit.hit_collision_object = static_cast<Physics3DObjectImpl *>(callback.m_hitCollisionObject->getUserPointer());
 		impl->hits.push_back(hit);
 	}
 
@@ -104,7 +104,7 @@ bool Physics3DSweepTest::test_all_hits(const Physics3DShape &shape, const Vec3f 
 	btTransform bt_from_transform(btQuaternion(from_orientation.x, from_orientation.y, from_orientation.z, from_orientation.w), bt_from_pos);
 	btTransform bt_to_transform(btQuaternion(to_orientation.x, to_orientation.y, to_orientation.z, to_orientation.w), bt_to_pos);
 
-	Physics3DSweepTest_Impl::AllHitsConvexResultCallback callback(impl.get());
+	Physics3DSweepTestImpl::AllHitsConvexResultCallback callback(impl.get());
 	impl->world->dynamics_world->convexSweepTest(convex_shape, bt_from_transform, bt_to_transform, callback, allowed_ccd_penetration);
 
 	std::sort(impl->hits.begin(), impl->hits.end());
@@ -142,11 +142,11 @@ Physics3DObject Physics3DSweepTest::get_hit_object(int index) const
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DSweepTest_Impl::Physics3DSweepTest_Impl(Physics3DWorld_Impl *world)
+Physics3DSweepTestImpl::Physics3DSweepTestImpl(Physics3DWorldImpl *world)
 	: world(world)
 {
 }
 
-Physics3DSweepTest_Impl::~Physics3DSweepTest_Impl()
+Physics3DSweepTestImpl::~Physics3DSweepTestImpl()
 {
 }

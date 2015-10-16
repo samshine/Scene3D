@@ -15,14 +15,14 @@ Physics3DObject::Physics3DObject()
 {
 }
 
-Physics3DObject::Physics3DObject(std::shared_ptr<Physics3DObject_Impl> impl)
+Physics3DObject::Physics3DObject(std::shared_ptr<Physics3DObjectImpl> impl)
 	: impl(impl)
 {
 }
 
 Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -39,7 +39,7 @@ Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Phy
 
 Physics3DObject Physics3DObject::ghost_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -56,7 +56,7 @@ Physics3DObject Physics3DObject::ghost_body(Physics3DWorld &world, const Physics
 
 Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics3DShape &shape, float mass, const Vec3f &position, const Quaternionf &orientation, const Vec3f &local_inertia)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObject_Impl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -282,12 +282,12 @@ void Physics3DObject::remove_constraint(const Physics3DConstraint &constraint)
 
 ///////////////////////////////////////////////////////////////////////////
 
-Physics3DObject_Impl::Physics3DObject_Impl(Physics3DWorld_Impl *world)
+Physics3DObjectImpl::Physics3DObjectImpl(Physics3DWorldImpl *world)
 	: world(world)
 {
 }
 
-Physics3DObject_Impl::~Physics3DObject_Impl()
+Physics3DObjectImpl::~Physics3DObjectImpl()
 {
 	if (object != 0)
 	{

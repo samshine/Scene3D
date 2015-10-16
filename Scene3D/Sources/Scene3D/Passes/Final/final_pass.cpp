@@ -51,7 +51,7 @@ FinalPass::FinalPass(const GraphicContextPtr &gc, const std::string &shader_path
 	rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
 }
 
-void FinalPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
+void FinalPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	ScopeTimeFunction();
 	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(gc, lightsource_pass.final_color);

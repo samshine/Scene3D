@@ -4,17 +4,17 @@
 #include <list>
 
 class SoundCache;
-class AudioObject_Impl;
+class AudioObjectImpl;
 
-class AudioWorld_Impl
+class AudioWorldImpl
 {
 public:
-	AudioWorld_Impl(const std::shared_ptr<SoundCache> &sound_cache);
-	~AudioWorld_Impl();
+	AudioWorldImpl(const std::shared_ptr<SoundCache> &sound_cache);
+	~AudioWorldImpl();
 
-	void update_session(AudioObject_Impl *obj);
+	void update_session(AudioObjectImpl *obj);
 
-	std::list<AudioObject_Impl *> objects;
+	std::list<AudioObjectImpl *> objects;
 	std::list<AudioObject> active_objects;
 
 	uicore::Vec3f listener_position;

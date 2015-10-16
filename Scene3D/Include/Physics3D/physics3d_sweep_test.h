@@ -6,7 +6,7 @@
 class Physics3DWorld;
 class Physics3DShape;
 class Physics3DObject;
-class Physics3DSweepTest_Impl;
+class Physics3DSweepTestImpl;
 
 class Physics3DSweepTest
 {
@@ -27,5 +27,5 @@ public:
 	Physics3DObject get_hit_object(int index) const;
 
 private:
-	std::shared_ptr<Physics3DSweepTest_Impl> impl;
+	std::shared_ptr<Physics3DSweepTestImpl> impl;
 };

@@ -21,7 +21,33 @@ ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std
 	final_color = inout.get<Texture2DPtr>("FinalColor");
 }
 
-void ParticleEmitterPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
+void ParticleEmitterPass::select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const FrustumPlanes &frustum)
+{
+	for (auto &emitter : active_emitters)
+		emitter->visible = false;
+
+	scene->foreach_emitter(frustum, [&](SceneParticleEmitterImpl *emitter)
+	{
+		if (!emitter->pass_data)
+		{
+			emitter->pass_data = std::make_shared<ParticleEmitterPassData>();
+			emitter->pass_data->emitter = emitter;
+			emitter->pass_data->life_color_gradient = texture_cache.get_texture(gc, emitter->gradient_texture(), false);
+			emitter->pass_data->particle_animation = texture_cache.get_texture(gc, emitter->particle_texture(), false);
+			emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(gc, 1);
+		}
+
+		emitter->pass_data->visible = true;
+
+		if (!emitter->pass_data->in_active_list)
+		{
+			active_emitters.push_back(emitter->pass_data);
+			emitter->pass_data->in_active_list = true;
+		}
+	});
+}
+
+void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 
@@ -30,9 +56,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 
-	for (size_t i = 0; i < active_emitters.size(); i++)
-		active_emitters[i]->visible = false;
-	scene->visit_emitters(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+	select_active_emitters(gc, scene, frustum);
 
 	const int vectors_per_particle = 2;
 
@@ -178,26 +202,6 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 
 		prim_array = PrimitivesArray::create(gc);
 		prim_array->set_attributes(0, billboard_positions);
-	}
-}
-
-void ParticleEmitterPass::emitter(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter)
-{
-	if (!emitter->pass_data)
-	{
-		emitter->pass_data.reset(new ParticleEmitterPassData());
-		emitter->pass_data->emitter = emitter;
-		emitter->pass_data->life_color_gradient = texture_cache.get_texture(gc, emitter->gradient_texture(), false);
-		emitter->pass_data->particle_animation = texture_cache.get_texture(gc, emitter->particle_texture(), false);
-		emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(gc, 1);
-	}
-
-	emitter->pass_data->visible = true;
-
-	if (!emitter->pass_data->in_active_list)
-	{
-		active_emitters.push_back(emitter->pass_data);
-		emitter->pass_data->in_active_list = true;
 	}
 }
 

@@ -8,14 +8,14 @@
 #include <thread>
 #include <atomic>
 
-class SoundBuffer_Session_Impl;
+class SoundBuffer_SessionImpl;
 class SoundBuffer_Session;
 
-class SoundOutput_Impl
+class SoundOutputImpl
 {
 public:
-	SoundOutput_Impl(int mixing_frequency, int mixing_latency);
-	virtual ~SoundOutput_Impl();
+	SoundOutputImpl(int mixing_frequency, int mixing_latency);
+	virtual ~SoundOutputImpl();
 
 	void play_session(SoundBuffer_Session &session);
 	void stop_session(SoundBuffer_Session &session);
@@ -86,7 +86,7 @@ private:
 	void clamp_mix_buffers();
 
 	static std::recursive_mutex singleton_mutex;
-	static SoundOutput_Impl *instance;
+	static SoundOutputImpl *instance;
 
 	mutable std::recursive_mutex mutex;
 

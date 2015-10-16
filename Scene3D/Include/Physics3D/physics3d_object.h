@@ -6,7 +6,7 @@
 class Physics3DWorld;
 class Physics3DShape;
 class Physics3DConstraint;
-class Physics3DObject_Impl;
+class Physics3DObjectImpl;
 
 /*
 class Physics3DRigidBodyDescription
@@ -42,7 +42,7 @@ public:
 	//static Physics3DObject soft_body(Physics3DWorld &world, const Physics3DShape &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
 
 	Physics3DObject();
-	Physics3DObject(std::shared_ptr<Physics3DObject_Impl> impl);
+	Physics3DObject(std::shared_ptr<Physics3DObjectImpl> impl);
 	bool is_null() const { return !impl; }
 
 	uicore::Vec3f get_position() const;
@@ -87,7 +87,7 @@ public:
 	void remove_constraint(const Physics3DConstraint &constraint);
 
 private:
-	std::shared_ptr<Physics3DObject_Impl> impl;
+	std::shared_ptr<Physics3DObjectImpl> impl;
 
 	friend class Physics3DContactTest;
 	friend class Physics3DConstraint;

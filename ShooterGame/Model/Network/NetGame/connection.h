@@ -38,7 +38,7 @@ namespace uicore
 	/// \{
 
 	class NetGameConnectionSite;
-	class NetGameConnection_Impl;
+	class NetGameConnectionImpl;
 
 	/// \brief NetGameConnection
 	class NetGameConnection
@@ -84,7 +84,7 @@ namespace uicore
 		NetGameConnection(NetGameConnection &other);
 		NetGameConnection &operator =(const NetGameConnection &other);
 
-		NetGameConnection_Impl *impl;
+		NetGameConnectionImpl *impl;
 	};
 
 	/// \}

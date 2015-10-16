@@ -8,20 +8,20 @@
 #include "Scene3D/SceneCache/resource_container.h"
 #include "Scene3D/SceneCache/resource.h"
 
-class Scene_Impl;
+class SceneImpl;
 class MaterialCache;
 
-class ParticleEmitterPass : public ScenePass, SceneParticleEmitterVisitor
+class ParticleEmitterPass : public ScenePass
 {
 public:
 	ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout);
 	std::string name() const override { return "particle"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
 
 private:
+	void select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const uicore::FrustumPlanes &frustum);
 	void setup(const uicore::GraphicContextPtr &gc);
-	void emitter(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter);
 
 	// In:
 	Resource<uicore::Rect> viewport;

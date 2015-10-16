@@ -34,11 +34,11 @@
 
 namespace uicore
 {
-	class NetGameConnection_Impl
+	class NetGameConnectionImpl
 	{
 	public:
-		NetGameConnection_Impl();
-		~NetGameConnection_Impl();
+		NetGameConnectionImpl();
+		~NetGameConnectionImpl();
 		void start(NetGameConnection *base, NetGameConnectionSite *site, const TCPConnectionPtr &connection);
 		void start(NetGameConnection *base, NetGameConnectionSite *site, const SocketName &socket_name);
 		void set_data(const std::string &name, void *data);

@@ -3,11 +3,11 @@
 #include "soundbuffer_impl.h"
 #include "Sound/SoundProviders/soundprovider.h"
 
-SoundBuffer_Impl::SoundBuffer_Impl() : provider(nullptr), volume(1.0f), pan(0.0f)
+SoundBufferImpl::SoundBufferImpl() : provider(nullptr), volume(1.0f), pan(0.0f)
 {
 }
 
-SoundBuffer_Impl::~SoundBuffer_Impl()
+SoundBufferImpl::~SoundBufferImpl()
 {
 	if (provider)
 		delete provider;

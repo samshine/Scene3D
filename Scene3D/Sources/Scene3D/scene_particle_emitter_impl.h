@@ -6,13 +6,13 @@
 #include <list>
 
 class ParticleEmitterPassData;
-class Scene_Impl;
+class SceneImpl;
 
-class SceneParticleEmitter_Impl : public SceneParticleEmitter, public SceneItem
+class SceneParticleEmitterImpl : public SceneParticleEmitter, public SceneItem
 {
 public:
-	SceneParticleEmitter_Impl(Scene_Impl *scene);
-	~SceneParticleEmitter_Impl();
+	SceneParticleEmitterImpl(SceneImpl *scene);
+	~SceneParticleEmitterImpl();
 
 	Type type() const override { return _type; }
 	uicore::Vec3f position() const override { return _position; }
@@ -42,9 +42,9 @@ public:
 
 	uicore::AxisAlignedBoundingBox get_aabb();
 
-	Scene_Impl *scene = nullptr;
+	SceneImpl *scene = nullptr;
 	SceneCullProxy *cull_proxy = nullptr;
-	std::list<SceneParticleEmitter_Impl *>::iterator it;
+	std::list<SceneParticleEmitterImpl *>::iterator it;
 
 	SceneParticleEmitter::Type _type = SceneParticleEmitter::type_omni;
 	uicore::Vec3f _position;
@@ -61,10 +61,4 @@ public:
 	std::string _gradient_texture;
 
 	std::shared_ptr<ParticleEmitterPassData> pass_data;
-};
-
-class SceneParticleEmitterVisitor
-{
-public:
-	virtual void emitter(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter) = 0;
 };

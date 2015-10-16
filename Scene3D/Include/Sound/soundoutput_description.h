@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class SoundOutput_Description_Impl;
+class SoundOutput_DescriptionImpl;
 
 class SoundOutput_Description
 {
@@ -17,5 +17,5 @@ public:
 	void set_mixing_latency(int latency);
 
 private:
-	std::shared_ptr<SoundOutput_Description_Impl> impl;
+	std::shared_ptr<SoundOutput_DescriptionImpl> impl;
 };

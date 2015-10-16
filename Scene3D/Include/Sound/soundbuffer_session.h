@@ -5,7 +5,7 @@
 
 class SoundCard;
 class SoundBuffer;
-class SoundBuffer_Session_Impl;
+class SoundBuffer_SessionImpl;
 class SoundOutput;
 
 class SoundBuffer_Session
@@ -39,8 +39,8 @@ public:
 
 private:
 	SoundBuffer_Session(SoundBuffer &soundbuffer, bool looping, SoundOutput &output);
-	std::shared_ptr<SoundBuffer_Session_Impl> impl;
+	std::shared_ptr<SoundBuffer_SessionImpl> impl;
 
 	friend class SoundBuffer;
-	friend class SoundOutput_Impl;
+	friend class SoundOutputImpl;
 };

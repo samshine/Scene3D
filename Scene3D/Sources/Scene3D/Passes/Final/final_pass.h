@@ -10,7 +10,7 @@ class FinalPass : public ScenePass
 public:
 	FinalPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	std::string name() const override { return "final"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
 	// In:

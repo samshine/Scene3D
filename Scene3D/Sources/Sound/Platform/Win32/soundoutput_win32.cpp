@@ -18,7 +18,7 @@ DEFINE_GUID(GUID_NULL,0x00000000L, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00,
 using namespace uicore;
 
 SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_latency)
-	: SoundOutput_Impl(init_mixing_frequency, init_mixing_latency), audio_buffer_ready_event(INVALID_HANDLE_VALUE), is_playing(false), fragment_size(0), wait_timeout(mixing_latency * 2), write_pos(0)
+	: SoundOutputImpl(init_mixing_frequency, init_mixing_latency), audio_buffer_ready_event(INVALID_HANDLE_VALUE), is_playing(false), fragment_size(0), wait_timeout(mixing_latency * 2), write_pos(0)
 {
 	try
 	{

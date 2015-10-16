@@ -3,20 +3,20 @@
 
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 
-class Physics3DObject_Impl;
-class Physics3DWorld_Impl;
+class Physics3DObjectImpl;
+class Physics3DWorldImpl;
 
-class Physics3DRayTest_Impl
+class Physics3DRayTestImpl
 {
 public:
-	Physics3DRayTest_Impl(Physics3DWorld_Impl *world);
-	~Physics3DRayTest_Impl();
+	Physics3DRayTestImpl(Physics3DWorldImpl *world);
+	~Physics3DRayTestImpl();
 
-	Physics3DWorld_Impl *world;
+	Physics3DWorldImpl *world;
 
 	uicore::Vec3f start, end;
 	bool has_hit;
 	float hit_fraction;
 	uicore::Vec3f hit_normal;
-	Physics3DObject_Impl *hit_object;
+	Physics3DObjectImpl *hit_object;
 };

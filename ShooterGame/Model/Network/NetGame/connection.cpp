@@ -36,13 +36,13 @@
 namespace uicore
 {
 	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const TCPConnectionPtr &connection)
-		: impl(new NetGameConnection_Impl)
+		: impl(new NetGameConnectionImpl)
 	{
 		impl->start(this, site, connection);
 	}
 
 	NetGameConnection::NetGameConnection(NetGameConnectionSite *site, const SocketName &socket_name)
-		: impl(new NetGameConnection_Impl)
+		: impl(new NetGameConnectionImpl)
 	{
 		impl->start(this, site, socket_name);
 	}

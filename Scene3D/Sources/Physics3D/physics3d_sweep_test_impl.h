@@ -4,16 +4,16 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <vector>
 
-class Physics3DObject_Impl;
-class Physics3DWorld_Impl;
+class Physics3DObjectImpl;
+class Physics3DWorldImpl;
 
-class Physics3DSweepTest_Impl
+class Physics3DSweepTestImpl
 {
 public:
-	Physics3DSweepTest_Impl(Physics3DWorld_Impl *world);
-	~Physics3DSweepTest_Impl();
+	Physics3DSweepTestImpl(Physics3DWorldImpl *world);
+	~Physics3DSweepTestImpl();
 
-	Physics3DWorld_Impl *world;
+	Physics3DWorldImpl *world;
 
 	uicore::Vec3f from_pos, to_pos;
 
@@ -25,7 +25,7 @@ public:
 
 		float hit_fraction;
 		uicore::Vec3f hit_normal;
-		Physics3DObject_Impl *hit_collision_object;
+		Physics3DObjectImpl *hit_collision_object;
 	};
 
 	std::vector<SweepHit> hits;
@@ -64,7 +64,7 @@ public:
 	class AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallback
 	{
 	public:
-		AllHitsConvexResultCallback(Physics3DSweepTest_Impl *impl) : impl(impl)
+		AllHitsConvexResultCallback(Physics3DSweepTestImpl *impl) : impl(impl)
 		{
 		}
 
@@ -72,7 +72,7 @@ public:
 		{
 			SweepHit hit;
 			hit.hit_fraction = convexResult.m_hitFraction;
-			hit.hit_collision_object = static_cast<Physics3DObject_Impl*>(convexResult.m_hitCollisionObject->getUserPointer());
+			hit.hit_collision_object = static_cast<Physics3DObjectImpl*>(convexResult.m_hitCollisionObject->getUserPointer());
 
 			if (normalInWorldSpace)
 			{
@@ -97,6 +97,6 @@ public:
 			return uicore::Vec3f(v.getX(), v.getY(), v.getZ());
 		}
 
-		Physics3DSweepTest_Impl *impl;
+		Physics3DSweepTestImpl *impl;
 	};
 };

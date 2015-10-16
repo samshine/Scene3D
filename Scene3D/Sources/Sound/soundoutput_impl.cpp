@@ -7,10 +7,10 @@
 
 using namespace uicore;
 
-std::recursive_mutex SoundOutput_Impl::singleton_mutex;
-SoundOutput_Impl *SoundOutput_Impl::instance = nullptr;
+std::recursive_mutex SoundOutputImpl::singleton_mutex;
+SoundOutputImpl *SoundOutputImpl::instance = nullptr;
 
-SoundOutput_Impl::SoundOutput_Impl(int mixing_frequency, int latency)
+SoundOutputImpl::SoundOutputImpl(int mixing_frequency, int latency)
 	: mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
 	pan(0.0f), mix_buffer_size(0)
 {
@@ -27,7 +27,7 @@ SoundOutput_Impl::SoundOutput_Impl(int mixing_frequency, int latency)
 
 }
 
-SoundOutput_Impl::~SoundOutput_Impl()
+SoundOutputImpl::~SoundOutputImpl()
 {
 	SoundSSE::aligned_free(stereo_buffer);
 	SoundSSE::aligned_free(mix_buffers[0]);
@@ -39,13 +39,13 @@ SoundOutput_Impl::~SoundOutput_Impl()
 	instance = nullptr;
 }
 
-void SoundOutput_Impl::play_session(SoundBuffer_Session &session)
+void SoundOutputImpl::play_session(SoundBuffer_Session &session)
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	sessions.push_back(session);
 }
 
-void SoundOutput_Impl::stop_session(SoundBuffer_Session &session)
+void SoundOutputImpl::stop_session(SoundBuffer_Session &session)
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 
@@ -59,14 +59,14 @@ void SoundOutput_Impl::stop_session(SoundBuffer_Session &session)
 	}
 }
 
-void SoundOutput_Impl::start_mixer_thread()
+void SoundOutputImpl::start_mixer_thread()
 {
 	stop_flag = false;
-	thread = std::thread(&SoundOutput_Impl::mixer_thread, this);
+	thread = std::thread(&SoundOutputImpl::mixer_thread, this);
 	//	thread.set_priority(cl_priority_highest);
 }
 
-void SoundOutput_Impl::stop_mixer_thread()
+void SoundOutputImpl::stop_mixer_thread()
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	stop_flag = true;
@@ -75,7 +75,7 @@ void SoundOutput_Impl::stop_mixer_thread()
 	thread = std::thread();
 }
 
-void SoundOutput_Impl::mix_fragment()
+void SoundOutputImpl::mix_fragment()
 {
 	resize_mix_buffers();
 	clear_mix_buffers();
@@ -85,7 +85,7 @@ void SoundOutput_Impl::mix_fragment()
 	SoundSSE::pack_float_stereo(mix_buffers, mix_buffer_size, stereo_buffer);
 }
 
-void SoundOutput_Impl::mixer_thread()
+void SoundOutputImpl::mixer_thread()
 {
 	mixer_thread_starting();
 
@@ -104,12 +104,12 @@ void SoundOutput_Impl::mixer_thread()
 	mixer_thread_stopping();
 }
 
-bool SoundOutput_Impl::if_continue_mixing()
+bool SoundOutputImpl::if_continue_mixing()
 {
 	return !stop_flag;
 }
 
-void SoundOutput_Impl::resize_mix_buffers()
+void SoundOutputImpl::resize_mix_buffers()
 {
 	if (get_fragment_size() != mix_buffer_size)
 	{
@@ -132,14 +132,14 @@ void SoundOutput_Impl::resize_mix_buffers()
 	}
 }
 
-void SoundOutput_Impl::clear_mix_buffers()
+void SoundOutputImpl::clear_mix_buffers()
 {
 	// Clear channel mixing buffers:
 	SoundSSE::set_float(mix_buffers[0], mix_buffer_size, 0.0f);
 	SoundSSE::set_float(mix_buffers[1], mix_buffer_size, 0.0f);
 }
 
-void SoundOutput_Impl::fill_mix_buffers()
+void SoundOutputImpl::fill_mix_buffers()
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	std::vector< SoundBuffer_Session > ended_sessions;
@@ -156,7 +156,7 @@ void SoundOutput_Impl::fill_mix_buffers()
 	for (int i = 0; i < size_ended_sessions; i++) stop_session(ended_sessions[i]);
 }
 
-void SoundOutput_Impl::apply_master_volume_on_mix_buffers()
+void SoundOutputImpl::apply_master_volume_on_mix_buffers()
 {
 	// Calculate volume on left and right channel:
 	float left_pan = 1 - pan;
@@ -175,7 +175,7 @@ void SoundOutput_Impl::apply_master_volume_on_mix_buffers()
 	SoundSSE::multiply_float(mix_buffers[1], mix_buffer_size, right_volume);
 }
 
-void SoundOutput_Impl::clamp_mix_buffers()
+void SoundOutputImpl::clamp_mix_buffers()
 {
 	// Make sure values stay inside 16 bit range:
 	for (auto & elem : mix_buffers)

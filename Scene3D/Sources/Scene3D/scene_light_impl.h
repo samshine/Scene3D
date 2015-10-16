@@ -6,13 +6,13 @@
 #include <list>
 
 class VSMShadowMapPassLightData;
-class Scene_Impl;
+class SceneImpl;
 
-class SceneLight_Impl : public SceneLight, public SceneItem
+class SceneLightImpl : public SceneLight, public SceneItem
 {
 public:
-	SceneLight_Impl(Scene_Impl *scene);
-	~SceneLight_Impl();
+	SceneLightImpl(SceneImpl *scene);
+	~SceneLightImpl();
 
 	Type type() const override { return _type; }
 	uicore::Vec3f position() const override { return _position; }
@@ -50,9 +50,9 @@ public:
 
 	uicore::AxisAlignedBoundingBox get_aabb();
 
-	Scene_Impl *scene = nullptr;
+	SceneImpl *scene = nullptr;
 	SceneCullProxy *cull_proxy = nullptr;
-	std::list<SceneLight_Impl *>::iterator it;
+	std::list<SceneLightImpl *>::iterator it;
 
 	SceneLight::Type _type = SceneLight::type_omni;
 	uicore::Vec3f _position;
@@ -72,10 +72,4 @@ public:
 	SceneLightPtr _shadow_source;
 
 	std::unique_ptr<VSMShadowMapPassLightData> vsm_data;
-};
-
-class SceneLightVisitor
-{
-public:
-	virtual void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light) = 0;
 };

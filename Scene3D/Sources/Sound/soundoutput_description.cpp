@@ -2,14 +2,14 @@
 #include "precomp.h"
 #include "Sound/soundoutput_description.h"
 
-class SoundOutput_Description_Impl
+class SoundOutput_DescriptionImpl
 {
 public:
 	int mixing_frequency;
 	int mixing_latency;
 };
 
-SoundOutput_Description::SoundOutput_Description() : impl(std::make_shared<SoundOutput_Description_Impl>())
+SoundOutput_Description::SoundOutput_Description() : impl(std::make_shared<SoundOutput_DescriptionImpl>())
 {
 	impl->mixing_frequency = 44100;
 	impl->mixing_latency = 50;

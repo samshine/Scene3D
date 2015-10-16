@@ -33,7 +33,7 @@
 
 namespace uicore
 {
-	class NetGameClient_Impl
+	class NetGameClientImpl
 	{
 	public:
 		void process();

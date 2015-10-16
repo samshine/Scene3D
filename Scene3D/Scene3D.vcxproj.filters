@@ -378,9 +378,6 @@
     <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_mesh_visitor.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\Model\model_render_command.h">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClInclude>

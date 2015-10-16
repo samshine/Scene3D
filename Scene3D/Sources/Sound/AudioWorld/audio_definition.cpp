@@ -3,7 +3,7 @@
 #include "Sound/AudioWorld/audio_definition.h"
 #include "audio_definition_impl.h"
 
-AudioDefinition::AudioDefinition() : impl(std::make_shared<AudioDefinition_Impl>())
+AudioDefinition::AudioDefinition() : impl(std::make_shared<AudioDefinitionImpl>())
 {
 }
 
@@ -69,6 +69,6 @@ void AudioDefinition::set_ambience(bool ambience)
 
 /////////////////////////////////////////////////////////////////////////////
 
-AudioDefinition_Impl::AudioDefinition_Impl() : attenuation_begin(0.0f), attenuation_end(0.0f), volume(1.0f), looping(false), ambience(false)
+AudioDefinitionImpl::AudioDefinitionImpl() : attenuation_begin(0.0f), attenuation_end(0.0f), volume(1.0f), looping(false), ambience(false)
 {
 }

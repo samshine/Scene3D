@@ -6,7 +6,7 @@
 class Physics3DWorld;
 class Physics3DObject;
 class Physics3DShape;
-class Physics3DContactTest_Impl;
+class Physics3DContactTestImpl;
 
 class Physics3DContactTest
 {
@@ -26,5 +26,5 @@ public:
 	float get_hit_distance(int index) const;
 
 private:
-	std::shared_ptr<Physics3DContactTest_Impl> impl;
+	std::shared_ptr<Physics3DContactTestImpl> impl;
 };

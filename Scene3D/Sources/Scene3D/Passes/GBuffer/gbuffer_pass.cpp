@@ -21,7 +21,7 @@ GBufferPass::GBufferPass(ResourceContainer &inout)
 	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
 }
 
-void GBufferPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_scene)
+void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scene)
 {
 	gc = render_gc;
 	scene = render_scene;
@@ -52,7 +52,11 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, Scene_Impl *render_sce
 	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 
 	render_list.clear();
-	scene->visit(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+	scene->instances_buffer.render_pass(gc, scene, world_to_eye.get(), eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	{
+		model_lod->early_z_commands.execute(scene, gc, num_instances);
+		render_list.push_back(RenderEntry(model_lod, num_instances));
+	});
 
 	gc->set_blend_state(blend_state);
 	for (size_t i = 0; i < render_list.size(); i++)
@@ -137,10 +141,4 @@ void GBufferPass::setup_gbuffer(const GraphicContextPtr &gc)
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
 		depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 	}
-}
-
-void GBufferPass::render(const GraphicContextPtr &gc, ModelLOD *model_lod, int num_instances)
-{
-	model_lod->early_z_commands.execute(scene, gc, num_instances);
-	render_list.push_back(RenderEntry(model_lod, num_instances));
 }

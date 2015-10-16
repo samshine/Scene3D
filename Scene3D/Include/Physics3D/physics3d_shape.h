@@ -7,7 +7,7 @@
 class ModelData;
 class TerrainData;
 class Physics3DWorld;
-class Physics3DShape_Impl;
+class Physics3DShapeImpl;
 
 class Physics3DShape
 {
@@ -25,7 +25,7 @@ public:
 	static Physics3DShape gimpact_model(const std::shared_ptr<ModelData> &model_data);
 
 private:
-	std::shared_ptr<Physics3DShape_Impl> impl;
+	std::shared_ptr<Physics3DShapeImpl> impl;
 
 	friend class Physics3DObject;
 	friend class Physics3DSweepTest;

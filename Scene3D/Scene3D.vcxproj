@@ -312,7 +312,6 @@
     <ClInclude Include="Sources\Scene3D\Model\model_lod.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_material_cache.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h" />
-    <ClInclude Include="Sources\Scene3D\Model\model_mesh_visitor.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_render_command.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_shader_cache.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_shader_description.h" />

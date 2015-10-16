@@ -9,26 +9,23 @@
 #include "Scene3D/scene_light_impl.h"
 
 class GPUTimer;
-class Scene_Impl;
+class SceneImpl;
 
-class LightsourcePass : public ScenePass, SceneLightVisitor
+class LightsourcePass : public ScenePass
 {
 public:
 	LightsourcePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourcePass();
 
 	std::string name() const override { return "light"; }
-	void run(const uicore::GraphicContextPtr &gc, Scene_Impl *scene) override;
+	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
-	void find_lights(const uicore::GraphicContextPtr &gc, Scene_Impl *scene);
+	void find_lights(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
 	void upload(const uicore::GraphicContextPtr &gc);
 	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
 	void update_buffers(const uicore::GraphicContextPtr &gc);
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines = std::string());
-
-	// SceneLightVisitor
-	void light(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
 	Resource<uicore::Rect> viewport;
@@ -76,7 +73,7 @@ private:
 	uicore::ProgramObjectPtr cull_tiles_program;
 	uicore::ProgramObjectPtr render_tiles_program;
 
-	std::vector<SceneLight_Impl *> lights;
+	std::vector<SceneLightImpl *> lights;
 
 	int tile_size;
 	int num_tiles_x;

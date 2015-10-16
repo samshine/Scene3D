@@ -6,7 +6,7 @@
 
 class Physics3DWorld;
 class Physics3DObject;
-class Physics3DConstraint_Impl;
+class Physics3DConstraintImpl;
 
 class Physics3DConstraint
 {
@@ -29,7 +29,7 @@ public:
 	void set_linear_upper_limit(const uicore::Vec3f &limit);
 
 private:
-	std::shared_ptr<Physics3DConstraint_Impl> impl;
+	std::shared_ptr<Physics3DConstraintImpl> impl;
 
 	friend class Physics3DObject;
 };

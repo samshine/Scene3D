@@ -3,7 +3,7 @@
 
 #include "soundprovider.h"
 
-class SoundProvider_Wave_Impl;
+class SoundProvider_WaveImpl;
 
 class SoundProvider_Wave : public SoundProvider
 {
@@ -16,7 +16,7 @@ public:
 	virtual void end_session(SoundProvider_Session *session) override;
 
 private:
-	std::shared_ptr<SoundProvider_Wave_Impl> impl;
+	std::shared_ptr<SoundProvider_WaveImpl> impl;
 
 	friend class SoundProvider_Wave_Session;
 };

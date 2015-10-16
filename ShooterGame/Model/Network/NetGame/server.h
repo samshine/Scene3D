@@ -37,7 +37,7 @@ namespace uicore
 
 	class NetGameEvent;
 	class NetGameConnection;
-	class NetGameServer_Impl;
+	class NetGameServerImpl;
 
 	/// \brief NetGameServer
 	class NetGameServer : NetGameConnectionSite
@@ -82,7 +82,7 @@ namespace uicore
 		/// \param e = Net Game Network Event
 		void add_network_event(const NetGameNetworkEvent &e) override;
 
-		std::shared_ptr<NetGameServer_Impl> impl;
+		std::shared_ptr<NetGameServerImpl> impl;
 	};
 
 	/// \}

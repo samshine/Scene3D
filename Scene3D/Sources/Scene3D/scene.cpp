@@ -14,12 +14,12 @@ using namespace uicore;
 
 std::shared_ptr<Scene> Scene::create(const SceneCachePtr &cache)
 {
-	auto scene = std::make_shared<Scene_Impl>(cache);
+	auto scene = std::make_shared<SceneImpl>(cache);
 	scene->set_camera(SceneCamera::create(scene));
 	return scene;
 }
 
-Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_cast<SceneCacheImpl>(cache))
+SceneImpl::SceneImpl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_cast<SceneCacheImpl>(cache))
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
 
@@ -74,24 +74,24 @@ Scene_Impl::Scene_Impl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_
 	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, inout_data));
 }
 
-Mat4f Scene_Impl::world_to_eye() const
+Mat4f SceneImpl::world_to_eye() const
 {
 	Quaternionf inv_orientation = Quaternionf::inverse(_camera->orientation());
 	return inv_orientation.to_matrix() * Mat4f::translate(_camera->position());
 }
 
-Mat4f Scene_Impl::eye_to_projection() const
+Mat4f SceneImpl::eye_to_projection() const
 {
 	Size viewport_size = viewport->size();
 	return Mat4f::perspective(camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
 }
 
-Mat4f Scene_Impl::world_to_projection() const
+Mat4f SceneImpl::world_to_projection() const
 {
 	return eye_to_projection() * world_to_eye();
 }
 
-void Scene_Impl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
+void SceneImpl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
 {
 	Size viewport_size = viewport->size();
 
@@ -113,12 +113,12 @@ void Scene_Impl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f 
 	out_ray_direction = _camera->orientation().rotate_vector(ray_direction);
 }
 
-void Scene_Impl::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
+void SceneImpl::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree(aabb));
 }
 
-void Scene_Impl::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
+void SceneImpl::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
 {
 	if (!objects.empty() || !lights.empty() || !emitters.empty() || !light_probes.empty())
 		throw Exception("Cannot change scene culling strategy after objects have been added");
@@ -126,17 +126,17 @@ void Scene_Impl::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
 	set_cull_oct_tree(AxisAlignedBoundingBox(aabb_min, aabb_max));
 }
 
-void Scene_Impl::set_cull_oct_tree(float max_size)
+void SceneImpl::set_cull_oct_tree(float max_size)
 {
 	set_cull_oct_tree(AxisAlignedBoundingBox(Vec3f(-max_size), Vec3f(max_size)));
 }
 
-void Scene_Impl::show_skybox_stars(bool enable)
+void SceneImpl::show_skybox_stars(bool enable)
 {
 	_show_skybox_stars.set(enable);
 }
 
-void Scene_Impl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
+void SceneImpl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
 {
 	auto pb = PixelBuffer::create(1, colors.size(), tf_rgba32f);
 	Vec4f *pixels = pb->data<Vec4f>();
@@ -154,13 +154,13 @@ void Scene_Impl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Co
 	skybox_texture.set(texture);
 }
 
-void Scene_Impl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
+void SceneImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
 	viewport.set(box);
 	viewport_fb.set(fb);
 }
 
-void Scene_Impl::render(const GraphicContextPtr &gc)
+void SceneImpl::render(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
 
@@ -195,7 +195,7 @@ void Scene_Impl::render(const GraphicContextPtr &gc)
 		OpenGL::check_error();
 }
 
-void Scene_Impl::update(const GraphicContextPtr &gc, float time_elapsed)
+void SceneImpl::update(const GraphicContextPtr &gc, float time_elapsed)
 {
 	get_cache()->process_work_completed();
 	material_cache->update(gc, time_elapsed);
@@ -204,105 +204,104 @@ void Scene_Impl::update(const GraphicContextPtr &gc, float time_elapsed)
 	// To do: update scene object animations here too
 }
 
-void Scene_Impl::visit(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
+void SceneImpl::foreach(const FrustumPlanes &frustum, const std::function<void(SceneItem *)> &callback)
 {
 	ScopeTimeFunction();
-	_scene_visits++;
-
-	std::vector<Model *> models;
-
-	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
-	for (size_t i = 0; i < visible_objects.size(); i++)
-	{
-		SceneObject_Impl *object = dynamic_cast<SceneObject_Impl*>(visible_objects[i]);
-		if (object)
-		{
-			if (object->instance.get_renderer())
-			{
-				Vec3f light_probe_color;
-				if (object->light_probe_receiver())
-				{
-					SceneLightProbe_Impl *probe = find_nearest_probe(object->position());
-					if (probe)
-						light_probe_color = probe->color();
-				}
-
-				_instances_drawn++;
-				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
-				if (first_instance)
-				{
-					models.push_back(object->instance.get_renderer().get());
-					_models_drawn++;
-				}
-			}
-		}
-	}
-
-	frame++;
-
-	instances_buffer.clear();
-	for (size_t i = 0; i < models.size(); i++)
-		instances_buffer.add(models[i]->get_instance_vectors_count());
-
-	instances_buffer.lock(gc);
-	for (size_t i = 0; i < models.size(); i++)
-		models[i]->upload(instances_buffer, world_to_eye, eye_to_projection);
-	instances_buffer.unlock(gc);
-
-	for (size_t i = 0; i < models.size(); i++)
-		models[i]->visit(gc, instances_buffer, visitor);
+	for (SceneItem *item : cull_provider->cull(frustum))
+		callback(item);
 }
 
-void Scene_Impl::visit_lights(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor)
+void SceneImpl::foreach(const Vec3f &position, const std::function<void(SceneItem *)> &callback)
 {
 	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(position))
+		callback(item);
+}
 
-	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
-	for (size_t i = 0; i < visible_objects.size(); i++)
+void SceneImpl::foreach_object(const FrustumPlanes &frustum, const std::function<void(SceneObjectImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(frustum))
 	{
-		SceneLight_Impl *light = dynamic_cast<SceneLight_Impl*>(visible_objects[i]);
-		if (light)
-		{
-			visitor->light(gc, world_to_eye, eye_to_projection, light);
-		}
+		SceneObjectImpl *v = dynamic_cast<SceneObjectImpl*>(item);
+		if (v)
+			callback(v);
 	}
 }
 
-void Scene_Impl::visit_emitters(const GraphicContextPtr &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor)
+void SceneImpl::foreach_object(const Vec3f &position, const std::function<void(SceneObjectImpl *)> &callback)
 {
 	ScopeTimeFunction();
-
-	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
-	for (size_t i = 0; i < visible_objects.size(); i++)
+	for (SceneItem *item : cull_provider->cull(position))
 	{
-		SceneParticleEmitter_Impl *emitter = dynamic_cast<SceneParticleEmitter_Impl*>(visible_objects[i]);
-		if (emitter)
-		{
-			visitor->emitter(gc, world_to_eye, eye_to_projection, emitter);
-		}
+		SceneObjectImpl *v = dynamic_cast<SceneObjectImpl*>(item);
+		if (v)
+			callback(v);
 	}
 }
 
-SceneLightProbe_Impl *Scene_Impl::find_nearest_probe(const Vec3f &position)
+void SceneImpl::foreach_light(const FrustumPlanes &frustum, const std::function<void(SceneLightImpl *)> &callback)
 {
-	SceneLightProbe_Impl *probe = 0;
-	float sqr_distance = 0.0f;
-
-	std::vector<SceneItem *> visible_objects = cull_provider->cull(position);
-	for (size_t i = 0; i < visible_objects.size(); i++)
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(frustum))
 	{
-		SceneLightProbe_Impl *current_probe = dynamic_cast<SceneLightProbe_Impl*>(visible_objects[i]);
-		if (current_probe)
-		{
-			Vec3f delta = current_probe->position() - position;
-			float current_sqr_distance = Vec3f::dot(delta, delta);
-			if (probe == 0 || current_sqr_distance < sqr_distance)
-			{
-				probe = current_probe;
-				sqr_distance = current_sqr_distance;
-			}
-		}
+		SceneLightImpl *v = dynamic_cast<SceneLightImpl*>(item);
+		if (v)
+			callback(v);
 	}
+}
 
-	return probe;
+void SceneImpl::foreach_light(const Vec3f &position, const std::function<void(SceneLightImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(position))
+	{
+		SceneLightImpl *v = dynamic_cast<SceneLightImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_light_probe(const FrustumPlanes &frustum, const std::function<void(SceneLightProbeImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(frustum))
+	{
+		SceneLightProbeImpl *v = dynamic_cast<SceneLightProbeImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_light_probe(const Vec3f &position, const std::function<void(SceneLightProbeImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(position))
+	{
+		SceneLightProbeImpl *v = dynamic_cast<SceneLightProbeImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_emitter(const FrustumPlanes &frustum, const std::function<void(SceneParticleEmitterImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(frustum))
+	{
+		SceneParticleEmitterImpl *v = dynamic_cast<SceneParticleEmitterImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_emitter(const Vec3f &position, const std::function<void(SceneParticleEmitterImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(position))
+	{
+		SceneParticleEmitterImpl *v = dynamic_cast<SceneParticleEmitterImpl*>(item);
+		if (v)
+			callback(v);
+	}
 }

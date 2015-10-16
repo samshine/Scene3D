@@ -3,15 +3,15 @@
 
 #include "Sound/soundformat.h"
 
-class SoundProvider_Wave_Impl
+class SoundProvider_WaveImpl
 {
 public:
-	SoundProvider_Wave_Impl()
+	SoundProvider_WaveImpl()
 		: data(nullptr)
 	{
 	}
 
-	~SoundProvider_Wave_Impl()
+	~SoundProvider_WaveImpl()
 	{
 		delete[] data;
 	}

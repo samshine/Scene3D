@@ -3,10 +3,10 @@
 
 #include <string>
 
-class AudioDefinition_Impl
+class AudioDefinitionImpl
 {
 public:
-	AudioDefinition_Impl();
+	AudioDefinitionImpl();
 
 	float attenuation_begin;
 	float attenuation_end;

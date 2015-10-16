@@ -6,7 +6,7 @@
 using namespace uicore;
 
 Physics3DWorld::Physics3DWorld()
-	: impl(std::make_shared<Physics3DWorld_Impl>())
+	: impl(std::make_shared<Physics3DWorldImpl>())
 {
 }
 
@@ -35,7 +35,7 @@ void Physics3DWorld::set_gravity(const Vec3f &gravity)
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DWorld_Impl::Physics3DWorld_Impl()
+Physics3DWorldImpl::Physics3DWorldImpl()
 {
 	collision_configuration.reset(new btDefaultCollisionConfiguration());
 	dispatcher.reset(new btCollisionDispatcher(collision_configuration.get()));
@@ -47,7 +47,7 @@ Physics3DWorld_Impl::Physics3DWorld_Impl()
 	dynamics_world->getDispatchInfo().m_allowedCcdPenetration=0.0001f; // This line is needed by the character controller
 }
 
-Physics3DWorld_Impl::~Physics3DWorld_Impl()
+Physics3DWorldImpl::~Physics3DWorldImpl()
 {
 	// To do: dispose all collision user objects
 }

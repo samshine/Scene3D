@@ -6,7 +6,7 @@
 
 class SoundBuffer;
 class AudioWorld;
-class AudioObject_Impl;
+class AudioObjectImpl;
 
 class AudioObject
 {
@@ -42,8 +42,8 @@ public:
 	void stop();
 
 private:
-	std::shared_ptr<AudioObject_Impl> impl;
+	std::shared_ptr<AudioObjectImpl> impl;
 
 	friend class AudioWorld;
-	friend class AudioWorld_Impl;
+	friend class AudioWorldImpl;
 };

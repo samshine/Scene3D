@@ -18,7 +18,7 @@ bool Physics3DShape::is_null() const
 Physics3DShape Physics3DShape::box(const uicore::Vec3f &size)
 {
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 	shape.impl->shape.reset(new btBoxShape(btVector3(size.x, size.y, size.z)));
 	shape.impl->shape->setUserPointer(shape.impl.get());
 	return shape;
@@ -27,7 +27,7 @@ Physics3DShape Physics3DShape::box(const uicore::Vec3f &size)
 Physics3DShape Physics3DShape::capsule(float radius, float height)
 {
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 	shape.impl->shape.reset(new btCapsuleShape(radius, height));
 	shape.impl->shape->setUserPointer(shape.impl.get());
 	return shape;
@@ -36,7 +36,7 @@ Physics3DShape Physics3DShape::capsule(float radius, float height)
 Physics3DShape Physics3DShape::sphere(float radius)
 {
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 	shape.impl->shape.reset(new btSphereShape(radius));
 	shape.impl->shape->setUserPointer(shape.impl.get());
 	return shape;
@@ -45,7 +45,7 @@ Physics3DShape Physics3DShape::sphere(float radius)
 Physics3DShape Physics3DShape::model(const std::shared_ptr<ModelData> &model_data)
 {
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 
 	unsigned int vertex_offset = 0;
 	for (size_t i = 0; i < model_data->meshes.size(); i++)
@@ -118,7 +118,7 @@ Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, uic
 		throw uicore::Exception("Physics3DShape is not a model shape!");
 
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 	shape.impl->base_model = base_model.impl;
 	shape.impl->shape.reset(new btScaledBvhTriangleMeshShape(base_shape, btVector3(scale.x, scale.y, scale.z)));
 	shape.impl->shape->setUserPointer(shape.impl.get());
@@ -128,7 +128,7 @@ Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, uic
 Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<ModelData> &model_data)
 {
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 
 	unsigned int vertex_offset = 0;
 	for (size_t i = 0; i < model_data->meshes.size(); i++)
@@ -162,7 +162,7 @@ Physics3DShape Physics3DShape::terrain(const std::shared_ptr<TerrainData> &terra
 	throw uicore::Exception("Physics3DShape::terrain not implemented");
 /*
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 	shape.impl->heights = terrain_data->heights();
 
 	float min_height = shape.impl->heights[0];
@@ -189,7 +189,7 @@ Physics3DShape Physics3DShape::terrain_with_holes(const std::shared_ptr<uicore::
 	out_transform = Mat4f::translate((float)tile.x(), 0.0f, (float)tile.y());
 
 	Physics3DShape shape;
-	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl = std::shared_ptr<Physics3DShapeImpl>(new Physics3DShapeImpl());
 
 	const TerrainVector<unsigned char> &flags = tile.flags();
 	const TerrainVector<float> &heights = tile.heights();
@@ -267,10 +267,10 @@ Physics3DShape Physics3DShape::terrain_with_holes(const std::shared_ptr<uicore::
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DShape_Impl::Physics3DShape_Impl()
+Physics3DShapeImpl::Physics3DShapeImpl()
 {
 }
 
-Physics3DShape_Impl::~Physics3DShape_Impl()
+Physics3DShapeImpl::~Physics3DShapeImpl()
 {
 }

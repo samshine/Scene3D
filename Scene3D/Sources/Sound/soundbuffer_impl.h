@@ -6,11 +6,11 @@
 
 class SoundProvider;
 
-class SoundBuffer_Impl
+class SoundBufferImpl
 {
 public:
-	SoundBuffer_Impl();
-	virtual ~SoundBuffer_Impl();
+	SoundBufferImpl();
+	virtual ~SoundBufferImpl();
 
 	SoundProvider *provider;
 	float volume;

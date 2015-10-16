@@ -4,7 +4,7 @@
 #include "Sound/soundoutput.h"
 #include <memory>
 
-static std::weak_ptr<SoundOutput_Impl> cl_current_output;
+static std::weak_ptr<SoundOutputImpl> cl_current_output;
 
 SoundOutput Sound::get_current_output()
 {

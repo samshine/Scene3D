@@ -5,12 +5,12 @@
 #include <vector>
 #include <memory>
 
-class Physics3DConstraint_Impl
+class Physics3DConstraintImpl
 {
 public:
-	Physics3DConstraint_Impl(Physics3DWorld_Impl *world);
-	~Physics3DConstraint_Impl();
+	Physics3DConstraintImpl(Physics3DWorldImpl *world);
+	~Physics3DConstraintImpl();
 
-	Physics3DWorld_Impl *world;
+	Physics3DWorldImpl *world;
 	std::unique_ptr<btTypedConstraint> constraint;
 };

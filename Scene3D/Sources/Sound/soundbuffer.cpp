@@ -14,17 +14,17 @@ SoundBuffer::SoundBuffer()
 {
 }
 
-SoundBuffer::SoundBuffer(SoundProvider *provider) : impl(std::make_shared<SoundBuffer_Impl>())
+SoundBuffer::SoundBuffer(SoundProvider *provider) : impl(std::make_shared<SoundBufferImpl>())
 {
 	impl->provider = provider;
 }
 
-SoundBuffer::SoundBuffer(const std::string &fullname, bool streamed, const std::string &sound_format) : impl(std::make_shared<SoundBuffer_Impl>())
+SoundBuffer::SoundBuffer(const std::string &fullname, bool streamed, const std::string &sound_format) : impl(std::make_shared<SoundBufferImpl>())
 {
 	impl->provider = SoundProviderFactory::load(fullname, streamed, sound_format);
 }
 
-SoundBuffer::SoundBuffer(IODevice &file, bool streamed, const std::string &type) : impl(std::make_shared<SoundBuffer_Impl>())
+SoundBuffer::SoundBuffer(IODevice &file, bool streamed, const std::string &type) : impl(std::make_shared<SoundBufferImpl>())
 {
 	impl->provider = SoundProviderFactory::load(file, streamed, type);
 }

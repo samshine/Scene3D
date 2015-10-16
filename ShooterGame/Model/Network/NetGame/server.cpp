@@ -36,7 +36,7 @@
 namespace uicore
 {
 	NetGameServer::NetGameServer()
-		: impl(std::make_shared<NetGameServer_Impl>())
+		: impl(std::make_shared<NetGameServerImpl>())
 	{
 	}
 
@@ -138,7 +138,7 @@ namespace uicore
 		return impl->sig_game_event_received;
 	}
 
-	void NetGameServer_Impl::process()
+	void NetGameServerImpl::process()
 	{
 		std::unique_lock<std::mutex> mutex_lock(mutex);
 		std::vector<NetGameNetworkEvent> new_events;

@@ -37,7 +37,7 @@ DiffuseGIPassCS::~DiffuseGIPassCS()
 {
 }
 
-void DiffuseGIPassCS::run(const GraphicContextPtr &gc, Scene_Impl *scene)
+void DiffuseGIPassCS::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	ScopeTimeFunction();
 /*

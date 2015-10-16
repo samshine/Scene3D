@@ -5,10 +5,6 @@
 
 using namespace uicore;
 
-ParticleEmitterPassData::ParticleEmitterPassData() : visible(), in_active_list(), time_to_next_emit(), last_emitted_index(), emitter()
-{
-}
-
 bool ParticleEmitterPassData::update(float time_elapsed)
 {
 	if (visible)

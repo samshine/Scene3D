@@ -42,13 +42,13 @@ SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 	impl = std::make_shared<SoundOutput_Win32>(desc.get_mixing_frequency(), desc.get_mixing_latency());
 #else
 #ifdef __APPLE__
-	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_MacOSX>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutputImpl> soundoutput_impl(std::make_shared<SoundOutput_MacOSX>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
 #if defined(__linux__) && defined(HAVE_ALSA_ASOUNDLIB_H)
 	// Try building ALSA
 
-	std::shared_ptr<SoundOutput_Impl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutputImpl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	if ( ( (SoundOutput_alsa *) (alsa_impl.get()))->handle)
 	{
 		impl = alsa_impl;
@@ -60,11 +60,11 @@ SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 
 	if (!impl)
 	{
-		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		std::shared_ptr<SoundOutputImpl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
 #else
-	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutputImpl> soundoutput_impl(std::make_shared<SoundOutput_OSS>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #endif
 #endif
@@ -76,7 +76,7 @@ SoundOutput::~SoundOutput()
 {
 }
 
-SoundOutput::SoundOutput(const std::weak_ptr<SoundOutput_Impl> impl)
+SoundOutput::SoundOutput(const std::weak_ptr<SoundOutputImpl> impl)
 	: impl(impl.lock())
 {
 }

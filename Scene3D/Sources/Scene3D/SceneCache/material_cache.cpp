@@ -6,7 +6,7 @@
 
 using namespace uicore;
 
-MaterialCache::MaterialCache(Scene_Impl *scene)
+MaterialCache::MaterialCache(SceneImpl *scene)
 : scene(scene)
 {
 }

@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-ModelCache::ModelCache(Scene_Impl *scene, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, InstancesBuffer &instances_buffer)
+ModelCache::ModelCache(SceneImpl *scene, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, InstancesBuffer &instances_buffer)
 : scene(scene), texture_cache(texture_cache), shader_cache(shader_cache), instances_buffer(instances_buffer)
 {
 }

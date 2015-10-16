@@ -7,13 +7,13 @@
 #include "Model/model_instance.h"
 #include <list>
 
-class Scene_Impl;
+class SceneImpl;
 
-class SceneObject_Impl : public SceneObject, public SceneItem
+class SceneObjectImpl : public SceneObject, public SceneItem
 {
 public:
-	SceneObject_Impl(Scene_Impl *scene);
-	~SceneObject_Impl();
+	SceneObjectImpl(SceneImpl *scene);
+	~SceneObjectImpl();
 
 	uicore::Vec3f position() const override { return _position; }
 	uicore::Quaternionf orientation() const override { return _orientation; }
@@ -44,9 +44,9 @@ public:
 
 	uicore::AxisAlignedBoundingBox get_aabb() const;
 
-	Scene_Impl *scene;
+	SceneImpl *scene;
 	SceneCullProxy *cull_proxy = nullptr;
-	std::list<SceneObject_Impl *>::iterator it;
+	std::list<SceneObjectImpl *>::iterator it;
 
 	uicore::Vec3f _position;
 	uicore::Quaternionf _orientation;

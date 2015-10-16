@@ -3,14 +3,14 @@
 
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 
-class Physics3DObject_Impl;
-class Physics3DWorld_Impl;
+class Physics3DObjectImpl;
+class Physics3DWorldImpl;
 
-class Physics3DContactPairTest_Impl
+class Physics3DContactPairTestImpl
 {
 public:
-	Physics3DContactPairTest_Impl(Physics3DWorld_Impl *world);
-	~Physics3DContactPairTest_Impl();
+	Physics3DContactPairTestImpl(Physics3DWorldImpl *world);
+	~Physics3DContactPairTestImpl();
 
-	Physics3DWorld_Impl *world;
+	Physics3DWorldImpl *world;
 };

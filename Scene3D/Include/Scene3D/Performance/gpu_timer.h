@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class GPUTimer_Impl;
+class GPUTimerImpl;
 
 class GPUTimer
 {
@@ -27,5 +27,5 @@ public:
 	std::vector<Result> get_results(const uicore::GraphicContextPtr &gc);
 
 private:
-	std::shared_ptr<GPUTimer_Impl> impl;
+	std::shared_ptr<GPUTimerImpl> impl;
 };

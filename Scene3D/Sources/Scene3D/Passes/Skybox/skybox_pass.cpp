@@ -25,7 +25,7 @@ SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)
 	show_stars = inout.get<bool>("ShowSkyboxStars");
 }
 
-void SkyboxPass::run(const GraphicContextPtr &gc, Scene_Impl *scene)
+void SkyboxPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 

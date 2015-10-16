@@ -29,18 +29,18 @@ class SceneCache;
 class SceneCacheImpl;
 typedef std::shared_ptr<SceneCache> SceneCachePtr;
 class ModelMeshVisitor;
-class SceneObject_Impl;
-class SceneLight_Impl;
+class SceneObjectImpl;
+class SceneLightImpl;
 class SceneLightVisitor;
 class Resource_BaseImpl;
-class SceneParticleEmitter_Impl;
+class SceneParticleEmitterImpl;
 class SceneParticleEmitterVisitor;
-class SceneLightProbe_Impl;
+class SceneLightProbeImpl;
 
-class Scene_Impl : public Scene
+class SceneImpl : public Scene
 {
 public:
-	Scene_Impl(const SceneCachePtr &cache);
+	SceneImpl(const SceneCachePtr &cache);
 
 	const SceneCameraPtr &camera() const override { return _camera; }
 	void set_camera(const SceneCameraPtr &camera) override { _camera = camera; }
@@ -75,11 +75,26 @@ public:
 	void set_camera_orientation(const uicore::Quaternionf &orientation);
 	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
 
-	void visit(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, ModelMeshVisitor *visitor);
-	void visit_lights(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneLightVisitor *visitor);
-	void visit_emitters(const uicore::GraphicContextPtr &gc, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, uicore::FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
+	void foreach(const uicore::FrustumPlanes &frustum, const std::function<void(SceneItem *)> &callback);
+	void foreach(const uicore::Vec3f &position, const std::function<void(SceneItem *)> &callback);
+	void foreach_object(const uicore::FrustumPlanes &frustum, const std::function<void(SceneObjectImpl *)> &callback);
+	void foreach_object(const uicore::Vec3f &position, const std::function<void(SceneObjectImpl *)> &callback);
+	void foreach_light(const uicore::FrustumPlanes &frustum, const std::function<void(SceneLightImpl *)> &callback);
+	void foreach_light(const uicore::Vec3f &position, const std::function<void(SceneLightImpl *)> &callback);
+	void foreach_light_probe(const uicore::FrustumPlanes &frustum, const std::function<void(SceneLightProbeImpl *)> &callback);
+	void foreach_light_probe(const uicore::Vec3f &position, const std::function<void(SceneLightProbeImpl *)> &callback);
+	void foreach_emitter(const uicore::FrustumPlanes &frustum, const std::function<void(SceneParticleEmitterImpl *)> &callback);
+	void foreach_emitter(const uicore::Vec3f &position, const std::function<void(SceneParticleEmitterImpl *)> &callback);
 
-	SceneLightProbe_Impl *find_nearest_probe(const uicore::Vec3f &position);
+	template<typename T> void foreach_type(const uicore::FrustumPlanes &frustum, const std::function<void(T *)> &callback)
+	{
+		foreach(frustum, [&](SceneItem *item)
+		{
+			T *v = dynamic_cast<T*>(item);
+			if (v)
+				callback(v);
+		});
+	}
 
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
@@ -95,20 +110,19 @@ public:
 	int _scene_visits = 0;
 	std::vector<GPUTimer::Result> _gpu_results;
 
+	InstancesBuffer instances_buffer;
+
 private:
 	std::shared_ptr<SceneCacheImpl> cache;
-
-	int frame = 0;
-	InstancesBuffer instances_buffer;
 
 	std::unique_ptr<MaterialCache> material_cache;
 	std::unique_ptr<ModelShaderCache> model_shader_cache;
 	std::unique_ptr<ModelCache> model_cache;
 
-	std::list<SceneObject_Impl *> objects;
-	std::list<SceneLight_Impl *> lights;
-	std::list<SceneLightProbe_Impl *> light_probes;
-	std::list<SceneParticleEmitter_Impl *> emitters;
+	std::list<SceneObjectImpl *> objects;
+	std::list<SceneLightImpl *> lights;
+	std::list<SceneLightProbeImpl *> light_probes;
+	std::list<SceneParticleEmitterImpl *> emitters;
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
 
@@ -124,14 +138,14 @@ private:
 	GPUTimer gpu_timer;
 
 	friend class SceneObject;
-	friend class SceneObject_Impl;
+	friend class SceneObjectImpl;
 	friend class SceneLight;
-	friend class SceneLight_Impl;
+	friend class SceneLightImpl;
 	friend class SceneLightProbe;
-	friend class SceneLightProbe_Impl;
+	friend class SceneLightProbeImpl;
 	friend class SceneParticleEmitter;
-	friend class SceneParticleEmitter_Impl;
+	friend class SceneParticleEmitterImpl;
 	friend class SceneModel;
-	friend class SceneModel_Impl;
+	friend class SceneModelImpl;
 	friend class Scene;
 };

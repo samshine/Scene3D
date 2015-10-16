@@ -6,7 +6,7 @@
 
 class ShadowMaps;
 class ShadowMapEntry;
-class ShadowMapEntry_Impl;
+class ShadowMapEntryImpl;
 
 class ShadowMaps
 {
@@ -18,24 +18,24 @@ public:
 	void assign_indexes();
 
 private:
-	void use_entry(ShadowMapEntry_Impl *entry);
-	void entry_destroyed(ShadowMapEntry_Impl *entry);
+	void use_entry(ShadowMapEntryImpl *entry);
+	void entry_destroyed(ShadowMapEntryImpl *entry);
 
-	void add_used(ShadowMapEntry_Impl *entry);
-	void add_unused(ShadowMapEntry_Impl *entry);
-	void unlink(ShadowMapEntry_Impl *entry);
+	void add_used(ShadowMapEntryImpl *entry);
+	void add_unused(ShadowMapEntryImpl *entry);
+	void unlink(ShadowMapEntryImpl *entry);
 
 	Resource<uicore::Texture2DArrayPtr> shadow_maps;
 
 	std::vector<uicore::FrameBufferPtr> framebuffers;
 	std::vector<uicore::Texture2DPtr> views;
 
-	ShadowMapEntry_Impl *used_entries;
-	ShadowMapEntry_Impl *unused_entries;
+	ShadowMapEntryImpl *used_entries;
+	ShadowMapEntryImpl *unused_entries;
 	std::vector<int> free_indexes;
 
 	friend class ShadowMapEntry;
-	friend class ShadowMapEntry_Impl;
+	friend class ShadowMapEntryImpl;
 };
 
 class ShadowMapEntry
@@ -52,19 +52,19 @@ public:
 	uicore::Texture2DPtr get_view() const;
 
 private:
-	std::shared_ptr<ShadowMapEntry_Impl> impl;
+	std::shared_ptr<ShadowMapEntryImpl> impl;
 };
 
-class ShadowMapEntry_Impl
+class ShadowMapEntryImpl
 {
 public:
-	ShadowMapEntry_Impl(ShadowMaps *maps) : shadow_maps(maps), index(-1), prev(0), next(0) { }
-	~ShadowMapEntry_Impl() { shadow_maps->entry_destroyed(this); }
+	ShadowMapEntryImpl(ShadowMaps *maps) : shadow_maps(maps), index(-1), prev(0), next(0) { }
+	~ShadowMapEntryImpl() { shadow_maps->entry_destroyed(this); }
 
 	ShadowMaps *shadow_maps;
 	int index;
 
-	ShadowMapEntry_Impl *prev;
-	ShadowMapEntry_Impl *next;
+	ShadowMapEntryImpl *prev;
+	ShadowMapEntryImpl *next;
 };
 

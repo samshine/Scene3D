@@ -3,14 +3,14 @@
 
 #include <memory>
 
-class Scene_Impl;
+class SceneImpl;
 class Model;
 
-class SceneModel_Impl : public SceneModel
+class SceneModelImpl : public SceneModel
 {
 public:
-	SceneModel_Impl(Scene_Impl *scene, std::shared_ptr<Model> model) : scene(scene), model(model) { }
+	SceneModelImpl(SceneImpl *scene, std::shared_ptr<Model> model) : scene(scene), model(model) { }
 
-	Scene_Impl *scene = nullptr;
+	SceneImpl *scene = nullptr;
 	std::shared_ptr<Model> model;
 };

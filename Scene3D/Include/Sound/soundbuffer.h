@@ -7,7 +7,7 @@
 class SoundOutput;
 class SoundProvider;
 class SoundBuffer_Session;
-class SoundBuffer_Impl;
+class SoundBufferImpl;
 
 class SoundBuffer
 {
@@ -33,5 +33,5 @@ public:
 	SoundBuffer_Session prepare(bool looping = false, SoundOutput *output = nullptr);
 
 private:
-	std::shared_ptr<SoundBuffer_Impl> impl;
+	std::shared_ptr<SoundBufferImpl> impl;
 };

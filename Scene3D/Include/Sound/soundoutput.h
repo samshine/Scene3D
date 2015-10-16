@@ -5,7 +5,7 @@
 
 class SoundBuffer;
 class SoundOutput_Description;
-class SoundOutput_Impl;
+class SoundOutputImpl;
 
 class SoundOutput
 {
@@ -30,9 +30,9 @@ public:
 	void set_global_pan(float pan);
 
 private:
-	SoundOutput(const std::weak_ptr<SoundOutput_Impl> impl);
+	SoundOutput(const std::weak_ptr<SoundOutputImpl> impl);
 
-	std::shared_ptr<SoundOutput_Impl> impl;
+	std::shared_ptr<SoundOutputImpl> impl;
 
 	friend class SoundBuffer;
 	friend class Sound;

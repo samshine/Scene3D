@@ -7,7 +7,7 @@
 #include "Sound/SoundProviders/soundprovider.h"
 #include "Sound/SoundProviders/soundprovider_session.h"
 
-SoundBuffer_Session_Impl::SoundBuffer_Session_Impl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output)
+SoundBuffer_SessionImpl::SoundBuffer_SessionImpl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output)
 	: soundbuffer(soundbuffer), provider_session(nullptr), output(output), volume(1.0f), pan(0.0f), looping(looping), playing(false)
 {
 	volume = soundbuffer.get_volume();
@@ -27,7 +27,7 @@ SoundBuffer_Session_Impl::SoundBuffer_Session_Impl(SoundBuffer &soundbuffer, boo
 	float_buffer_data_offsetted.resize(num_buffer_channels);
 }
 
-SoundBuffer_Session_Impl::~SoundBuffer_Session_Impl()
+SoundBuffer_SessionImpl::~SoundBuffer_SessionImpl()
 {
 	if (provider_session)
 	{
@@ -38,7 +38,7 @@ SoundBuffer_Session_Impl::~SoundBuffer_Session_Impl()
 	delete[] float_buffer_data;
 }
 
-bool SoundBuffer_Session_Impl::mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels)
+bool SoundBuffer_SessionImpl::mix_to(float **sample_data, float **temp_data, int num_samples, int num_channels)
 {
 	std::unique_lock<std::recursive_mutex> mutex_lock(mutex);
 	get_data_in_mixer_frequency(num_samples, temp_data);
@@ -46,7 +46,7 @@ bool SoundBuffer_Session_Impl::mix_to(float **sample_data, float **temp_data, in
 	return playing;
 }
 
-void SoundBuffer_Session_Impl::get_data()
+void SoundBuffer_SessionImpl::get_data()
 {
 	int num_session_channels = provider_session->get_num_channels();
 	if (num_session_channels != num_buffer_channels)
@@ -98,7 +98,7 @@ void SoundBuffer_Session_Impl::get_data()
 	}
 }
 
-void SoundBuffer_Session_Impl::get_data_in_mixer_frequency(int num_samples, float **temp_data)
+void SoundBuffer_SessionImpl::get_data_in_mixer_frequency(int num_samples, float **temp_data)
 {
 	// Convert from session frequency to mixer frequency:
 	// This is done by copying data from the temporary session buffers (buffer_data) to
@@ -143,7 +143,7 @@ void SoundBuffer_Session_Impl::get_data_in_mixer_frequency(int num_samples, floa
 	}
 }
 
-void SoundBuffer_Session_Impl::get_channel_volume(float *channel_volume)
+void SoundBuffer_SessionImpl::get_channel_volume(float *channel_volume)
 {
 	float left_pan = 1 - pan;
 	float right_pan = 1 + pan;
@@ -161,7 +161,7 @@ void SoundBuffer_Session_Impl::get_channel_volume(float *channel_volume)
 	channel_volume[1] = right_volume;
 }
 
-void SoundBuffer_Session_Impl::mix_channels(int num_channels, int num_samples, float ** sample_data, float ** temp_data)
+void SoundBuffer_SessionImpl::mix_channels(int num_channels, int num_samples, float ** sample_data, float ** temp_data)
 {
 	float channel_volume[2];
 	get_channel_volume(channel_volume);
