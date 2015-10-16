@@ -60,5 +60,5 @@ public:
 	std::string _particle_texture;
 	std::string _gradient_texture;
 
-	std::shared_ptr<ParticleEmitterPassData> pass_data;
+	ParticleEmitterPassData *pass_data = nullptr;
 };

@@ -5,6 +5,16 @@
 
 using namespace uicore;
 
+void ParticleEmitterPassData::reset()
+{
+	time_to_next_emit = 0.0f;
+	cpu_particles.clear();
+	last_emitted_index = 0;
+	emitter = nullptr;
+	life_color_gradient = Resource<uicore::TexturePtr>();
+	particle_animation = Resource<uicore::TexturePtr>();
+}
+
 bool ParticleEmitterPassData::update(float time_elapsed)
 {
 	if (visible)

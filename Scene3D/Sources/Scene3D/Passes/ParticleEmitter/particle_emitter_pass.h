@@ -49,7 +49,9 @@ private:
 	uicore::Texture2DPtr instance_texture;
 	uicore::StagingTexturePtr instance_transfer;
 
-	std::vector< std::shared_ptr<ParticleEmitterPassData> > active_emitters;
+	std::vector<ParticleEmitterPassData> emitter_slots;
+	std::vector<int> active_emitters;
+	std::vector<int> free_emitters;
 
 	struct ParticleOrderIndex
 	{

@@ -9,10 +9,10 @@
 class ParticleEmitterPassData
 {
 public:
+	void reset();
 	bool update(float time_elapsed);
 
 	bool visible = false;
-	bool in_active_list = false;
 
 	float time_to_next_emit = 0.0f;
 	std::vector<Particle> cpu_particles;
