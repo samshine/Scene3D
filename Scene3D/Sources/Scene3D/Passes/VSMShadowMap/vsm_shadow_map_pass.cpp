@@ -8,7 +8,7 @@
 using namespace uicore;
 
 VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, ResourceContainer &inout)
-: maps(gc, inout.get<Texture2DArrayPtr>("ShadowMaps"), 512, 64, tf_rg32f), round_robin(0)
+: maps(gc, inout.get<Texture2DArrayPtr>("ShadowMaps"), 1024, 8, tf_rg32f), round_robin(0)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
