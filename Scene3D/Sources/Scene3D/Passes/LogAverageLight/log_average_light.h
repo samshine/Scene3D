@@ -13,8 +13,7 @@ public:
 private:
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &vertex_source, const std::string &fragment_source);
 
-	// In:
-	Resource<uicore::Rect> viewport;
+	ResourceContainer &inout;
 
 	int iterations;
 	uicore::ProgramObjectPtr program0, program1, program2;

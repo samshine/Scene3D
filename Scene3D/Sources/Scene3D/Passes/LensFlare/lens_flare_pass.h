@@ -21,17 +21,9 @@ private:
 		uicore::Mat4f eye_to_projection;
 	};
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
-
-	// InOut:
-	Resource<uicore::Texture2DPtr> final_color;
-
 	std::string shader_path;
+	ResourceContainer &inout;
 
-	uicore::FrameBufferPtr fb;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

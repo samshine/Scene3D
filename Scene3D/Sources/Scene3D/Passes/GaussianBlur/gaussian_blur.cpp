@@ -23,14 +23,14 @@ void GaussianBlur::blur(const GraphicContextPtr &gc, TextureFormat format, float
 	gc->set_program_object(current_blur_setup->horizontal_blur_program);
 	gc->set_frame_buffer(fb0);
 	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
-	gc->set_texture(0, input.get());
+	gc->set_texture(0, input);
 	gc->draw_primitives(type_triangles, 6, prim_array);
 	gc->reset_texture(0);
 	gc->reset_frame_buffer();
 
 	// Vertical blur
 	gc->set_program_object(current_blur_setup->vertical_blur_program);
-	gc->set_frame_buffer(output.get());
+	gc->set_frame_buffer(output);
 	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
 	gc->set_texture(0, pass0_texture);
 	gc->draw_primitives(type_triangles, 6, prim_array);

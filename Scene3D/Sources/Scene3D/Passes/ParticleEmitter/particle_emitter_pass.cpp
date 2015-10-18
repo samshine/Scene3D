@@ -10,16 +10,8 @@
 using namespace uicore;
 
 ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout)
-: shader_path(shader_path), texture_cache(texture_cache)
+: shader_path(shader_path), inout(inout), texture_cache(texture_cache)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-
-	final_color = inout.get<Texture2DPtr>("FinalColor");
-
 	emitter_slots.resize(32);
 	for (size_t i = 0; i < emitter_slots.size(); i++)
 		free_emitters.push_back((int)i);
@@ -71,10 +63,10 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 
-	Size viewport_size = viewport->size();
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Size viewport_size = inout.viewport.size();
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
 	select_active_emitters(gc, scene, frustum);
 
@@ -90,7 +82,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		float depth_fade_distance = 1.0f;
 		ParticleUniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
-		uniforms.object_to_eye = world_to_eye.get();
+		uniforms.object_to_eye = inout.world_to_eye;
 		uniforms.rcp_depth_fade_distance = 1.0f / depth_fade_distance;
 		uniforms.instance_vectors_offset = total_particle_count * vectors_per_particle;
 		pass_data->gpu_uniforms.upload_data(gc, &uniforms, 1);
@@ -141,7 +133,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	gc->set_depth_range(0.0f, 0.9f);
 
-	gc->set_frame_buffer(fb);
+	gc->set_frame_buffer(inout.fb_final_color);
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(blend_state);
@@ -149,7 +141,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_primitives_array(prim_array);
 
 	gc->set_program_object(program);
-	gc->set_texture(0, normal_z_gbuffer.get());
+	gc->set_texture(0, inout.normal_z_gbuffer);
 	gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)
@@ -199,14 +191,6 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 		program->set_uniform1i("ColorGradientSampler", 3);
 
 		billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
-	}
-
-	Size viewport_size = viewport->size();
-	if (!fb || !gc->is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated())
-	{
-		fb = FrameBuffer::create(gc);
-		fb->attach_color(0, final_color.get());
-		fb->attach_depth(zbuffer.get());
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);

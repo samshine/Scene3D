@@ -6,10 +6,8 @@
 using namespace uicore;
 
 LogAverageLight::LogAverageLight(const GraphicContextPtr &gc, ResourceContainer &inout, int iterations)
-: iterations(iterations), current_index(0)
+: inout(inout), iterations(iterations), current_index(0)
 {
-	viewport = inout.get<Rect>("Viewport");
-
 	Size texture_size(1 << iterations, 1 << iterations);
 
 	std::string vertex_program =
@@ -161,7 +159,7 @@ Texture2DPtr &LogAverageLight::find_log_average_light(const GraphicContextPtr &g
 	gc->reset_program_object();
 	gc->reset_primitives_array();
 	gc->reset_frame_buffer();
-	gc->set_viewport(viewport->size(), gc->texture_image_y_axis());
+	gc->set_viewport(inout.viewport.size(), gc->texture_image_y_axis());
 
 	return current_index == 0 ? result_texture0 : result_texture1;
 }

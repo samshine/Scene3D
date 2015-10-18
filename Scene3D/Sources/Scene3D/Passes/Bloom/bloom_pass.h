@@ -14,19 +14,10 @@ public:
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
-	void setup_bloom_extract(const uicore::GraphicContextPtr &gc);
+	ResourceContainer &inout;
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2DPtr> final_color;
-
-	// Out:
-	Resource<uicore::Texture2DPtr> bloom_contribution;
-
-	GaussianBlur bloom_blur;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::ProgramObjectPtr bloom_shader;
-	uicore::FrameBufferPtr fb_bloom_extract;
 	uicore::BlendStatePtr blend_state;
 };

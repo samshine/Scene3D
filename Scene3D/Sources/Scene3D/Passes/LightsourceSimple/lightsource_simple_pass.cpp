@@ -11,21 +11,8 @@
 
 using namespace uicore;
 
-LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
+LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-	shadow_maps = inout.get<Texture2DArrayPtr>("ShadowMaps");
-	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
-
-	final_color = inout.get<Texture2DPtr>("FinalColor");
-
 	icosahedron_light_program = compile_and_link(gc, shader_path, "icosahedron");
 	rect_light_program = compile_and_link(gc, shader_path, "rect");
 
@@ -69,19 +56,9 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 
 void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->size();
-	if (!fb || !gc->is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated() || diffuse_color_gbuffer.updated())
+	Size viewport_size = inout.viewport.size();
+	if (!blend_state)
 	{
-		final_color.set(nullptr);
-		fb = nullptr;
-		gc->flush();
-
-		final_color.set(Texture2D::create(gc, viewport->width(), viewport->height(), tf_rgba16f));
-
-		fb = FrameBuffer::create(gc);
-		fb->attach_color(0, final_color.get());
-		fb->attach_depth(zbuffer.get());
-
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_one, blend_one, blend_one, blend_one);
@@ -139,11 +116,11 @@ void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, SceneImpl *
 {
 	lights.clear();
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 	scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
@@ -157,16 +134,16 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene
 {
 	ScopeTimeFunction();
 
-	Size viewport_size = viewport->size();
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
+	Size viewport_size = inout.viewport.size();
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
 
-	float aspect = viewport->width()/(float)viewport->height();
-	float field_of_view_y_degrees = field_of_view.get();
+	float aspect = inout.viewport.width()/(float)inout.viewport.height();
+	float field_of_view_y_degrees = inout.field_of_view;
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	Vec2f two_rcp_viewport_size(2.0f / viewport->width(), 2.0f / viewport->height());
+	Vec2f two_rcp_viewport_size(2.0f / inout.viewport.width(), 2.0f / inout.viewport.height());
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
@@ -178,8 +155,8 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene
 
 	int num_lights = lights.size();
 
-	Mat4f normal_world_to_eye = Mat4f(Mat3f(world_to_eye.get())); // This assumes uniform scale
-	Mat4f eye_to_world = Mat4f::inverse(world_to_eye.get());
+	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
+	Mat4f eye_to_world = Mat4f::inverse(inout.world_to_eye);
 
 	Vec4f *instance_data = light_instance_transfer->data<Vec4f>();
 
@@ -207,7 +184,7 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene
 			float falloff_begin = lights[i]->hotspot() / lights[i]->falloff();
 			sqr_falloff_begin = falloff_begin * falloff_begin;
 		}
-		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position(), 1.0f));
+		Vec3f position_in_eye = Vec3f(inout.world_to_eye * Vec4f(lights[i]->position(), 1.0f));
 		Mat4f eye_to_shadow_projection = lights[i]->vsm_data->world_to_shadow_projection * eye_to_world;
 
 		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
@@ -240,20 +217,20 @@ void LightsourceSimplePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 
 	//timer.begin_time(gc, "light(simple)");
 
-	gc->set_frame_buffer(fb);
+	gc->set_frame_buffer(inout.fb_final_color);
 
-	gc->set_viewport(viewport->size(), gc->texture_image_y_axis());
+	gc->set_viewport(inout.viewport.size(), gc->texture_image_y_axis());
 
 	gc->set_depth_range(0.0f, 0.9f);
 
 	gc->set_uniform_buffer(0, uniforms);
 	gc->set_texture(0, light_instance_texture);
-	gc->set_texture(1, normal_z_gbuffer.get());
-	gc->set_texture(2, diffuse_color_gbuffer.get());
-	gc->set_texture(3, specular_color_gbuffer.get());
-	gc->set_texture(4, specular_level_gbuffer.get());
-	gc->set_texture(5, shadow_maps.get());
-	gc->set_texture(6, self_illumination_gbuffer.get());
+	gc->set_texture(1, inout.normal_z_gbuffer);
+	gc->set_texture(2, inout.diffuse_color_gbuffer);
+	gc->set_texture(3, inout.specular_color_gbuffer);
+	gc->set_texture(4, inout.specular_level_gbuffer);
+	gc->set_texture(5, inout.shadow_maps);
+	gc->set_texture(6, inout.self_illumination_gbuffer);
 
 	gc->set_blend_state(blend_state);
 

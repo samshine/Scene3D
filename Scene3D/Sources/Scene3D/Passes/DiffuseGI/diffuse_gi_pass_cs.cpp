@@ -6,15 +6,8 @@
 
 using namespace uicore;
 
-DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
+DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-	shadow_maps = inout.get<Texture2DArrayPtr>("ShadowMaps");
-
-	final_color = inout.get<Texture2DPtr>("FinalColor");
-
 	if (gc->shader_language() == shader_glsl)
 	{
 		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.glsl"));
@@ -64,9 +57,6 @@ void DiffuseGIPassCS::run(const GraphicContextPtr &gc, SceneImpl *scene)
 void DiffuseGIPassCS::update_buffers(const GraphicContextPtr &gc)
 {
 	ScopeTimeFunction();
-	if (diffuse_color_gbuffer.updated())
-	{
-	}
 }
 
 ProgramObjectPtr DiffuseGIPassCS::compile_and_link(const GraphicContextPtr &gc, const std::string &compute_filename)

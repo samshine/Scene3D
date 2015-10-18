@@ -24,22 +24,8 @@ private:
 	void create_cube_program(const uicore::GraphicContextPtr &gc);
 	static float random(float min_value, float max_value);
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
-	Resource<uicore::Texture2DPtr> cloud_texture;
-	Resource<bool> show_stars;
-
-	// InOut:
-	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
-	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
-	Resource<uicore::Texture2DPtr> zbuffer;
-
 	std::string shader_path;
+	ResourceContainer &inout;
 
 	struct Uniforms
 	{
@@ -47,7 +33,6 @@ private:
 		uicore::Mat4f eye_to_projection;
 	};
 
-	uicore::FrameBufferPtr fb;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

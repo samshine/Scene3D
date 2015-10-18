@@ -4,22 +4,23 @@
 
 using namespace uicore;
 
-ShadowMaps::ShadowMaps(const GraphicContextPtr &gc, const Resource<Texture2DArrayPtr> &init_shadow_maps, int shadow_map_size, int max_active_maps, TextureFormat format)
-: shadow_maps(init_shadow_maps), used_entries(0), unused_entries(0)
+ShadowMaps::ShadowMaps(const GraphicContextPtr &gc, ResourceContainer &inout_data, int shadow_map_size, int max_active_maps, TextureFormat format)
+: inout_data(inout_data), used_entries(0), unused_entries(0)
 {
 	framebuffers.reserve(max_active_maps);
 	views.reserve(max_active_maps);
-	shadow_maps.set(Texture2DArray::create(gc, shadow_map_size, shadow_map_size, max_active_maps, format));
+	
+	inout_data.shadow_maps = Texture2DArray::create(gc, shadow_map_size, shadow_map_size, max_active_maps, format);
 
 	auto depth_texture = Texture2D::create(gc, shadow_map_size, shadow_map_size, tf_depth_component32);
 	for (int i = 0; i < max_active_maps; i++)
 	{
 		auto fb = FrameBuffer::create(gc);
-		fb->attach_color(0, shadow_maps.get(), i);
+		fb->attach_color(0, inout_data.shadow_maps, i);
 		fb->attach_depth(depth_texture);
 		framebuffers.push_back(fb);
 
-		views.push_back(shadow_maps.get()->create_2d_view(i, tf_rg32f, 0, 1));
+		views.push_back(inout_data.shadow_maps->create_2d_view(i, tf_rg32f, 0, 1));
 
 		free_indexes.push_back(i);
 	}

@@ -5,12 +5,8 @@
 
 using namespace uicore;
 
-SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
+SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
 {
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-
-	ssao_contribution = inout.get<Texture2DPtr>("AmbientOcclusion");
-
 	if (gc->shader_language() == shader_glsl)
 	{
 		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.glsl"), "");
@@ -47,8 +43,6 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, 
 	rect_primarray = PrimitivesArray::create(gc);
 	rect_primarray->set_attributes(0, rect_positions);
 
-	blur.input = ssao_contribution;
-
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
 	blend_state = gc->create_blend_state(blend_desc);
@@ -56,44 +50,30 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, 
 
 void SSAOPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
-	Size viewport_size = normal_z_gbuffer.get()->size();
-	if (!ssao_contribution.get() || ssao_contribution.get()->size() != viewport_size || !gc->is_frame_buffer_owner(fb))
-	{
-		ssao_contribution.set(nullptr);
-		fb = nullptr;
-		gc->flush();
+	/*		To do: port this to uniform buffer
+	float aspect = viewport_size.width/(float)viewport_size.height;
+	float field_of_view_y_degrees = 60.0f;
+	float field_of_view_y_rad = (float)(field_of_view_y_degrees * M_PI / 180.0);
+	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+	extract_shader.set_uniform1f("f", f);
+	extract_shader.set_uniform1f("f_div_aspect", f/aspect);
+	*/
 
-		ssao_contribution.set(Texture2D::create(gc, viewport_size.width / 2, viewport_size.height / 2, tf_r8));
-		ssao_contribution.get()->set_min_filter(filter_linear);
-		ssao_contribution.get()->set_mag_filter(filter_linear);
+	inout.normal_z_gbuffer->set_min_filter(filter_nearest);
+	inout.normal_z_gbuffer->set_mag_filter(filter_nearest);
 
-		fb = FrameBuffer::create(gc);
-		fb->attach_color(0, ssao_contribution.get());
-/*		To do: port this to uniform buffer
-		float aspect = viewport_size.width/(float)viewport_size.height;
-		float field_of_view_y_degrees = 60.0f;
-		float field_of_view_y_rad = (float)(field_of_view_y_degrees * M_PI / 180.0);
-		float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
-		extract_shader.set_uniform1f("f", f);
-		extract_shader.set_uniform1f("f_div_aspect", f/aspect);
-*/
-
-		blur.output.set(fb);
-	}
-
-	normal_z_gbuffer.get()->set_min_filter(filter_nearest);
-	normal_z_gbuffer.get()->set_mag_filter(filter_nearest);
-
-	gc->set_frame_buffer(fb);
-	gc->set_viewport(ssao_contribution.get()->size(), gc->texture_image_y_axis());
-	gc->set_texture(0, normal_z_gbuffer.get());
+	gc->set_frame_buffer(inout.fb_ambient_occlusion);
+	gc->set_viewport(inout.ambient_occlusion->size(), gc->texture_image_y_axis());
+	gc->set_texture(0, inout.normal_z_gbuffer);
 	gc->set_blend_state(blend_state);
 	gc->set_program_object(extract_shader);
 	gc->draw_primitives(type_triangles, 6, rect_primarray);
 	gc->reset_program_object();
 	gc->reset_frame_buffer();
 
-	blur.blur(gc, tf_r8, 2.0f, 7);
+	inout.blur.input = inout.ambient_occlusion;
+	inout.blur.output = inout.fb_ambient_occlusion;
+	inout.blur.blur(gc, tf_r8, 2.0f, 7);
 }
 
 float SSAOPass::random_value()

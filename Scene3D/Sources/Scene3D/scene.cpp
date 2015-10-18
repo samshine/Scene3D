@@ -30,17 +30,6 @@ SceneImpl::SceneImpl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_ca
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
 	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, *material_cache, *model_shader_cache, instances_buffer));
 
-	viewport_fb = inout_data.get<FrameBufferPtr>("ViewportFrameBuffer");
-	viewport = inout_data.get<Rect>("Viewport");
-	camera_field_of_view = inout_data.get<float>("FieldOfView");
-	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
-
-	skybox_texture = inout_data.get<Texture2DPtr>("SkyboxTexture");
-	_show_skybox_stars = inout_data.get<bool>("ShowSkyboxStars");
-
-	viewport.set(Size(640, 480));
-	camera_field_of_view.set(60.0f);
-
 	bool use_compute_shader_pass = true;
 
 	if (gc->shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
@@ -83,8 +72,8 @@ Mat4f SceneImpl::world_to_eye() const
 
 Mat4f SceneImpl::eye_to_projection() const
 {
-	Size viewport_size = viewport->size();
-	return Mat4f::perspective(camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
+	Size viewport_size = inout_data.viewport.size();
+	return Mat4f::perspective(inout_data.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
 }
 
 Mat4f SceneImpl::world_to_projection() const
@@ -94,18 +83,18 @@ Mat4f SceneImpl::world_to_projection() const
 
 void SceneImpl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
 {
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout_data.viewport.size();
 
-	float aspect = viewport->width()/(float)viewport->height();
-	float field_of_view_y_degrees = camera_field_of_view.get();
+	float aspect = inout_data.viewport.width() / (float)inout_data.viewport.height();
+	float field_of_view_y_degrees = inout_data.field_of_view;
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
 
-	Vec2f pos((float)(screen_pos.x - viewport->left), (float)(viewport->bottom - screen_pos.y));
+	Vec2f pos((float)(screen_pos.x - inout_data.viewport.left), (float)(inout_data.viewport.bottom - screen_pos.y));
 
-	Vec2f normalized(pos.x * 2.0f / viewport->width(), pos.y * 2.0f / viewport->height());
+	Vec2f normalized(pos.x * 2.0f / inout_data.viewport.width(), pos.y * 2.0f / inout_data.viewport.height());
 	normalized -= 1.0f;
 
 	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
@@ -134,7 +123,7 @@ void SceneImpl::set_cull_oct_tree(float max_size)
 
 void SceneImpl::show_skybox_stars(bool enable)
 {
-	_show_skybox_stars.set(enable);
+	inout_data.show_skybox_stars = enable;
 }
 
 void SceneImpl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
@@ -152,13 +141,13 @@ void SceneImpl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Col
 	texture->set_min_filter(filter_linear);
 	texture->set_mag_filter(filter_linear);
 
-	skybox_texture.set(texture);
+	inout_data.skybox_texture = texture;
 }
 
 void SceneImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
-	viewport.set(box);
-	viewport_fb.set(fb);
+	inout_data.viewport = box;
+	inout_data.fb_viewport = fb;
 }
 
 void SceneImpl::render(const GraphicContextPtr &gc)
@@ -173,13 +162,13 @@ void SceneImpl::render(const GraphicContextPtr &gc)
 
 	gpu_timer.begin_frame(gc);
 
-	if (camera_field_of_view.get() != _camera->field_of_view())
-		camera_field_of_view.set(_camera->field_of_view());
+	inout_data.setup_pass_buffers(gc);
+
+	if (inout_data.field_of_view != _camera->field_of_view())
+		inout_data.field_of_view = _camera->field_of_view();
 
 	Quaternionf inv_orientation = Quaternionf::inverse(_camera->orientation());
-	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-_camera->position());
-
-	out_world_to_eye.set(world_to_eye);
+	inout_data.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-_camera->position());
 
 	for (const auto &pass : passes)
 	{

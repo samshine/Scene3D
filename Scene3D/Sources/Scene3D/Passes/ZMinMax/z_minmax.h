@@ -10,11 +10,11 @@ public:
 	void minmax(const uicore::GraphicContextPtr &gc);
 
 	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2DPtr> normal_z;
+	uicore::Rect viewport;
+	uicore::Texture2DPtr normal_z;
 
 	// Out:
-	Resource<uicore::Texture2DPtr> result;
+	uicore::Texture2DPtr result;
 
 private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);

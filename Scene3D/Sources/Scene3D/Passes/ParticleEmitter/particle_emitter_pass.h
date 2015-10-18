@@ -23,20 +23,10 @@ private:
 	void select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const uicore::FrustumPlanes &frustum);
 	void setup(const uicore::GraphicContextPtr &gc);
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
-	Resource<uicore::Texture2DPtr> zbuffer;
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
-
-	// InOut:
-	Resource<uicore::Texture2DPtr> final_color;
-
 	std::string shader_path;
+	ResourceContainer &inout;
 
 	MaterialCache &texture_cache;
-	uicore::FrameBufferPtr fb;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

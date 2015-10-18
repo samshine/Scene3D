@@ -8,12 +8,8 @@
 using namespace uicore;
 
 VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, ResourceContainer &inout)
-: maps(gc, inout.get<Texture2DArrayPtr>("ShadowMaps"), 1024, 8, tf_rg32f), round_robin(0)
+: inout(inout), maps(gc, inout, 1024, 8, tf_rg32f), round_robin(0)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
 	blend_state = gc->create_blend_state(blend_desc);
@@ -42,11 +38,11 @@ void VSMShadowMapPass::find_lights(SceneImpl *scene)
 {
 	lights.clear();
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
 	scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
@@ -151,9 +147,9 @@ void VSMShadowMapPass::blur_maps()
 		size_t i = blur_indexes[j];
 		if (lights[i]->vsm_data->shadow_map.get_index() != -1)
 		{
-			blur.input.set(lights[i]->vsm_data->shadow_map.get_view());
-			blur.output.set(lights[i]->vsm_data->shadow_map.get_framebuffer());
-			blur.blur(gc, tf_rg32f, 1.3f, 9);
+			inout.blur.input = lights[i]->vsm_data->shadow_map.get_view();
+			inout.blur.output = lights[i]->vsm_data->shadow_map.get_framebuffer();
+			inout.blur.blur(gc, tf_rg32f, 1.3f, 9);
 		}
 	}
 }

@@ -6,14 +6,8 @@
 
 using namespace uicore;
 
-FinalPass::FinalPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
+FinalPass::FinalPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
 {
-	viewport_fb = inout.get<FrameBufferPtr>("ViewportFrameBuffer");
-	viewport = inout.get<Rect>("Viewport");
-	final_color = inout.get<Texture2DPtr>("FinalColor");
-	bloom_blur_texture = inout.get<Texture2DPtr>("BloomContribution");
-	ambient_occlusion = inout.get<Texture2DPtr>("AmbientOcclusion");
-
 	if (gc->shader_language() == shader_glsl)
 	{
 		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");
@@ -56,15 +50,15 @@ void FinalPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	ScopeTimeFunction();
 	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(gc, lightsource_pass.final_color);
 
-	bloom_blur_texture.get()->set_min_filter(filter_linear);
-	bloom_blur_texture.get()->set_mag_filter(filter_linear);
-	final_color.get()->set_min_filter(filter_nearest);
-	final_color.get()->set_mag_filter(filter_nearest);
+	inout.bloom_contribution->set_min_filter(filter_linear);
+	inout.bloom_contribution->set_mag_filter(filter_linear);
+	inout.final_color->set_min_filter(filter_nearest);
+	inout.final_color->set_mag_filter(filter_nearest);
 
-	if (viewport_fb.get()) gc->set_frame_buffer(viewport_fb.get());
-	gc->set_viewport(viewport.get(), gc->texture_image_y_axis());
-	gc->set_texture(0, final_color.get());
-	gc->set_texture(2, bloom_blur_texture.get());
+	if (inout.fb_viewport) gc->set_frame_buffer(inout.fb_viewport);
+	gc->set_viewport(inout.viewport, gc->texture_image_y_axis());
+	gc->set_texture(0, inout.final_color);
+	gc->set_texture(2, inout.bloom_contribution);
 	gc->set_program_object(present_shader);
 	gc->set_rasterizer_state(rasterizer_state);
 	gc->draw_primitives(type_triangles, 6, rect_primarray);

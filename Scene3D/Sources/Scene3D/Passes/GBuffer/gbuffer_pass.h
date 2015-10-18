@@ -19,20 +19,8 @@ public:
 private:
 	void setup_gbuffer(const uicore::GraphicContextPtr &gc);
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
+	ResourceContainer &inout;
 
-	// Out:
-	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
-	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
-	Resource<uicore::Texture2DPtr> zbuffer;
-
-	uicore::FrameBufferPtr fb_gbuffer;
 	uicore::GraphicContextPtr gc;
 	SceneImpl *scene;
 	uicore::BlendStatePtr blend_state;

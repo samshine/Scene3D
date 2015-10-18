@@ -7,18 +7,8 @@
 
 using namespace uicore;
 
-GBufferPass::GBufferPass(ResourceContainer &inout)
+GBufferPass::GBufferPass(ResourceContainer &inout) : inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-
-	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
 }
 
 void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scene)
@@ -27,7 +17,7 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scen
 	scene = render_scene;
 	setup_gbuffer(gc);
 
-	gc->set_frame_buffer(fb_gbuffer);
+	gc->set_frame_buffer(inout.fb_gbuffer);
 
 	if (gc->shader_language() == shader_glsl)
 	{
@@ -37,7 +27,7 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scen
 		glDrawBuffers(4, buffers);
 	}
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->clear_depth(1.0f);
@@ -47,12 +37,12 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scen
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(early_z_blend_state);
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
 	render_list.clear();
-	scene->instances_buffer.render_pass(gc, scene, world_to_eye.get(), eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	scene->instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
 	{
 		model_lod->early_z_commands.execute(scene, gc, num_instances);
 		render_list.push_back(RenderEntry(model_lod, num_instances));
@@ -98,33 +88,8 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scen
 
 void GBufferPass::setup_gbuffer(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->size();
-	if (!diffuse_color_gbuffer.get() || diffuse_color_gbuffer.get()->size() != viewport_size || !gc->is_frame_buffer_owner(fb_gbuffer))
+	if (!blend_state)
 	{
-		diffuse_color_gbuffer.set(nullptr);
-		specular_color_gbuffer.set(nullptr);
-		specular_level_gbuffer.set(nullptr);
-		self_illumination_gbuffer.set(nullptr);
-		normal_z_gbuffer.set(nullptr);
-		zbuffer.set(nullptr);
-		fb_gbuffer = nullptr;
-		gc->flush();
-
-		diffuse_color_gbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16));
-		specular_color_gbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba8));
-		specular_level_gbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rg16f));
-		self_illumination_gbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16));
-		normal_z_gbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f));
-		zbuffer.set(Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_depth_component24));
-
-		fb_gbuffer = FrameBuffer::create(gc);
-		fb_gbuffer->attach_color(0, diffuse_color_gbuffer.get());
-		fb_gbuffer->attach_color(1, specular_color_gbuffer.get());
-		fb_gbuffer->attach_color(2, specular_level_gbuffer.get());
-		fb_gbuffer->attach_color(3, self_illumination_gbuffer.get());
-		fb_gbuffer->attach_color(4, normal_z_gbuffer.get());
-		fb_gbuffer->attach_depth(zbuffer.get());
-
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(false);
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_zero, blend_zero);

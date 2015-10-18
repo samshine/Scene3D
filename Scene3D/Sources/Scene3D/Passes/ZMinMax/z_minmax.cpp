@@ -14,15 +14,15 @@ void ZMinMax::minmax(const GraphicContextPtr &gc)
 {
 	update_buffers(gc);
 
-	normal_z.get()->set_min_filter(filter_nearest);
-	normal_z.get()->set_mag_filter(filter_nearest);
-	normal_z.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	normal_z->set_min_filter(filter_nearest);
+	normal_z->set_mag_filter(filter_nearest);
+	normal_z->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
 	gc->set_primitives_array(prim_array);
 	gc->set_program_object(program0);
 	gc->set_blend_state(blend_state);
 
-	Size texture_size = find_texture_size(normal_z.get());
+	Size texture_size = find_texture_size(normal_z);
 
 	for (int i = 0; i < iterations; i++)
 	{
@@ -35,7 +35,7 @@ void ZMinMax::minmax(const GraphicContextPtr &gc)
 		gc->set_frame_buffer((i % 2 == 0) ? fb0 : fb1);
 		gc->set_viewport(Size(iteration_width, iteration_height), gc->texture_image_y_axis());
 		if (i == 0)
-			gc->set_texture(0, normal_z.get());
+			gc->set_texture(0, normal_z);
 		else
 			gc->set_texture(0, (i % 2 == 0) ? texture1 : texture0);
 		gc->draw_primitives_array(type_triangles, 6);
@@ -45,63 +45,60 @@ void ZMinMax::minmax(const GraphicContextPtr &gc)
 	gc->reset_program_object();
 	gc->reset_primitives_array();
 	gc->reset_frame_buffer();
-	gc->set_viewport(viewport->size(), gc->texture_image_y_axis());
+	gc->set_viewport(viewport.size(), gc->texture_image_y_axis());
 }
 
 void ZMinMax::update_buffers(const GraphicContextPtr &gc)
 {
-	if (normal_z.updated())
-	{
-		Size texture_size = find_texture_size(normal_z.get());
+	Size texture_size = find_texture_size(normal_z);
 
-		if (!texture0 || texture0->size() != texture_size)
-		{ 
-			std::string vertex_shader, fragment_shader0, fragment_shader1;
-			if (gc->shader_language() == shader_glsl)
-				get_shader_glsl(vertex_shader, fragment_shader0, fragment_shader1);
-			else
-				get_shader_hlsl(vertex_shader, fragment_shader0, fragment_shader1);
+	if (!texture0 || texture0->size() != texture_size)
+	{ 
+		std::string vertex_shader, fragment_shader0, fragment_shader1;
+		if (gc->shader_language() == shader_glsl)
+			get_shader_glsl(vertex_shader, fragment_shader0, fragment_shader1);
+		else
+			get_shader_hlsl(vertex_shader, fragment_shader0, fragment_shader1);
 
-			program0 = compile_and_link(gc, vertex_shader, fragment_shader0);
-			program1 = compile_and_link(gc, vertex_shader, fragment_shader1);
+		program0 = compile_and_link(gc, vertex_shader, fragment_shader0);
+		program1 = compile_and_link(gc, vertex_shader, fragment_shader1);
 
-			Vec4f positions[6] =
-			{
-				Vec4f(-1.0f, -1.0f, 1.0f, 1.0f),
-				Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
-				Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
-				Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
-				Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
-				Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
-			};
-			vertices = VertexArrayVector<Vec4f>(gc, positions, 6);
+		Vec4f positions[6] =
+		{
+			Vec4f(-1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
+		};
+		vertices = VertexArrayVector<Vec4f>(gc, positions, 6);
 
-			prim_array = PrimitivesArray::create(gc);
-			prim_array->set_attributes(0, vertices);
+		prim_array = PrimitivesArray::create(gc);
+		prim_array->set_attributes(0, vertices);
 
-			texture0 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
-			texture0->set_min_filter(filter_nearest);
-			texture0->set_mag_filter(filter_nearest);
-			texture0->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+		texture0 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
+		texture0->set_min_filter(filter_nearest);
+		texture0->set_mag_filter(filter_nearest);
+		texture0->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
-			texture1 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
-			texture1->set_min_filter(filter_nearest);
-			texture1->set_mag_filter(filter_nearest);
-			texture1->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+		texture1 = Texture2D::create(gc, texture_size.width, texture_size.height, tf_rg32f);
+		texture1->set_min_filter(filter_nearest);
+		texture1->set_mag_filter(filter_nearest);
+		texture1->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
-			fb0 = FrameBuffer::create(gc);
-			fb0->attach_color(0, texture0);
+		fb0 = FrameBuffer::create(gc);
+		fb0->attach_color(0, texture0);
 
-			fb1 = FrameBuffer::create(gc);
-			fb1->attach_color(0, texture1);
+		fb1 = FrameBuffer::create(gc);
+		fb1->attach_color(0, texture1);
 
-			BlendStateDescription blend_desc;
-			blend_desc.enable_blending(false);
-			blend_state = gc->create_blend_state(blend_desc);
-		}
-
-		result.set((iterations % 2 == 0) ? texture1 : texture0);
+		BlendStateDescription blend_desc;
+		blend_desc.enable_blending(false);
+		blend_state = gc->create_blend_state(blend_desc);
 	}
+
+	result = (iterations % 2 == 0) ? texture1 : texture0;
 }
 
 Size ZMinMax::find_texture_size(const Texture2DPtr &normal_z)

@@ -74,7 +74,7 @@ public:
 	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
 	void set_camera_position(const uicore::Vec3f &position);
 	void set_camera_orientation(const uicore::Quaternionf &orientation);
-	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
+	void set_camera_field_of_view(float fov) { inout_data.field_of_view = fov; }
 
 	void foreach(const uicore::FrustumPlanes &frustum, const std::function<void(SceneItem *)> &callback);
 	void foreach(const uicore::Vec3f &position, const std::function<void(SceneItem *)> &callback);
@@ -128,13 +128,6 @@ private:
 	std::unique_ptr<SceneCullProvider> cull_provider;
 
 	SceneCameraPtr _camera;
-
-	Resource<float> camera_field_of_view;
-	Resource<uicore::FrameBufferPtr> viewport_fb;
-	Resource<uicore::Rect> viewport;
-	Resource<uicore::Mat4f> out_world_to_eye;
-	Resource<uicore::Texture2DPtr> skybox_texture;
-	Resource<bool> _show_skybox_stars;
 
 	GPUTimer gpu_timer;
 

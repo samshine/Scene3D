@@ -7,14 +7,8 @@
 
 using namespace uicore;
 
-TransparencyPass::TransparencyPass(ResourceContainer &inout)
+TransparencyPass::TransparencyPass(ResourceContainer &inout) : inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
-
-	final_color = inout.get<Texture2DPtr>("FinalColor");
 }
 
 void TransparencyPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scene)
@@ -23,20 +17,20 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, SceneImpl *render
 	scene = render_scene;
 	setup(gc);
 
-	gc->set_frame_buffer(fb_transparency);
+	gc->set_frame_buffer(inout.fb_final_color);
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->set_depth_range(0.0f, 0.9f);
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(blend_state);
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	scene->instances_buffer.render_pass(gc, scene, world_to_eye.get(), eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	scene->instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
 	{
 		model_lod->transparency_commands.execute(scene, gc, num_instances);
 	});
@@ -61,13 +55,8 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, SceneImpl *render
 
 void TransparencyPass::setup(const GraphicContextPtr &gc)
 {
-	Size viewport_size = viewport->size();
-	if (!fb_transparency || !gc->is_frame_buffer_owner(fb_transparency) || final_color.updated() || zbuffer.updated())
+	if (!blend_state)
 	{
-		fb_transparency = FrameBuffer::create(gc);
-		fb_transparency->attach_color(0, final_color.get());
-		fb_transparency->attach_depth(zbuffer.get());
-
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		//blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_zero, blend_zero);

@@ -9,8 +9,8 @@ public:
 	GaussianBlur();
 	void blur(const uicore::GraphicContextPtr &gc, uicore::TextureFormat format, float blur_amount, int sample_count = 15);
 
-	Resource<uicore::Texture2DPtr> input;
-	Resource<uicore::FrameBufferPtr> output;
+	uicore::Texture2DPtr input;
+	uicore::FrameBufferPtr output;
 
 private:
 	void setup(const uicore::GraphicContextPtr &gc, uicore::Size new_size, uicore::TextureFormat new_format, float blur_amount, int sample_count);

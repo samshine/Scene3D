@@ -21,14 +21,7 @@ private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename);
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
-	Resource<uicore::Texture2DArrayPtr> shadow_maps;
-
-	// Out:
-	Resource<uicore::Texture2DPtr> final_color;
+	ResourceContainer &inout;
 
 	uicore::ProgramObjectPtr init_lpv_program;
 	uicore::ProgramObjectPtr init_gv_program;

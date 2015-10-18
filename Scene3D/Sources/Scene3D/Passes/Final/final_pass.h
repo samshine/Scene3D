@@ -13,12 +13,7 @@ public:
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
-	// In:
-	Resource<uicore::FrameBufferPtr> viewport_fb;
-	Resource<uicore::Rect> viewport;
-	Resource<uicore::Texture2DPtr> final_color;
-	Resource<uicore::Texture2DPtr> bloom_blur_texture;
-	Resource<uicore::Texture2DPtr> ambient_occlusion;
+	ResourceContainer &inout;
 
 	uicore::ProgramObjectPtr present_shader;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;

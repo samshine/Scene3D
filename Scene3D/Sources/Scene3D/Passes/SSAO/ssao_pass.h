@@ -16,15 +16,9 @@ public:
 private:
 	static float random_value();
 
-	// In:
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
+	ResourceContainer &inout;
 
-	// Out:
-	Resource<uicore::Texture2DPtr> ssao_contribution;
-
-	GaussianBlur blur;
 	uicore::ProgramObjectPtr extract_shader;
-	uicore::FrameBufferPtr fb;
 	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
 	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::BlendStatePtr blend_state;

@@ -12,20 +12,8 @@
 
 using namespace uicore;
 
-LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout)
+LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-	shadow_maps = inout.get<Texture2DArrayPtr>("ShadowMaps");
-
-	final_color = inout.get<Texture2DPtr>("FinalColor");
-
 	if (gc->shader_language() == shader_glsl)
 	{
 		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.glsl"));
@@ -40,9 +28,6 @@ LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string 
 	compute_uniforms = UniformVector<Uniforms>(gc, 1);
 	compute_lights = StorageVector<GPULight>(gc, max_lights);
 	transfer_lights = StagingVector<GPULight>(gc, max_lights);
-
-	zminmax.viewport = viewport;
-	zminmax.normal_z = normal_z_gbuffer;
 }
 
 LightsourcePass::~LightsourcePass()
@@ -60,11 +45,11 @@ void LightsourcePass::find_lights(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	lights.clear();
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 	scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
@@ -103,13 +88,13 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 
 	std::sort(lights.begin(), lights.end(), LightsourcePass_LightCompare());
 
-	float aspect = viewport->width()/(float)viewport->height();
-	float field_of_view_y_degrees = field_of_view.get();
+	float aspect = inout.viewport.width()/(float)inout.viewport.height();
+	float field_of_view_y_degrees = inout.field_of_view;
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	Vec2f two_rcp_viewport_size(2.0f / viewport->width(), 2.0f / viewport->height());
+	Vec2f two_rcp_viewport_size(2.0f / inout.viewport.width(), 2.0f / inout.viewport.height());
 
 	Uniforms uniforms;
 	uniforms.rcp_f = rcp_f;
@@ -120,8 +105,8 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 	uniforms.num_tiles_y = num_tiles_y;
 	compute_uniforms.upload_data(gc, &uniforms, 1);
 
-	Mat4f normal_world_to_eye = Mat4f(Mat3f(world_to_eye.get())); // This assumes uniform scale
-	Mat4f eye_to_world = Mat4f::inverse(world_to_eye.get());
+	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
+	Mat4f eye_to_world = Mat4f::inverse(inout.world_to_eye);
 
 	transfer_lights.lock(gc, access_write_only);
 	MappedBuffer<GPULight> data(transfer_lights.data(), max_lights);
@@ -149,7 +134,7 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 			float falloff_begin = lights[i]->hotspot() / lights[i]->falloff();
 			sqr_falloff_begin = falloff_begin * falloff_begin;
 		}
-		Vec3f position_in_eye = Vec3f(world_to_eye.get() * Vec4f(lights[i]->position(), 1.0f));
+		Vec3f position_in_eye = Vec3f(inout.world_to_eye * Vec4f(lights[i]->position(), 1.0f));
 		Mat4f eye_to_shadow_projection = lights[i]->vsm_data->world_to_shadow_projection * eye_to_world;
 
 		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
@@ -175,6 +160,9 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 void LightsourcePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 {
 	ScopeTimeFunction();
+
+	zminmax.viewport = inout.viewport;
+	zminmax.normal_z = inout.normal_z_gbuffer;
 	zminmax.minmax(gc);
 	update_buffers(gc);
 
@@ -183,14 +171,14 @@ void LightsourcePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 	gc->set_uniform_buffer(0, compute_uniforms);
 	gc->set_storage_buffer(0, compute_lights);
 	gc->set_storage_buffer(1, compute_visible_lights);
-	gc->set_texture(0, zminmax.result.get());
-	gc->set_texture(1, normal_z_gbuffer.get());
-	gc->set_texture(2, diffuse_color_gbuffer.get());
-	gc->set_texture(3, specular_color_gbuffer.get());
-	gc->set_texture(4, specular_level_gbuffer.get());
-	gc->set_texture(5, shadow_maps.get());
-	gc->set_texture(6, self_illumination_gbuffer.get());
-	gc->set_image_texture(0, final_color.get());
+	gc->set_texture(0, zminmax.result);
+	gc->set_texture(1, inout.normal_z_gbuffer);
+	gc->set_texture(2, inout.diffuse_color_gbuffer);
+	gc->set_texture(3, inout.specular_color_gbuffer);
+	gc->set_texture(4, inout.specular_level_gbuffer);
+	gc->set_texture(5, inout.shadow_maps);
+	gc->set_texture(6, inout.self_illumination_gbuffer);
+	gc->set_image_texture(0, inout.final_color);
 
 	gc->set_program_object(cull_tiles_program);
 	gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
@@ -218,16 +206,16 @@ void LightsourcePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
 
 void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
 {
-	if (diffuse_color_gbuffer.updated())
+	int needed_num_tiles_x = (inout.viewport.width() + tile_size - 1) / tile_size;
+	int needed_num_tiles_y = (inout.viewport.height() + tile_size - 1) / tile_size;
+
+	if (!compute_visible_lights.buffer() || num_tiles_x != needed_num_tiles_x || num_tiles_y != needed_num_tiles_y)
 	{
-		final_color.set(nullptr);
 		compute_visible_lights = StorageVector<unsigned int>();
 		gc->flush();
 
-		tile_size = 16;
-		num_tiles_x = (viewport->width() + tile_size - 1) / tile_size;
-		num_tiles_y = (viewport->height() + tile_size - 1) / tile_size;
-		final_color.set(Texture2D::create(gc, viewport->width(), viewport->height(), tf_rgba16f));
+		num_tiles_x = needed_num_tiles_x;
+		num_tiles_y = needed_num_tiles_y;
 
 		compute_visible_lights = StorageVector<unsigned int>(gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 	}

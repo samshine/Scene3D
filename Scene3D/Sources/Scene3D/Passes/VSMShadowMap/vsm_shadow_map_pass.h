@@ -25,17 +25,12 @@ private:
 	void render_maps(SceneImpl *scene);
 	void blur_maps();
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
-
+	ResourceContainer &inout;
 	std::vector<SceneLightImpl *> lights;
 	int round_robin;
 	std::vector<size_t> blur_indexes;
 
 	ShadowMaps maps;
-	GaussianBlur blur;
 	SceneImpl *scene;
 	uicore::GraphicContextPtr gc;
 	uicore::BlendStatePtr blend_state;

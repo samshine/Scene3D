@@ -8,37 +8,24 @@
 
 using namespace uicore;
 
-SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout) : shader_path(shader_path)
+SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout) : shader_path(shader_path), inout(inout)
 {
-	viewport = inout.get<Rect>("Viewport");
-	field_of_view = inout.get<float>("FieldOfView");
-	world_to_eye = inout.get<Mat4f>("WorldToEye");
-
-	diffuse_color_gbuffer = inout.get<Texture2DPtr>("DiffuseColorGBuffer");
-	specular_color_gbuffer = inout.get<Texture2DPtr>("SpecularColorGBuffer");
-	specular_level_gbuffer = inout.get<Texture2DPtr>("SpecularLevelGBuffer");
-	self_illumination_gbuffer = inout.get<Texture2DPtr>("SelfIlluminationGBuffer");
-	normal_z_gbuffer = inout.get<Texture2DPtr>("NormalZGBuffer");
-	zbuffer = inout.get<Texture2DPtr>("ZBuffer");
-
-	cloud_texture = inout.get<Texture2DPtr>("SkyboxTexture");
-	show_stars = inout.get<bool>("ShowSkyboxStars");
 }
 
 void SkyboxPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 
-	gc->set_frame_buffer(fb);
+	gc->set_frame_buffer(inout.fb_self_illumination);
 
-	Size viewport_size = viewport->size();
+	Size viewport_size = inout.viewport.size();
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(blend_state);
 	gc->set_rasterizer_state(rasterizer_state);
 
-	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
@@ -47,7 +34,7 @@ void SkyboxPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	gc->set_depth_range(0.9f, 1.0f);
 
-	if (show_stars.get())
+	if (inout.show_skybox_stars)
 	{
 		gc->set_program_object(billboard_program);
 		gc->set_primitives_array(billboard_prim_array);
@@ -61,7 +48,7 @@ void SkyboxPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_program_object(cube_program);
 	gc->set_primitives_array(cube_prim_array);
 	gc->set_uniform_buffer(0, uniforms);
-	gc->set_texture(0, cloud_texture.get());
+	gc->set_texture(0, inout.skybox_texture);
 	gc->draw_primitives_array(type_triangles, 0, 6*6);
 	gc->reset_primitives_array();
 
@@ -88,20 +75,9 @@ void SkyboxPass::setup(const GraphicContextPtr &gc)
 		create_programs(gc);
 	}
 
-	Size viewport_size = viewport->size();
-	if (!fb || !gc->is_frame_buffer_owner(fb) || zbuffer.updated())
+	Size viewport_size = inout.viewport.size();
+	if (!blend_state)
 	{
-		fb = FrameBuffer::create(gc);
-		fb->attach_color(0, self_illumination_gbuffer.get());
-/*
-		fb->attach_color(0, diffuse_color_gbuffer.get());
-		fb->attach_color(1, specular_color_gbuffer.get());
-		fb->attach_color(2, specular_level_gbuffer.get());
-		fb->attach_color(3, self_illumination_gbuffer.get());
-		fb->attach_color(4, normal_z_gbuffer.get());
-*/
-		fb->attach_depth(zbuffer.get());
-
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
@@ -127,7 +103,7 @@ void SkyboxPass::setup(const GraphicContextPtr &gc)
 
 void SkyboxPass::create_clouds(const GraphicContextPtr &gc)
 {
-	if (!cloud_texture.get())
+	if (!inout.skybox_texture)
 		create_cloud_texture(gc);
 }
 
@@ -152,7 +128,7 @@ void SkyboxPass::create_cloud_texture(const GraphicContextPtr &gc)
 	auto texture = Texture2D::create(gc, width, height, tf_rgba16, 0);
 	texture->set_image(gc, cloud);
 	texture->generate_mipmap();
-	cloud_texture.set(texture);
+	inout.skybox_texture = texture;
 }
 
 void SkyboxPass::create_stars(const GraphicContextPtr &gc)

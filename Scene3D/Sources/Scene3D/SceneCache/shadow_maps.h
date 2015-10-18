@@ -2,7 +2,7 @@
 #pragma once
 
 #include <list>
-#include "resource.h"
+#include "resource_container.h"
 
 class ShadowMaps;
 class ShadowMapEntry;
@@ -11,7 +11,7 @@ class ShadowMapEntryImpl;
 class ShadowMaps
 {
 public:
-	ShadowMaps(const uicore::GraphicContextPtr &gc, const Resource<uicore::Texture2DArrayPtr> &shadow_maps, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
+	ShadowMaps(const uicore::GraphicContextPtr &gc, ResourceContainer &inout_data, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
 	~ShadowMaps();
 
 	void start_frame();
@@ -25,7 +25,7 @@ private:
 	void add_unused(ShadowMapEntryImpl *entry);
 	void unlink(ShadowMapEntryImpl *entry);
 
-	Resource<uicore::Texture2DArrayPtr> shadow_maps;
+	ResourceContainer &inout_data;
 
 	std::vector<uicore::FrameBufferPtr> framebuffers;
 	std::vector<uicore::Texture2DPtr> views;

@@ -27,19 +27,7 @@ private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
-	// In:
-	Resource<uicore::Rect> viewport;
-	Resource<float> field_of_view;
-	Resource<uicore::Mat4f> world_to_eye;
-	Resource<uicore::Texture2DPtr> diffuse_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_color_gbuffer;
-	Resource<uicore::Texture2DPtr> specular_level_gbuffer;
-	Resource<uicore::Texture2DPtr> self_illumination_gbuffer;
-	Resource<uicore::Texture2DPtr> normal_z_gbuffer;
-	Resource<uicore::Texture2DArrayPtr> shadow_maps;
-
-	// Out:
-	Resource<uicore::Texture2DPtr> final_color;
+	ResourceContainer &inout;
 
 	static const int max_lights = 1023;
 	static const int light_slots_per_tile = 128;
@@ -75,9 +63,9 @@ private:
 
 	std::vector<SceneLightImpl *> lights;
 
-	int tile_size;
-	int num_tiles_x;
-	int num_tiles_y;
+	const int tile_size = 16;
+	int num_tiles_x = 0;
+	int num_tiles_y = 0;
 
 	ZMinMax zminmax;
 };
