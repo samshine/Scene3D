@@ -34,7 +34,7 @@ void LensFlarePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	instance_transfer->lock(gc, access_write_discard);
 	auto instance_data = instance_transfer->data<Vec4f>();
 	for (size_t i = 0; i < lights.size(); i++)
-		instance_data[i] = Vec4f(lights[i]->position(), 4.0f);
+		instance_data[i] = Vec4f(lights[i]->position(), lights[i]->attenuation_end()/7.0f);
 	instance_transfer->unlock();
 	instance_texture->set_image(gc, instance_transfer);
 
@@ -109,7 +109,7 @@ void LensFlarePass::setup(const GraphicContextPtr &gc)
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(false);
-		depth_stencil_desc.enable_depth_test(false);
+		depth_stencil_desc.enable_depth_test(true); // To do: this should be false and then we should use occlusion queries to fade flares in and out
 		depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 
 		RasterizerStateDescription rasterizer_desc;
