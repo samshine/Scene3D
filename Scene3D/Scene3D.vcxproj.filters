@@ -1233,9 +1233,6 @@
     <ClInclude Include="Sources\Scene3D\SceneCache\resource_container.h">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\resource_object.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneCache\scene_cache_impl.h">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClInclude>

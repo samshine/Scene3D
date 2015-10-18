@@ -343,7 +343,6 @@
     <ClInclude Include="Sources\Scene3D\SceneCache\material_cache.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\resource.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\resource_container.h" />
-    <ClInclude Include="Sources\Scene3D\SceneCache\resource_object.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\scene_cache_impl.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\shader_setup.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\shadow_maps.h" />
