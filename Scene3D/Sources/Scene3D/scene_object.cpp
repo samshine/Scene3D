@@ -5,9 +5,9 @@
 #include "Scene3D/scene.h"
 #include <algorithm>
 #include "Scene3D/scene_object_impl.h"
-#include "Scene3D/Model/model.h"
 #include "Scene3D/scene_impl.h"
 #include "Scene3D/scene_model_impl.h"
+#include "Scene3D/SceneEngine/Model/model.h"
 
 using namespace uicore;
 

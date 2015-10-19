@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "Scene3D/scene_particle_emitter.h"
 #include "Scene3D/scene.h"
-#include "Passes/ParticleEmitter/particle_emitter_pass_data.h"
+#include "Scene3D/SceneEngine/Passes/ParticleEmitter/particle_emitter_pass_data.h"
 #include "Scene3D/scene_particle_emitter_impl.h"
 #include "Scene3D/scene_impl.h"
 

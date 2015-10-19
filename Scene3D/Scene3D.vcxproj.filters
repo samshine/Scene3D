@@ -67,59 +67,8 @@
     <Filter Include="Sources\Scene3D\Culling">
       <UniqueIdentifier>{d4f39bf9-40d9-461d-990b-8508f609db72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Scene3D\Level">
-      <UniqueIdentifier>{187394de-2979-41b6-96dd-58b32c63fc1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Model">
-      <UniqueIdentifier>{056e2108-64fd-4260-997e-530f24941bab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes">
-      <UniqueIdentifier>{3f0ba0a5-49ca-412d-8480-23325718580d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\Performance">
       <UniqueIdentifier>{f0db1207-023d-4ff0-ad51-aaa2acb55929}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\Bloom">
-      <UniqueIdentifier>{6e49aa09-2b96-4e9e-8069-df591e3a64c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\DiffuseGI">
-      <UniqueIdentifier>{16d1aaa1-1129-4f42-8fce-4421dbe44655}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\Final">
-      <UniqueIdentifier>{ddd1a6b4-bfb2-450e-baa8-6bdb613cff4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\GaussianBlur">
-      <UniqueIdentifier>{5ef94ef1-2bb0-46aa-a469-6b733b74caf2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\GBuffer">
-      <UniqueIdentifier>{8084141b-39c1-434d-a7da-30548d21d556}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\Lightsource">
-      <UniqueIdentifier>{bf84d8be-b42b-4485-8fbb-58fd8cf8625e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\LightsourceSimple">
-      <UniqueIdentifier>{be55a3db-0ff4-4fd6-8013-f43cd6a197e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\LogAverageLight">
-      <UniqueIdentifier>{99195f3d-d302-45cf-8a69-8ecab932519c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\ParticleEmitter">
-      <UniqueIdentifier>{d7edcdc3-10c6-405b-acf1-610eee8244da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\Skybox">
-      <UniqueIdentifier>{c83d6c9d-e238-4788-b419-6f48f99abab1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\SSAO">
-      <UniqueIdentifier>{90fc8541-7387-4afe-ac0d-ff6357b99df5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\Transparency">
-      <UniqueIdentifier>{63addf32-8c51-48c0-88f8-65f291a58489}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\VSMShadowMap">
-      <UniqueIdentifier>{e08d18c3-b70b-4f27-a887-0f342726c426}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\Scene3D\Passes\ZMinMax">
-      <UniqueIdentifier>{61ea6c96-e703-49f4-b229-79ed1c84621c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Scene3D">
       <UniqueIdentifier>{3628e6d7-4777-411c-9f5f-a7f21675b18b}</UniqueIdentifier>
@@ -184,11 +133,62 @@
     <Filter Include="Sources\Sound\SoundProviders">
       <UniqueIdentifier>{5be9dab4-8045-423a-867c-b38f622779ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Scene3D\Passes\LensFlare">
-      <UniqueIdentifier>{bb003ebd-eb99-4850-8871-e8df173e5392}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\SceneEngine">
       <UniqueIdentifier>{d66c1695-acac-4c20-9d0a-a7f5dec46129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Level">
+      <UniqueIdentifier>{fe950581-342f-41de-845a-8fb71189da6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Model">
+      <UniqueIdentifier>{31ad8f23-0cee-4bc1-9a7b-49fe0ba9257f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes">
+      <UniqueIdentifier>{f185e2aa-ca39-48b5-b5a1-93821adb11a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Bloom">
+      <UniqueIdentifier>{27117aa0-0d2d-4ab3-aaa7-a61861784c74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI">
+      <UniqueIdentifier>{f7bd88f4-f4f8-46a5-b41a-772011ac09b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Final">
+      <UniqueIdentifier>{decffc25-81a8-4aac-af55-f36627c6bf19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\GaussianBlur">
+      <UniqueIdentifier>{dee2abce-b2e1-4599-a453-43fa859bf26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\GBuffer">
+      <UniqueIdentifier>{5f909097-7f63-4d66-9e2b-d79f42bacaf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\LensFlare">
+      <UniqueIdentifier>{b6914a8c-8259-4a37-9509-8f745dd2731b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Lightsource">
+      <UniqueIdentifier>{acdc02b1-7d29-4570-bd37-cfff2f5a8913}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple">
+      <UniqueIdentifier>{2dea82e9-ecfa-4fbc-9fab-92badc87d5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight">
+      <UniqueIdentifier>{e132396a-f4fa-4972-93ee-b7ca04827382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter">
+      <UniqueIdentifier>{b709382a-0ffa-4357-9adf-aa746b0713e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Skybox">
+      <UniqueIdentifier>{05e51343-2c05-44e0-ac93-3ff78c05371b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\SSAO">
+      <UniqueIdentifier>{31eb162c-d014-441d-8c8c-8d348080defb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Transparency">
+      <UniqueIdentifier>{aea227b8-9dd0-4786-9ea4-b86f28193833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap">
+      <UniqueIdentifier>{50e19e1f-9f3d-4460-acb9-3463ea2c5ba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax">
+      <UniqueIdentifier>{ad754cc9-2290-4ef7-a4f9-d1e041c3fac4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -353,96 +353,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree_root.h">
       <Filter>Sources\Scene3D\Culling\RTree</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Level\level.h">
-      <Filter>Sources\Scene3D\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Level\level_instance.h">
-      <Filter>Sources\Scene3D\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\dual_quaternion.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_instance.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_lod.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_render_command.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_shader_cache.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_shader_description.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Bloom\bloom_pass.h">
-      <Filter>Sources\Scene3D\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\DiffuseGI\diffuse_gi_pass_cs.h">
-      <Filter>Sources\Scene3D\Passes\DiffuseGI</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Final\final_pass.h">
-      <Filter>Sources\Scene3D\Passes\Final</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.h">
-      <Filter>Sources\Scene3D\Passes\GaussianBlur</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.h">
-      <Filter>Sources\Scene3D\Passes\GBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.h">
-      <Filter>Sources\Scene3D\Passes\Lightsource</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\icosahedron.h">
-      <Filter>Sources\Scene3D\Passes\LightsourceSimple</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.h">
-      <Filter>Sources\Scene3D\Passes\LightsourceSimple</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\LogAverageLight\log_average_light.h">
-      <Filter>Sources\Scene3D\Passes\LogAverageLight</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.h">
-      <Filter>Sources\Scene3D\Passes\ZMinMax</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\VSMShadowMap\vsm_shadow_map_pass.h">
-      <Filter>Sources\Scene3D\Passes\VSMShadowMap</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Transparency\transparency_pass.h">
-      <Filter>Sources\Scene3D\Passes\Transparency</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\SSAO\ssao_pass.h">
-      <Filter>Sources\Scene3D\Passes\SSAO</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_2d.h">
-      <Filter>Sources\Scene3D\Passes\Skybox</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Skybox\noise_3d.h">
-      <Filter>Sources\Scene3D\Passes\Skybox</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\Skybox\skybox_pass.h">
-      <Filter>Sources\Scene3D\Passes\Skybox</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle.h">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass.h">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass_data.h">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\ParticleEmitter\particle_uniforms.h">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Physics3D\physics3d_constraint_impl.h">
       <Filter>Sources\Physics3D</Filter>
@@ -1218,12 +1128,6 @@
     <ClInclude Include="Include\Sound\sound_cache.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\scene_pass.h">
-      <Filter>Sources\Scene3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.h">
-      <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene3D\scene_engine.h">
       <Filter>Include\Scene3D</Filter>
     </ClInclude>
@@ -1253,6 +1157,102 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\work_queue.h">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Level\level.h">
+      <Filter>Sources\Scene3D\SceneEngine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Level\level_instance.h">
+      <Filter>Sources\Scene3D\SceneEngine\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\dual_quaternion.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_lod.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render_command.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\final_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GaussianBlur\gaussian_blur.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GaussianBlur</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\gbuffer_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensFlare\lens_flare_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\lightsource_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\icosahedron.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\lightsource_simple_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass_data.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_uniforms.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\noise_2d.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\noise_3d.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\skybox_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\ssao_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ZMinMax</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\scene_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1298,71 +1298,11 @@
     <ClCompile Include="Sources\Scene3D\Culling\RTree\rtree.cpp">
       <Filter>Sources\Scene3D\Culling\RTree</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Level\level.cpp">
-      <Filter>Sources\Scene3D\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Model\model.cpp">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Model\model_instance.cpp">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Model\model_lod.cpp">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Model\model_shader_cache.cpp">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp">
       <Filter>Sources\Scene3D\Performance</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp">
       <Filter>Sources\Scene3D\Performance</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\Bloom\bloom_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\Bloom</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp">
-      <Filter>Sources\Scene3D\Passes\DiffuseGI</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\Final\final_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\Final</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\GaussianBlur\gaussian_blur.cpp">
-      <Filter>Sources\Scene3D\Passes\GaussianBlur</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\GBuffer\gbuffer_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\GBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\Lightsource\lightsource_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\Lightsource</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\LightsourceSimple\lightsource_simple_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\LightsourceSimple</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\LogAverageLight\log_average_light.cpp">
-      <Filter>Sources\Scene3D\Passes\LogAverageLight</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\ZMinMax\z_minmax.cpp">
-      <Filter>Sources\Scene3D\Passes\ZMinMax</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\VSMShadowMap\vsm_shadow_map_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\VSMShadowMap</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\Transparency\transparency_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\Transparency</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\SSAO\ssao_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\SSAO</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\Skybox\skybox_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\Skybox</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\ParticleEmitter\particle_emitter_pass_data.cpp">
-      <Filter>Sources\Scene3D\Passes\ParticleEmitter</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Physics3D\physics3d_constraint.cpp">
       <Filter>Sources\Physics3D</Filter>
@@ -1850,9 +1790,6 @@
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.cpp">
-      <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\instances_buffer.cpp">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClCompile>
@@ -1873,6 +1810,69 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\work_queue.cpp">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Level\level.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_lod.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Final\final_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\GaussianBlur\gaussian_blur.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GaussianBlur</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\gbuffer_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LensFlare\lens_flare_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LensFlare</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\lightsource_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\lightsource_simple_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass_data.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Skybox\skybox_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SSAO\ssao_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ZMinMax</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

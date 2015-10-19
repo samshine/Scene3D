@@ -1,23 +1,23 @@
 
 #pragma once
 
-#include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/SceneEngine/instances_buffer.h"
 #include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/SceneEngine/resource.h"
-#include "Scene3D/Model/model_shader_cache.h"
-#include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
-#include "Scene3D/Passes/Lightsource/lightsource_pass.h"
-#include "Scene3D/Passes/LightsourceSimple/lightsource_simple_pass.h"
-#include "Scene3D/Passes/GBuffer/gbuffer_pass.h"
-#include "Scene3D/Passes/Skybox/skybox_pass.h"
-#include "Scene3D/Passes/Bloom/bloom_pass.h"
-#include "Scene3D/Passes/SSAO/ssao_pass.h"
-#include "Scene3D/Passes/Final/final_pass.h"
-#include "Scene3D/Passes/Transparency/transparency_pass.h"
-#include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
-#include "Scene3D/Passes/LensFlare/lens_flare_pass.h"
+#include "Scene3D/SceneEngine/Model/model_shader_cache.h"
+#include "Scene3D/SceneEngine/Passes/GaussianBlur/gaussian_blur.h"
+#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
+#include "Scene3D/SceneEngine/Passes/Lightsource/lightsource_pass.h"
+#include "Scene3D/SceneEngine/Passes/LightsourceSimple/lightsource_simple_pass.h"
+#include "Scene3D/SceneEngine/Passes/GBuffer/gbuffer_pass.h"
+#include "Scene3D/SceneEngine/Passes/Skybox/skybox_pass.h"
+#include "Scene3D/SceneEngine/Passes/Bloom/bloom_pass.h"
+#include "Scene3D/SceneEngine/Passes/SSAO/ssao_pass.h"
+#include "Scene3D/SceneEngine/Passes/Final/final_pass.h"
+#include "Scene3D/SceneEngine/Passes/Transparency/transparency_pass.h"
+#include "Scene3D/SceneEngine/Passes/ParticleEmitter/particle_emitter_pass.h"
+#include "Scene3D/SceneEngine/Passes/LensFlare/lens_flare_pass.h"
 #include <memory>
 #include <map>
 

@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "scene_engine_impl.h"
 #include "Scene3D/ModelData/model_data.h"
-#include "Scene3D/Model/model.h"
+#include "Scene3D/SceneEngine/Model/model.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/scene_impl.h"
 
