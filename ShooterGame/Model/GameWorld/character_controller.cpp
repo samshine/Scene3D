@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-CharacterController::CharacterController(const Physics3DWorldPtr &collision_world) : collision_world(collision_world), sweep_test(collision_world)
+CharacterController::CharacterController(const Physics3DWorldPtr &collision_world) : collision_world(collision_world), sweep_test(Physics3DSweepTest::create(collision_world))
 {
 }
 
@@ -128,18 +128,18 @@ bool CharacterController::step_move(uicore::Vec3f move_vec)
 		Vec3f to_pos = position + move_vec;
 		Quaternionf orientation;
 
-		if (sweep_test.test_all_hits(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd))
+		if (sweep_test->test_all_hits(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd))
 		{
 			// Look for a floor/ceiling first as multiple faces might have contact at face edges
-			float t = sweep_test.get_hit_fraction(0);
-			for (int hit_index = 0; hit_index < sweep_test.get_hit_count(); hit_index++)
+			float t = sweep_test->hit_fraction(0);
+			for (int hit_index = 0; hit_index < sweep_test->hit_count(); hit_index++)
 			{
-				Vec3f normal = sweep_test.get_hit_normal(hit_index);
+				Vec3f normal = sweep_test->hit_normal(hit_index);
 
 				float dot = Vec3f::dot(Vec3f(0.0f, vertical_sign, 0.0f), normal);
 				if (dot < -acos_too_steep_slope || dot > acos_too_steep_slope)
 				{
-					position = sweep_test.get_hit_position(0);
+					position = sweep_test->hit_position(0);
 					hit_ceiling_or_floor = true;
 					break; // hit ceiling or floor
 				}
@@ -149,8 +149,8 @@ bool CharacterController::step_move(uicore::Vec3f move_vec)
 			if (!hit_ceiling_or_floor)
 			{
 				float margin = allowed_ccd * 0.3f;
-				Vec3f normal = sweep_test.get_hit_normal(0);
-				move_vec = mix(move_vec, reflect(move_vec, normal, step_bounce), 1.0f - sweep_test.get_hit_fraction(0)) + normal * margin;
+				Vec3f normal = sweep_test->hit_normal(0);
+				move_vec = mix(move_vec, reflect(move_vec, normal, step_bounce), 1.0f - sweep_test->hit_fraction(0)) + normal * margin;
 			}
 		}
 		else
@@ -234,16 +234,16 @@ void CharacterController::apply_velocity(float tick_elapsed)
 		Vec3f to_pos = position + velocity * (1.0f - t) * tick_elapsed;
 		Quaternionf orientation;
 		bool found = false;
-		sweep_test.test_all_hits(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd);
-		for (int hit = 0; hit < sweep_test.get_hit_count(); hit++)
+		sweep_test->test_all_hits(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd);
+		for (int hit = 0; hit < sweep_test->hit_count(); hit++)
 		{
 			//if (Vec3f::dot(velocity, sweep_test.get_hit_normal(hit)) > 0)
 			//	continue;
 
-			position = sweep_test.get_hit_position(hit);
-			velocity = reflect(velocity, sweep_test.get_hit_normal(hit), bounce);
+			position = sweep_test->hit_position(hit);
+			velocity = reflect(velocity, sweep_test->hit_normal(hit), bounce);
 
-			t = t + sweep_test.get_hit_fraction(hit) * (1.0f - t);
+			t = t + sweep_test->hit_fraction(hit) * (1.0f - t);
 
 			found = true;
 			break;

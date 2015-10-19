@@ -83,7 +83,7 @@ private:
 
 	Physics3DWorldPtr collision_world;
 	Physics3DShape collision_shape;
-	Physics3DSweepTest sweep_test;
+	Physics3DSweepTestPtr sweep_test;
 
 	float allowed_ccd = 0.001f; // 1 millimeter
 	float acos_too_steep_slope = 0.70f; // cos(45 deg)

@@ -31,7 +31,7 @@ private:
 
 	std::string last_anim = "default";
 
-	Physics3DSweepTest camera_sweep_test;
+	Physics3DSweepTestPtr camera_sweep_test;
 	Physics3DShape camera_shape;
 
 	uicore::Vec3f last_position;

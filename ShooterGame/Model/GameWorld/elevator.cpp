@@ -114,11 +114,11 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	Vec3f from_pos = mix(pos1, pos2, time);
 	Vec3f to_pos = mix(pos1, pos2, new_time);
 
-	Physics3DSweepTest test(world()->game()->collision);
-	test.test_all_hits(box_shape, from_pos, orientation, to_pos, orientation);
-	for (int i = 0; i < test.get_hit_count(); i++)
+	auto test = Physics3DSweepTest::create(world()->game()->collision);
+	test->test_all_hits(box_shape, from_pos, orientation, to_pos, orientation);
+	for (int i = 0; i < test->hit_count(); i++)
 	{
-		Physics3DObject obj = test.get_hit_object(i);
+		Physics3DObject obj = test->hit_object(i);
 		std::shared_ptr<GameObjectCollision> obj_collision = obj.get_data<GameObjectCollision>();
 		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
 		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
@@ -198,12 +198,12 @@ bool Elevator::test_start_trigger()
 {
 	Vec3f trigger_pos = pos1 + Vec3f(0.0, 1.0f, 0.0f);
 
-	Physics3DSweepTest test(world()->game()->collision);
-	test.test_all_hits(box_shape, pos1, orientation, trigger_pos, orientation);
+	auto test = Physics3DSweepTest::create(world()->game()->collision);
+	test->test_all_hits(box_shape, pos1, orientation, trigger_pos, orientation);
 
-	for (int i = 0; i < test.get_hit_count(); i++)
+	for (int i = 0; i < test->hit_count(); i++)
 	{
-		Physics3DObject obj = test.get_hit_object(i);
+		Physics3DObject obj = test->hit_object(i);
 		std::shared_ptr<GameObjectCollision> obj_collision = obj.get_data<GameObjectCollision>();
 		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
 		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
