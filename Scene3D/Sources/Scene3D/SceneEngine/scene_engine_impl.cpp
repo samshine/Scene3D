@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "scene_cache_impl.h"
+#include "scene_engine_impl.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/Model/model.h"
 #include "Scene3D/Performance/scope_timer.h"
@@ -8,82 +8,82 @@
 
 using namespace uicore;
 
-SceneCacheImpl::SceneCacheImpl(const GraphicContextPtr &gc, const std::string &shader_path)
-	: gc(gc), inout_data(gc, shader_path, this)
+SceneEngineImpl::SceneEngineImpl(const GraphicContextPtr &gc, const std::string &shader_path)
+	: gc(gc), render(gc, shader_path, this)
 {
 }
 
-void SceneCacheImpl::render(const GraphicContextPtr &gc, SceneImpl *scene)
+void SceneEngineImpl::render_scene(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	ScopeTimeFunction();
 
-	inout_data.models_drawn = 0;
-	inout_data.instances_drawn = 0;
-	inout_data.draw_calls = 0;
-	inout_data.triangles_drawn = 0;
-	inout_data.scene_visits = 0;
+	render.models_drawn = 0;
+	render.instances_drawn = 0;
+	render.draw_calls = 0;
+	render.triangles_drawn = 0;
+	render.scene_visits = 0;
 
-	inout_data.gpu_timer.begin_frame(gc);
+	render.gpu_timer.begin_frame(gc);
 
-	inout_data.setup_pass_buffers(gc);
+	render.setup_pass_buffers(gc);
 
-	if (inout_data.field_of_view != scene->camera()->field_of_view())
-		inout_data.field_of_view = scene->camera()->field_of_view();
+	if (render.field_of_view != scene->camera()->field_of_view())
+		render.field_of_view = scene->camera()->field_of_view();
 
 	Quaternionf inv_orientation = Quaternionf::inverse(scene->camera()->orientation());
-	inout_data.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene->camera()->position());
+	render.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene->camera()->position());
 
-	for (const auto &pass : inout_data.passes)
+	for (const auto &pass : render.passes)
 	{
-		inout_data.gpu_timer.begin_time(gc, pass->name());
+		render.gpu_timer.begin_time(gc, pass->name());
 		pass->run(gc, scene);
-		inout_data.gpu_timer.end_time(gc);
+		render.gpu_timer.end_time(gc);
 	}
 
-	inout_data.gpu_timer.end_frame(gc);
+	render.gpu_timer.end_frame(gc);
 
-	inout_data.gpu_results = inout_data.gpu_timer.get_results(gc);
+	render.gpu_results = render.gpu_timer.get_results(gc);
 
 	if (gc->shader_language() == shader_glsl)
 		OpenGL::check_error();
 }
 
-void SceneCacheImpl::update(const GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed)
+void SceneEngineImpl::update_scene(const GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed)
 {
 	process_work_completed();
 	update_textures(gc, time_elapsed);
-	for (const auto &pass : inout_data.passes)
+	for (const auto &pass : render.passes)
 		pass->update(gc, time_elapsed);
 	// To do: update scene object animations here too
 }
 
-std::shared_ptr<Model> SceneCacheImpl::get_model(const std::string &model_name)
+std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 {
 	auto &renderer = models[model_name];
 	if (!renderer)
 	{
-		renderer = std::make_shared<Model>(get_gc(), this, get_model_data(model_name), inout_data.instances_buffer.new_offset_index());
+		renderer = std::make_shared<Model>(get_gc(), this, get_model_data(model_name), render.instances_buffer.new_offset_index());
 	}
 	return renderer;
 }
 
-std::shared_ptr<ModelData> SceneCacheImpl::get_model_data(const std::string &name)
+std::shared_ptr<ModelData> SceneEngineImpl::get_model_data(const std::string &name)
 {
 	return ModelData::load(PathHelp::combine("Resources/Assets", name));
 }
 
-void SceneCacheImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)
+void SceneEngineImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)
 {
 	//for (size_t i = 0; i < video_textures.size(); i++)
 	//	video_textures[i].update(gc, time_elapsed);
 }
 
-std::string SceneCacheImpl::to_key(const std::string &material_name, bool linear)
+std::string SceneEngineImpl::to_key(const std::string &material_name, bool linear)
 {
 	return material_name + (linear ? "__linear" : "__srgb");
 }
 
-Resource<TexturePtr> SceneCacheImpl::get_texture(const GraphicContextPtr &gc, const std::string &material_name, bool linear)
+Resource<TexturePtr> SceneEngineImpl::get_texture(const GraphicContextPtr &gc, const std::string &material_name, bool linear)
 {
 	std::string key = to_key(material_name, linear);
 	Resource<TexturePtr> texture = textures[key];
@@ -100,7 +100,7 @@ Resource<TexturePtr> SceneCacheImpl::get_texture(const GraphicContextPtr &gc, co
 	return texture;
 }
 
-Texture2DPtr SceneCacheImpl::get_dummy_texture(const GraphicContextPtr &gc)
+Texture2DPtr SceneEngineImpl::get_dummy_texture(const GraphicContextPtr &gc)
 {
 	if (!dummy_texture)
 	{
@@ -137,7 +137,7 @@ Texture2DPtr SceneCacheImpl::get_dummy_texture(const GraphicContextPtr &gc)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CacheLoadTexture::CacheLoadTexture(SceneCacheImpl *cache, Resource<TexturePtr> texture, const std::string &material_name, bool linear)
+CacheLoadTexture::CacheLoadTexture(SceneEngineImpl *cache, Resource<TexturePtr> texture, const std::string &material_name, bool linear)
 : cache(cache), texture(texture), material_name(material_name), linear(linear)
 {
 }

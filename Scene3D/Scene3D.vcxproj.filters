@@ -184,11 +184,11 @@
     <Filter Include="Sources\Sound\SoundProviders">
       <UniqueIdentifier>{5be9dab4-8045-423a-867c-b38f622779ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Scene3D\SceneCache">
-      <UniqueIdentifier>{fd28d256-0b78-47d0-ad6f-d42b3801eee5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\Passes\LensFlare">
       <UniqueIdentifier>{bb003ebd-eb99-4850-8871-e8df173e5392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine">
+      <UniqueIdentifier>{d66c1695-acac-4c20-9d0a-a7f5dec46129}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1218,41 +1218,41 @@
     <ClInclude Include="Include\Sound\sound_cache.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene3D\scene_cache.h">
-      <Filter>Include\Scene3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\resource.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\resource_container.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\scene_cache_impl.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\instances_buffer.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\mapped_buffer.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\shader_setup.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\shadow_maps.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\file_search_path.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\work_queue.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\Passes\scene_pass.h">
       <Filter>Sources\Scene3D\Passes</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.h">
       <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\scene_engine.h">
+      <Filter>Include\Scene3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\file_search_path.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\instances_buffer.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\mapped_buffer.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\resource.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\scene_engine_impl.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\scene_render.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\shader_setup.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\shadow_maps.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\work_queue.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1850,29 +1850,29 @@
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\instances_buffer.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\shader_setup.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\shadow_maps.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache_impl.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\work_queue.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.cpp">
       <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\resource_container.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\instances_buffer.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine_impl.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\scene_render.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\shader_setup.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\shadow_maps.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\work_queue.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 
 using namespace uicore;
 
-DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
+DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{

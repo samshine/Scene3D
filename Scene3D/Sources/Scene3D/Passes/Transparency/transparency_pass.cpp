@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-TransparencyPass::TransparencyPass(ResourceContainer &inout) : inout(inout)
+TransparencyPass::TransparencyPass(SceneRender &inout) : inout(inout)
 {
 }
 

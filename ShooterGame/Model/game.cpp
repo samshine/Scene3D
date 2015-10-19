@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-Game::Game(std::string hostname, std::string port, bool server, SceneCachePtr scene_cache, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContextPtr gc, uicore::DisplayWindowPtr ic) : server(server), scene_cache(scene_cache), gc(gc), ic(ic)
+Game::Game(std::string hostname, std::string port, bool server, SceneEnginePtr scene_engine, const std::shared_ptr<SoundCache> &sound_cache, uicore::GraphicContextPtr gc, uicore::DisplayWindowPtr ic) : server(server), scene_engine(scene_engine), gc(gc), ic(ic)
 {
 	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
 
@@ -87,7 +87,7 @@ void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 		}, true);
 	}
 
-	scene = Scene::create(scene_cache);
+	scene = Scene::create(scene_engine);
 
 	std::vector<Colorf> colors;
 	colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));

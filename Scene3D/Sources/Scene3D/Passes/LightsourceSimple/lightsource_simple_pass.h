@@ -4,8 +4,8 @@
 #include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
-#include "Scene3D/SceneCache/resource_container.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/resource.h"
 #include "icosahedron.h"
 
 class GPUTimer;
@@ -14,7 +14,7 @@ class SceneImpl;
 class LightsourceSimplePass : public ScenePass
 {
 public:
-	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
+	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout);
 	~LightsourceSimplePass();
 
 	std::string name() const override { return "light"; }
@@ -28,7 +28,7 @@ private:
 	void upload(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
 	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
 
-	ResourceContainer &inout;
+	SceneRender &inout;
 
 	static const int max_lights = 1023;
 	static const int vectors_per_light = 6;

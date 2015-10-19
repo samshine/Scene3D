@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-GBufferPass::GBufferPass(ResourceContainer &inout) : inout(inout)
+GBufferPass::GBufferPass(SceneRender &inout) : inout(inout)
 {
 }
 

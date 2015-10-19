@@ -40,7 +40,7 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 
 	GraphicContextPtr gc = canvas->gc();
 
-	scene = Scene::create(Screen::scene_cache());
+	scene = Scene::create(Screen::scene_engine());
 	scene->set_camera(SceneCamera::create(scene));
 	scene->camera()->set_position(Vec3f(0.0f, 1.8f, -3.0f));
 	//scene.get_camera()->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));

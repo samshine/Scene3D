@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "lightsource_simple_pass.h"
-#include "Scene3D/SceneCache/shader_setup.h"
+#include "Scene3D/SceneEngine/shader_setup.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/scene_impl.h"
 #include "Scene3D/scene.h"
@@ -11,7 +11,7 @@
 
 using namespace uicore;
 
-LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
+LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
 {
 	icosahedron_light_program = compile_and_link(gc, shader_path, "icosahedron");
 	rect_light_program = compile_and_link(gc, shader_path, "rect");

@@ -5,12 +5,12 @@
 #include "Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
 #include "model_lod.h"
-#include "Scene3D/SceneCache/instances_buffer.h"
-#include "Scene3D/SceneCache/scene_cache_impl.h"
+#include "Scene3D/SceneEngine/instances_buffer.h"
+#include "Scene3D/SceneEngine/scene_engine_impl.h"
 
 using namespace uicore;
 
-Model::Model(const GraphicContextPtr &gc, SceneCacheImpl *engine, std::shared_ptr<ModelData> model_data, int model_index)
+Model::Model(const GraphicContextPtr &gc, SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data, int model_index)
 : engine(engine), model_data(model_data), frame(-1), max_instances(0), model_index(model_index)
 {
 /*
@@ -37,7 +37,7 @@ Model::Model(const GraphicContextPtr &gc, SceneCacheImpl *engine, std::shared_pt
 	for (size_t i = 0; i < model_data->textures.size(); i++)
 		textures.push_back(engine->get_texture(gc, model_data->textures[i].name, model_data->textures[i].gamma == 1.0f));
 
-	const auto &shader_cache = engine->inout_data.model_shader_cache;
+	const auto &shader_cache = engine->render.model_shader_cache;
 	shader_cache->create_gbuffer_commands(gc, this, 0);
 	shader_cache->create_transparency_commands(gc, this, 0);
 	shader_cache->create_shadow_commands(gc, this, 0);

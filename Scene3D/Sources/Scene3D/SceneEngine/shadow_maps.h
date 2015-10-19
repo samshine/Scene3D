@@ -6,12 +6,12 @@
 class ShadowMaps;
 class ShadowMapEntry;
 class ShadowMapEntryImpl;
-class ResourceContainer;
+class SceneRender;
 
 class ShadowMaps
 {
 public:
-	ShadowMaps(const uicore::GraphicContextPtr &gc, ResourceContainer &inout_data, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
+	ShadowMaps(const uicore::GraphicContextPtr &gc, SceneRender &render, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
 	~ShadowMaps();
 
 	void start_frame();
@@ -25,7 +25,7 @@ private:
 	void add_unused(ShadowMapEntryImpl *entry);
 	void unlink(ShadowMapEntryImpl *entry);
 
-	ResourceContainer &inout_data;
+	SceneRender &render;
 
 	std::vector<uicore::FrameBufferPtr> framebuffers;
 	std::vector<uicore::Texture2DPtr> views;

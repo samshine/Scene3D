@@ -5,17 +5,17 @@
 #include "Scene3D/scene_particle_emitter.h"
 #include "particle_emitter_pass_data.h"
 #include "Scene3D/scene_particle_emitter_impl.h"
-#include "Scene3D/SceneCache/resource_container.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/resource.h"
 
 class SceneImpl;
-class SceneCacheImpl;
+class SceneEngineImpl;
 class MaterialCache;
 
 class ParticleEmitterPass : public ScenePass
 {
 public:
-	ParticleEmitterPass(SceneCacheImpl *engine);
+	ParticleEmitterPass(SceneEngineImpl *engine);
 	std::string name() const override { return "particle"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
@@ -24,7 +24,7 @@ private:
 	void select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const uicore::FrustumPlanes &frustum);
 	void setup(const uicore::GraphicContextPtr &gc);
 
-	SceneCacheImpl *engine;
+	SceneEngineImpl *engine;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

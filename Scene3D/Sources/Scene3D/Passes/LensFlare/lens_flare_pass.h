@@ -2,13 +2,13 @@
 #pragma once
 
 #include "Scene3D/Passes/scene_pass.h"
-#include "Scene3D/SceneCache/resource.h"
-#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneEngine/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
 
 class LensFlarePass : public ScenePass
 {
 public:
-	LensFlarePass(const std::string &shader_path, ResourceContainer &inout);
+	LensFlarePass(const std::string &shader_path, SceneRender &inout);
 	std::string name() const override { return "lensflare"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
@@ -22,7 +22,7 @@ private:
 	};
 
 	std::string shader_path;
-	ResourceContainer &inout;
+	SceneRender &inout;
 
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;

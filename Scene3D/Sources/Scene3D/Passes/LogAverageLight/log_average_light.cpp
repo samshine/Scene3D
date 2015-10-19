@@ -1,11 +1,11 @@
 
 #include "precomp.h"
 #include "log_average_light.h"
-#include "Scene3D/SceneCache/shader_setup.h"
+#include "Scene3D/SceneEngine/shader_setup.h"
 
 using namespace uicore;
 
-LogAverageLight::LogAverageLight(const GraphicContextPtr &gc, ResourceContainer &inout, int iterations)
+LogAverageLight::LogAverageLight(const GraphicContextPtr &gc, SceneRender &inout, int iterations)
 : inout(inout), iterations(iterations), current_index(0)
 {
 	Size texture_size(1 << iterations, 1 << iterations);

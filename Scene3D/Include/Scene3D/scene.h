@@ -3,15 +3,15 @@
 
 #include <memory>
 
-class SceneCache;
-typedef std::shared_ptr<SceneCache> SceneCachePtr;
+class SceneEngine;
+typedef std::shared_ptr<SceneEngine> SceneEnginePtr;
 class SceneCamera;
 typedef std::shared_ptr<SceneCamera> SceneCameraPtr;
 
 class Scene
 {
 public:
-	static std::shared_ptr<Scene> create(const SceneCachePtr &cache);
+	static std::shared_ptr<Scene> create(const SceneEnginePtr &engine);
 
 	virtual const SceneCameraPtr &camera() const = 0;
 

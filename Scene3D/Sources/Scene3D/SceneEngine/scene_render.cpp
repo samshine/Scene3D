@@ -1,10 +1,10 @@
 
 #include "precomp.h"
-#include "resource_container.h"
+#include "scene_render.h"
 
 using namespace uicore;
 
-ResourceContainer::ResourceContainer(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneCacheImpl *engine) : shader_path(shader_path)
+SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneEngineImpl *engine) : shader_path(shader_path)
 {
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
 
@@ -42,7 +42,7 @@ ResourceContainer::ResourceContainer(const uicore::GraphicContextPtr &gc, const 
 	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, *this));
 }
 
-void ResourceContainer::setup_pass_buffers(const GraphicContextPtr &gc)
+void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 {
 	Size viewport_size = viewport.size();
 

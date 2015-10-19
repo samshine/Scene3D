@@ -6,7 +6,7 @@
 
 using namespace uicore;
 
-LensFlarePass::LensFlarePass(const std::string &shader_path, ResourceContainer &inout) : shader_path(shader_path), inout(inout)
+LensFlarePass::LensFlarePass(const std::string &shader_path, SceneRender &inout) : shader_path(shader_path), inout(inout)
 {
 }
 
@@ -15,7 +15,7 @@ void LensFlarePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	setup(gc);
 
 	if (!flare_texture.get())
-		flare_texture = scene->get_cache()->get_texture(gc, "lensflare.png", false);
+		flare_texture = scene->engine()->get_texture(gc, "lensflare.png", false);
 
 	Size viewport_size = inout.viewport.size();
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());

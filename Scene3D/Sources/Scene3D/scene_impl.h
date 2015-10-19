@@ -2,15 +2,15 @@
 #pragma once
 
 #include "Scene3D/scene.h"
-#include "Scene3D/scene_cache.h"
+#include "Scene3D/scene_engine.h"
 #include "Scene3D/scene_camera.h"
-#include "Scene3D/SceneCache/scene_cache_impl.h"
+#include "Scene3D/SceneEngine/scene_engine_impl.h"
 #include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 
-class SceneCache;
-class SceneCacheImpl;
-typedef std::shared_ptr<SceneCache> SceneCachePtr;
+class SceneEngine;
+class SceneEngineImpl;
+typedef std::shared_ptr<SceneEngine> SceneEnginePtr;
 class ModelMeshVisitor;
 class SceneObjectImpl;
 class SceneLightImpl;
@@ -23,7 +23,7 @@ class SceneLightProbeImpl;
 class SceneImpl : public Scene
 {
 public:
-	SceneImpl(const SceneCachePtr &cache);
+	SceneImpl(const SceneEnginePtr &engine);
 
 	const SceneCameraPtr &camera() const override { return _camera; }
 	void set_camera(const SceneCameraPtr &camera) override { _camera = camera; }
@@ -71,10 +71,10 @@ public:
 		});
 	}
 
-	SceneCacheImpl *get_cache() const { return cache.get(); }
+	SceneEngineImpl *engine() const { return _engine.get(); }
 
 private:
-	std::shared_ptr<SceneCacheImpl> cache;
+	std::shared_ptr<SceneEngineImpl> _engine;
 
 	std::list<SceneObjectImpl *> objects;
 	std::list<SceneLightImpl *> lights;

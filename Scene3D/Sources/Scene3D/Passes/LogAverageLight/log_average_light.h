@@ -1,19 +1,19 @@
 
 #pragma once
 
-#include "Scene3D/SceneCache/resource_container.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/resource.h"
 
 class LogAverageLight
 {
 public:
-	LogAverageLight(const uicore::GraphicContextPtr &gc, ResourceContainer &inout, int iterations = 8);
+	LogAverageLight(const uicore::GraphicContextPtr &gc, SceneRender &inout, int iterations = 8);
 	uicore::Texture2DPtr &find_log_average_light(const uicore::GraphicContextPtr &gc, uicore::Texture2DPtr &hdr_texture);
 
 private:
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &vertex_source, const std::string &fragment_source);
 
-	ResourceContainer &inout;
+	SceneRender &inout;
 
 	int iterations;
 	uicore::ProgramObjectPtr program0, program1, program2;

@@ -2,13 +2,13 @@
 #include "precomp.h"
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
-#include "Scene3D/SceneCache/mapped_buffer.h"
+#include "Scene3D/SceneEngine/mapped_buffer.h"
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 
 using namespace uicore;
 
-ParticleEmitterPass::ParticleEmitterPass(SceneCacheImpl *engine)
+ParticleEmitterPass::ParticleEmitterPass(SceneEngineImpl *engine)
 : engine(engine)
 {
 	emitter_slots.resize(32);
@@ -62,10 +62,10 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 
-	Size viewport_size = engine->inout_data.viewport.size();
-	Mat4f eye_to_projection = Mat4f::perspective(engine->inout_data.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(engine->inout_data.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * engine->inout_data.world_to_eye);
+	Size viewport_size = engine->render.viewport.size();
+	Mat4f eye_to_projection = Mat4f::perspective(engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * engine->render.world_to_eye);
 
 	select_active_emitters(gc, scene, frustum);
 
@@ -81,7 +81,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		float depth_fade_distance = 1.0f;
 		ParticleUniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
-		uniforms.object_to_eye = engine->inout_data.world_to_eye;
+		uniforms.object_to_eye = engine->render.world_to_eye;
 		uniforms.rcp_depth_fade_distance = 1.0f / depth_fade_distance;
 		uniforms.instance_vectors_offset = total_particle_count * vectors_per_particle;
 		pass_data->gpu_uniforms.upload_data(gc, &uniforms, 1);
@@ -132,7 +132,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	gc->set_depth_range(0.0f, 0.9f);
 
-	gc->set_frame_buffer(engine->inout_data.fb_final_color);
+	gc->set_frame_buffer(engine->render.fb_final_color);
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(blend_state);
@@ -140,7 +140,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_primitives_array(prim_array);
 
 	gc->set_program_object(program);
-	gc->set_texture(0, engine->inout_data.normal_z_gbuffer);
+	gc->set_texture(0, engine->render.normal_z_gbuffer);
 	gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)
@@ -174,8 +174,8 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 {
 	if (!program)
 	{
-		std::string vertex_filename = PathHelp::combine(engine->inout_data.shader_path, "ParticleEmitter/vertex.hlsl");
-		std::string fragment_filename = PathHelp::combine(engine->inout_data.shader_path, "ParticleEmitter/fragment.hlsl");
+		std::string vertex_filename = PathHelp::combine(engine->render.shader_path, "ParticleEmitter/vertex.hlsl");
+		std::string fragment_filename = PathHelp::combine(engine->render.shader_path, "ParticleEmitter/fragment.hlsl");
 		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
 		program->bind_attribute_location(0, "AttrPosition");
 		program->bind_frag_data_location(0, "FragColor");

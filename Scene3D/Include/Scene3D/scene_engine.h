@@ -5,10 +5,10 @@
 #include <memory>
 #include <string>
 
-class SceneCache
+class SceneEngine
 {
 public:
-	static std::shared_ptr<SceneCache> create(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
+	static std::shared_ptr<SceneEngine> create(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
 
 	virtual int models_drawn() const = 0;
 	virtual int instances_drawn() const = 0;
@@ -18,4 +18,4 @@ public:
 	virtual const std::vector<GPUTimer::Result> &gpu_results() const = 0;
 };
 
-typedef std::shared_ptr<SceneCache> SceneCachePtr;
+typedef std::shared_ptr<SceneEngine> SceneEnginePtr;

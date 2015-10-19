@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, ResourceContainer &inout)
+VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, SceneRender &inout)
 : inout(inout), maps(gc, inout, 1024, 8, tf_rg32f), round_robin(0)
 {
 	BlendStateDescription blend_desc;

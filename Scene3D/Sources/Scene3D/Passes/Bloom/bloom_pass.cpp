@@ -2,11 +2,11 @@
 #include "precomp.h"
 #include "bloom_pass.h"
 #include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/SceneCache/shader_setup.h"
+#include "Scene3D/SceneEngine/shader_setup.h"
 
 using namespace uicore;
 
-BloomPass::BloomPass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
+BloomPass::BloomPass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{

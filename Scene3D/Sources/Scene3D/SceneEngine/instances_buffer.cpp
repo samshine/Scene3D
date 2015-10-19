@@ -22,7 +22,7 @@ int InstancesBuffer::new_offset_index()
 void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
 {
 	ScopeTimeFunction();
-	scene->get_cache()->inout_data.scene_visits++;
+	scene->engine()->render.scene_visits++;
 
 	std::vector<Model *> models;
 
@@ -38,12 +38,12 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 					light_probe_color = probe->color();
 			}
 
-			scene->get_cache()->inout_data.instances_drawn++;
+			scene->engine()->render.instances_drawn++;
 			bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 			if (first_instance)
 			{
 				models.push_back(object->instance.get_renderer().get());
-				scene->get_cache()->inout_data.models_drawn++;
+				scene->engine()->render.models_drawn++;
 			}
 		}
 	});

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Scene3D/scene_particle_emitter_impl.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/resource.h"
 #include "particle.h"
 #include "particle_uniforms.h"
 

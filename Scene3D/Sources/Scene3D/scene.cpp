@@ -12,14 +12,14 @@
 
 using namespace uicore;
 
-std::shared_ptr<Scene> Scene::create(const SceneCachePtr &cache)
+std::shared_ptr<Scene> Scene::create(const SceneEnginePtr &engine)
 {
-	auto scene = std::make_shared<SceneImpl>(cache);
+	auto scene = std::make_shared<SceneImpl>(engine);
 	scene->set_camera(SceneCamera::create(scene));
 	return scene;
 }
 
-SceneImpl::SceneImpl(const SceneCachePtr &cache) : cache(std::dynamic_pointer_cast<SceneCacheImpl>(cache))
+SceneImpl::SceneImpl(const SceneEnginePtr &engine) : _engine(std::dynamic_pointer_cast<SceneEngineImpl>(engine))
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
 }
@@ -32,8 +32,8 @@ Mat4f SceneImpl::world_to_eye() const
 
 Mat4f SceneImpl::eye_to_projection() const
 {
-	Size viewport_size = get_cache()->inout_data.viewport.size();
-	return Mat4f::perspective(get_cache()->inout_data.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
+	Size viewport_size = engine()->render.viewport.size();
+	return Mat4f::perspective(engine()->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
 }
 
 Mat4f SceneImpl::world_to_projection() const
@@ -43,18 +43,18 @@ Mat4f SceneImpl::world_to_projection() const
 
 void SceneImpl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
 {
-	Size viewport_size = get_cache()->inout_data.viewport.size();
+	Size viewport_size = engine()->render.viewport.size();
 
-	float aspect = get_cache()->inout_data.viewport.width() / (float)get_cache()->inout_data.viewport.height();
-	float field_of_view_y_degrees = get_cache()->inout_data.field_of_view;
+	float aspect = engine()->render.viewport.width() / (float)engine()->render.viewport.height();
+	float field_of_view_y_degrees = engine()->render.field_of_view;
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
 
-	Vec2f pos((float)(screen_pos.x - get_cache()->inout_data.viewport.left), (float)(get_cache()->inout_data.viewport.bottom - screen_pos.y));
+	Vec2f pos((float)(screen_pos.x - engine()->render.viewport.left), (float)(engine()->render.viewport.bottom - screen_pos.y));
 
-	Vec2f normalized(pos.x * 2.0f / get_cache()->inout_data.viewport.width(), pos.y * 2.0f / get_cache()->inout_data.viewport.height());
+	Vec2f normalized(pos.x * 2.0f / engine()->render.viewport.width(), pos.y * 2.0f / engine()->render.viewport.height());
 	normalized -= 1.0f;
 
 	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
@@ -83,7 +83,7 @@ void SceneImpl::set_cull_oct_tree(float max_size)
 
 void SceneImpl::show_skybox_stars(bool enable)
 {
-	get_cache()->inout_data.show_skybox_stars = enable;
+	engine()->render.show_skybox_stars = enable;
 }
 
 void SceneImpl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Colorf> &colors)
@@ -101,23 +101,23 @@ void SceneImpl::set_skybox_gradient(const GraphicContextPtr &gc, std::vector<Col
 	texture->set_min_filter(filter_linear);
 	texture->set_mag_filter(filter_linear);
 
-	get_cache()->inout_data.skybox_texture = texture;
+	engine()->render.skybox_texture = texture;
 }
 
 void SceneImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
-	get_cache()->inout_data.viewport = box;
-	get_cache()->inout_data.fb_viewport = fb;
+	engine()->render.viewport = box;
+	engine()->render.fb_viewport = fb;
 }
 
 void SceneImpl::render(const GraphicContextPtr &gc)
 {
-	get_cache()->render(gc, this);
+	engine()->render_scene(gc, this);
 }
 
 void SceneImpl::update(const GraphicContextPtr &gc, float time_elapsed)
 {
-	get_cache()->update(gc, this, time_elapsed);
+	engine()->update_scene(gc, this, time_elapsed);
 }
 
 void SceneImpl::foreach(const FrustumPlanes &frustum, const std::function<void(SceneItem *)> &callback)

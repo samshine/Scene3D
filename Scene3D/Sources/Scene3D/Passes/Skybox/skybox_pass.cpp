@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout) : shader_path(shader_path), inout(inout)
+SkyboxPass::SkyboxPass(const std::string &shader_path, SceneRender &inout) : shader_path(shader_path), inout(inout)
 {
 }
 

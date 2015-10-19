@@ -11,12 +11,12 @@ using namespace uicore;
 std::shared_ptr<SceneModel> SceneModel::create(const ScenePtr &scene, const std::string &model_name)
 {
 	auto scene_impl = static_cast<SceneImpl*>(scene.get());
-	return std::make_shared<SceneModelImpl>(scene_impl, scene_impl->get_cache()->get_model(model_name));
+	return std::make_shared<SceneModelImpl>(scene_impl, scene_impl->engine()->get_model(model_name));
 }
 
 std::shared_ptr<SceneModel> SceneModel::create(const ScenePtr &scene, std::shared_ptr<ModelData> model_data)
 {
 	auto scene_impl = static_cast<SceneImpl*>(scene.get());
-	auto model = std::make_shared<Model>(scene_impl->get_cache()->get_gc(), scene_impl->get_cache(), model_data, scene_impl->get_cache()->inout_data.instances_buffer.new_offset_index());
+	auto model = std::make_shared<Model>(scene_impl->engine()->get_gc(), scene_impl->engine(), model_data, scene_impl->engine()->render.instances_buffer.new_offset_index());
 	return std::make_shared<SceneModelImpl>(scene_impl, model);
 }

@@ -30,6 +30,6 @@ private:
 	uicore::Texture2DPtr scene_texture;
 	uicore::FrameBufferPtr scene_frame_buffer;
 
-	SceneCachePtr cache;
+	SceneEnginePtr cache;
 	ScenePtr scene;
 };

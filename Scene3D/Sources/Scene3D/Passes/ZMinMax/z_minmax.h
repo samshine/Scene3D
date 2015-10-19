@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/resource.h"
 
 class ZMinMax
 {

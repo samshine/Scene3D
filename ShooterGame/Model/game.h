@@ -10,14 +10,14 @@
 class Game
 {
 public:
-	Game(std::string hostname, std::string port, bool server, SceneCachePtr scene_cache = nullptr, const std::shared_ptr<SoundCache> &sound_cache = nullptr, uicore::GraphicContextPtr gc = nullptr, uicore::DisplayWindowPtr ic = nullptr);
+	Game(std::string hostname, std::string port, bool server, SceneEnginePtr scene_engine = nullptr, const std::shared_ptr<SoundCache> &sound_cache = nullptr, uicore::GraphicContextPtr gc = nullptr, uicore::DisplayWindowPtr ic = nullptr);
 
 	void update(uicore::Vec2i mouse_movement);
 
 	uicore::GraphicContextPtr gc;
 	uicore::DisplayWindowPtr ic;
 
-	SceneCachePtr scene_cache;
+	SceneEnginePtr scene_engine;
 	ScenePtr scene;
 
 	std::unique_ptr<AudioWorld> audio;

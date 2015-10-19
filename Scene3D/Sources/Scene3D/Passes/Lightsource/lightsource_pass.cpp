@@ -1,8 +1,8 @@
 
 #include "precomp.h"
 #include "lightsource_pass.h"
-#include "Scene3D/SceneCache/shader_setup.h"
-#include "Scene3D/SceneCache/mapped_buffer.h"
+#include "Scene3D/SceneEngine/shader_setup.h"
+#include "Scene3D/SceneEngine/mapped_buffer.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"
@@ -12,7 +12,7 @@
 
 using namespace uicore;
 
-LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout) : inout(inout)
+LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{

@@ -3,19 +3,19 @@
 
 #include "Scene3D/Passes/scene_pass.h"
 #include "Scene3D/Passes/ZMinMax/z_minmax.h"
-#include "Scene3D/SceneCache/resource_container.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/resource.h"
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
 
 class GPUTimer;
-class ResourceContainer;
+class SceneRender;
 class SceneImpl;
 
 class LightsourcePass : public ScenePass
 {
 public:
-	LightsourcePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, ResourceContainer &inout);
+	LightsourcePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout);
 	~LightsourcePass();
 
 	std::string name() const override { return "light"; }
@@ -28,7 +28,7 @@ private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
-	ResourceContainer &inout;
+	SceneRender &inout;
 
 	static const int max_lights = 1023;
 	static const int light_slots_per_tile = 128;

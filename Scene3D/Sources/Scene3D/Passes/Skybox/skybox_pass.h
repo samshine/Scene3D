@@ -2,14 +2,14 @@
 #pragma once
 
 #include "Scene3D/Passes/scene_pass.h"
-#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneEngine/scene_render.h"
 
 class SceneImpl;
 
 class SkyboxPass : public ScenePass
 {
 public:
-	SkyboxPass(const std::string &shader_path, ResourceContainer &inout);
+	SkyboxPass(const std::string &shader_path, SceneRender &inout);
 	std::string name() const override { return "skybox"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
@@ -25,7 +25,7 @@ private:
 	static float random(float min_value, float max_value);
 
 	std::string shader_path;
-	ResourceContainer &inout;
+	SceneRender &inout;
 
 	struct Uniforms
 	{

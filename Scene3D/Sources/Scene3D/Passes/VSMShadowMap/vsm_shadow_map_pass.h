@@ -2,21 +2,21 @@
 #pragma once
 
 #include "Scene3D/Passes/scene_pass.h"
-#include "Scene3D/SceneCache/shadow_maps.h"
-#include "Scene3D/SceneCache/resource.h"
-#include "Scene3D/SceneCache/resource_container.h"
+#include "Scene3D/SceneEngine/shadow_maps.h"
+#include "Scene3D/SceneEngine/resource.h"
+#include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene_light_impl.h"
 
 class SceneImpl;
-class ResourceContainer;
+class SceneRender;
 class VSMShadowMapPassLightData;
 
 class VSMShadowMapPass : public ScenePass
 {
 public:
-	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, ResourceContainer &inout);
+	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	std::string name() const override { return "shadow"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
@@ -26,7 +26,7 @@ private:
 	void render_maps(SceneImpl *scene);
 	void blur_maps();
 
-	ResourceContainer &inout;
+	SceneRender &inout;
 	std::vector<SceneLightImpl *> lights;
 	int round_robin;
 	std::vector<size_t> blur_indexes;

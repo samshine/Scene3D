@@ -3,9 +3,9 @@
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/Performance/gpu_timer.h"
-#include "Scene3D/SceneCache/instances_buffer.h"
-#include "Scene3D/SceneCache/resource_container.h"
-#include "Scene3D/SceneCache/resource.h"
+#include "Scene3D/SceneEngine/instances_buffer.h"
+#include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/resource.h"
 #include "Scene3D/Model/model_shader_cache.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/Passes/Lightsource/lightsource_pass.h"
@@ -21,14 +21,14 @@
 #include <memory>
 #include <map>
 
-class SceneCacheImpl;
+class SceneEngineImpl;
 
-class ResourceContainer
+class SceneRender
 {
 public:
-	ResourceContainer(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneCacheImpl *engine);
-	ResourceContainer(const ResourceContainer &) = delete;
-	ResourceContainer &operator=(const ResourceContainer &) = delete;
+	SceneRender(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneEngineImpl *engine);
+	SceneRender(const SceneRender &) = delete;
+	SceneRender &operator=(const SceneRender &) = delete;
 
 	void setup_pass_buffers(const uicore::GraphicContextPtr &gc);
 
