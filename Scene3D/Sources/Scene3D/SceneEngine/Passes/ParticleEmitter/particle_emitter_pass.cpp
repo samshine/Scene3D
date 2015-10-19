@@ -3,7 +3,7 @@
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/SceneEngine/mapped_buffer.h"
-#include "Scene3D/scene_impl.h"
+#include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
 
 using namespace uicore;

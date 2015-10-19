@@ -2,8 +2,8 @@
 #include "precomp.h"
 #include "Scene3D/scene_light.h"
 #include "Scene3D/scene.h"
-#include "Scene3D/scene_light_impl.h"
-#include "Scene3D/scene_impl.h"
+#include "Scene3D/Scene/scene_light_impl.h"
+#include "Scene3D/Scene/scene_impl.h"
 
 using namespace uicore;
 

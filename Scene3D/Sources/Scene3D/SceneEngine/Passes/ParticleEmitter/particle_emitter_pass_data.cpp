@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "particle_emitter_pass_data.h"
-#include "Scene3D/scene_particle_emitter_impl.h"
+#include "Scene3D/Scene/scene_particle_emitter_impl.h"
 
 using namespace uicore;
 

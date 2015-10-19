@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "diffuse_gi_pass_cs.h"
 #include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/scene_impl.h"
+#include "Scene3D/Scene/scene_impl.h"
 
 using namespace uicore;
 

@@ -7,7 +7,7 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Performance/gpu_timer.h"
-#include "Scene3D/scene_impl.h"
+#include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
 
 using namespace uicore;

@@ -4,7 +4,7 @@
 #include "Scene3D/scene.h"
 #include "noise_2d.h"
 #include "noise_3d.h"
-#include "Scene3D/scene_impl.h"
+#include "Scene3D/Scene/scene_impl.h"
 
 using namespace uicore;
 
