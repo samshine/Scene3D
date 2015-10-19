@@ -7,6 +7,7 @@ class Physics3DWorld;
 typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DShape;
 class Physics3DConstraint;
+typedef std::shared_ptr<Physics3DConstraint> Physics3DConstraintPtr;
 class Physics3DObjectImpl;
 
 /*
@@ -84,8 +85,8 @@ public:
 	void apply_impulse(const uicore::Vec3f &impulse, const uicore::Vec3f &relative_pos);
 	void clear_forces();
 
-	void add_constraint(const Physics3DConstraint &constraint);
-	void remove_constraint(const Physics3DConstraint &constraint);
+	void add_constraint(const Physics3DConstraintPtr &constraint);
+	void remove_constraint(const Physics3DConstraintPtr &constraint);
 
 private:
 	std::shared_ptr<Physics3DObjectImpl> impl;

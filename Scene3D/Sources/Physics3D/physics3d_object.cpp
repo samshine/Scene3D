@@ -266,18 +266,18 @@ void Physics3DObject::clear_forces()
 		body->clearForces();
 }
 
-void Physics3DObject::add_constraint(const Physics3DConstraint &constraint)
+void Physics3DObject::add_constraint(const Physics3DConstraintPtr &constraint)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
-		body->addConstraintRef(constraint.impl->constraint.get());
+		body->addConstraintRef(static_cast<Physics3DConstraintImpl*>(constraint.get())->constraint.get());
 }
 
-void Physics3DObject::remove_constraint(const Physics3DConstraint &constraint)
+void Physics3DObject::remove_constraint(const Physics3DConstraintPtr &constraint)
 {
 	btRigidBody *body = btRigidBody::upcast(impl->object.get());
 	if (body)
-		body->removeConstraintRef(constraint.impl->constraint.get());
+		body->removeConstraintRef(static_cast<Physics3DConstraintImpl*>(constraint.get())->constraint.get());
 }
 
 ///////////////////////////////////////////////////////////////////////////

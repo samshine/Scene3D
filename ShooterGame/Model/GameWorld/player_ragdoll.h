@@ -18,7 +18,7 @@ protected:
 	SceneObjectPtr scene_object1;
 	SceneObjectPtr scene_object2;
 
-	Physics3DConstraint hinge_constraint;
+	Physics3DConstraintPtr hinge_constraint;
 	Physics3DObject physics_object1;
 	Physics3DObject physics_object2;
 
@@ -60,5 +60,5 @@ protected:
 
 	Physics3DShape shapes[total_parts];
 	Physics3DObject parts[total_parts];
-	Physics3DConstraint joints[total_joints];
+	Physics3DConstraintPtr joints[total_joints];
 };
