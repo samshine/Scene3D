@@ -7,83 +7,73 @@
 #include "physics3d_world_impl.h"
 #include "physics3d_object_impl.h"
 
-Physics3DRayTest::Physics3DRayTest()
+std::shared_ptr<Physics3DRayTest> Physics3DRayTest::create(const Physics3DWorldPtr &world)
 {
-}
-
-Physics3DRayTest::Physics3DRayTest(const Physics3DWorldPtr &world)
-	: impl(std::make_shared<Physics3DRayTestImpl>(static_cast<Physics3DWorldImpl*>(world.get())))
-{
-}
-
-bool Physics3DRayTest::is_null() const
-{
-	return !impl;
-}
-
-bool Physics3DRayTest::test(const uicore::Vec3f &new_start, const uicore::Vec3f &new_end)
-{
-	impl->start = new_start;
-	impl->end = new_end;
-
-	btVector3 bt_start(impl->start.x, impl->start.y, impl->start.z);
-	btVector3 bt_end(impl->end.x, impl->end.y, impl->end.z);
-
-	btCollisionWorld::ClosestRayResultCallback callback(bt_start, bt_end);
-	impl->world->dynamics_world->rayTest(bt_start, bt_end, callback);
-	if (callback.hasHit())
-	{
-		impl->has_hit = true;
-		impl->hit_fraction = callback.m_closestHitFraction;
-		impl->hit_normal = uicore::Vec3f(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
-		impl->hit_object = static_cast<Physics3DObjectImpl*>(callback.m_collisionObject->getUserPointer());
-	}
-	else
-	{
-		impl->has_hit = false;
-		impl->hit_fraction = 1.0f;
-		impl->hit_normal = uicore::Vec3f();
-		impl->hit_object = 0;
-	}
-
-	return impl->has_hit;
-}
-
-bool Physics3DRayTest::has_hit() const
-{
-	return impl->has_hit;
-}
-
-float Physics3DRayTest::get_hit_fraction() const
-{
-	return impl->hit_fraction;
-}
-
-uicore::Vec3f Physics3DRayTest::get_hit_position() const
-{
-	return mix(impl->start, impl->end, impl->hit_fraction);
-}
-
-uicore::Vec3f Physics3DRayTest::get_hit_normal() const
-{
-	return impl->hit_normal;
-}
-
-Physics3DObject Physics3DRayTest::get_hit_object() const
-{
-	if (impl->hit_object)
-		return Physics3DObject(impl->hit_object->shared_from_this());
-	else
-		return Physics3DObject();
+	return std::make_shared<Physics3DRayTestImpl>(static_cast<Physics3DWorldImpl*>(world.get()));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DRayTestImpl::Physics3DRayTestImpl(Physics3DWorldImpl *world)
-	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(0)
+Physics3DRayTestImpl::Physics3DRayTestImpl(Physics3DWorldImpl *world) : world(world)
 {
 }
 
 Physics3DRayTestImpl::~Physics3DRayTestImpl()
 {
+}
+
+bool Physics3DRayTestImpl::test(const uicore::Vec3f &new_start, const uicore::Vec3f &new_end)
+{
+	start = new_start;
+	end = new_end;
+
+	btVector3 bt_start(start.x, start.y, start.z);
+	btVector3 bt_end(end.x, end.y, end.z);
+
+	btCollisionWorld::ClosestRayResultCallback callback(bt_start, bt_end);
+	world->dynamics_world->rayTest(bt_start, bt_end, callback);
+	if (callback.hasHit())
+	{
+		_hit = true;
+		_hit_fraction = callback.m_closestHitFraction;
+		_hit_normal = uicore::Vec3f(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
+		_hit_object = static_cast<Physics3DObjectImpl*>(callback.m_collisionObject->getUserPointer());
+	}
+	else
+	{
+		_hit = false;
+		_hit_fraction = 1.0f;
+		_hit_normal = uicore::Vec3f();
+		_hit_object = 0;
+	}
+
+	return _hit;
+}
+
+bool Physics3DRayTestImpl::hit() const
+{
+	return _hit;
+}
+
+float Physics3DRayTestImpl::hit_fraction() const
+{
+	return _hit_fraction;
+}
+
+uicore::Vec3f Physics3DRayTestImpl::hit_position() const
+{
+	return mix(start, end, _hit_fraction);
+}
+
+uicore::Vec3f Physics3DRayTestImpl::hit_normal() const
+{
+	return _hit_normal;
+}
+
+Physics3DObject Physics3DRayTestImpl::hit_object() const
+{
+	if (_hit_object)
+		return Physics3DObject(_hit_object->shared_from_this());
+	else
+		return Physics3DObject();
 }
