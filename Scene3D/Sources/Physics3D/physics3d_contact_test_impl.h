@@ -1,18 +1,29 @@
 
 #pragma once
 
+#include "Physics3D/physics3d_contact_pair_test.h"
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <map>
 
 class Physics3DObjectImpl;
 class Physics3DWorldImpl;
 
-class Physics3DContactTestImpl
+class Physics3DContactTestImpl : public Physics3DContactTest
 {
 public:
 	Physics3DContactTestImpl(Physics3DWorldImpl *world);
 	~Physics3DContactTestImpl();
 
+	bool test(const Physics3DObject &object) override;
+	bool test(const Physics3DShape &shape, const uicore::Vec3f &position, const uicore::Quaternionf &orientation) override;
+
+	int hit_count() const override;
+	Physics3DObject hit_object(int index) const override;
+	uicore::Vec3f hit_position(int index) const override;
+	uicore::Vec3f hit_normal(int index) const override;
+	float hit_distance(int index) const override;
+
+private:
 	Physics3DWorldImpl *world;
 
 	struct Contact

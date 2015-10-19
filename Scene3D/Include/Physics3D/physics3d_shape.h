@@ -29,5 +29,5 @@ private:
 
 	friend class Physics3DObject;
 	friend class Physics3DSweepTestImpl;
-	friend class Physics3DContactTest;
+	friend class Physics3DContactTestImpl;
 };

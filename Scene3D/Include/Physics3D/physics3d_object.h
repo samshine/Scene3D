@@ -90,6 +90,6 @@ public:
 private:
 	std::shared_ptr<Physics3DObjectImpl> impl;
 
-	friend class Physics3DContactTest;
+	friend class Physics3DContactTestImpl;
 	friend class Physics3DConstraint;
 };
