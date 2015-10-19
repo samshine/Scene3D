@@ -88,11 +88,11 @@ private:
 	uicore::GameTime game_time;
 
 	ScenePtr scene;
-	uicore::Physics3DWorld collision_world;
+	Physics3DWorldPtr collision_world = Physics3DWorld::create();
 	CharacterController character_controller;
 
 	SceneObject map_object;
-	uicore::Physics3DObject map_collision;
+	Physics3DObject map_collision;
 
 	SceneObject model_object;
 	std::string last_anim = "default";

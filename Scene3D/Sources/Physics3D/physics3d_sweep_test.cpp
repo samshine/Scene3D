@@ -16,8 +16,8 @@ Physics3DSweepTest::Physics3DSweepTest()
 {
 }
 
-Physics3DSweepTest::Physics3DSweepTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DSweepTestImpl>(world.impl.get()))
+Physics3DSweepTest::Physics3DSweepTest(const Physics3DWorldPtr &world)
+	: impl(std::make_shared<Physics3DSweepTestImpl>(static_cast<Physics3DWorldImpl*>(world.get())))
 {
 }
 

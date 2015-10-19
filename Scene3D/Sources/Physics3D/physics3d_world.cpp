@@ -5,32 +5,9 @@
 
 using namespace uicore;
 
-Physics3DWorld::Physics3DWorld()
-	: impl(std::make_shared<Physics3DWorldImpl>())
+std::shared_ptr<Physics3DWorld> Physics3DWorld::create()
 {
-}
-
-bool Physics3DWorld::is_null() const
-{
-	return !impl;
-}
-
-int Physics3DWorld::step_simulation(float time_step, int max_sub_steps, float fixed_time_step)
-{
-	int num_sub_steps = impl->dynamics_world->stepSimulation(time_step, max_sub_steps, fixed_time_step);
-	return num_sub_steps;
-}
-
-void Physics3DWorld::step_simulation_once(float time_step)
-{
-	int steps = impl->dynamics_world->stepSimulation(time_step, 0, time_step);
-	if (steps == 0)
-		throw Exception("btDynamicsWorld::stepSimulation failed");
-}
-
-void Physics3DWorld::set_gravity(const Vec3f &gravity)
-{
-	impl->dynamics_world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+	return std::make_shared<Physics3DWorldImpl>();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,4 +27,22 @@ Physics3DWorldImpl::Physics3DWorldImpl()
 Physics3DWorldImpl::~Physics3DWorldImpl()
 {
 	// To do: dispose all collision user objects
+}
+
+int Physics3DWorldImpl::step_simulation(float time_step, int max_sub_steps, float fixed_time_step)
+{
+	int num_sub_steps = dynamics_world->stepSimulation(time_step, max_sub_steps, fixed_time_step);
+	return num_sub_steps;
+}
+
+void Physics3DWorldImpl::step_simulation_once(float time_step)
+{
+	int steps = dynamics_world->stepSimulation(time_step, 0, time_step);
+	if (steps == 0)
+		throw Exception("btDynamicsWorld::stepSimulation failed");
+}
+
+void Physics3DWorldImpl::set_gravity(const Vec3f &gravity)
+{
+	dynamics_world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }

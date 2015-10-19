@@ -28,7 +28,7 @@ private:
 	std::string last_anim = "default";
 
 	uicore::GameTime gametime;
-	Physics3DWorld collision_world;
+	Physics3DWorldPtr collision_world = Physics3DWorld::create();
 	CharacterController character_controller;
 	float dodge_cooldown = 0;
 	float double_tap_left_elapsed = 1;

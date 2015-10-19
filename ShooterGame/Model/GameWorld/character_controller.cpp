@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-CharacterController::CharacterController(Physics3DWorld collision_world) : collision_world(collision_world), sweep_test(collision_world)
+CharacterController::CharacterController(const Physics3DWorldPtr &collision_world) : collision_world(collision_world), sweep_test(collision_world)
 {
 }
 

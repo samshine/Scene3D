@@ -106,7 +106,7 @@ private:
 	std::shared_ptr<TriangleMeshShape> triangle_mesh;
 	std::vector<unsigned int> triangle_elements;
 
-	Physics3DWorld world;
+	Physics3DWorldPtr world = Physics3DWorld::create();
 	Physics3DObject model_collision;
 
 	const float margin = 0.01f;

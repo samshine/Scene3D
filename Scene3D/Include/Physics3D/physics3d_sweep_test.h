@@ -4,6 +4,7 @@
 #include <memory>
 
 class Physics3DWorld;
+typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DShape;
 class Physics3DObject;
 class Physics3DSweepTestImpl;
@@ -12,7 +13,7 @@ class Physics3DSweepTest
 {
 public:
 	Physics3DSweepTest();
-	Physics3DSweepTest(Physics3DWorld &world);
+	Physics3DSweepTest(const Physics3DWorldPtr &world);
 
 	bool is_null() const;
 

@@ -4,6 +4,7 @@
 #include <memory>
 
 class Physics3DWorld;
+typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DObject;
 class Physics3DShape;
 class Physics3DContactTestImpl;
@@ -12,7 +13,7 @@ class Physics3DContactTest
 {
 public:
 	Physics3DContactTest();
-	Physics3DContactTest(Physics3DWorld &world);
+	Physics3DContactTest(const Physics3DWorldPtr &world);
 
 	bool is_null() const;
 

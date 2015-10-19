@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+class Physics3DWorldImpl;
+
 class Physics3DConstraintImpl
 {
 public:

@@ -12,8 +12,8 @@ Physics3DContactPairTest::Physics3DContactPairTest()
 {
 }
 
-Physics3DContactPairTest::Physics3DContactPairTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DContactPairTestImpl>(world.impl.get()))
+Physics3DContactPairTest::Physics3DContactPairTest(const Physics3DWorldPtr &world)
+	: impl(std::make_shared<Physics3DContactPairTestImpl>(static_cast<Physics3DWorldImpl*>(world.get())))
 {
 }
 

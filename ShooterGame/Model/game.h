@@ -28,7 +28,7 @@ public:
 	std::shared_ptr<GameNetwork> network;
 	std::unique_ptr<LockStepTime> lock_step_time;
 
-	Physics3DWorld collision;
+	Physics3DWorldPtr collision = Physics3DWorld::create();
 
 	uicore::JsonValue game_data;
 	uicore::JsonValue level_data;

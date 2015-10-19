@@ -20,9 +20,9 @@ Physics3DObject::Physics3DObject(std::shared_ptr<Physics3DObjectImpl> impl)
 {
 }
 
-Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
+Physics3DObject Physics3DObject::collision_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(static_cast<Physics3DWorldImpl*>(world.get())));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -32,14 +32,14 @@ Physics3DObject Physics3DObject::collision_body(Physics3DWorld &world, const Phy
 	instance.impl->object->setCollisionShape(shape.impl->shape.get());
 	instance.impl->object->setWorldTransform(transform);
 
-	world.impl->dynamics_world->addCollisionObject(instance.impl->object.get());
+	static_cast<Physics3DWorldImpl*>(world.get())->dynamics_world->addCollisionObject(instance.impl->object.get());
 
 	return instance;
 }
 
-Physics3DObject Physics3DObject::ghost_body(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
+Physics3DObject Physics3DObject::ghost_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(static_cast<Physics3DWorldImpl*>(world.get())));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -49,14 +49,14 @@ Physics3DObject Physics3DObject::ghost_body(Physics3DWorld &world, const Physics
 	instance.impl->object->setCollisionShape(shape.impl->shape.get());
 	instance.impl->object->setWorldTransform(transform);
 
-	world.impl->dynamics_world->addCollisionObject(instance.impl->object.get());
+	static_cast<Physics3DWorldImpl*>(world.get())->dynamics_world->addCollisionObject(instance.impl->object.get());
 
 	return instance;
 }
 
-Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics3DShape &shape, float mass, const Vec3f &position, const Quaternionf &orientation, const Vec3f &local_inertia)
+Physics3DObject Physics3DObject::rigid_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, float mass, const Vec3f &position, const Quaternionf &orientation, const Vec3f &local_inertia)
 {
-	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(world.impl.get()));
+	Physics3DObject instance(std::make_shared<Physics3DObjectImpl>(static_cast<Physics3DWorldImpl*>(world.get())));
 
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
@@ -73,7 +73,7 @@ Physics3DObject Physics3DObject::rigid_body(Physics3DWorld &world, const Physics
 	instance.impl->object->setUserPointer(instance.impl.get());
 	instance.impl->object->setWorldTransform(transform);
 
-	world.impl->dynamics_world->addRigidBody(btRigidBody::upcast(instance.impl->object.get()));
+	static_cast<Physics3DWorldImpl*>(world.get())->dynamics_world->addRigidBody(btRigidBody::upcast(instance.impl->object.get()));
 
 	return instance;
 }

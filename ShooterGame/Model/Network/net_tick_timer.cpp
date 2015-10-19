@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-NetTickTimer::NetTickTimer(Physics3DWorld collision)
+NetTickTimer::NetTickTimer(const Physics3DWorldPtr &collision)
 : start_time(0), last_tick(0), collision(collision), server_arrival_tick_time(0), next_send_ping(0)
 {
 	start_time = (unsigned int)System::get_time();
@@ -30,7 +30,7 @@ int NetTickTimer::ticks_elapsed()
 void NetTickTimer::step_simulation(int local_tick_time, int new_server_arrival_tick_time)
 {
 	float time_elapsed = 1.0f / ticks_per_second;
-	collision.step_simulation_once(time_elapsed);
+	collision->step_simulation_once(time_elapsed);
 
 	server_arrival_tick_time = new_server_arrival_tick_time;
 
@@ -88,7 +88,7 @@ void NetTickTimer::remove_net_object(const std::string &obj_id)
 
 /////////////////////////////////////////////////////////////////////////////
 
-NetTickTimerClient::NetTickTimerClient(Physics3DWorld collision)
+NetTickTimerClient::NetTickTimerClient(const Physics3DWorldPtr &collision)
 : NetTickTimer(collision), server_tick_time(0), client_tick_time(0), ping(0), jitter(2), skipped_last_tick(false)
 {
 	slots.connect(netgame.sig_connected(), this, &NetTickTimerClient::on_connected);
@@ -206,7 +206,7 @@ int NetTickTimerClient::actual_ping = 0;
 
 /////////////////////////////////////////////////////////////////////////////
 
-NetTickTimerServer::NetTickTimerServer(Physics3DWorld collision)
+NetTickTimerServer::NetTickTimerServer(const Physics3DWorldPtr &collision)
 : NetTickTimer(collision), next_client_id(0), next_obj_id(0), tick_time(0)
 {
 	slots.connect(netgame.sig_client_connected(), this, &NetTickTimerServer::on_client_connected);

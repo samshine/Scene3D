@@ -147,7 +147,7 @@ void Game::update(uicore::Vec2i mouse_movement)
 		int arrival_tick_time = lock_step_time->get_arrival_tick_time() + i;
 		float tick_time_elapsed = lock_step_time->get_tick_time_elapsed();
 
-		collision.step_simulation_once(tick_time_elapsed);
+		collision->step_simulation_once(tick_time_elapsed);
 		game_world->net_tick = GameTick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
 		network->receive_events(receive_tick_time);
 		on_game_tick(tick_time_elapsed, receive_tick_time, arrival_tick_time);

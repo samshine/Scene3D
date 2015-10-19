@@ -4,6 +4,7 @@
 #include <memory>
 
 class Physics3DWorld;
+typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DObject;
 class Physics3DRayTestImpl;
 
@@ -11,7 +12,7 @@ class Physics3DRayTest
 {
 public:
 	Physics3DRayTest();
-	Physics3DRayTest(Physics3DWorld &world);
+	Physics3DRayTest(const Physics3DWorldPtr &world);
 
 	bool is_null() const;
 

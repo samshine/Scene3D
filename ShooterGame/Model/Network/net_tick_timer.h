@@ -15,7 +15,7 @@ public:
 class NetTickTimer
 {
 public:
-	NetTickTimer(Physics3DWorld collision);
+	NetTickTimer(const Physics3DWorldPtr &collision);
 
 	std::function<void(float, int, int)> func_game_tick; // (float time_elapsed, int local_tick_time, int server_arrival_tick_time)
 	std::function<void(const std::string &)> func_net_peer_connected; // (const std::string &id)
@@ -55,7 +55,7 @@ private:
 	unsigned int start_time;
 	unsigned int last_tick;
 
-	Physics3DWorld collision;
+	Physics3DWorldPtr collision;
 	std::map<std::string, NetObject *> objects;
 
 	int server_arrival_tick_time;
@@ -64,7 +64,7 @@ private:
 class NetTickTimerClient : public NetTickTimer
 {
 public:
-	NetTickTimerClient(Physics3DWorld collision);
+	NetTickTimerClient(const Physics3DWorldPtr &collision);
 
 	void start(std::string hostname, std::string port);
 	void stop();
@@ -94,7 +94,7 @@ private:
 class NetTickTimerServer : public NetTickTimer
 {
 public:
-	NetTickTimerServer(Physics3DWorld collision);
+	NetTickTimerServer(const Physics3DWorldPtr &collision);
 
 	void start(std::string hostname, std::string port);
 	void stop();

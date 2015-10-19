@@ -4,6 +4,7 @@
 #include <memory>
 
 class Physics3DWorld;
+typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DObject;
 class Physics3DContactPairTestImpl;
 
@@ -11,7 +12,7 @@ class Physics3DContactPairTest
 {
 public:
 	Physics3DContactPairTest();
-	Physics3DContactPairTest(Physics3DWorld &world);
+	Physics3DContactPairTest(const Physics3DWorldPtr &world);
 
 	bool is_null() const;
 

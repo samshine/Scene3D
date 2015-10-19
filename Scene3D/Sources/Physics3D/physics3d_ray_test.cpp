@@ -11,8 +11,8 @@ Physics3DRayTest::Physics3DRayTest()
 {
 }
 
-Physics3DRayTest::Physics3DRayTest(Physics3DWorld &world)
-	: impl(std::make_shared<Physics3DRayTestImpl>(world.impl.get()))
+Physics3DRayTest::Physics3DRayTest(const Physics3DWorldPtr &world)
+	: impl(std::make_shared<Physics3DRayTestImpl>(static_cast<Physics3DWorldImpl*>(world.get())))
 {
 }
 
