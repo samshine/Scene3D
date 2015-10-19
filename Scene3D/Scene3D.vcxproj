@@ -307,10 +307,8 @@
     <ClInclude Include="Sources\Scene3D\Level\level_instance.h" />
     <ClInclude Include="Sources\Scene3D\Model\dual_quaternion.h" />
     <ClInclude Include="Sources\Scene3D\Model\model.h" />
-    <ClInclude Include="Sources\Scene3D\Model\model_cache.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_instance.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_lod.h" />
-    <ClInclude Include="Sources\Scene3D\Model\model_material_cache.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_render_command.h" />
     <ClInclude Include="Sources\Scene3D\Model\model_shader_cache.h" />
@@ -340,7 +338,6 @@
     <ClInclude Include="Sources\Scene3D\SceneCache\file_search_path.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\instances_buffer.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\mapped_buffer.h" />
-    <ClInclude Include="Sources\Scene3D\SceneCache\material_cache.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\resource.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\resource_container.h" />
     <ClInclude Include="Sources\Scene3D\SceneCache\scene_cache_impl.h" />
@@ -529,7 +526,6 @@
     <ClCompile Include="Sources\Scene3D\Level\level.cpp" />
     <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model.cpp" />
-    <ClCompile Include="Sources\Scene3D\Model\model_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model_instance.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model_lod.cpp" />
     <ClCompile Include="Sources\Scene3D\Model\model_shader_cache.cpp" />
@@ -553,7 +549,7 @@
     <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp" />
     <ClCompile Include="Sources\Scene3D\scene.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneCache\instances_buffer.cpp" />
-    <ClCompile Include="Sources\Scene3D\SceneCache\material_cache.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneCache\resource_container.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneCache\scene_cache_impl.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneCache\shader_setup.cpp" />

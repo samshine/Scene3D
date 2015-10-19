@@ -9,6 +9,7 @@
 #include "Scene3D/scene_light_impl.h"
 
 class GPUTimer;
+class ResourceContainer;
 class SceneImpl;
 
 class LightsourcePass : public ScenePass

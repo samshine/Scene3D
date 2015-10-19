@@ -30,7 +30,7 @@ void TransparencyPass::run(const GraphicContextPtr &render_gc, SceneImpl *render
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	scene->instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	inout.instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
 	{
 		model_lod->transparency_commands.execute(scene, gc, num_instances);
 	});

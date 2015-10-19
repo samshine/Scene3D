@@ -2,11 +2,11 @@
 #pragma once
 
 #include <list>
-#include "resource_container.h"
 
 class ShadowMaps;
 class ShadowMapEntry;
 class ShadowMapEntryImpl;
+class ResourceContainer;
 
 class ShadowMaps
 {

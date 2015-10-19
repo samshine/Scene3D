@@ -2,15 +2,14 @@
 #include "precomp.h"
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
-#include "Scene3D/SceneCache/material_cache.h"
 #include "Scene3D/SceneCache/mapped_buffer.h"
 #include "Scene3D/scene_impl.h"
 #include <algorithm>
 
 using namespace uicore;
 
-ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout)
-: shader_path(shader_path), inout(inout), texture_cache(texture_cache)
+ParticleEmitterPass::ParticleEmitterPass(SceneCacheImpl *engine)
+: engine(engine)
 {
 	emitter_slots.resize(32);
 	for (size_t i = 0; i < emitter_slots.size(); i++)
@@ -51,8 +50,8 @@ void ParticleEmitterPass::select_active_emitters(const uicore::GraphicContextPtr
 			emitter->pass_data = &emitter_slots[slot];
 			emitter->pass_data->emitter = emitter;
 			emitter->pass_data->visible = true;
-			emitter->pass_data->life_color_gradient = texture_cache.get_texture(gc, emitter->gradient_texture(), false);
-			emitter->pass_data->particle_animation = texture_cache.get_texture(gc, emitter->particle_texture(), false);
+			emitter->pass_data->life_color_gradient = engine->get_texture(gc, emitter->gradient_texture(), false);
+			emitter->pass_data->particle_animation = engine->get_texture(gc, emitter->particle_texture(), false);
 			if (!emitter->pass_data->gpu_uniforms.buffer())
 				emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(gc, 1);
 		}
@@ -63,10 +62,10 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	setup(gc);
 
-	Size viewport_size = inout.viewport.size();
-	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
+	Size viewport_size = engine->inout_data.viewport.size();
+	Mat4f eye_to_projection = Mat4f::perspective(engine->inout_data.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(engine->inout_data.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * engine->inout_data.world_to_eye);
 
 	select_active_emitters(gc, scene, frustum);
 
@@ -82,7 +81,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		float depth_fade_distance = 1.0f;
 		ParticleUniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
-		uniforms.object_to_eye = inout.world_to_eye;
+		uniforms.object_to_eye = engine->inout_data.world_to_eye;
 		uniforms.rcp_depth_fade_distance = 1.0f / depth_fade_distance;
 		uniforms.instance_vectors_offset = total_particle_count * vectors_per_particle;
 		pass_data->gpu_uniforms.upload_data(gc, &uniforms, 1);
@@ -133,7 +132,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	gc->set_depth_range(0.0f, 0.9f);
 
-	gc->set_frame_buffer(inout.fb_final_color);
+	gc->set_frame_buffer(engine->inout_data.fb_final_color);
 	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
 	gc->set_depth_stencil_state(depth_stencil_state);
 	gc->set_blend_state(blend_state);
@@ -141,7 +140,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_primitives_array(prim_array);
 
 	gc->set_program_object(program);
-	gc->set_texture(0, inout.normal_z_gbuffer);
+	gc->set_texture(0, engine->inout_data.normal_z_gbuffer);
 	gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)
@@ -175,8 +174,8 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 {
 	if (!program)
 	{
-		std::string vertex_filename = PathHelp::combine(shader_path, "ParticleEmitter/vertex.hlsl");
-		std::string fragment_filename = PathHelp::combine(shader_path, "ParticleEmitter/fragment.hlsl");
+		std::string vertex_filename = PathHelp::combine(engine->inout_data.shader_path, "ParticleEmitter/vertex.hlsl");
+		std::string fragment_filename = PathHelp::combine(engine->inout_data.shader_path, "ParticleEmitter/fragment.hlsl");
 		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
 		program->bind_attribute_location(0, "AttrPosition");
 		program->bind_frag_data_location(0, "FragColor");

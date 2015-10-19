@@ -38,7 +38,7 @@ void LightsourcePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	find_lights(gc, scene);
 	upload(gc);
-	render(gc, scene->get_gpu_timer());
+	render(gc, inout.gpu_timer);
 }
 
 void LightsourcePass::find_lights(const GraphicContextPtr &gc, SceneImpl *scene)

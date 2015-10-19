@@ -1,17 +1,17 @@
 
 #include "precomp.h"
 #include "model.h"
-#include "Scene3D/SceneCache/material_cache.h"
 #include "model_shader_cache.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
 #include "model_lod.h"
 #include "Scene3D/SceneCache/instances_buffer.h"
+#include "Scene3D/SceneCache/scene_cache_impl.h"
 
 using namespace uicore;
 
-Model::Model(const GraphicContextPtr &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index)
-: shader_cache(shader_cache), model_data(model_data), frame(-1), max_instances(0), model_index(model_index)
+Model::Model(const GraphicContextPtr &gc, SceneCacheImpl *engine, std::shared_ptr<ModelData> model_data, int model_index)
+: engine(engine), model_data(model_data), frame(-1), max_instances(0), model_index(model_index)
 {
 /*
 	// Small hack until we support rendering unskinned meshes
@@ -35,12 +35,13 @@ Model::Model(const GraphicContextPtr &gc, ModelMaterialCache &texture_cache, Mod
 	levels.push_back(std::shared_ptr<ModelLOD>(new ModelLOD(gc, model_index, model_data)));
 
 	for (size_t i = 0; i < model_data->textures.size(); i++)
-		textures.push_back(texture_cache.get_texture(gc, model_data->textures[i].name, model_data->textures[i].gamma == 1.0f));
+		textures.push_back(engine->get_texture(gc, model_data->textures[i].name, model_data->textures[i].gamma == 1.0f));
 
-	shader_cache.create_gbuffer_commands(gc, this, 0);
-	shader_cache.create_transparency_commands(gc, this, 0);
-	shader_cache.create_shadow_commands(gc, this, 0);
-	shader_cache.create_early_z_commands(gc, this, 0);
+	const auto &shader_cache = engine->inout_data.model_shader_cache;
+	shader_cache->create_gbuffer_commands(gc, this, 0);
+	shader_cache->create_transparency_commands(gc, this, 0);
+	shader_cache->create_shadow_commands(gc, this, 0);
+	shader_cache->create_early_z_commands(gc, this, 0);
 }
 
 const std::vector<ModelDataLight> &Model::get_lights()

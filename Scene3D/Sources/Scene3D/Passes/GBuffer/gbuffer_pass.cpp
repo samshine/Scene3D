@@ -42,7 +42,7 @@ void GBufferPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scen
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
 	render_list.clear();
-	scene->instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	inout.instances_buffer.render_pass(gc, scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
 	{
 		model_lod->early_z_commands.execute(scene, gc, num_instances);
 		render_list.push_back(RenderEntry(model_lod, num_instances));

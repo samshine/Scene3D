@@ -9,12 +9,13 @@
 #include "Scene3D/SceneCache/resource.h"
 
 class SceneImpl;
+class SceneCacheImpl;
 class MaterialCache;
 
 class ParticleEmitterPass : public ScenePass
 {
 public:
-	ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout);
+	ParticleEmitterPass(SceneCacheImpl *engine);
 	std::string name() const override { return "particle"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
@@ -23,10 +24,7 @@ private:
 	void select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const uicore::FrustumPlanes &frustum);
 	void setup(const uicore::GraphicContextPtr &gc);
 
-	std::string shader_path;
-	ResourceContainer &inout;
-
-	MaterialCache &texture_cache;
+	SceneCacheImpl *engine;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

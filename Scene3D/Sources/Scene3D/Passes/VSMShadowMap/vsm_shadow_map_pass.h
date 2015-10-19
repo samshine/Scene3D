@@ -10,6 +10,7 @@
 #include "Scene3D/scene_light_impl.h"
 
 class SceneImpl;
+class ResourceContainer;
 class VSMShadowMapPassLightData;
 
 class VSMShadowMapPass : public ScenePass

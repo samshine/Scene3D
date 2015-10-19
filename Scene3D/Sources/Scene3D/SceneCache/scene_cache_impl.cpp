@@ -2,12 +2,69 @@
 #include "precomp.h"
 #include "scene_cache_impl.h"
 #include "Scene3D/ModelData/model_data.h"
+#include "Scene3D/Model/model.h"
+#include "Scene3D/Performance/scope_timer.h"
+#include "Scene3D/scene_impl.h"
 
 using namespace uicore;
 
 SceneCacheImpl::SceneCacheImpl(const GraphicContextPtr &gc, const std::string &shader_path)
-	: gc(gc), shader_path(shader_path)
+	: gc(gc), inout_data(gc, shader_path, this)
 {
+}
+
+void SceneCacheImpl::render(const GraphicContextPtr &gc, SceneImpl *scene)
+{
+	ScopeTimeFunction();
+
+	inout_data.models_drawn = 0;
+	inout_data.instances_drawn = 0;
+	inout_data.draw_calls = 0;
+	inout_data.triangles_drawn = 0;
+	inout_data.scene_visits = 0;
+
+	inout_data.gpu_timer.begin_frame(gc);
+
+	inout_data.setup_pass_buffers(gc);
+
+	if (inout_data.field_of_view != scene->camera()->field_of_view())
+		inout_data.field_of_view = scene->camera()->field_of_view();
+
+	Quaternionf inv_orientation = Quaternionf::inverse(scene->camera()->orientation());
+	inout_data.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene->camera()->position());
+
+	for (const auto &pass : inout_data.passes)
+	{
+		inout_data.gpu_timer.begin_time(gc, pass->name());
+		pass->run(gc, scene);
+		inout_data.gpu_timer.end_time(gc);
+	}
+
+	inout_data.gpu_timer.end_frame(gc);
+
+	inout_data.gpu_results = inout_data.gpu_timer.get_results(gc);
+
+	if (gc->shader_language() == shader_glsl)
+		OpenGL::check_error();
+}
+
+void SceneCacheImpl::update(const GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed)
+{
+	process_work_completed();
+	update_textures(gc, time_elapsed);
+	for (const auto &pass : inout_data.passes)
+		pass->update(gc, time_elapsed);
+	// To do: update scene object animations here too
+}
+
+std::shared_ptr<Model> SceneCacheImpl::get_model(const std::string &model_name)
+{
+	auto &renderer = models[model_name];
+	if (!renderer)
+	{
+		renderer = std::make_shared<Model>(get_gc(), this, get_model_data(model_name), inout_data.instances_buffer.new_offset_index());
+	}
+	return renderer;
 }
 
 std::shared_ptr<ModelData> SceneCacheImpl::get_model_data(const std::string &name)

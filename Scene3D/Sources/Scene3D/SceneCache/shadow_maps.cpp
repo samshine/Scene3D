@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "shadow_maps.h"
+#include "resource_container.h"
 
 using namespace uicore;
 

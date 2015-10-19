@@ -5,17 +5,16 @@
 #include "model_instance.h"
 
 class ModelDataLight;
-class ModelMaterialCache;
-class ModelShaderCache;
 class ModelLightInstance;
 class ModelMeshVisitor;
 class ModelLOD;
 class InstancesBuffer;
+class SceneCacheImpl;
 
 class Model
 {
 public:
-	Model(const uicore::GraphicContextPtr &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index);
+	Model(const uicore::GraphicContextPtr &gc, SceneCacheImpl *engine, std::shared_ptr<ModelData> model_data, int model_index);
 	const std::vector<ModelDataLight> &get_lights();
 	const std::shared_ptr<ModelData> &get_model_data() const { return model_data; }
 
@@ -30,7 +29,7 @@ public:
 	static const int vectors_per_material = 14;
 
 private:
-	ModelShaderCache &shader_cache;
+	SceneCacheImpl *engine = nullptr;
 	std::shared_ptr<ModelData> model_data;
 	std::vector<Resource<uicore::TexturePtr> > textures;
 

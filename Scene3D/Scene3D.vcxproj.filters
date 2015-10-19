@@ -366,16 +366,10 @@
     <ClInclude Include="Sources\Scene3D\Model\model.h">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_cache.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\Model\model_instance.h">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Model\model_lod.h">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\Model\model_material_cache.h">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Model\model_mesh_buffers.h">
@@ -1242,9 +1236,6 @@
     <ClInclude Include="Sources\Scene3D\SceneCache\mapped_buffer.h">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneCache\material_cache.h">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneCache\shader_setup.h">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClInclude>
@@ -1311,9 +1302,6 @@
       <Filter>Sources\Scene3D\Level</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Model\model.cpp">
-      <Filter>Sources\Scene3D\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\Model\model_cache.cpp">
       <Filter>Sources\Scene3D\Model</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Model\model_instance.cpp">
@@ -1868,9 +1856,6 @@
     <ClCompile Include="Sources\Scene3D\SceneCache\instances_buffer.cpp">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneCache\material_cache.cpp">
-      <Filter>Sources\Scene3D\SceneCache</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneCache\shader_setup.cpp">
       <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClCompile>
@@ -1885,6 +1870,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Passes\LensFlare\lens_flare_pass.cpp">
       <Filter>Sources\Scene3D\Passes\LensFlare</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneCache\resource_container.cpp">
+      <Filter>Sources\Scene3D\SceneCache</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

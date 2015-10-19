@@ -5,6 +5,7 @@
 #include "Scene3D/scene_light_probe_impl.h"
 #include "Scene3D/scene_impl.h"
 #include "Scene3D/Performance/scope_timer.h"
+#include "Scene3D/Model/model.h"
 
 using namespace uicore;
 
@@ -21,7 +22,7 @@ int InstancesBuffer::new_offset_index()
 void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
 {
 	ScopeTimeFunction();
-	scene->_scene_visits++;
+	scene->get_cache()->inout_data.scene_visits++;
 
 	std::vector<Model *> models;
 
@@ -37,12 +38,12 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 					light_probe_color = probe->color();
 			}
 
-			scene->_instances_drawn++;
+			scene->get_cache()->inout_data.instances_drawn++;
 			bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 			if (first_instance)
 			{
 				models.push_back(object->instance.get_renderer().get());
-				scene->_models_drawn++;
+				scene->get_cache()->inout_data.models_drawn++;
 			}
 		}
 	});
