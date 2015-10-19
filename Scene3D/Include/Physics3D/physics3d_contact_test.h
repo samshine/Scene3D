@@ -7,7 +7,6 @@ class Physics3DWorld;
 typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DObject;
 class Physics3DShape;
-class Physics3DContactTestImpl;
 
 class Physics3DContactTest
 {

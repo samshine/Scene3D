@@ -8,23 +8,9 @@
 
 using namespace uicore;
 
-Physics3DContactPairTest::Physics3DContactPairTest()
+std::shared_ptr<Physics3DContactPairTest> Physics3DContactPairTest::create(const Physics3DWorldPtr &world)
 {
-}
-
-Physics3DContactPairTest::Physics3DContactPairTest(const Physics3DWorldPtr &world)
-	: impl(std::make_shared<Physics3DContactPairTestImpl>(static_cast<Physics3DWorldImpl*>(world.get())))
-{
-}
-
-bool Physics3DContactPairTest::is_null() const
-{
-	return !impl;
-}
-
-bool Physics3DContactPairTest::test(const Physics3DObject &object_a, const Physics3DObject &object_b)
-{
-	throw Exception("Physics3DContactPairTest::test not implemented");
+	return std::make_shared<Physics3DContactPairTestImpl>(static_cast<Physics3DWorldImpl*>(world.get()));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -36,4 +22,9 @@ Physics3DContactPairTestImpl::Physics3DContactPairTestImpl(Physics3DWorldImpl *w
 
 Physics3DContactPairTestImpl::~Physics3DContactPairTestImpl()
 {
+}
+
+bool Physics3DContactPairTestImpl::test(const Physics3DObject &object_a, const Physics3DObject &object_b)
+{
+	throw Exception("Physics3DContactPairTest::test not implemented");
 }
