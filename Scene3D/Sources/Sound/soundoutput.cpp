@@ -4,7 +4,6 @@
 #include "Sound/soundoutput_description.h"
 #include "Sound/sound.h"
 #include "soundoutput_impl.h"
-#include "setupsound.h"
 
 #ifdef WIN32
 #include "Platform/Win32/soundoutput_win32.h"
@@ -36,8 +35,6 @@ SoundOutput::SoundOutput(int mixing_frequency, int latency)
 
 SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 {
-	SetupSound::start();
-
 #ifdef WIN32
 	impl = std::make_shared<SoundOutput_Win32>(desc.get_mixing_frequency(), desc.get_mixing_latency());
 #else

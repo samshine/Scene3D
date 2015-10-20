@@ -1,15 +1,15 @@
 
 #include "precomp.h"
 #include "soundprovider_vorbis_session.h"
-#include "soundprovider_vorbis_impl.h"
+#include "soundprovider_vorbis.h"
 #include "Sound/soundformat.h"
 
 using namespace uicore;
 
-SoundProvider_Vorbis_Session::SoundProvider_Vorbis_Session(SoundProvider_Vorbis &source) : source(source), position(0), stream_eof(false), handle(nullptr), stream_byte_offset(0), pcm(nullptr), pcm_position(0), pcm_samples(0)
+SoundProvider_Vorbis_Session::SoundProvider_Vorbis_Session(std::shared_ptr<SoundProvider_Vorbis> source) : source(source), position(0), stream_eof(false), handle(nullptr), stream_byte_offset(0), pcm(nullptr), pcm_position(0), pcm_samples(0)
 {
 	int error = 0;
-	handle = stb_vorbis_open_pushdata(source.impl->buffer->data<unsigned char>(), source.impl->buffer->size(), &stream_byte_offset, &error, nullptr);
+	handle = stb_vorbis_open_pushdata(source->buffer->data<unsigned char>(), source->buffer->size(), &stream_byte_offset, &error, nullptr);
 	if (handle == nullptr)
 		throw Exception("Unable to read ogg file");
 
@@ -67,7 +67,7 @@ bool SoundProvider_Vorbis_Session::set_position(int pos)
 	stream_byte_offset = 0;
 
 	int error = 0;
-	handle = stb_vorbis_open_pushdata(source.impl->buffer->data<unsigned char>(), source.impl->buffer->size(), &stream_byte_offset, &error, nullptr);
+	handle = stb_vorbis_open_pushdata(source->buffer->data<unsigned char>(), source->buffer->size(), &stream_byte_offset, &error, nullptr);
 	if (handle == nullptr)
 		throw Exception("Unable to read ogg file");
 
@@ -86,9 +86,9 @@ int SoundProvider_Vorbis_Session::get_data(float **channels, int data_requested)
 			pcm = nullptr;
 			pcm_position = 0;
 			pcm_samples = 0;
-			int bytes_used = stb_vorbis_decode_frame_pushdata(handle, source.impl->buffer->data<unsigned char>() + stream_byte_offset, source.impl->buffer->size() - stream_byte_offset, nullptr, &pcm, &pcm_samples);
+			int bytes_used = stb_vorbis_decode_frame_pushdata(handle, source->buffer->data<unsigned char>() + stream_byte_offset, source->buffer->size() - stream_byte_offset, nullptr, &pcm, &pcm_samples);
 			stream_byte_offset += bytes_used;
-			if (bytes_used == 0 || stream_byte_offset == source.impl->buffer->size())
+			if (bytes_used == 0 || stream_byte_offset == source->buffer->size())
 			{
 				stream_eof = true;
 				break;

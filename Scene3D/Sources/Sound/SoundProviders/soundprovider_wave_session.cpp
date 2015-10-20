@@ -1,17 +1,16 @@
 
 #include "precomp.h"
 #include "soundprovider_wave_session.h"
-#include "soundprovider_wave_impl.h"
+#include "soundprovider_wave.h"
 #include "Sound/soundformat.h"
 #include "Sound/sound_sse.h"
 
 using namespace uicore;
 
-SoundProvider_Wave_Session::SoundProvider_Wave_Session(SoundProvider_Wave &source) :
-	source(source), position(0)
+SoundProvider_Wave_Session::SoundProvider_Wave_Session(std::shared_ptr<SoundProvider_Wave>source) : source(source), position(0)
 {
-	frequency = source.impl->frequency;
-	end_position = num_samples = source.impl->num_samples;
+	frequency = source->frequency;
+	end_position = num_samples = source->num_samples;
 }
 
 SoundProvider_Wave_Session::~SoundProvider_Wave_Session()
@@ -30,7 +29,7 @@ int SoundProvider_Wave_Session::get_frequency() const
 
 int SoundProvider_Wave_Session::get_num_channels() const
 {
-	return source.impl->num_channels;
+	return source->num_channels;
 }
 
 int SoundProvider_Wave_Session::get_position() const
@@ -75,29 +74,29 @@ int SoundProvider_Wave_Session::get_data(float **data_ptr, int data_requested)
 
 	int retrieved = block_end - block_start;
 
-	if (source.impl->format == sf_16bit_signed)
+	if (source->format == sf_16bit_signed)
 	{
-		if (source.impl->num_channels == 2)
+		if (source->num_channels == 2)
 		{
-			short *src = ((short *)source.impl->data) + position * 2;
+			short *src = source->data->data<short>() + position * 2;
 			SoundSSE::unpack_16bit_stereo(src, retrieved * 2, data_ptr);
 		}
 		else
 		{
-			short *src = ((short *)source.impl->data) + position;
+			short *src = source->data->data<short>() + position;
 			SoundSSE::unpack_16bit_mono(src, retrieved, data_ptr[0]);
 		}
 	}
 	else
 	{
-		if (source.impl->num_channels == 2)
+		if (source->num_channels == 2)
 		{
-			unsigned char *src = ((unsigned char *)source.impl->data) + position * 2;
+			unsigned char *src = source->data->data<unsigned char>() + position * 2;
 			SoundSSE::unpack_8bit_stereo(src, retrieved * 2, data_ptr);
 		}
 		else
 		{
-			unsigned char *src = ((unsigned char *)source.impl->data) + position;
+			unsigned char *src = source->data->data<unsigned char>() + position;
 			SoundSSE::unpack_8bit_mono(src, retrieved, data_ptr[0]);
 		}
 	}

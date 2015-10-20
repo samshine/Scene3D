@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "Sound/SoundProviders/soundprovider_session.h"
-#include "Sound/SoundProviders/soundprovider_raw.h"
+#include "Sound/soundprovider_session.h"
+#include "soundprovider_raw.h"
 
 class SoundProvider_Raw_Session : public SoundProvider_Session
 {
 public:
-	SoundProvider_Raw_Session(SoundProvider_Raw &source);
+	SoundProvider_Raw_Session(std::shared_ptr<SoundProvider_Raw> source);
 	~SoundProvider_Raw_Session();
 
 	int get_num_samples() const override;
@@ -23,9 +23,9 @@ public:
 	int get_data(float **data_ptr, int data_requested) override;
 
 private:
-	SoundProvider_Raw source;
+	std::shared_ptr<SoundProvider_Raw> source;
 
-	int position;
-	int num_samples;
-	int frequency;
+	int position = 0;
+	int num_samples = 0;
+	int frequency = 0;
 };

@@ -4,8 +4,8 @@
 #include "soundbuffer_impl.h"
 #include "soundoutput_impl.h"
 #include "Sound/sound_sse.h"
-#include "Sound/SoundProviders/soundprovider.h"
-#include "Sound/SoundProviders/soundprovider_session.h"
+#include "Sound/soundprovider.h"
+#include "Sound/soundprovider_session.h"
 
 SoundBuffer_SessionImpl::SoundBuffer_SessionImpl(SoundBuffer &soundbuffer, bool looping, SoundOutput &output)
 	: soundbuffer(soundbuffer), provider_session(nullptr), output(output), volume(1.0f), pan(0.0f), looping(looping), playing(false)
@@ -29,11 +29,6 @@ SoundBuffer_SessionImpl::SoundBuffer_SessionImpl(SoundBuffer &soundbuffer, bool 
 
 SoundBuffer_SessionImpl::~SoundBuffer_SessionImpl()
 {
-	if (provider_session)
-	{
-		soundbuffer.get_provider()->end_session(provider_session);
-	}
-
 	for (int j = 0; j < num_buffer_channels; ++j) delete[] float_buffer_data[j];
 	delete[] float_buffer_data;
 }

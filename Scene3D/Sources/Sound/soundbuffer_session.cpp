@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "Sound/soundbuffer_session.h"
-#include "Sound/SoundProviders/soundprovider_session.h"
+#include "Sound/soundprovider_session.h"
 #include "soundbuffer_session_impl.h"
 #include "soundoutput_impl.h"
 

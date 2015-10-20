@@ -1,15 +1,16 @@
 
 #include "precomp.h"
 #include "soundprovider_raw_session.h"
-#include "soundprovider_raw_impl.h"
+#include "soundprovider_raw.h"
 #include "Sound/soundformat.h"
 #include "Sound/sound_sse.h"
 
-SoundProvider_Raw_Session::SoundProvider_Raw_Session(SoundProvider_Raw &source) :
-	source(source), position(0)
+SoundProvider_Raw_Session::SoundProvider_Raw_Session(std::shared_ptr<SoundProvider_Raw> source) : source(source)
 {
-	frequency = source.impl->frequency;
-	num_samples = source.impl->num_samples;
+	frequency = source->frequency;
+	num_samples = source->sound_data->size() / source->bytes_per_sample;
+	if (source->stereo)
+		num_samples /= 2;
 }
 
 SoundProvider_Raw_Session::~SoundProvider_Raw_Session()
@@ -28,7 +29,7 @@ int SoundProvider_Raw_Session::get_frequency() const
 
 int SoundProvider_Raw_Session::get_num_channels() const
 {
-	return (source.impl->stereo) ? 2 : 1;
+	return (source->stereo) ? 2 : 1;
 }
 
 int SoundProvider_Raw_Session::get_position() const
@@ -64,29 +65,29 @@ int SoundProvider_Raw_Session::get_data(float **data_ptr, int data_requested)
 		if (data_requested < 0) return 0;
 	}
 
-	if (source.impl->bytes_per_sample == 2)
+	if (source->bytes_per_sample == 2)
 	{
-		if (source.impl->stereo)
+		if (source->stereo)
 		{
-			short *src = (short *)source.impl->sound_data + position * source.impl->bytes_per_sample;
+			short *src = source->sound_data->data<short>() + position * source->bytes_per_sample;
 			SoundSSE::unpack_16bit_stereo(src, data_requested, data_ptr);
 		}
 		else
 		{
-			short *src = (short *)source.impl->sound_data + position * source.impl->bytes_per_sample;
+			short *src = source->sound_data->data<short>() + position * source->bytes_per_sample;
 			SoundSSE::unpack_16bit_mono(src, data_requested, data_ptr[0]);
 		}
 	}
-	else if (source.impl->bytes_per_sample == 1)
+	else if (source->bytes_per_sample == 1)
 	{
-		if (source.impl->stereo)
+		if (source->stereo)
 		{
-			unsigned char *src = (unsigned char *)source.impl->sound_data + position * source.impl->bytes_per_sample;
+			unsigned char *src = source->sound_data->data<unsigned char>() + position * source->bytes_per_sample;
 			SoundSSE::unpack_8bit_stereo(src, data_requested, data_ptr);
 		}
 		else
 		{
-			unsigned char *src = (unsigned char *)source.impl->sound_data + position * source.impl->bytes_per_sample;
+			unsigned char *src = source->sound_data->data<unsigned char>() + position * source->bytes_per_sample;
 			SoundSSE::unpack_8bit_mono(src, data_requested, data_ptr[0]);
 		}
 	}

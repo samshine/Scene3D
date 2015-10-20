@@ -4,7 +4,7 @@
 #include "Sound/soundbuffer_session.h"
 #include "Sound/soundoutput.h"
 #include "Sound/sound.h"
-#include "Sound/SoundProviders/soundprovider_factory.h"
+#include "Sound/soundprovider.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
 
@@ -14,26 +14,26 @@ SoundBuffer::SoundBuffer()
 {
 }
 
-SoundBuffer::SoundBuffer(SoundProvider *provider) : impl(std::make_shared<SoundBufferImpl>())
+SoundBuffer::SoundBuffer(const SoundProviderPtr &provider) : impl(std::make_shared<SoundBufferImpl>())
 {
 	impl->provider = provider;
 }
 
-SoundBuffer::SoundBuffer(const std::string &fullname, bool streamed, const std::string &sound_format) : impl(std::make_shared<SoundBufferImpl>())
+SoundBuffer::SoundBuffer(const std::string &filename, bool streamed) : impl(std::make_shared<SoundBufferImpl>())
 {
-	impl->provider = SoundProviderFactory::load(fullname, streamed, sound_format);
+	impl->provider = SoundProvider::file(filename, streamed);
 }
 
-SoundBuffer::SoundBuffer(IODevice &file, bool streamed, const std::string &type) : impl(std::make_shared<SoundBufferImpl>())
+SoundBuffer::SoundBuffer(const IODevicePtr &file, bool streamed, const std::string &sound_format) : impl(std::make_shared<SoundBufferImpl>())
 {
-	impl->provider = SoundProviderFactory::load(file, streamed, type);
+	impl->provider = SoundProvider::file(file, streamed, sound_format);
 }
 
 SoundBuffer::~SoundBuffer()
 {
 }
 
-SoundProvider *SoundBuffer::get_provider() const
+SoundProviderPtr SoundBuffer::get_provider() const
 {
 	if (!impl)
 		return nullptr;

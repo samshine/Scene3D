@@ -112,9 +112,6 @@
     <Filter Include="Include\Sound\AudioWorld">
       <UniqueIdentifier>{1b8f7531-65b0-45eb-a3cd-af9d34477a4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Sound\SoundProviders">
-      <UniqueIdentifier>{422e1668-698d-41ab-9628-f6ce0827d160}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Sound">
       <UniqueIdentifier>{f9b4c03f-5838-4036-aa6e-67028ed959dd}</UniqueIdentifier>
     </Filter>
@@ -1014,33 +1011,6 @@
     <ClInclude Include="Include\Sound\AudioWorld\audio_world.h">
       <Filter>Include\Sound\AudioWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_factory.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_raw.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_session.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_type_register.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_vorbis.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Sound\SoundProviders\soundprovider_wave.h">
-      <Filter>Include\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Sound\setupsound.h">
-      <Filter>Sources\Sound</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Sound\soundbuffer_impl.h">
       <Filter>Sources\Sound</Filter>
     </ClInclude>
@@ -1083,19 +1053,10 @@
     <ClInclude Include="Sources\Sound\Platform\Win32\soundoutput_win32.h">
       <Filter>Sources\Sound\Platform\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_impl.h">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw_session.h">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_impl.h">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis_session.h">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_impl.h">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave_session.h">
@@ -1256,6 +1217,21 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\Scene\scene_particle_emitter_impl.h">
       <Filter>Sources\Scene3D\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundprovider.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\soundprovider_session.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_raw.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_vorbis.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave.h">
+      <Filter>Sources\Sound\SoundProviders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1709,9 +1685,6 @@
     <ClCompile Include="Sources\Sound\soundbuffer.cpp">
       <Filter>Sources\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Sound\soundbuffer_impl.cpp">
-      <Filter>Sources\Sound</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Sound\soundbuffer_session.cpp">
       <Filter>Sources\Sound</Filter>
     </ClCompile>
@@ -1742,22 +1715,10 @@
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp">
       <Filter>Sources\Sound\Platform\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider.cpp">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_factory.cpp">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_raw_session.cpp">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_session.cpp">
-      <Filter>Sources\Sound\SoundProviders</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_type.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_vorbis.cpp">
@@ -1876,6 +1837,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Scene\scene_particle_emitter.cpp">
       <Filter>Sources\Scene3D\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\soundprovider.cpp">
+      <Filter>Sources\Sound</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

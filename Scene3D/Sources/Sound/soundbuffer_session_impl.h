@@ -19,7 +19,7 @@ public:
 	virtual ~SoundBuffer_SessionImpl();
 
 	SoundBuffer soundbuffer;
-	SoundProvider_Session *provider_session;
+	std::shared_ptr<SoundProvider_Session> provider_session;
 	SoundOutput output;
 	float volume;
 	float frequency;

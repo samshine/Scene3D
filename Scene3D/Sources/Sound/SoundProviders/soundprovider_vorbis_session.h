@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "Sound/SoundProviders/soundprovider_session.h"
-#include "Sound/SoundProviders/soundprovider_vorbis.h"
+#include "Sound/soundprovider_session.h"
+#include "soundprovider_vorbis.h"
 #include "stb_vorbis.h"
 
 class SoundProvider_Vorbis_Session : public SoundProvider_Session
 {
 public:
-	SoundProvider_Vorbis_Session(SoundProvider_Vorbis &source);
+	SoundProvider_Vorbis_Session(std::shared_ptr<SoundProvider_Vorbis> source);
 	~SoundProvider_Vorbis_Session();
 
 	int get_num_samples() const override;
@@ -24,7 +24,7 @@ public:
 	int get_data(float **data_ptr, int data_requested) override;
 
 private:
-	SoundProvider_Vorbis source;
+	std::shared_ptr<SoundProvider_Vorbis> source;
 	int position;
 	bool stream_eof;
 

@@ -5,15 +5,13 @@
 #include <mutex>
 
 class SoundProvider;
+typedef std::shared_ptr<SoundProvider> SoundProviderPtr;
 
 class SoundBufferImpl
 {
 public:
-	SoundBufferImpl();
-	virtual ~SoundBufferImpl();
-
-	SoundProvider *provider;
-	float volume;
-	float pan;
+	SoundProviderPtr provider;
+	float volume = 1.0f;
+	float pan = 0.0f;
 	mutable std::recursive_mutex mutex;
 };

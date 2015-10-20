@@ -6,6 +6,7 @@
 
 class SoundOutput;
 class SoundProvider;
+typedef std::shared_ptr<SoundProvider> SoundProviderPtr;
 class SoundBuffer_Session;
 class SoundBufferImpl;
 
@@ -13,12 +14,12 @@ class SoundBuffer
 {
 public:
 	SoundBuffer();
-	SoundBuffer(SoundProvider *provider);
-	SoundBuffer(const std::string &fullname, bool streamed = false, const std::string &format = "");
-	SoundBuffer(uicore::IODevice &file, bool streamed, const std::string &type);
+	SoundBuffer(const SoundProviderPtr &provider);
+	SoundBuffer(const std::string &filename, bool streamed = false);
+	SoundBuffer(const uicore::IODevicePtr &file, bool streamed, const std::string &format);
 	~SoundBuffer();
 
-	SoundProvider *get_provider() const;
+	SoundProviderPtr get_provider() const;
 
 	float get_volume() const;
 	float get_pan() const;
