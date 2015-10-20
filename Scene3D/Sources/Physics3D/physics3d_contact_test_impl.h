@@ -15,7 +15,7 @@ public:
 	~Physics3DContactTestImpl();
 
 	bool test(const Physics3DObject &object) override;
-	bool test(const Physics3DShape &shape, const uicore::Vec3f &position, const uicore::Quaternionf &orientation) override;
+	bool test(const Physics3DShapePtr &shape, const uicore::Vec3f &position, const uicore::Quaternionf &orientation) override;
 
 	int hit_count() const override;
 	Physics3DObject hit_object(int index) const override;

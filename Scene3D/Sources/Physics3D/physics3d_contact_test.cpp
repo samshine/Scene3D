@@ -37,12 +37,12 @@ bool Physics3DContactTestImpl::test(const Physics3DObject &object)
 	return !contacts.empty();
 }
 
-bool Physics3DContactTestImpl::test(const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
+bool Physics3DContactTestImpl::test(const Physics3DShapePtr &shape, const Vec3f &position, const Quaternionf &orientation)
 {
 	btTransform transform(btQuaternion(orientation.x, orientation.y, orientation.z, orientation.w), btVector3(position.x, position.y, position.z));
 
 	btCollisionObject obj;
-	obj.setCollisionShape(shape.impl->shape.get());
+	obj.setCollisionShape(static_cast<Physics3DShapeImpl*>(shape.get())->shape.get());
 	obj.setWorldTransform(transform);
 
 	AllHitsContactResultCallback callback(this, &obj);

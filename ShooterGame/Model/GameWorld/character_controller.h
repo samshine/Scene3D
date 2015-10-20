@@ -85,7 +85,7 @@ private:
 	static uicore::Vec3f reflect(const uicore::Vec3f &ray, const uicore::Vec3f &normal, float amount = 1.0f);
 
 	Physics3DWorldPtr collision_world;
-	Physics3DShape collision_shape;
+	Physics3DShapePtr collision_shape;
 	Physics3DSweepTestPtr sweep_test;
 
 	float allowed_ccd = 0.001f; // 1 millimeter

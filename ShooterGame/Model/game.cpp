@@ -19,7 +19,7 @@ Game::Game(std::string hostname, std::string port, bool server, SceneEnginePtr s
 
 	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources/Assets", map_cmodel_filename)))));
 
-	std::map<std::string, Physics3DShape> level_shapes;
+	std::map<std::string, Physics3DShapePtr> level_shapes;
 
 	for (auto &item : level_data["objects"].items())
 	{

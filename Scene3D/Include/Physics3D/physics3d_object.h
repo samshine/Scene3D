@@ -6,6 +6,7 @@
 class Physics3DWorld;
 typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DShape;
+typedef std::shared_ptr<Physics3DShape> Physics3DShapePtr;
 class Physics3DConstraint;
 typedef std::shared_ptr<Physics3DConstraint> Physics3DConstraintPtr;
 class Physics3DObjectImpl;
@@ -37,11 +38,11 @@ public:
 class Physics3DObject
 {
 public:
-	static Physics3DObject collision_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
-	static Physics3DObject ghost_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
-	static Physics3DObject rigid_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, float mass = 0.0f, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &local_inertia = uicore::Vec3f());
+	static Physics3DObject collision_body(const Physics3DWorldPtr &world, const Physics3DShapePtr &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
+	static Physics3DObject ghost_body(const Physics3DWorldPtr &world, const Physics3DShapePtr &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
+	static Physics3DObject rigid_body(const Physics3DWorldPtr &world, const Physics3DShapePtr &shape, float mass = 0.0f, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf(), const uicore::Vec3f &local_inertia = uicore::Vec3f());
 	//static Physics3DObject rigid_body(const Physics3DWorldPtr &world, const Physics3DRigidBodyDescription &desc);
-	//static Physics3DObject soft_body(const Physics3DWorldPtr &world, const Physics3DShape &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
+	//static Physics3DObject soft_body(const Physics3DWorldPtr &world, const Physics3DShapePtr &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
 
 	Physics3DObject();
 	Physics3DObject(std::shared_ptr<Physics3DObjectImpl> impl);

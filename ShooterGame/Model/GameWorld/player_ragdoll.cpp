@@ -27,7 +27,7 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	scene_object2->set_position(pos);
 	scene_object2->set_orientation(orientation);
 
-	Physics3DShape shape = Physics3DShape::box(box_size);
+	auto shape = Physics3DShape::box(box_size);
 	physics_object1 = Physics3DObject::rigid_body(world->game()->collision, shape, 1.0f, pos, orientation);
 	physics_object1.set_ccd_swept_sphere_radius(1.0f);
 	physics_object1.set_ccd_motion_threshold(0.5f);

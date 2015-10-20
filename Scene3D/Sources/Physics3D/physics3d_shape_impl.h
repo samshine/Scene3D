@@ -4,12 +4,9 @@
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include <vector>
 
-class Physics3DShapeImpl
+class Physics3DShapeImpl : public Physics3DShape
 {
 public:
-	Physics3DShapeImpl();
-	~Physics3DShapeImpl();
-
 	std::unique_ptr<btCollisionShape> shape;
 
 	std::shared_ptr<Physics3DShapeImpl> base_model;

@@ -59,8 +59,8 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 	float damage = 45.0f;
 
 	// Check if we hit anyone nearby
-	Physics3DShape shape = Physics3DShape::sphere(radius);
-	Physics3DObject sphere = Physics3DObject::collision_body(world->game()->collision, shape, pos, orientation);
+	auto shape = Physics3DShape::sphere(radius);
+	auto sphere = Physics3DObject::collision_body(world->game()->collision, shape, pos, orientation);
 	auto test = Physics3DContactTest::create(world->game()->collision);
 	test->test(sphere);
 	for (int i = 0; i < test->hit_count(); i++)

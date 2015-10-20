@@ -13,6 +13,6 @@ public:
 	~Physics3DObjectImpl();
 
 	Physics3DWorldImpl *world;
-	Physics3DShape shape;
+	Physics3DShapePtr shape;
 	std::unique_ptr<btCollisionObject> object;
 };

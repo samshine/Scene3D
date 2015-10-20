@@ -170,7 +170,7 @@ void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const u
 void GameScene::update_camera(const ScenePtr &scene, const GraphicContextPtr &gc)
 {
 	auto sweep_test = Physics3DSweepTest::create(collision_world);
-	Physics3DShape sphere_shape = Physics3DShape::sphere(0.25f);
+	auto sphere_shape = Physics3DShape::sphere(0.25f);
 
 	Quaternionf camera_orientation = character_controller.get_rotation().to_quaternionf();
 
