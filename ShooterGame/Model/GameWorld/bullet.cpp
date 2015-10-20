@@ -85,7 +85,7 @@ void Bullet::tick(const GameTick &tick)
 
 	if (ray_test->test(last_pos, pos))
 	{
-		std::shared_ptr<GameObjectCollision> obj_collision = ray_test->hit_object().get_data<GameObjectCollision>();
+		std::shared_ptr<GameObjectCollision> obj_collision = ray_test->hit_object()->data<GameObjectCollision>();
 		if (obj_collision && dynamic_cast<PlayerPawn*>(obj_collision->obj))
 		{
 			static_cast<PlayerPawn*>(obj_collision->obj)->apply_damage(tick, damage);

@@ -92,7 +92,7 @@ private:
 	CharacterController character_controller;
 
 	SceneObject map_object;
-	Physics3DObject map_collision;
+	Physics3DObjectPtr map_collision;
 
 	SceneObject model_object;
 	std::string last_anim = "default";

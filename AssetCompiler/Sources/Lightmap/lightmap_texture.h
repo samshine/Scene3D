@@ -107,7 +107,7 @@ private:
 	std::vector<unsigned int> triangle_elements;
 
 	Physics3DWorldPtr world = Physics3DWorld::create();
-	Physics3DObject model_collision;
+	Physics3DObjectPtr model_collision;
 
 	const float margin = 0.01f;
 };

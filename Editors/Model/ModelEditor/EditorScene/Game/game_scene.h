@@ -43,7 +43,7 @@ private:
 	std::string map_filename;
 	bool map_updated = true;
 	SceneObjectPtr map_object;
-	Physics3DObject map_collision;
+	Physics3DObjectPtr map_collision;
 
 	bool model_updated = true;
 	std::shared_ptr<ModelData> model_data;

@@ -13,7 +13,7 @@ public:
 	Physics3DContactPairTestImpl(Physics3DWorldImpl *world);
 	~Physics3DContactPairTestImpl();
 
-	bool test(const Physics3DObject &object_a, const Physics3DObject &object_b) override;
+	bool test(const Physics3DObjectPtr &object_a, const Physics3DObjectPtr &object_b) override;
 
 private:
 	Physics3DWorldImpl *world;

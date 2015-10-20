@@ -24,7 +24,7 @@ Physics3DContactPairTestImpl::~Physics3DContactPairTestImpl()
 {
 }
 
-bool Physics3DContactPairTestImpl::test(const Physics3DObject &object_a, const Physics3DObject &object_b)
+bool Physics3DContactPairTestImpl::test(const Physics3DObjectPtr &object_a, const Physics3DObjectPtr &object_b)
 {
 	throw Exception("Physics3DContactPairTest::test not implemented");
 }

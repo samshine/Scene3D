@@ -322,7 +322,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		camera_sweep_test->test_all_hits(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf());
 		for (int i = 0; i < camera_sweep_test->hit_count(); i++)
 		{
-			std::shared_ptr<GameObjectCollision> obj_collision = camera_sweep_test->hit_object(i).get_data<GameObjectCollision>();
+			std::shared_ptr<GameObjectCollision> obj_collision = camera_sweep_test->hit_object(i)->data<GameObjectCollision>();
 			if (!obj_collision)
 			{
 				wall_hit_index = i;

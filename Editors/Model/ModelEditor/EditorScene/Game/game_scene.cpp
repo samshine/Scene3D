@@ -193,7 +193,7 @@ void GameScene::update_map(const ScenePtr &scene, const GraphicContextPtr &gc)
 	if (map_updated)
 	{
 		map_object = nullptr;
-		map_collision = Physics3DObject();
+		map_collision = nullptr;
 		map_updated = false;
 
 		try
@@ -270,7 +270,7 @@ void GameScene::update_model(const ScenePtr &scene, const GraphicContextPtr &gc)
 
 void GameScene::update_character_controller()
 {
-	if (map_collision.is_null())
+	if (!map_collision)
 	{
 		character_controller.warp(Vec3f(0.0f, 0.2f, 0.0f), character_controller.get_rotation(), Vec3f());
 	}

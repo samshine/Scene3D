@@ -19,7 +19,7 @@ public:
 	float hit_fraction() const override;
 	uicore::Vec3f hit_position() const override;
 	uicore::Vec3f hit_normal() const override;
-	Physics3DObject hit_object() const override;
+	Physics3DObjectPtr hit_object() const override;
 
 private:
 	Physics3DWorldImpl *world = nullptr;

@@ -70,10 +70,10 @@ uicore::Vec3f Physics3DRayTestImpl::hit_normal() const
 	return _hit_normal;
 }
 
-Physics3DObject Physics3DRayTestImpl::hit_object() const
+Physics3DObjectPtr Physics3DRayTestImpl::hit_object() const
 {
 	if (_hit_object)
-		return Physics3DObject(_hit_object->shared_from_this());
+		return _hit_object->shared_from_this();
 	else
-		return Physics3DObject();
+		return nullptr;
 }

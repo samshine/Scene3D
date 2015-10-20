@@ -65,8 +65,8 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 	test->test(sphere);
 	for (int i = 0; i < test->hit_count(); i++)
 	{
-		Physics3DObject obj = test->hit_object(i);	
-		std::shared_ptr<GameObjectCollision> obj_collision = obj.get_data<GameObjectCollision>();
+		Physics3DObjectPtr obj = test->hit_object(i);
+		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
 		if (obj_collision && dynamic_cast<PlayerPawn*>(obj_collision->obj))
 		{
 			float normalized_distance = std::min(pos.distance(static_cast<PlayerPawn*>(obj_collision->obj)->get_position()) / radius, 1.0f);

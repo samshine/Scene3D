@@ -27,12 +27,12 @@ Physics3DContactTestImpl::~Physics3DContactTestImpl()
 {
 }
 
-bool Physics3DContactTestImpl::test(const Physics3DObject &object)
+bool Physics3DContactTestImpl::test(const Physics3DObjectPtr &object)
 {
 	contacts.clear();
 
-	AllHitsContactResultCallback callback(this, object.impl->object.get());
-	world->dynamics_world->contactTest(object.impl->object.get(), callback);
+	AllHitsContactResultCallback callback(this, static_cast<Physics3DObjectImpl*>(object.get())->object.get());
+	world->dynamics_world->contactTest(static_cast<Physics3DObjectImpl*>(object.get())->object.get(), callback);
 
 	return !contacts.empty();
 }
@@ -56,12 +56,12 @@ int Physics3DContactTestImpl::hit_count() const
 	return contacts.size();
 }
 
-Physics3DObject Physics3DContactTestImpl::hit_object(int index) const
+Physics3DObjectPtr Physics3DContactTestImpl::hit_object(int index) const
 {
 	if (!contacts.empty())
-		return Physics3DObject(contacts[index].object->shared_from_this());
+		return contacts[index].object->shared_from_this();
 	else
-		return Physics3DObject();
+		return nullptr;
 }
 
 Vec3f Physics3DContactTestImpl::hit_position(int index) const

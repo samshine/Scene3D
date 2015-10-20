@@ -9,9 +9,9 @@
 
 using namespace uicore;
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const Physics3DWorldPtr &world, const Physics3DObject &a, const Vec3f &pivot_in_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Vec3f &pivot_in_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
 
 	auto constraint = std::make_shared<Physics3DConstraintImpl>(static_cast<Physics3DWorldImpl*>(world.get()));
 	constraint->constraint.reset(new btPoint2PointConstraint(body_a, btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z)));
@@ -22,10 +22,10 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const P
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const Physics3DWorldPtr &world, const Physics3DObject &a, const Physics3DObject &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Physics3DObjectPtr &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
-	btRigidBody &body_b = *btRigidBody::upcast(b.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
+	btRigidBody &body_b = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(b.get())->object.get());
 
 	auto constraint = std::make_shared<Physics3DConstraintImpl>(static_cast<Physics3DWorldImpl*>(world.get()));
 	constraint->constraint.reset(new btPoint2PointConstraint(body_a, body_b, btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z), btVector3(pivot_in_b.x, pivot_in_b.y, pivot_in_b.z)));
@@ -36,9 +36,9 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::point_to_point(const P
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DWorldPtr &world, const Physics3DObject &a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a, bool use_reference_frame_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a, bool use_reference_frame_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 
@@ -51,10 +51,10 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DW
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DWorldPtr &world, const Physics3DObject &a, const Physics3DObject &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Physics3DObjectPtr &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
-	btRigidBody &body_b = *btRigidBody::upcast(b.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
+	btRigidBody &body_b = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(b.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 	btTransform transform_b(btQuaternion(axis_in_b.x, axis_in_b.y, axis_in_b.z, axis_in_b.w), btVector3(pivot_in_b.x, pivot_in_b.y, pivot_in_b.z));
@@ -68,10 +68,10 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::hinge(const Physics3DW
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::slider(const Physics3DWorldPtr &world, const Physics3DObject &a, const Physics3DObject &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::slider(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Physics3DObjectPtr &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
-	btRigidBody &body_b = *btRigidBody::upcast(b.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
+	btRigidBody &body_b = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(b.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 	btTransform transform_b(btQuaternion(axis_in_b.x, axis_in_b.y, axis_in_b.z, axis_in_b.w), btVector3(pivot_in_b.x, pivot_in_b.y, pivot_in_b.z));
@@ -85,9 +85,9 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::slider(const Physics3D
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physics3DWorldPtr &world, const Physics3DObject &a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Vec3f &pivot_in_a, const Quaternionf &axis_in_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 
@@ -100,10 +100,10 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physi
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physics3DWorldPtr &world, const Physics3DObject &a, const Physics3DObject &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Physics3DObjectPtr &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
-	btRigidBody &body_b = *btRigidBody::upcast(b.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
+	btRigidBody &body_b = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(b.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 	btTransform transform_b(btQuaternion(axis_in_b.x, axis_in_b.y, axis_in_b.z, axis_in_b.w), btVector3(pivot_in_b.x, pivot_in_b.y, pivot_in_b.z));
@@ -117,10 +117,10 @@ std::shared_ptr<Physics3DConstraint> Physics3DConstraint::cone_twist(const Physi
 	return constraint;
 }
 
-std::shared_ptr<Physics3DConstraint> Physics3DConstraint::six_degrees_of_freedom(const Physics3DWorldPtr &world, const Physics3DObject &a, const Physics3DObject &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
+std::shared_ptr<Physics3DConstraint> Physics3DConstraint::six_degrees_of_freedom(const Physics3DWorldPtr &world, const Physics3DObjectPtr &a, const Physics3DObjectPtr &b, const Vec3f &pivot_in_a, const Vec3f &pivot_in_b, const Quaternionf &axis_in_a, const Quaternionf &axis_in_b, bool use_reference_frame_a)
 {
-	btRigidBody &body_a = *btRigidBody::upcast(a.impl->object.get());
-	btRigidBody &body_b = *btRigidBody::upcast(b.impl->object.get());
+	btRigidBody &body_a = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(a.get())->object.get());
+	btRigidBody &body_b = *btRigidBody::upcast(static_cast<Physics3DObjectImpl*>(b.get())->object.get());
 
 	btTransform transform_a(btQuaternion(axis_in_a.x, axis_in_a.y, axis_in_a.z, axis_in_a.w), btVector3(pivot_in_a.x, pivot_in_a.y, pivot_in_a.z));
 	btTransform transform_b(btQuaternion(axis_in_b.x, axis_in_b.y, axis_in_b.z, axis_in_b.w), btVector3(pivot_in_b.x, pivot_in_b.y, pivot_in_b.z));

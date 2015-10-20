@@ -8,6 +8,7 @@ typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
 class Physics3DShape;
 typedef std::shared_ptr<Physics3DShape> Physics3DShapePtr;
 class Physics3DObject;
+typedef std::shared_ptr<Physics3DObject> Physics3DObjectPtr;
 
 class Physics3DSweepTest
 {
@@ -22,7 +23,7 @@ public:
 	virtual float hit_fraction(int index) const = 0;
 	virtual uicore::Vec3f hit_position(int index) const = 0;
 	virtual uicore::Vec3f hit_normal(int index) const = 0;
-	virtual Physics3DObject hit_object(int index) const = 0;
+	virtual Physics3DObjectPtr hit_object(int index) const = 0;
 };
 
 typedef std::shared_ptr<Physics3DSweepTest> Physics3DSweepTestPtr;

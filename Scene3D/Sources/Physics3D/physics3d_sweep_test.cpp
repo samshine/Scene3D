@@ -123,12 +123,12 @@ Vec3f Physics3DSweepTestImpl::hit_normal(int index) const
 	return hits[index].hit_normal;
 }
 
-Physics3DObject Physics3DSweepTestImpl::hit_object(int index) const
+Physics3DObjectPtr Physics3DSweepTestImpl::hit_object(int index) const
 {
 	if (!hits.empty())
-		return Physics3DObject(hits[index].hit_collision_object->shared_from_this());
+		return hits[index].hit_collision_object->shared_from_this();
 	else
-		return Physics3DObject();
+		return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

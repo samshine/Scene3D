@@ -29,16 +29,16 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 
 	auto shape = Physics3DShape::box(box_size);
 	physics_object1 = Physics3DObject::rigid_body(world->game()->collision, shape, 1.0f, pos, orientation);
-	physics_object1.set_ccd_swept_sphere_radius(1.0f);
-	physics_object1.set_ccd_motion_threshold(0.5f);
+	physics_object1->set_ccd_swept_sphere_radius(1.0f);
+	physics_object1->set_ccd_motion_threshold(0.5f);
 
 	physics_object2 = Physics3DObject::rigid_body(world->game()->collision, shape, 1.0f, pos + orientation.rotate_vector(Vec3f(0.0f, 0.0f, 1.0f)), Quaternionf::inverse(orientation));
-	physics_object2.set_ccd_swept_sphere_radius(1.0f);
-	physics_object2.set_ccd_motion_threshold(0.5f);
+	physics_object2->set_ccd_swept_sphere_radius(1.0f);
+	physics_object2->set_ccd_motion_threshold(0.5f);
 
 	hinge_constraint = Physics3DConstraint::hinge(world->game()->collision, physics_object1, physics_object2, Vec3f(0.0f, 0.0f, 1.0f), Vec3f(0.0f, 0.0f, 1.0f), Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ), Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
 
-	physics_object1.apply_central_impulse(orientation.rotate_vector(Vec3f(0.0f, 0.0f, 50.0f)));
+	physics_object1->apply_central_impulse(orientation.rotate_vector(Vec3f(0.0f, 0.0f, 50.0f)));
 
 	// http://caiosabino.com/?p=26
 
@@ -104,11 +104,11 @@ void PlayerRagdoll::tick(const GameTick &tick)
 	prev_pos2 = next_pos2;
 	prev_orientation2 = next_orientation2;
 
-	next_pos1 = physics_object1.get_position();
-	next_orientation1 = physics_object1.get_orientation();
+	next_pos1 = physics_object1->position();
+	next_orientation1 = physics_object1->orientation();
 
-	next_pos2 = physics_object2.get_position();
-	next_orientation2 = physics_object2.get_orientation();
+	next_pos2 = physics_object2->position();
+	next_orientation2 = physics_object2->orientation();
 
 	if (first_tick)
 	{

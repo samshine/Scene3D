@@ -31,7 +31,7 @@ protected:
 
 	uicore::Vec3f box_size = uicore::Vec3f(7.0f, 0.2f, 9.0f);
 	Physics3DShapePtr box_shape;
-	Physics3DObject body;
+	Physics3DObjectPtr body;
 
 	SceneObjectPtr scene_object;
 

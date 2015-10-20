@@ -15,7 +15,7 @@ Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const 
 {
 	box_shape = Physics3DShape::box(box_size);
 	body = Physics3DObject::collision_body(world->game()->collision, box_shape, pos1, orientation);
-	body.set_kinematic(true);
+	body->set_kinematic_object();
 
 	if (!world->is_server)
 	{
@@ -118,8 +118,8 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	test->test_all_hits(box_shape, from_pos, orientation, to_pos, orientation);
 	for (int i = 0; i < test->hit_count(); i++)
 	{
-		Physics3DObject obj = test->hit_object(i);
-		std::shared_ptr<GameObjectCollision> obj_collision = obj.get_data<GameObjectCollision>();
+		Physics3DObjectPtr obj = test->hit_object(i);
+		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
 		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
 		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
 		if (hit_player)
@@ -131,7 +131,7 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	time = new_time;
 
 	Vec3f obj_pos = mix(pos1, pos2, time);
-	body.set_position(obj_pos);
+	body->set_position(obj_pos);
 	if (scene_object)
 		scene_object->set_position(obj_pos);
 
@@ -178,7 +178,7 @@ void Elevator::tick_moving_down(const GameTick &tick)
 	time = new_time;
 
 	Vec3f obj_pos = mix(pos1, pos2, time);
-	body.set_position(obj_pos);
+	body->set_position(obj_pos);
 	if (scene_object)
 		scene_object->set_position(obj_pos);
 
@@ -203,8 +203,8 @@ bool Elevator::test_start_trigger()
 
 	for (int i = 0; i < test->hit_count(); i++)
 	{
-		Physics3DObject obj = test->hit_object(i);
-		std::shared_ptr<GameObjectCollision> obj_collision = obj.get_data<GameObjectCollision>();
+		Physics3DObjectPtr obj = test->hit_object(i);
+		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
 		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
 		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
 		if (hit_player)

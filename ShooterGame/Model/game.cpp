@@ -45,7 +45,7 @@ Game::Game(std::string hostname, std::string port, bool server, SceneEnginePtr s
 
 	for (auto obj : level_collision_objects)
 	{
-		obj.set_static(true);
+		obj->set_static_object();
 	}
 
 	if (server)

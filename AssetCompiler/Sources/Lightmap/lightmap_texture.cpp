@@ -266,7 +266,7 @@ void LightmapTexture::blur()
 
 void LightmapTexture::create_collision_mesh()
 {
-	model_collision = Physics3DObject();
+	model_collision = nullptr;
 	world = Physics3DWorld::create();
 	model_collision = Physics3DObject::collision_body(world, Physics3DShape::model(model_data));
 
