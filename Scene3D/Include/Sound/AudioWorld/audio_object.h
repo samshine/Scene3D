@@ -5,43 +5,36 @@
 
 class SoundBuffer;
 class AudioWorld;
-class AudioObjectImpl;
+typedef std::shared_ptr<AudioWorld> AudioWorldPtr;
 
 class AudioObject
 {
 public:
-	AudioObject();
-	AudioObject(AudioWorld &world);
+	static std::shared_ptr<AudioObject> create(const AudioWorldPtr &world);
 
-	bool is_null() const { return !impl; }
+	virtual uicore::Vec3f position() const = 0;
 
-	uicore::Vec3f get_position() const;
+	virtual float attenuation_begin() const = 0;
+	virtual float attenuation_end() const = 0;
+	virtual float volume() const = 0;
+	virtual bool looping() const = 0;
+	virtual bool ambience() const = 0;
+	virtual bool playing() const = 0;
 
-	float get_attenuation_begin() const;
-	float get_attenuation_end() const;
-	float get_volume() const;
-	bool is_looping() const;
-	bool is_ambience() const;
-	bool is_playing() const;
+	virtual void set_position(const uicore::Vec3f &position) = 0;
 
-	void set_position(const uicore::Vec3f &position);
+	virtual void set_attenuation_begin(float distance) = 0;
+	virtual void set_attenuation_end(float distance) = 0;
+	virtual void set_volume(float volume) = 0;
 
-	void set_attenuation_begin(float distance);
-	void set_attenuation_end(float distance);
-	void set_volume(float volume);
+	virtual void set_sound(const std::string &id) = 0;
+	virtual void set_sound(const SoundBuffer &buffer) = 0;
 
-	void set_sound(const std::string &id);
-	void set_sound(const SoundBuffer &buffer);
+	virtual void set_looping(bool loop) = 0;
+	virtual void set_ambience(bool ambience) = 0;
 
-	void set_looping(bool loop);
-	void set_ambience(bool ambience);
-
-	void play();
-	void stop();
-
-private:
-	std::shared_ptr<AudioObjectImpl> impl;
-
-	friend class AudioWorld;
-	friend class AudioWorldImpl;
+	virtual void play() = 0;
+	virtual void stop() = 0;
 };
+
+typedef std::shared_ptr<AudioObject> AudioObjectPtr;

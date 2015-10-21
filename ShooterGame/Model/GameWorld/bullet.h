@@ -26,7 +26,7 @@ private:
 
 	SceneObjectPtr scene_object;
 	SceneParticleEmitterPtr emitter;
-	AudioObject sound;
+	AudioObjectPtr sound;
 
 	float gravity = 0.0f;
 	bool bounce = false;

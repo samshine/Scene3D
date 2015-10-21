@@ -37,13 +37,13 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 
 		if (!desc["fireSound"].is_undefined())
 		{
-			sound = AudioObject(*world->game()->audio.get());
-			sound.set_sound(desc["fireSound"]["sample"].to_string());
-			sound.set_attenuation_begin(desc["fireSound"]["attenuationBegin"].to_float());
-			sound.set_attenuation_end(desc["fireSound"]["attenuationEnd"].to_float());
-			sound.set_volume(desc["fireSound"]["volume"].to_float());
-			sound.set_position(pos);
-			sound.play();
+			sound = AudioObject::create(world->game()->audio);
+			sound->set_sound(desc["fireSound"]["sample"].to_string());
+			sound->set_attenuation_begin(desc["fireSound"]["attenuationBegin"].to_float());
+			sound->set_attenuation_end(desc["fireSound"]["attenuationEnd"].to_float());
+			sound->set_volume(desc["fireSound"]["volume"].to_float());
+			sound->set_position(pos);
+			sound->play();
 		}
 
 		if (!desc["particleEmitter"].is_undefined())
@@ -153,6 +153,6 @@ void Bullet::frame(float time_elapsed, float interpolated_time)
 		emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
 	}
 
-	if (!sound.is_null())
-		scene_object->set_position(mix(last_pos, pos, interpolated_time));
+	if (sound)
+		sound->set_position(mix(last_pos, pos, interpolated_time));
 }

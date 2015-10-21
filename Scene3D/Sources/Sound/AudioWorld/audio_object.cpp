@@ -8,119 +8,114 @@
 
 using namespace uicore;
 
-AudioObject::AudioObject()
+std::shared_ptr<AudioObject> AudioObject::create(const AudioWorldPtr &world)
 {
-}
-
-AudioObject::AudioObject(AudioWorld &world)
-	: impl(std::make_shared<AudioObjectImpl>(world.impl.get()))
-{
-}
-
-Vec3f AudioObject::get_position() const
-{
-	return impl->position;
-}
-
-float AudioObject::get_attenuation_begin() const
-{
-	return impl->attenuation_begin;
-}
-
-float AudioObject::get_attenuation_end() const
-{
-	return impl->attenuation_end;
-}
-
-float AudioObject::get_volume() const
-{
-	return impl->volume;
-}
-
-bool AudioObject::is_looping() const
-{
-	return impl->looping;
-}
-
-bool AudioObject::is_ambience() const
-{
-	return impl->ambience;
-}
-
-bool AudioObject::is_playing() const
-{
-	return impl && !impl->session.is_null() && impl->session.is_playing();
-}
-
-void AudioObject::set_position(const Vec3f &position)
-{
-	impl->position = position;
-}
-
-void AudioObject::set_attenuation_begin(float distance)
-{
-	impl->attenuation_begin = distance;
-}
-
-void AudioObject::set_attenuation_end(float distance)
-{
-	impl->attenuation_end = distance;
-}
-
-void AudioObject::set_volume(float volume)
-{
-	impl->volume = volume;
-}
-
-void AudioObject::set_sound(const SoundBuffer &buffer)
-{
-	impl->sound = buffer;
-}
-
-void AudioObject::set_sound(const std::string &id)
-{
-	impl->sound = impl->world->sound_cache->get(id);
-}
-
-void AudioObject::set_looping(bool loop)
-{
-	impl->looping = loop;
-}
-
-void AudioObject::set_ambience(bool ambience)
-{
-	impl->ambience = ambience;
-}
-
-void AudioObject::play()
-{
-	if (!impl->ambience || impl->world->play_ambience)
-	{
-		impl->session = impl->sound.prepare(impl->looping);
-		impl->world->update_session(impl.get());
-		impl->session.play();
-		impl->world->active_objects.push_back(*this);
-	}
-}
-
-void AudioObject::stop()
-{
-	if (impl && !impl->session.is_null())
-	{
-		impl->session.stop();
-		impl->session = SoundBuffer_Session();
-	}
+	return std::make_shared<AudioObjectImpl>(static_cast<AudioWorldImpl*>(world.get()));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-AudioObjectImpl::AudioObjectImpl(AudioWorldImpl *world)
-	: world(world), attenuation_begin(0.0f), attenuation_end(0.0f), volume(1.0f), looping(false), ambience(false)
+AudioObjectImpl::AudioObjectImpl(AudioWorldImpl *world) : _world(world)
 {
-	it = world->objects.insert(world->objects.end(), this);
+	_it = world->objects.insert(world->objects.end(), this);
 }
 
 AudioObjectImpl::~AudioObjectImpl()
 {
-	world->objects.erase(it);
+	_world->objects.erase(_it);
+}
+
+Vec3f AudioObjectImpl::position() const
+{
+	return _position;
+}
+
+float AudioObjectImpl::attenuation_begin() const
+{
+	return _attenuation_begin;
+}
+
+float AudioObjectImpl::attenuation_end() const
+{
+	return _attenuation_end;
+}
+
+float AudioObjectImpl::volume() const
+{
+	return _volume;
+}
+
+bool AudioObjectImpl::looping() const
+{
+	return _looping;
+}
+
+bool AudioObjectImpl::ambience() const
+{
+	return _ambience;
+}
+
+bool AudioObjectImpl::playing() const
+{
+	return !_session.is_null() && _session.is_playing();
+}
+
+void AudioObjectImpl::set_position(const Vec3f &position)
+{
+	_position = position;
+}
+
+void AudioObjectImpl::set_attenuation_begin(float distance)
+{
+	_attenuation_begin = distance;
+}
+
+void AudioObjectImpl::set_attenuation_end(float distance)
+{
+	_attenuation_end = distance;
+}
+
+void AudioObjectImpl::set_volume(float volume)
+{
+	_volume = volume;
+}
+
+void AudioObjectImpl::set_sound(const SoundBuffer &buffer)
+{
+	_sound = buffer;
+}
+
+void AudioObjectImpl::set_sound(const std::string &id)
+{
+	_sound = _world->sound_cache->get(id);
+}
+
+void AudioObjectImpl::set_looping(bool loop)
+{
+	_looping = loop;
+}
+
+void AudioObjectImpl::set_ambience(bool ambience)
+{
+	_ambience = ambience;
+}
+
+void AudioObjectImpl::play()
+{
+	if (!_ambience || _world->ambience_enabled())
+	{
+		_session = _sound.prepare(_looping);
+		_world->update_session(this);
+		_session.play();
+		_world->active_objects.push_back(shared_from_this());
+	}
+}
+
+void AudioObjectImpl::stop()
+{
+	if (!_session.is_null())
+	{
+		_session.stop();
+		_session = SoundBuffer_Session();
+	}
 }

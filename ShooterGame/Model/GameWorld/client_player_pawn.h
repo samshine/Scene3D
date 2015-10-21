@@ -25,7 +25,7 @@ private:
 	bool is_owner = false;
 
 	SceneObjectPtr scene_object;
-	AudioObject sound;
+	AudioObjectPtr sound;
 	float step_movement = 0.0f;
 	bool left_step = false;
 

@@ -132,13 +132,13 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 
 void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
-	sound = AudioObject(*world()->game()->audio.get());
-	sound.set_sound("Sound/Character/hurt1.ogg");
-	sound.set_attenuation_begin(1.0f);
-	sound.set_attenuation_end(100.0f);
-	sound.set_volume(1.0f);
-	sound.set_position(get_position());
-	sound.play();
+	sound = AudioObject::create(world()->game()->audio);
+	sound->set_sound("Sound/Character/hurt1.ogg");
+	sound->set_attenuation_begin(1.0f);
+	sound->set_attenuation_end(100.0f);
+	sound->set_volume(1.0f);
+	sound->set_position(get_position());
+	sound->play();
 }
 
 void ClientPlayerPawn::tick(const GameTick &tick)
@@ -190,34 +190,34 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 	{
 		step_movement = 0.0f;
 
-		AudioObject sound_land(*world()->game()->audio.get());
+		auto sound_land = AudioObject::create(world()->game()->audio);
 
 		if (character_controller.get_land_impact() > 17.0f)
 		{
-			sound_land.set_volume(0.5f);
+			sound_land->set_volume(0.5f);
 			switch (rand() * 4 / (RAND_MAX + 1))
 			{
 			default:
-			case 0: sound_land.set_sound("Sound/Character/hurt1.ogg"); break;
-			case 1: sound_land.set_sound("Sound/Character/hurt2.ogg"); break;
-			case 2: sound_land.set_sound("Sound/Character/hurt3.ogg"); break;
-			case 3: sound_land.set_sound("Sound/Character/hurt4.ogg"); break;
+			case 0: sound_land->set_sound("Sound/Character/hurt1.ogg"); break;
+			case 1: sound_land->set_sound("Sound/Character/hurt2.ogg"); break;
+			case 2: sound_land->set_sound("Sound/Character/hurt3.ogg"); break;
+			case 3: sound_land->set_sound("Sound/Character/hurt4.ogg"); break;
 			}
 		}
 		else
 		{
-			sound_land.set_volume(0.25f);
-			sound_land.set_sound("Sound/Character/land.ogg");
+			sound_land->set_volume(0.25f);
+			sound_land->set_sound("Sound/Character/land.ogg");
 		}
 
 		if (!is_owner)
 		{
-			sound_land.set_attenuation_begin(1.0f);
-			sound_land.set_attenuation_end(10.0f);
-			sound_land.set_position(character_controller.get_position());
+			sound_land->set_attenuation_begin(1.0f);
+			sound_land->set_attenuation_end(10.0f);
+			sound_land->set_position(character_controller.get_position());
 		}
 
-		sound_land.play();
+		sound_land->play();
 	}
 	else if ((is_moving && !character_controller.is_flying()))
 	{
@@ -228,31 +228,31 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 			step_movement = std::fmod(step_movement, step_distance);
 			left_step = !left_step;
 
-			AudioObject sound_footstep(*world()->game()->audio.get());
+			auto sound_footstep = AudioObject::create(world()->game()->audio);
 			if (left_step)
 			{
 				if (rand() > RAND_MAX / 2)
-					sound_footstep.set_sound("Sound/Character/foot_left1.ogg");
+					sound_footstep->set_sound("Sound/Character/foot_left1.ogg");
 				else
-					sound_footstep.set_sound("Sound/Character/foot_left2.ogg");
+					sound_footstep->set_sound("Sound/Character/foot_left2.ogg");
 			}
 			else
 			{
 				if (rand() > RAND_MAX / 2)
-					sound_footstep.set_sound("Sound/Character/foot_right1.ogg");
+					sound_footstep->set_sound("Sound/Character/foot_right1.ogg");
 				else
-					sound_footstep.set_sound("Sound/Character/foot_right2.ogg");
+					sound_footstep->set_sound("Sound/Character/foot_right2.ogg");
 			}
-			sound_footstep.set_volume(0.05f);
+			sound_footstep->set_volume(0.05f);
 
 			if (!is_owner)
 			{
-				sound_footstep.set_attenuation_begin(1.0f);
-				sound_footstep.set_attenuation_end(10.0f);
-				sound_footstep.set_position(character_controller.get_position());
+				sound_footstep->set_attenuation_begin(1.0f);
+				sound_footstep->set_attenuation_end(10.0f);
+				sound_footstep->set_position(character_controller.get_position());
 			}
 
-			sound_footstep.play();
+			sound_footstep->play();
 		}
 	}
 
@@ -262,21 +262,21 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 
 		if (anim == "jump")
 		{
-			AudioObject sound(*world()->game()->audio.get());
+			auto sound = AudioObject::create(world()->game()->audio);
 			if (rand() > RAND_MAX / 2)
-				sound.set_sound("Sound/Character/jump1.ogg");
+				sound->set_sound("Sound/Character/jump1.ogg");
 			else
-				sound.set_sound("Sound/Character/jump2.ogg");
-			sound.set_volume(0.5f);
+				sound->set_sound("Sound/Character/jump2.ogg");
+			sound->set_volume(0.5f);
 
 			if (!is_owner)
 			{
-				sound.set_attenuation_begin(1.0f);
-				sound.set_attenuation_end(10.0f);
-				sound.set_position(character_controller.get_position());
+				sound->set_attenuation_begin(1.0f);
+				sound->set_attenuation_end(10.0f);
+				sound->set_position(character_controller.get_position());
 			}
 
-			sound.play();
+			sound->play();
 		}
 
 		if (scene_object)

@@ -30,13 +30,13 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 		if (!desc["sound"].is_undefined())
 		{
-			sound = AudioObject(*world->game()->audio.get());
-			sound.set_sound(desc["sound"]["sample"].to_string());
-			sound.set_attenuation_begin(desc["sound"]["attenuationBegin"].to_float());
-			sound.set_attenuation_end(desc["sound"]["attenuationEnd"].to_float());
-			sound.set_volume(desc["sound"]["volume"].to_float());
-			sound.set_position(pos);
-			sound.play();
+			sound = AudioObject::create(world->game()->audio);
+			sound->set_sound(desc["sound"]["sample"].to_string());
+			sound->set_attenuation_begin(desc["sound"]["attenuationBegin"].to_float());
+			sound->set_attenuation_end(desc["sound"]["attenuationEnd"].to_float());
+			sound->set_volume(desc["sound"]["volume"].to_float());
+			sound->set_position(pos);
+			sound->play();
 		}
 
 		if (!desc["particleEmitter"].is_undefined())

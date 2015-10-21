@@ -24,7 +24,7 @@ public:
 	float get_volume() const;
 	float get_pan() const;
 	bool get_looping() const;
-	bool is_playing();
+	bool is_playing() const;
 
 	bool set_position(int new_pos);
 	bool set_position_relative(float new_pos);

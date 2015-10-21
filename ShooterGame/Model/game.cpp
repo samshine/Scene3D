@@ -74,7 +74,7 @@ Game::Game(std::string hostname, std::string port, bool server, SceneEnginePtr s
 
 void Game::create_client_objects(const std::shared_ptr<SoundCache> &sound_cache)
 {
-	audio.reset(new AudioWorld(sound_cache));
+	audio = AudioWorld::create(sound_cache);
 	music_player.reset(new MusicPlayer());
 
 	if (game_data["music"].to_boolean())

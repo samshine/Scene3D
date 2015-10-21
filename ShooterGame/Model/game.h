@@ -20,7 +20,7 @@ public:
 	SceneEnginePtr scene_engine;
 	ScenePtr scene;
 
-	std::unique_ptr<AudioWorld> audio;
+	AudioWorldPtr audio;
 	std::unique_ptr<MusicPlayer> music_player;
 
 	InputButtons buttons;

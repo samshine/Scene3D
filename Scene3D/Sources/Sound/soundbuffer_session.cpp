@@ -118,7 +118,7 @@ bool SoundBuffer_Session::get_looping() const
 	}
 }
 
-bool SoundBuffer_Session::is_playing()
+bool SoundBuffer_Session::is_playing() const
 {
 	if (impl)
 	{
