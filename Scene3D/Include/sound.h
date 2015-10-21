@@ -11,7 +11,6 @@
 #include "Sound/sound_cache.h"
 #include "Sound/soundprovider.h"
 #include "Sound/soundprovider_session.h"
-#include "Sound/AudioWorld/audio_definition.h"
 #include "Sound/AudioWorld/audio_object.h"
 #include "Sound/AudioWorld/audio_world.h"
 

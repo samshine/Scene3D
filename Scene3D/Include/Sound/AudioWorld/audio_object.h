@@ -2,7 +2,6 @@
 #pragma once
 
 #include <string>
-#include "audio_definition.h"
 
 class SoundBuffer;
 class AudioWorld;
@@ -13,7 +12,6 @@ class AudioObject
 public:
 	AudioObject();
 	AudioObject(AudioWorld &world);
-	AudioObject(AudioWorld &world, AudioDefinition definition);
 
 	bool is_null() const { return !impl; }
 

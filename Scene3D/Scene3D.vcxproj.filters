@@ -1002,9 +1002,6 @@
     <ClInclude Include="Include\Sound\soundoutput_description.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Sound\AudioWorld\audio_definition.h">
-      <Filter>Include\Sound\AudioWorld</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h">
       <Filter>Include\Sound\AudioWorld</Filter>
     </ClInclude>
@@ -1019,9 +1016,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Sound\soundoutput_impl.h">
       <Filter>Sources\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Sound\AudioWorld\audio_definition_impl.h">
-      <Filter>Sources\Sound\AudioWorld</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Sound\AudioWorld\audio_object_impl.h">
       <Filter>Sources\Sound\AudioWorld</Filter>
@@ -1699,9 +1693,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\soundoutput_impl.cpp">
       <Filter>Sources\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Sound\AudioWorld\audio_definition.cpp">
-      <Filter>Sources\Sound\AudioWorld</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp">
       <Filter>Sources\Sound\AudioWorld</Filter>

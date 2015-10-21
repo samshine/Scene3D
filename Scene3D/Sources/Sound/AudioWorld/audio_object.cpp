@@ -17,17 +17,6 @@ AudioObject::AudioObject(AudioWorld &world)
 {
 }
 
-AudioObject::AudioObject(AudioWorld &world, AudioDefinition definition)
-	: impl(std::make_shared<AudioObjectImpl>(world.impl.get()))
-{
-	set_attenuation_begin(definition.get_attenuation_begin());
-	set_attenuation_end(definition.get_attenuation_end());
-	set_volume(definition.get_volume());
-	set_sound(definition.get_sound_id());
-	set_looping(definition.is_looping());
-	set_ambience(definition.is_ambience());
-}
-
 Vec3f AudioObject::get_position() const
 {
 	return impl->position;
