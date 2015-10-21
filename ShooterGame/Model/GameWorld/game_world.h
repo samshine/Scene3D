@@ -51,12 +51,12 @@ public:
 
 	void update(uicore::Vec2i mouse_movement);
 
-	GameObject *get(int id);
+	std::shared_ptr<GameObject> get(int id);
 
 	std::shared_ptr<GameWorldClient> client;
 
 	std::shared_ptr<GameNetwork> network;
-	std::unique_ptr<LockStepTime> lock_step_time;
+	std::shared_ptr<LockStepTime> lock_step_time;
 
 	Physics3DWorldPtr collision = Physics3DWorld::create();
 	std::vector<Physics3DObjectPtr> level_collision_objects;
@@ -65,14 +65,14 @@ public:
 	uicore::JsonValue level_data;
 	uicore::JsonValue weapon_data;
 
-	std::unique_ptr<PlayerList> player_list;
-	std::unique_ptr<TeamList> team_list;
+	std::shared_ptr<PlayerList> player_list = std::make_shared<PlayerList>();
+	std::shared_ptr<TeamList> team_list = std::make_shared<TeamList>();
 
-	std::map<int, Elevator *> elevators;
+	std::map<int, std::shared_ptr<Elevator>> elevators;
 
-	std::map<int, ClientPlayerPawn *> client_player_pawns;
-	std::map<std::string, ServerPlayerPawn *> server_player_pawns;
-	std::vector<SpawnPoint *> spawn_points;
+	std::map<int, std::shared_ptr<ClientPlayerPawn>> client_player_pawns;
+	std::map<std::string, std::shared_ptr<ServerPlayerPawn>> server_player_pawns;
+	std::vector<std::shared_ptr<SpawnPoint>> spawn_points;
 
 	uicore::Point mouse_movement;
 
@@ -85,14 +85,14 @@ public:
 	void net_peer_disconnected(const std::string &peer_id);
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
-	void add(GameObject *obj);
+	void add(std::shared_ptr<GameObject> obj);
 	void remove(GameObject *obj);
 
-	void player_killed(const GameTick &tick, PlayerPawn *player);
+	void player_killed(const GameTick &tick, std::shared_ptr<PlayerPawn> player);
 
 private:
-	std::map<int, GameObject *> objects;
-	std::map<int, GameObject *> added_objects;
+	std::map<int, std::shared_ptr<GameObject>> objects;
+	std::map<int, std::shared_ptr<GameObject>> added_objects;
 	std::vector<int> delete_list;
 	int next_id = 1;
 

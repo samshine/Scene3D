@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn) : PlayerPawn(world), owner(owner)
+ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : PlayerPawn(world), owner(owner)
 {
 	cur_movement.dir = spawn->dir;
 	cur_movement.up = spawn->up;
@@ -39,7 +39,7 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
-		world()->player_killed(tick, this);
+		world()->player_killed(tick, to_type<ServerPlayerPawn>());
 	}
 }
 

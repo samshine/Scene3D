@@ -6,7 +6,7 @@
 class RobotPlayerPawn : public ServerPlayerPawn
 {
 public:
-	RobotPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn);
+	RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
 
 	void tick(const GameTick &tick) override;
 

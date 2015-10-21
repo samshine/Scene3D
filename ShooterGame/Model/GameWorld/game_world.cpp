@@ -22,25 +22,22 @@ using namespace uicore;
 GameWorld::GameWorld(const std::string &hostname, const std::string &port, const std::shared_ptr<GameWorldClient> &client) : client(client)
 {
 	if (!client)
-		network.reset(new GameNetworkServer());
+		network = std::make_shared<GameNetworkServer>();
 	else
-		network.reset(new GameNetworkClient());
+		network = std::make_shared<GameNetworkClient>();
 
 	slots.connect(network->sig_peer_connected, this, &GameWorld::net_peer_connected);
 	slots.connect(network->sig_peer_disconnected, this, &GameWorld::net_peer_disconnected);
 	slots.connect(network->sig_event_received, this, &GameWorld::net_event_received);
 
 	if (!client)
-		lock_step_time.reset(new LockStepServerTime(network));
+		lock_step_time = std::make_shared<LockStepServerTime>(network);
 	else
-		lock_step_time.reset(new LockStepClientTime(network));
+		lock_step_time = std::make_shared<LockStepClientTime>(network);
 
 	network->start(hostname, port);
 
 	weapon_data = JsonValue::parse(File::read_all_text("Resources/Config/weapon_data.json"));
-	player_list.reset(new PlayerList());
-	team_list.reset(new TeamList());
-
 	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
 
 	std::string map_name = game_data["map"].to_string();
@@ -118,7 +115,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		auto json = JsonValue::parse(File::read_all_text("Resources/Config/input.json"));
 		client->buttons.load(client->window, json["buttons"]);
 
-		AlarmLights *lights = new AlarmLights(this);
+		auto lights = std::make_shared<AlarmLights>(this);
 		add(lights);
 	}
 
@@ -142,7 +139,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
 
-			Elevator *elevator = new Elevator(this, level_obj_id++, pos, pos2, orientation, mesh);
+			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, pos, pos2, orientation, mesh);
 			add(elevator);
 
 			elevators[elevator->level_obj_id] = elevator;
@@ -153,7 +150,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			float respawn_time = fields["respawnTime"].to_float();
 
-			Powerup *powerup = new Powerup(this, pos, orientation, mesh, scale, animation, collision_box_size, respawn_time, powerup_type);
+			auto powerup = std::make_shared<Powerup>(this, pos, orientation, mesh, scale, animation, collision_box_size, respawn_time, powerup_type);
 			add(powerup);
 		}
 		else if (type == "Flag")
@@ -161,14 +158,14 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			std::string team = fields["team"].to_string();
 
-			Flag *flag = new Flag(this, pos, orientation, mesh, scale, animation, collision_box_size, team);
+			auto flag = std::make_shared<Flag>(this, pos, orientation, mesh, scale, animation, collision_box_size, team);
 			add(flag);
 		}
 		else if (type == "SpawnPoint")
 		{
 			std::string team = fields["team"].to_string();
 
-			SpawnPoint *spawn = new SpawnPoint(this, pos, dir, up, tilt, team);
+			auto spawn = std::make_shared<SpawnPoint>(this, pos, dir, up, tilt, team);
 			add(spawn);
 			spawn_points.push_back(spawn);
 		}
@@ -179,7 +176,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-		RobotPlayerPawn *pawn = new RobotPlayerPawn(this, "server", spawn_points[spawn_index]);
+		auto pawn = std::make_shared<RobotPlayerPawn>(this, "server", spawn_points[spawn_index]);
 		add(pawn);
 		server_player_pawns["server"] = pawn;
 	}
@@ -232,7 +229,7 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement)
 	}
 }
 
-void GameWorld::add(GameObject *obj)
+void GameWorld::add(std::shared_ptr<GameObject> obj)
 {
 	obj->_id = next_id++;
 	added_objects[obj->_id] = obj;
@@ -247,7 +244,7 @@ void GameWorld::remove(GameObject *obj)
 	}
 }
 
-GameObject *GameWorld::get(int id)
+std::shared_ptr<GameObject> GameWorld::get(int id)
 {
 	auto it = objects.find(id);
 	if (it != objects.end() && it->second->_id != 0)
@@ -257,7 +254,7 @@ GameObject *GameWorld::get(int id)
 	if (it != objects.end() && it->second->_id != 0)
 		return it->second;
 
-	return 0;
+	return nullptr;
 }
 
 void GameWorld::tick(float time_elapsed, int receive_tick_time, int arrival_tick_time)
@@ -279,9 +276,8 @@ void GameWorld::tick(float time_elapsed, int receive_tick_time, int arrival_tick
 	for (int id : delete_list)
 	{
 		auto it = objects.find(id);
-		delete it->second;
-		it->second = 0;
-		objects.erase(it);
+		if (it != objects.end())
+			objects.erase(it);
 	}
 	delete_list.clear();
 }
@@ -303,7 +299,7 @@ void GameWorld::net_peer_connected(const std::string &peer_id)
 	float random = rand() / (float)RAND_MAX;
 	int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-	ServerPlayerPawn *pawn = new ServerPlayerPawn(this, peer_id, spawn_points[spawn_index]);
+	auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
 	add(pawn);
 	server_player_pawns[peer_id] = pawn;
 	pawn->send_net_create(net_tick, "all");
@@ -321,7 +317,7 @@ void GameWorld::net_peer_disconnected(const std::string &peer_id)
 	if (it != server_player_pawns.end())
 	{
 		it->second->send_net_destroy(net_tick);
-		remove(it->second);
+		remove(it->second.get());
 		server_player_pawns.erase(it);
 	}
 }
@@ -332,7 +328,7 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 	{
 		if (net_event.get_name() == "player-pawn-input")
 		{
-			ServerPlayerPawn *pawn = server_player_pawns[sender];
+			auto pawn = server_player_pawns[sender];
 			if (pawn)
 				pawn->net_input(net_tick, net_event);
 		}
@@ -343,7 +339,7 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 		{
 			int server_obj_id = net_event.get_argument(0);
 
-			ClientPlayerPawn *pawn = new ClientPlayerPawn(this);
+			auto pawn = std::make_shared<ClientPlayerPawn>(this);
 			add(pawn);
 			client_player_pawns[server_obj_id] = pawn;
 
@@ -372,9 +368,9 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 			auto it = client_player_pawns.find(server_obj_id);
 			if (it != client_player_pawns.end())
 			{
-				PlayerPawn *pawn = it->second;
+				auto pawn = it->second;
 				client_player_pawns.erase(it);
-				remove(pawn);
+				remove(pawn.get());
 			}
 		}
 		else if (net_event.get_name() == "elevator-update")
@@ -385,11 +381,11 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 	}
 }
 
-void GameWorld::player_killed(const GameTick &tick, PlayerPawn *player)
+void GameWorld::player_killed(const GameTick &tick, std::shared_ptr<PlayerPawn> player)
 {
 	if (!client)
 	{
-		ServerPlayerPawn *server_player = static_cast<ServerPlayerPawn*>(player);
+		auto server_player = std::dynamic_pointer_cast<ServerPlayerPawn>(player);
 		std::string peer_id = server_player->owner;
 
 		server_player->send_net_destroy(tick);
@@ -402,13 +398,13 @@ void GameWorld::player_killed(const GameTick &tick, PlayerPawn *player)
 				break;
 			}
 		}
-		remove(server_player);
+		remove(server_player.get());
 
 
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-		ServerPlayerPawn *pawn = new ServerPlayerPawn(this, peer_id, spawn_points[spawn_index]);
+		auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
 		add(pawn);
 		server_player_pawns[peer_id] = pawn;
 		pawn->send_net_create(tick, "all");

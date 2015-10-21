@@ -9,7 +9,7 @@ class SpawnPoint;
 class ServerPlayerPawn : public PlayerPawn
 {
 public:
-	ServerPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn);
+	ServerPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
 	~ServerPlayerPawn();
 
 	void tick(const GameTick &tick) override;

@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, SpawnPoint *spawn) : ServerPlayerPawn(world, owner, spawn)
+RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
 {
 
 }
@@ -14,12 +14,12 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 {
 	ServerPlayerPawn::tick(tick);
 
-	ServerPlayerPawn *target = nullptr;
+	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
 	for (auto it : world()->server_player_pawns)
 	{
-		ServerPlayerPawn *other_pawn = it.second;
-		if (other_pawn != this)
+		auto other_pawn = it.second;
+		if (other_pawn.get() != this)
 			target = other_pawn;
 	}
 

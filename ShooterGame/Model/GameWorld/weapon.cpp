@@ -81,7 +81,7 @@ void Weapon::fire_bullet()
 
 	Vec3f bullet_pos = player->get_position() + player->eye_offset + player->get_orientation().rotate_vector(offset);
 
-	player->world()->add(new Bullet(player->world(), subtype_description["bullet"].to_string(), bullet_pos, player->get_orientation()));
+	player->world()->add(std::make_shared<Bullet>(player->world(), subtype_description["bullet"].to_string(), bullet_pos, player->get_orientation()));
 }
 
 void Weapon::tick_ready(const GameTick &tick)

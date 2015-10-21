@@ -130,7 +130,7 @@ void Bullet::tick(const GameTick &tick)
 		}
 		else
 		{
-			world()->add(new Explosion(world(), explosion_type, last_pos, last_orientation));
+			world()->add(std::make_shared<Explosion>(world(), explosion_type, last_pos, last_orientation));
 			world()->remove(this);
 			return;
 		}

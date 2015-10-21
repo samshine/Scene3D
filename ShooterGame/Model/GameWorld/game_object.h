@@ -9,7 +9,7 @@ class Game;
 class GameWorld;
 class GameTick;
 
-class GameObject
+class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 	GameObject(GameWorld *world);
@@ -20,6 +20,8 @@ public:
 
 	GameWorld *world() const { return _world; }
 	int id() const { return _id; }
+
+	template<typename T> std::shared_ptr<T> to_type() { return std::dynamic_pointer_cast<T>(shared_from_this()); }
 
 private:
 	GameWorld *_world;
