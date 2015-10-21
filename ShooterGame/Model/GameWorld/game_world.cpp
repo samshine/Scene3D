@@ -1,7 +1,6 @@
 
 #include "precomp.h"
 #include "game_world.h"
-#include "Model/game.h"
 #include "game_object.h"
 #include "game_tick.h"
 #include "alarm_lights.h"
@@ -13,33 +12,119 @@
 #include "spawn_point.h"
 #include "player_ragdoll.h"
 #include "robot_player_pawn.h"
+#include "Model/Network/game_network_client.h"
+#include "Model/Network/game_network_server.h"
+#include "Model/Network/lock_step_client_time.h"
+#include "Model/Network/lock_step_server_time.h"
 
 using namespace uicore;
 
-GameWorld::GameWorld(Game *game) : _game(game), next_id(1)
+GameWorld::GameWorld(const std::string &hostname, const std::string &port, const std::shared_ptr<GameWorldClient> &client) : client(client)
 {
+	if (!client)
+		network.reset(new GameNetworkServer());
+	else
+		network.reset(new GameNetworkClient());
+
+	slots.connect(network->sig_peer_connected, this, &GameWorld::net_peer_connected);
+	slots.connect(network->sig_peer_disconnected, this, &GameWorld::net_peer_disconnected);
+	slots.connect(network->sig_event_received, this, &GameWorld::net_event_received);
+
+	if (!client)
+		lock_step_time.reset(new LockStepServerTime(network));
+	else
+		lock_step_time.reset(new LockStepClientTime(network));
+
+	network->start(hostname, port);
+
 	weapon_data = JsonValue::parse(File::read_all_text("Resources/Config/weapon_data.json"));
 	player_list.reset(new PlayerList());
 	team_list.reset(new TeamList());
-}
 
-GameWorld::~GameWorld()
-{
-}
+	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
 
-void GameWorld::init(bool init_is_server)
-{
-	is_server = init_is_server;
+	std::string map_name = game_data["map"].to_string();
 
-	if (!is_server)
+	level_data = JsonValue::parse(File::read_all_text(PathHelp::combine("Resources/Assets", map_name + ".mapdesc")));
+	map_cmodel_filename = map_name + ".cmodel";
+
+	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources/Assets", map_cmodel_filename)))));
+
+	std::map<std::string, Physics3DShapePtr> level_shapes;
+
+	for (auto &item : level_data["objects"].items())
 	{
+		if (item["type"].to_string() != "Static")
+			continue;
+
+		Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
+		Vec3f scale(item["scale"].to_float());
+		Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
+		std::string model_name = item["mesh"].to_string();
+
+		auto it = level_shapes.find(model_name);
+		if (it == level_shapes.end())
+		{
+			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine("Resources/Assets", model_name));
+
+			level_shapes[model_name] = Physics3DShape::model(model_data);
+			it = level_shapes.find(model_name);
+		}
+
+		level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::scale_model(it->second, scale), 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+	}
+
+	for (auto obj : level_collision_objects)
+	{
+		obj->set_static_object();
+	}
+
+	if (client)
+	{
+		if (game_data["music"].to_boolean())
+		{
+			client->music_player.play(
+			{
+				"Resources/Assets/Music/game1.ogg",
+				"Resources/Assets/Music/game2.ogg",
+				"Resources/Assets/Music/game3.ogg"
+			}, true);
+		}
+
+		std::vector<Colorf> colors;
+		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
+		colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
+		colors.push_back(Colorf(0.001f, 0.002f, 0.005f, 1.0f));
+		colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
+		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
+		client->scene->set_skybox_gradient(client->window->gc(), colors);
+
+		for (auto &item : level_data["objects"].items())
+		{
+			if (item["type"].to_string() != "Static" || item["fields"]["no_render"].to_boolean())
+				continue;
+
+			Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
+			Vec3f scale(item["scale"].to_float());
+			Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
+			std::string model_name = item["mesh"].to_string();
+			std::string animation_name = item["animation"].to_string();
+			client->objects.push_back(SceneObject::create(client->scene, SceneModel::create(client->scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+			client->objects.back()->play_animation(animation_name, true);
+		}
+
+		client->level_instance = SceneObject::create(client->scene, SceneModel::create(client->scene, map_cmodel_filename), Vec3f(), Quaternionf(), Vec3f(1.0f));
+
+		auto json = JsonValue::parse(File::read_all_text("Resources/Config/input.json"));
+		client->buttons.load(client->window, json["buttons"]);
+
 		AlarmLights *lights = new AlarmLights(this);
 		add(lights);
 	}
 
 	int level_obj_id = 0;
 
-	for (auto &objdesc : game()->level_data["objects"].items())
+	for (auto &objdesc : level_data["objects"].items())
 	{
 		std::string type = objdesc["type"].to_string();
 		Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
@@ -89,7 +174,7 @@ void GameWorld::init(bool init_is_server)
 		}
 	}
 
-	if (is_server)
+	if (!client)
 	{
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
@@ -97,6 +182,53 @@ void GameWorld::init(bool init_is_server)
 		RobotPlayerPawn *pawn = new RobotPlayerPawn(this, "server", spawn_points[spawn_index]);
 		add(pawn);
 		server_player_pawns["server"] = pawn;
+	}
+}
+
+GameWorld::~GameWorld()
+{
+}
+
+void GameWorld::update(uicore::Vec2i new_mouse_movement)
+{
+	ScopeTimeFunction();
+
+	mouse_movement = new_mouse_movement;
+	if (client)
+		client->buttons.update(client->window);
+
+	network->update();
+
+	lock_step_time->update();
+	elapsed_timer.update();
+
+	float time_elapsed = elapsed_timer.get_time_elapsed();
+
+	int ticks = lock_step_time->get_ticks_elapsed();
+	for (int i = 0; i < ticks; i++)
+	{
+		int receive_tick_time = lock_step_time->get_receive_tick_time() + i;
+		int arrival_tick_time = lock_step_time->get_arrival_tick_time() + i;
+		float tick_time_elapsed = lock_step_time->get_tick_time_elapsed();
+
+		collision->step_simulation_once(tick_time_elapsed);
+		net_tick = GameTick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
+		network->receive_events(receive_tick_time);
+		tick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
+	}
+
+	if (client)
+	{
+		client->level_instance->update(time_elapsed);
+		for (auto &object : client->objects)
+			object->update(time_elapsed);
+
+		frame(time_elapsed, lock_step_time->get_tick_interpolation_time());
+
+		client->music_player.update();
+
+		client->audio->set_listener(client->scene->camera()->position(), client->scene->camera()->orientation());
+		client->audio->update();
 	}
 }
 
@@ -161,6 +293,9 @@ void GameWorld::frame(float time_elapsed, float interpolated_time)
 		if (it.first != 0)
 			it.second->frame(time_elapsed, interpolated_time);
 	}
+
+	if (client)
+		client->scene->update(client->window->gc(), time_elapsed);
 }
 
 void GameWorld::net_peer_connected(const std::string &peer_id)
@@ -193,7 +328,7 @@ void GameWorld::net_peer_disconnected(const std::string &peer_id)
 
 void GameWorld::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
-	if (is_server)
+	if (!client)
 	{
 		if (net_event.get_name() == "player-pawn-input")
 		{
@@ -252,7 +387,7 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 
 void GameWorld::player_killed(const GameTick &tick, PlayerPawn *player)
 {
-	if (is_server)
+	if (!client)
 	{
 		ServerPlayerPawn *server_player = static_cast<ServerPlayerPawn*>(player);
 		std::string peer_id = server_player->owner;

@@ -2,20 +2,19 @@
 #include "precomp.h"
 #include "alarm_lights.h"
 #include "game_world.h"
-#include "Model/game.h"
 
 using namespace uicore;
 
 AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {
-	for (const auto &item : world->game()->level_data["objects"].items())
+	for (const auto &item : world->level_data["objects"].items())
 	{
 		if (item["type"].to_string() != "alarmLights") continue;
 
 		std::string group = item["fields"]["group"].to_string();
 
-		auto model = SceneModel::create(world->game()->scene, item["mesh"].to_string());
-		auto light = SceneObject::create(world->game()->scene, model);
+		auto model = SceneModel::create(world->client->scene, item["mesh"].to_string());
+		auto light = SceneObject::create(world->client->scene, model);
 		light->set_scale(Vec3f(item["scale"].to_float()));
 		light->set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));
 		light->set_orientation(Quaternionf(item["up"].to_float(), item["dir"].to_float(), item["tilt"].to_float(), angle_degrees, order_YXZ));

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "screen_view_controller.h"
-#include "Model/game.h"
+#include "Model/GameWorld/game_world.h"
 
 class GameScreenController : public ScreenViewController
 {
@@ -12,8 +12,8 @@ public:
 	void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
 
 private:
-	std::unique_ptr<Game> client_game;
-	std::unique_ptr<Game> server_game;
+	std::unique_ptr<GameWorld> client_game;
+	std::unique_ptr<GameWorld> server_game;
 	bool desktop_exception_flag = false;
 };
 

@@ -7,6 +7,10 @@
 #include "team_list.h"
 #include "game_tick.h"
 #include "Model/Network/NetGame/event.h"
+#include "Model/Network/game_network.h"
+#include "Model/Network/lock_step_time.h"
+#include "Model/Audio/music_player.h"
+#include "Model/Input/input_buttons.h"
 
 class Game;
 class GameTick;
@@ -17,17 +21,48 @@ class ClientPlayerPawn;
 class Elevator;
 class SpawnPoint;
 
+class GameWorldClient
+{
+public:
+	GameWorldClient(const uicore::DisplayWindowPtr &window, const SceneEnginePtr &scene_engine, const std::shared_ptr<SoundCache> &sound_cache) : window(window), scene_engine(scene_engine)
+	{
+		audio = AudioWorld::create(sound_cache);
+		scene = Scene::create(scene_engine);
+	}
+
+	uicore::DisplayWindowPtr window;
+
+	SceneEnginePtr scene_engine;
+	ScenePtr scene;
+	SceneObjectPtr level_instance;
+	std::vector<SceneObjectPtr> objects;
+
+	AudioWorldPtr audio;
+	MusicPlayer music_player;
+
+	InputButtons buttons;
+};
+
 class GameWorld
 {
 public:
-	GameWorld(Game *game);
+	GameWorld(const std::string &hostname, const std::string &port, const std::shared_ptr<GameWorldClient> &client = nullptr);
 	~GameWorld();
 
-	void init(bool is_server);
+	void update(uicore::Vec2i mouse_movement);
 
-	Game *game() { return _game; }
 	GameObject *get(int id);
 
+	std::shared_ptr<GameWorldClient> client;
+
+	std::shared_ptr<GameNetwork> network;
+	std::unique_ptr<LockStepTime> lock_step_time;
+
+	Physics3DWorldPtr collision = Physics3DWorld::create();
+	std::vector<Physics3DObjectPtr> level_collision_objects;
+
+	uicore::JsonValue game_data;
+	uicore::JsonValue level_data;
 	uicore::JsonValue weapon_data;
 
 	std::unique_ptr<PlayerList> player_list;
@@ -40,8 +75,6 @@ public:
 	std::vector<SpawnPoint *> spawn_points;
 
 	uicore::Point mouse_movement;
-
-	bool is_server = false;
 
 	GameTick net_tick;
 
@@ -58,13 +91,14 @@ public:
 	void player_killed(const GameTick &tick, PlayerPawn *player);
 
 private:
-	Game *_game;
 	std::map<int, GameObject *> objects;
 	std::map<int, GameObject *> added_objects;
 	std::vector<int> delete_list;
-	int next_id;
+	int next_id = 1;
 
-	int stupid_counter = 0;
+	uicore::GameTime elapsed_timer;
+	std::string map_cmodel_filename;
+	uicore::SlotContainer slots;
 
 	friend class GameObject;
 };

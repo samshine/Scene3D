@@ -155,7 +155,6 @@
     <ClInclude Include="Controllers\Screens\menu_screen_controller.h" />
     <ClInclude Include="Controllers\Screens\screen_view_controller.h" />
     <ClInclude Include="Model\Audio\music_player.h" />
-    <ClInclude Include="Model\game.h" />
     <ClInclude Include="Model\GameWorld\alarm_lights.h" />
     <ClInclude Include="Model\GameWorld\bullet.h" />
     <ClInclude Include="Model\GameWorld\character_controller.h" />
@@ -207,7 +206,6 @@
     <ClCompile Include="Controllers\Screens\screen_view_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Audio\music_player.cpp" />
-    <ClCompile Include="Model\game.cpp" />
     <ClCompile Include="Model\GameWorld\alarm_lights.cpp" />
     <ClCompile Include="Model\GameWorld\bullet.cpp" />
     <ClCompile Include="Model\GameWorld\character_controller.cpp" />

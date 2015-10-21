@@ -5,7 +5,6 @@
 #include "game_tick.h"
 #include "game_object_collision.h"
 #include "player_pawn.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -14,17 +13,17 @@ Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const 
 : GameObject(world), level_obj_id(level_obj_id), pos1(pos1), pos2(pos2), orientation(orientation)
 {
 	box_shape = Physics3DShape::box(box_size);
-	body = Physics3DObject::collision_body(world->game()->collision, box_shape, pos1, orientation);
+	body = Physics3DObject::collision_body(world->collision, box_shape, pos1, orientation);
 	body->set_kinematic_object();
 
-	if (!world->is_server)
+	if (world->client)
 	{
-		auto model = SceneModel::create(world->game()->scene, model_name);
-		scene_object = SceneObject::create(world->game()->scene, model, pos1, orientation, Vec3f(scale));
+		auto model = SceneModel::create(world->client->scene, model_name);
+		scene_object = SceneObject::create(world->client->scene, model, pos1, orientation, Vec3f(scale));
 
 		// For debugging collision box
-		//SceneModel model(world->game()->gc(), *world->game()->scene, create_box());
-		//scene_object = SceneObject(*world->game()->scene, model, pos1, orientation, Vec3f(1.0f));
+		//SceneModel model(world->client->window->gc(), *world->client->scene, create_box());
+		//scene_object = SceneObject(*world->client->scene, model, pos1, orientation, Vec3f(1.0f));
 	}
 }
 
@@ -34,7 +33,7 @@ Elevator::~Elevator()
 
 void Elevator::net_update(const GameTick &net_tick, const uicore::NetGameEvent &net_event)
 {
-	if (!world()->is_server)
+	if (world()->client)
 	{
 		int age = std::max(net_tick.arrival_tick_time - net_tick.receive_tick_time, 0);
 
@@ -59,7 +58,7 @@ void Elevator::send_net_update(const GameTick &tick, const std::string &target)
 	net_event.add_argument((int)state);
 	net_event.add_argument(time);
 
-	world()->game()->network->queue_event(target, net_event, tick.arrival_tick_time);
+	world()->network->queue_event(target, net_event, tick.arrival_tick_time);
 }
 
 void Elevator::tick(const GameTick &tick)
@@ -81,7 +80,7 @@ void Elevator::tick_down(const GameTick &tick)
 		state = state_start_triggered;
 		time = 0.250f;
 
-		if (world()->is_server)
+		if (!world()->client)
 			send_net_update(tick, "all");
 	}
 }
@@ -96,7 +95,7 @@ void Elevator::tick_start_triggered(const GameTick &tick)
 		if (scene_object)
 			scene_object->play_animation("up", true);
 
-		if (world()->is_server)
+		if (!world()->client)
 			send_net_update(tick, "all");
 	}
 }
@@ -114,7 +113,7 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	Vec3f from_pos = mix(pos1, pos2, time);
 	Vec3f to_pos = mix(pos1, pos2, new_time);
 
-	auto test = Physics3DSweepTest::create(world()->game()->collision);
+	auto test = Physics3DSweepTest::create(world()->collision);
 	test->test_all_hits(box_shape, from_pos, orientation, to_pos, orientation);
 	for (int i = 0; i < test->hit_count(); i++)
 	{
@@ -143,7 +142,7 @@ void Elevator::tick_moving_up(const GameTick &tick)
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (world()->is_server)
+		if (!world()->client)
 			send_net_update(tick, "all");
 	}
 }
@@ -160,7 +159,7 @@ void Elevator::tick_up(const GameTick &tick)
 		if (scene_object)
 			scene_object->play_animation("down", true);
 
-		if (world()->is_server)
+		if (!world()->client)
 			send_net_update(tick, "all");
 	}
 }
@@ -189,7 +188,7 @@ void Elevator::tick_moving_down(const GameTick &tick)
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (world()->is_server)
+		if (!world()->client)
 			send_net_update(tick, "all");
 	}
 }
@@ -198,7 +197,7 @@ bool Elevator::test_start_trigger()
 {
 	Vec3f trigger_pos = pos1 + Vec3f(0.0, 1.0f, 0.0f);
 
-	auto test = Physics3DSweepTest::create(world()->game()->collision);
+	auto test = Physics3DSweepTest::create(world()->collision);
 	test->test_all_hits(box_shape, pos1, orientation, trigger_pos, orientation);
 
 	for (int i = 0; i < test->hit_count(); i++)

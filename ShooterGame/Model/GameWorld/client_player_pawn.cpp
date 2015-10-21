@@ -1,18 +1,18 @@
 
 #include "precomp.h"
 #include "client_player_pawn.h"
+#include "game_world.h"
 #include "game_tick.h"
 #include "game_object_collision.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
 
 ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
-	camera = SceneCamera::create(world->game()->scene);
+	camera = SceneCamera::create(world->client->scene);
 	camera_shape = Physics3DShape::sphere(0.5f);
-	camera_sweep_test = Physics3DSweepTest::create(world->game()->collision);
+	camera_sweep_test = Physics3DSweepTest::create(world->collision);
 }
 
 ClientPlayerPawn::~ClientPlayerPawn()
@@ -25,7 +25,7 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEve
 	net_update(tick, net_event);
 
 	if (is_owner)
-		world()->game()->scene->set_camera(camera);
+		world()->client->scene->set_camera(camera);
 }
 
 void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event)
@@ -132,7 +132,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 
 void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
-	sound = AudioObject::create(world()->game()->audio);
+	sound = AudioObject::create(world()->client->audio);
 	sound->set_sound("Sound/Character/hurt1.ogg");
 	sound->set_attenuation_begin(1.0f);
 	sound->set_attenuation_end(100.0f);
@@ -145,19 +145,19 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 {
 	if (is_owner)
 	{
-		cur_movement.key_forward.next_pressed = world()->game()->buttons.buttons["move-forward"].down;
-		cur_movement.key_back.next_pressed = world()->game()->buttons.buttons["move-back"].down;
-		cur_movement.key_left.next_pressed = world()->game()->buttons.buttons["move-left"].down;
-		cur_movement.key_right.next_pressed = world()->game()->buttons.buttons["move-right"].down;
-		cur_movement.key_jump.next_pressed = world()->game()->buttons.buttons["jump"].down;
-		cur_movement.key_fire_primary.next_pressed = world()->game()->buttons.buttons["fire-primary"].down;
-		cur_movement.key_fire_secondary.next_pressed = world()->game()->buttons.buttons["fire-secondary"].down;
+		cur_movement.key_forward.next_pressed = world()->client->buttons.buttons["move-forward"].down;
+		cur_movement.key_back.next_pressed = world()->client->buttons.buttons["move-back"].down;
+		cur_movement.key_left.next_pressed = world()->client->buttons.buttons["move-left"].down;
+		cur_movement.key_right.next_pressed = world()->client->buttons.buttons["move-right"].down;
+		cur_movement.key_jump.next_pressed = world()->client->buttons.buttons["jump"].down;
+		cur_movement.key_fire_primary.next_pressed = world()->client->buttons.buttons["fire-primary"].down;
+		cur_movement.key_fire_secondary.next_pressed = world()->client->buttons.buttons["fire-secondary"].down;
 		cur_movement.key_weapon = 0;
-		if (world()->game()->buttons.buttons["switch-to-icelauncher"].down) cur_movement.key_weapon = 1;
-		else if (world()->game()->buttons.buttons["switch-to-rocketlauncher"].down) cur_movement.key_weapon = 2;
-		else if (world()->game()->buttons.buttons["switch-to-dualguns"].down) cur_movement.key_weapon = 3;
-		else if (world()->game()->buttons.buttons["switch-to-sniperrifle"].down) cur_movement.key_weapon = 4;
-		else if (world()->game()->buttons.buttons["switch-to-tractorbeam"].down) cur_movement.key_weapon = 5;
+		if (world()->client->buttons.buttons["switch-to-icelauncher"].down) cur_movement.key_weapon = 1;
+		else if (world()->client->buttons.buttons["switch-to-rocketlauncher"].down) cur_movement.key_weapon = 2;
+		else if (world()->client->buttons.buttons["switch-to-dualguns"].down) cur_movement.key_weapon = 3;
+		else if (world()->client->buttons.buttons["switch-to-sniperrifle"].down) cur_movement.key_weapon = 4;
+		else if (world()->client->buttons.buttons["switch-to-tractorbeam"].down) cur_movement.key_weapon = 5;
 
 		NetGameEvent netevent("player-pawn-input");
 		netevent.add_argument(NetGameEventValue(cur_movement.key_forward.next_pressed));
@@ -173,7 +173,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 
 		//Console::write_line("Sent dir %1 to tick %2", cur_movement.dir, tick.arrival_tick_time);
 
-		world()->game()->network->queue_event("server", netevent, tick.arrival_tick_time);
+		world()->network->queue_event("server", netevent, tick.arrival_tick_time);
 
 		PlayerPawnMovement past = cur_movement;
 		past.tick_time = tick.arrival_tick_time;
@@ -190,7 +190,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 	{
 		step_movement = 0.0f;
 
-		auto sound_land = AudioObject::create(world()->game()->audio);
+		auto sound_land = AudioObject::create(world()->client->audio);
 
 		if (character_controller.get_land_impact() > 17.0f)
 		{
@@ -228,7 +228,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 			step_movement = std::fmod(step_movement, step_distance);
 			left_step = !left_step;
 
-			auto sound_footstep = AudioObject::create(world()->game()->audio);
+			auto sound_footstep = AudioObject::create(world()->client->audio);
 			if (left_step)
 			{
 				if (rand() > RAND_MAX / 2)
@@ -262,7 +262,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 
 		if (anim == "jump")
 		{
-			auto sound = AudioObject::create(world()->game()->audio);
+			auto sound = AudioObject::create(world()->client->audio);
 			if (rand() > RAND_MAX / 2)
 				sound->set_sound("Sound/Character/jump1.ogg");
 			else
@@ -361,8 +361,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (!scene_object)
 		{
-			auto model = SceneModel::create(world()->game()->scene, "Models/Kachujin/Kachujin.cmodel");
-			scene_object = SceneObject::create(world()->game()->scene, model);
+			auto model = SceneModel::create(world()->client->scene, "Models/Kachujin/Kachujin.cmodel");
+			scene_object = SceneObject::create(world()->client->scene, model);
 
 			if (animation_move_speed > 0.0f)
 				scene_object->play_animation("forward", false);

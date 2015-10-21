@@ -4,7 +4,6 @@
 #include "game_tick.h"
 #include "game_world.h"
 #include "spawn_point.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -36,7 +35,7 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 	NetGameEvent net_event("player-pawn-hit");
 	net_event.add_argument(id());
 
-	world()->game()->network->queue_event("all", net_event, tick.arrival_tick_time);
+	world()->network->queue_event("all", net_event, tick.arrival_tick_time);
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
@@ -68,12 +67,12 @@ void ServerPlayerPawn::send_net_create(const GameTick &tick, const std::string &
 
 	if (target == "all" && owner != "server")
 	{
-		world()->game()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
-		world()->game()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
+		world()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
+		world()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
 	}
 	else
 	{
-		world()->game()->network->queue_event(target, target == owner ? net_event_owner : net_event, tick.arrival_tick_time);
+		world()->network->queue_event(target, target == owner ? net_event_owner : net_event, tick.arrival_tick_time);
 	}
 }
 
@@ -87,12 +86,12 @@ void ServerPlayerPawn::send_net_update(const GameTick &tick)
 
 	if (owner != "server")
 	{
-		world()->game()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
-		world()->game()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
+		world()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
+		world()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
 	}
 	else
 	{
-		world()->game()->network->queue_event("all", net_event, tick.arrival_tick_time);
+		world()->network->queue_event("all", net_event, tick.arrival_tick_time);
 	}
 }
 
@@ -101,7 +100,7 @@ void ServerPlayerPawn::send_net_destroy(const GameTick &tick)
 	NetGameEvent net_event("player-pawn-destroy");
 	net_event.add_argument(id());
 
-	world()->game()->network->queue_event("all", net_event, tick.arrival_tick_time);
+	world()->network->queue_event("all", net_event, tick.arrival_tick_time);
 }
 
 void ServerPlayerPawn::add_update_args(uicore::NetGameEvent &net_event, const GameTick &tick, bool is_owner)

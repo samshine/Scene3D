@@ -4,7 +4,6 @@
 #include "client_player_pawn.h"
 #include "game_world.h"
 #include "bullet.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -116,7 +115,7 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 		if (!weapon_type.empty())
 			animation_timer = player->world()->weapon_data["weapons"][weapon_type]["showTime"].to_float();
 
-		if (!player->world()->is_server)
+		if (player->world()->client)
 		{
 			JsonValue weapon_description = player->world()->weapon_data["weapons"][weapon_type];
 
@@ -131,8 +130,8 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 			float up = weapon_description["firstPersonView"]["orientation"]["up"].to_float();
 			float tilt = weapon_description["firstPersonView"]["orientation"]["tilt"].to_float();
 
-			auto model = SceneModel::create(player->world()->game()->scene, weapon_description["firstPersonView"]["mesh"].to_string());
-			weapon_object = SceneObject::create(player->world()->game()->scene, model);
+			auto model = SceneModel::create(player->world()->client->scene, weapon_description["firstPersonView"]["mesh"].to_string());
+			weapon_object = SceneObject::create(player->world()->client->scene, model);
 			weapon_object->set_scale(Vec3f(weapon_description["firstPersonView"]["scale"].to_float()));
 			/*
 			weapon_object->set_position(static_cast<ClientPlayerPawn*>(player)->camera.get_position());

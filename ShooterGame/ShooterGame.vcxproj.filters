@@ -13,9 +13,6 @@
       <Filter>Controllers\Screens</Filter>
     </ClInclude>
     <ClInclude Include="mouse_movement.h" />
-    <ClInclude Include="Model\game.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\GameWorld\alarm_lights.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
@@ -156,9 +153,6 @@
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
     <ClCompile Include="mouse_movement.cpp" />
-    <ClCompile Include="Model\game.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\GameWorld\alarm_lights.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>

@@ -4,7 +4,6 @@
 #include "game_world.h"
 #include "game_object_collision.h"
 #include "player_pawn.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -16,7 +15,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 	time_left = desc["lifespan"].to_float();
 
-	if (!world->is_server)
+	if (world->client)
 	{
 		if (!desc["model"].is_undefined())
 		{
@@ -24,13 +23,13 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 			float scale = desc["model"]["scale"].to_float();
 			Vec3f offset(desc["model"]["offset"]["x"].to_float(), desc["model"]["offset"]["y"].to_float(), desc["model"]["offset"]["z"].to_float());
 
-			auto model = SceneModel::create(world->game()->scene, model_name);
-			scene_object = SceneObject::create(world->game()->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
+			auto model = SceneModel::create(world->client->scene, model_name);
+			scene_object = SceneObject::create(world->client->scene, model, pos + orientation.rotate_vector(offset), orientation, Vec3f(scale));
 		}
 
 		if (!desc["sound"].is_undefined())
 		{
-			sound = AudioObject::create(world->game()->audio);
+			sound = AudioObject::create(world->client->audio);
 			sound->set_sound(desc["sound"]["sample"].to_string());
 			sound->set_attenuation_begin(desc["sound"]["attenuationBegin"].to_float());
 			sound->set_attenuation_end(desc["sound"]["attenuationEnd"].to_float());
@@ -41,7 +40,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 		if (!desc["particleEmitter"].is_undefined())
 		{
-			emitter = SceneParticleEmitter::create(world->game()->scene);
+			emitter = SceneParticleEmitter::create(world->client->scene);
 			emitter->set_type(SceneParticleEmitter::type_omni);
 			emitter->set_position(pos);
 			emitter->set_orientation(orientation);
@@ -60,8 +59,8 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 	// Check if we hit anyone nearby
 	auto shape = Physics3DShape::sphere(radius);
-	auto sphere = Physics3DObject::collision_body(world->game()->collision, shape, pos, orientation);
-	auto test = Physics3DContactTest::create(world->game()->collision);
+	auto sphere = Physics3DObject::collision_body(world->collision, shape, pos, orientation);
+	auto test = Physics3DContactTest::create(world->collision);
 	test->test(sphere);
 	for (int i = 0; i < test->hit_count(); i++)
 	{

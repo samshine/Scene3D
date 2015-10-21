@@ -5,7 +5,6 @@
 #include "game_world.h"
 #include "game_object_collision.h"
 #include "player_pawn.h"
-#include "Model/game.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -13,7 +12,7 @@ using namespace uicore;
 Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation)
 	: GameObject(world), pos(init_pos), orientation(init_orientation)
 {
-	ray_test = Physics3DRayTest::create(world->game()->collision);
+	ray_test = Physics3DRayTest::create(world->collision);
 
 	JsonValue desc = world->weapon_data["bullets"][type];
 
@@ -30,14 +29,14 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 	last_pos = pos;
 	last_orientation = orientation;
 
-	if (!world->is_server)
+	if (world->client)
 	{
-		auto model = SceneModel::create(world->game()->scene, model_name);
-		scene_object = SceneObject::create(world->game()->scene, model, pos, orientation, Vec3f(scale));
+		auto model = SceneModel::create(world->client->scene, model_name);
+		scene_object = SceneObject::create(world->client->scene, model, pos, orientation, Vec3f(scale));
 
 		if (!desc["fireSound"].is_undefined())
 		{
-			sound = AudioObject::create(world->game()->audio);
+			sound = AudioObject::create(world->client->audio);
 			sound->set_sound(desc["fireSound"]["sample"].to_string());
 			sound->set_attenuation_begin(desc["fireSound"]["attenuationBegin"].to_float());
 			sound->set_attenuation_end(desc["fireSound"]["attenuationEnd"].to_float());
@@ -48,7 +47,7 @@ Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &i
 
 		if (!desc["particleEmitter"].is_undefined())
 		{
-			emitter = SceneParticleEmitter::create(world->game()->scene);
+			emitter = SceneParticleEmitter::create(world->client->scene);
 			emitter->set_type(SceneParticleEmitter::type_omni);
 			emitter->set_position(pos);
 			emitter->set_orientation(orientation);

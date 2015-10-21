@@ -8,7 +8,7 @@ GameScreenController::GameScreenController(const CanvasPtr &canvas) : ScreenView
 {
 }
 
-void GameScreenController::update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void GameScreenController::update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &mouse_delta)
 {
 	if (desktop_exception_flag)
 	{
@@ -25,14 +25,14 @@ void GameScreenController::update_desktop(const uicore::CanvasPtr &canvas, const
 
 			GraphicContextPtr gc = canvas->gc();
 
-			server_game = std::make_unique<Game>(hostname, port, true);
-			client_game = std::make_unique<Game>(hostname, port, false, Screen::scene_engine(), Screen::sound_cache(), gc, ic);
+			server_game = std::make_unique<GameWorld>(hostname, port);
+			client_game = std::make_unique<GameWorld>(hostname, port, std::make_shared<GameWorldClient>(window, Screen::scene_engine(), Screen::sound_cache()));
 		}
 
 		server_game->update(mouse_delta);
 		client_game->update(mouse_delta);
 
-		render_scene(canvas, client_game->scene);
+		render_scene(canvas, client_game->client->scene);
 	}
 	catch (...)
 	{
