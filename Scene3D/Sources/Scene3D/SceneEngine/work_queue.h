@@ -25,28 +25,24 @@ class WorkQueue
 public:
 	/// \brief Constructs a work queue
 	/// \param serial_queue If true, executes items in the order they are queued, one at a time
-	WorkQueue(bool serial_queue = false);
-	~WorkQueue();
+	static std::shared_ptr<WorkQueue> create(bool serial_queue = false);
 
 	/// \brief Queue some work to be executed on a worker thread
-	///
-	/// Stagings ownership of the item queued. WorkQueue will delete the item.
-	void queue(WorkItem *item);
+	virtual void queue_item(std::shared_ptr<WorkItem> item) = 0;
 
 	/// \brief Queue some work to be executed on a worker thread
-	void queue(const std::function<void()> &func);
+	virtual void queue(const std::function<void()> &func) = 0;
 
 	/// \brief Queue some work to be executed on the main WorkQueue thread
-	void work_completed(const std::function<void()> &func);
+	virtual void work_completed(const std::function<void()> &func) = 0;
 
 	/// \brief Returns the number of items currently queued
-	int get_items_queued() const;
+	virtual int items_queued() const = 0;
 
 	/// \brief Process work completed queue
 	///
 	/// Needs to be called on the main WorkQueue thread periodically to finish queued work
-	void process_work_completed();
-
-private:
-	std::shared_ptr<WorkQueueImpl> impl;
+	virtual void process_work_completed() = 0;
 };
+
+typedef std::shared_ptr<WorkQueue> WorkQueuePtr;

@@ -121,5 +121,8 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		ExceptionDialog::show(std::current_exception());
 	}
 
+	Screen::scene_engine().reset();
+	Screen::sound_cache().reset();
+
 	return 0;
 }

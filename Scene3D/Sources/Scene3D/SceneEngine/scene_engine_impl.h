@@ -15,6 +15,7 @@ class SceneEngineImpl : public SceneEngine
 {
 public:
 	SceneEngineImpl(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
+	~SceneEngineImpl();
 
 	int models_drawn() const override { return render.models_drawn; }
 	int instances_drawn() const override { return render.instances_drawn; }
@@ -33,7 +34,7 @@ public:
 	void render_scene(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
 	void update_scene(const uicore::GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed);
 
-	void process_work_completed() { work_queue.process_work_completed(); }
+	void process_work_completed() { work_queue->process_work_completed(); }
 
 	SceneRender render;
 
@@ -50,7 +51,7 @@ private:
 	long long memory_used = 0;
 
 	uicore::GraphicContextPtr gc;
-	WorkQueue work_queue;
+	WorkQueuePtr work_queue = WorkQueue::create();
 	friend class CacheLoadTexture;
 };
 

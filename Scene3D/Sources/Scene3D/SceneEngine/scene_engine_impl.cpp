@@ -13,6 +13,11 @@ SceneEngineImpl::SceneEngineImpl(const GraphicContextPtr &gc, const std::string 
 {
 }
 
+SceneEngineImpl::~SceneEngineImpl()
+{
+	work_queue.reset(); // Make sure all pending items finish before we shut down
+}
+
 void SceneEngineImpl::render_scene(const GraphicContextPtr &gc, SceneImpl *scene)
 {
 	ScopeTimeFunction();
@@ -92,7 +97,7 @@ Resource<TexturePtr> SceneEngineImpl::get_texture(const GraphicContextPtr &gc, c
 		texture.set(get_dummy_texture(gc));
 		textures[key] = texture;
 
-		work_queue.queue(new CacheLoadTexture(this, texture, material_name, linear));
+		work_queue->queue_item(std::make_shared<CacheLoadTexture>(this, texture, material_name, linear));
 		//CacheLoadTexture t(this, texture, material_name, linear);
 		//t.process_work();
 		//t.work_completed();

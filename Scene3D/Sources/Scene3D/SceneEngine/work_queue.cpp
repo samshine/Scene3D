@@ -31,20 +31,21 @@ private:
 	std::function<void()> func;
 };
 
-class WorkQueueImpl
+class WorkQueueImpl : public WorkQueue
 {
 public:
 	WorkQueueImpl(bool serial_queue);
 	~WorkQueueImpl();
 
-	void queue(WorkItem *item); // transfers ownership
-	void work_completed(WorkItem *item); // transfers ownership
-
-	int get_items_queued() const { return items_queued; }
-
-	void process_work_completed();
+	void queue_item(std::shared_ptr<WorkItem> item) override;
+	void queue(const std::function<void()> &func) override { queue_item(std::make_shared<WorkItemProcess>(func)); }
+	void work_completed(const std::function<void()> &func) override { work_completed(std::static_pointer_cast<WorkItem>(std::make_shared<WorkItemWorkCompleted>(func))); }
+	int items_queued() const override { return _items_queued; }
+	void process_work_completed() override;
 
 private:
+	void work_completed(std::shared_ptr<WorkItem> item);
+
 	void worker_main();
 
 	bool serial_queue = false;
@@ -52,43 +53,14 @@ private:
 	std::mutex mutex;
 	std::condition_variable worker_event;
 	bool stop_flag = false;
-	std::vector<WorkItem *> queued_items;
-	std::vector<WorkItem *> finished_items;
-	std::atomic_int items_queued;
+	std::vector<std::shared_ptr<WorkItem>> queued_items;
+	std::vector<std::shared_ptr<WorkItem>> finished_items;
+	std::atomic_int _items_queued;
 };
 
-WorkQueue::WorkQueue(bool serial_queue)
-	: impl(std::make_shared<WorkQueueImpl>(serial_queue))
+std::shared_ptr<WorkQueue> WorkQueue::create(bool serial_queue)
 {
-}
-
-WorkQueue::~WorkQueue()
-{
-}
-
-void WorkQueue::queue(WorkItem *item) // transfers ownership
-{
-	impl->queue(item);
-}
-
-void WorkQueue::queue(const std::function<void()> &func)
-{
-	impl->queue(new WorkItemProcess(func));
-}
-
-void WorkQueue::work_completed(const std::function<void()> &func)
-{
-	impl->work_completed(new WorkItemWorkCompleted(func));
-}
-
-int WorkQueue::get_items_queued() const
-{
-	return impl->get_items_queued();
-}
-
-void WorkQueue::process_work_completed()
-{
-	impl->process_work_completed();
+	return std::make_shared<WorkQueueImpl>(serial_queue);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,15 +77,11 @@ WorkQueueImpl::~WorkQueueImpl()
 	mutex_lock.unlock();
 	worker_event.notify_all();
 
-	for (auto & elem : threads)
-		elem.join();
-	for (auto & elem : queued_items)
-		delete elem;
-	for (auto & elem : finished_items)
-		delete elem;
+	for (auto &thread : threads)
+		thread.join();
 }
 
-void WorkQueueImpl::queue(WorkItem *item) // transfers ownership
+void WorkQueueImpl::queue_item(std::shared_ptr<WorkItem> item)
 {
 	if (threads.empty())
 	{
@@ -126,26 +94,27 @@ void WorkQueueImpl::queue(WorkItem *item) // transfers ownership
 
 	std::unique_lock<std::mutex> mutex_lock(mutex);
 	queued_items.push_back(item);
-	++items_queued;
+	++_items_queued;
 	mutex_lock.unlock();
 	worker_event.notify_one();
 }
 
-void WorkQueueImpl::work_completed(WorkItem *item) // transfers ownership
+void WorkQueueImpl::work_completed(std::shared_ptr<WorkItem> item)
 {
 	std::unique_lock<std::mutex> mutex_lock(mutex);
 	finished_items.push_back(item);
-	++items_queued;
+	++_items_queued;
 }
 
 void WorkQueueImpl::process_work_completed()
 {
 	std::unique_lock<std::mutex> mutex_lock(mutex);
-	std::vector<WorkItem *> items;
+	std::vector<std::shared_ptr<WorkItem>> items;
 	items.swap(finished_items);
 	mutex_lock.unlock();
 	for (size_t i = 0; i < items.size(); i++)
 	{
+		--_items_queued;
 		try
 		{
 			items[i]->work_completed();
@@ -153,11 +122,9 @@ void WorkQueueImpl::process_work_completed()
 		catch (...)
 		{
 			mutex_lock.lock();
-			finished_items.insert(finished_items.begin(), items.begin() + i, items.end());
+			finished_items.insert(finished_items.begin(), items.begin() + i + 1, items.end());
 			throw;
 		}
-		delete items[i];
-		--items_queued;
 	}
 }
 
@@ -171,7 +138,7 @@ void WorkQueueImpl::worker_main()
 		if (stop_flag)
 			break;
 
-		WorkItem *item = queued_items.front();
+		std::shared_ptr<WorkItem> item = queued_items.front();
 		queued_items.erase(queued_items.begin());
 		mutex_lock.unlock();
 
