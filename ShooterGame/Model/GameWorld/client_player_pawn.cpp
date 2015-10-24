@@ -3,7 +3,7 @@
 #include "client_player_pawn.h"
 #include "game_world.h"
 #include "game_tick.h"
-#include "game_object_collision.h"
+#include "collision_game_object.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -322,7 +322,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		camera_sweep_test->test_all_hits(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf());
 		for (int i = 0; i < camera_sweep_test->hit_count(); i++)
 		{
-			std::shared_ptr<GameObjectCollision> obj_collision = camera_sweep_test->hit_object(i)->data<GameObjectCollision>();
+			CollisionGameObject *obj_collision = camera_sweep_test->hit_object(i)->data<CollisionGameObject>();
 			if (!obj_collision)
 			{
 				wall_hit_index = i;

@@ -34,7 +34,13 @@ public:
 };
 */
 
-class Physics3DObject
+class Physics3DDataObject
+{
+public:
+	virtual ~Physics3DDataObject() { }
+};
+
+class Physics3DObject : public std::enable_shared_from_this<Physics3DObject>
 {
 public:
 	static std::shared_ptr<Physics3DObject> collision_body(const Physics3DWorldPtr &world, const Physics3DShapePtr &shape, const uicore::Vec3f &position = uicore::Vec3f(0.0f), const uicore::Quaternionf &orientation = uicore::Quaternionf());
@@ -51,6 +57,9 @@ public:
 	virtual bool character_object() const = 0;
 	virtual bool debug_drawn() const = 0;
 
+	template<typename T> T *data() { return dynamic_cast<T*>(data_object()); }
+	virtual Physics3DDataObject *data_object() = 0;
+
 	virtual void set_position(const uicore::Vec3f &position) = 0;
 	virtual void set_orientation(const uicore::Quaternionf &orientation) = 0;
 	virtual void set_transform(const uicore::Vec3f &position, const uicore::Quaternionf &orientation) = 0;
@@ -60,8 +69,7 @@ public:
 	virtual void set_character_object(bool enable = true) = 0;
 	virtual void set_debug_drawn(bool enable = true) = 0;
 
-	template<typename T>
-	std::shared_ptr<T> data() { return std::shared_ptr<T>(); } // To do: remove this function and fix code depending on it
+	virtual void set_data(Physics3DDataObject *obj) = 0;
 
 	// Rigid body functionality:
 

@@ -3,7 +3,7 @@
 #include "elevator.h"
 #include "game_world.h"
 #include "game_tick.h"
-#include "game_object_collision.h"
+#include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
@@ -118,9 +118,7 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	for (int i = 0; i < test->hit_count(); i++)
 	{
 		Physics3DObjectPtr obj = test->hit_object(i);
-		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
-		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
-		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
+		PlayerPawn *hit_player = obj->data<PlayerPawn>();
 		if (hit_player)
 		{
 			hit_player->ground_moved(to_pos - from_pos);
@@ -203,9 +201,7 @@ bool Elevator::test_start_trigger()
 	for (int i = 0; i < test->hit_count(); i++)
 	{
 		Physics3DObjectPtr obj = test->hit_object(i);
-		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
-		GameObject *hit_game_object = obj_collision ? obj_collision->obj : 0;
-		PlayerPawn *hit_player = dynamic_cast<PlayerPawn*>(hit_game_object);
+		PlayerPawn *hit_player = obj->data<PlayerPawn>();
 		if (hit_player)
 		{
 			return true;

@@ -3,12 +3,11 @@
 #include "player_pawn.h"
 #include "game_world.h"
 #include "game_tick.h"
-#include "game_object_collision.h"
 #include <algorithm>
 
 using namespace uicore;
 
-PlayerPawn::PlayerPawn(GameWorld *world) : GameObject(world), character_controller(world->collision)
+PlayerPawn::PlayerPawn(GameWorld *world) : CollisionGameObject(world), character_controller(world->collision)
 {
 	//controller.reset(new OldCharacterController(world->collision, 0.5f, 1.8f*0.5f, 0.25f, 58.0f));
 	//controller->get_object().set_data(std::make_shared<GameObjectCollision>(this));

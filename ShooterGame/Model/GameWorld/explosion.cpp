@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "explosion.h"
 #include "game_world.h"
-#include "game_object_collision.h"
+#include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
@@ -65,18 +65,17 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 	for (int i = 0; i < test->hit_count(); i++)
 	{
 		Physics3DObjectPtr obj = test->hit_object(i);
-		std::shared_ptr<GameObjectCollision> obj_collision = obj->data<GameObjectCollision>();
-		if (obj_collision && dynamic_cast<PlayerPawn*>(obj_collision->obj))
+		PlayerPawn *pawn = obj->data<PlayerPawn>();
+		if (pawn)
 		{
-			float normalized_distance = std::min(pos.distance(static_cast<PlayerPawn*>(obj_collision->obj)->get_position()) / radius, 1.0f);
+			float normalized_distance = std::min(pos.distance(pawn->get_position()) / radius, 1.0f);
 			float player_damage = damage * (1.0f - normalized_distance);
 
-			static_cast<PlayerPawn*>(obj_collision->obj)->apply_damage(world->net_tick, player_damage);
+			pawn->apply_damage(world->net_tick, player_damage);
 
 			//Console::write_line("normalized_distance = %1, player_damage = %2", normalized_distance, player_damage);
 		}
 	}
-
 }
 
 Explosion::~Explosion()

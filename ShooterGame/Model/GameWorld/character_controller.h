@@ -1,12 +1,6 @@
 
 #pragma once
 
-class CollisionEntity
-{
-public:
-	virtual ~CollisionEntity() { }
-};
-
 class EulerRotation
 {
 public:
@@ -25,7 +19,7 @@ public:
 	float tilt = 0.0f;
 };
 
-class CharacterController : public CollisionEntity
+class CharacterController
 {
 public:
 	CharacterController(const Physics3DWorldPtr &collision_world);

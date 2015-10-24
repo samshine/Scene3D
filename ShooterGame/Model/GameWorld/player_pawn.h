@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "game_object.h"
+#include "collision_game_object.h"
 #include "character_controller.h"
 #include "weapon.h"
 
@@ -55,7 +55,7 @@ public:
 	float dodge_cooldown = 0.0f;
 };
 
-class PlayerPawn : public GameObject
+class PlayerPawn : public CollisionGameObject
 {
 public:
 	PlayerPawn(GameWorld *world);

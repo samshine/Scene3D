@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "player_ragdoll.h"
 #include "game_world.h"
-#include "game_object_collision.h"
+#include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 

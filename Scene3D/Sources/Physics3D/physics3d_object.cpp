@@ -174,6 +174,16 @@ void Physics3DObjectImpl::set_debug_drawn(bool enable)
 		object->setCollisionFlags(object->getCollisionFlags() & (~btCollisionObject::CF_DISABLE_VISUALIZE_OBJECT));
 }
 
+Physics3DDataObject *Physics3DObjectImpl::data_object()
+{
+	return static_cast<Physics3DDataObject*>(object->getUserPointer());
+}
+
+void Physics3DObjectImpl::set_data(Physics3DDataObject *obj)
+{
+	object->setUserPointer(obj);
+}
+
 void Physics3DObjectImpl::set_mass(float mass, const Vec3f &local_inertia)
 {
 	btRigidBody *body = btRigidBody::upcast(object.get());

@@ -3,7 +3,7 @@
 #include "bullet.h"
 #include "explosion.h"
 #include "game_world.h"
-#include "game_object_collision.h"
+#include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
@@ -84,11 +84,9 @@ void Bullet::tick(const GameTick &tick)
 
 	if (ray_test->test(last_pos, pos))
 	{
-		std::shared_ptr<GameObjectCollision> obj_collision = ray_test->hit_object()->data<GameObjectCollision>();
-		if (obj_collision && dynamic_cast<PlayerPawn*>(obj_collision->obj))
-		{
-			static_cast<PlayerPawn*>(obj_collision->obj)->apply_damage(tick, damage);
-		}
+		PlayerPawn *pawn = ray_test->hit_object()->data<PlayerPawn>();
+		if (pawn)
+			pawn->apply_damage(tick, damage);
 
 		if (bounce)
 		{

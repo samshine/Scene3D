@@ -163,9 +163,9 @@
     <ClInclude Include="Model\GameWorld\explosion.h" />
     <ClInclude Include="Model\GameWorld\flag.h" />
     <ClInclude Include="Model\GameWorld\game_object.h" />
-    <ClInclude Include="Model\GameWorld\game_object_collision.h" />
     <ClInclude Include="Model\GameWorld\game_tick.h" />
     <ClInclude Include="Model\GameWorld\game_world.h" />
+    <ClInclude Include="Model\GameWorld\collision_game_object.h" />
     <ClInclude Include="Model\GameWorld\player_list.h" />
     <ClInclude Include="Model\GameWorld\player_pawn.h" />
     <ClInclude Include="Model\GameWorld\player_ragdoll.h" />
