@@ -59,13 +59,14 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 
 	// Check if we hit anyone nearby
 	auto shape = Physics3DShape::sphere(radius);
-	auto sphere = Physics3DObject::collision_body(world->collision, shape, pos, orientation);
-	auto test = Physics3DContactTest::create(world->collision);
-	test->test(sphere);
-	for (int i = 0; i < test->hit_count(); i++)
+
+	std::map<Physics3DObject *, bool> hits;
+	for (const auto &contact : world->collision->contact_test_all(shape, pos, orientation))
+		hits[contact.object] = true;
+
+	for (auto it : hits)
 	{
-		Physics3DObjectPtr obj = test->hit_object(i);
-		PlayerPawn *pawn = obj->data<PlayerPawn>();
+		PlayerPawn *pawn = it.first->data<PlayerPawn>();
 		if (pawn)
 		{
 			float normalized_distance = std::min(pos.distance(pawn->get_position()) / radius, 1.0f);

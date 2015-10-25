@@ -23,8 +23,6 @@
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
-    <ClInclude Include="Include\Physics3D\physics3d_contact_pair_test.h" />
-    <ClInclude Include="Include\Physics3D\physics3d_contact_test.h" />
     <ClInclude Include="Include\Physics3D\physics3d_object.h" />
     <ClInclude Include="Include\Physics3D\physics3d_shape.h" />
     <ClInclude Include="Include\Physics3D\physics3d_world.h" />
@@ -276,8 +274,6 @@
     <ClInclude Include="Sources\Physics3D\Bullet\vectormath\sse\vec_aos.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\vectormath\vmInclude.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_constraint_impl.h" />
-    <ClInclude Include="Sources\Physics3D\physics3d_contact_pair_test_impl.h" />
-    <ClInclude Include="Sources\Physics3D\physics3d_contact_test_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_object_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_shape_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_world_impl.h" />
@@ -490,8 +486,6 @@
     <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btSerializer.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\LinearMath\btVector3.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_constraint.cpp" />
-    <ClCompile Include="Sources\Physics3D\physics3d_contact_pair_test.cpp" />
-    <ClCompile Include="Sources\Physics3D\physics3d_contact_test.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_object.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_shape.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_world.cpp" />

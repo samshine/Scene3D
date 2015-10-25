@@ -317,7 +317,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		float max_zoom_out = 15.0f;
 		Vec3f ideal_look_pos = look_pos + look_dir.rotate_vector(Vec3f(0.0f, 0.0f, -max_zoom_out));
 
-		auto hit = world()->collision->sweep_test_nearest(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf(), 0.0f, [&](const Physics3DTestResult &result)
+		auto hit = world()->collision->sweep_test_nearest(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf(), 0.0f, [&](const Physics3DHit &result)
 		{
 			return result.object->data<CollisionGameObject>() == nullptr; // Ignore all game objects
 		});

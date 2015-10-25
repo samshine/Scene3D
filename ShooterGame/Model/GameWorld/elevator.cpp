@@ -192,7 +192,7 @@ bool Elevator::test_start_trigger()
 {
 	Vec3f trigger_pos = pos1 + Vec3f(0.0, 1.0f, 0.0f);
 
-	return world()->collision->sweep_test_any(box_shape, pos1, orientation, trigger_pos, orientation, 0.0f, [](const Physics3DTestResult &result)
+	return world()->collision->sweep_test_any(box_shape, pos1, orientation, trigger_pos, orientation, 0.0f, [](const Physics3DHit &result)
 	{
 		return result.object->data<PlayerPawn>() != nullptr;
 	});

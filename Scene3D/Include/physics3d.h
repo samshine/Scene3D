@@ -2,8 +2,6 @@
 #pragma once
 
 #include "Physics3D/physics3d_constraint.h"
-#include "Physics3D/physics3d_contact_pair_test.h"
-#include "Physics3D/physics3d_contact_test.h"
 #include "Physics3D/physics3d_object.h"
 #include "Physics3D/physics3d_shape.h"
 #include "Physics3D/physics3d_world.h"
