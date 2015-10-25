@@ -26,9 +26,7 @@
     <ClInclude Include="Include\Physics3D\physics3d_contact_pair_test.h" />
     <ClInclude Include="Include\Physics3D\physics3d_contact_test.h" />
     <ClInclude Include="Include\Physics3D\physics3d_object.h" />
-    <ClInclude Include="Include\Physics3D\physics3d_ray_test.h" />
     <ClInclude Include="Include\Physics3D\physics3d_shape.h" />
-    <ClInclude Include="Include\Physics3D\physics3d_sweep_test.h" />
     <ClInclude Include="Include\Physics3D\physics3d_world.h" />
     <ClInclude Include="Include\scene3d.h" />
     <ClInclude Include="Include\Scene3D\LevelData\level_data.h" />
@@ -281,9 +279,7 @@
     <ClInclude Include="Sources\Physics3D\physics3d_contact_pair_test_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_contact_test_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_object_impl.h" />
-    <ClInclude Include="Sources\Physics3D\physics3d_ray_test_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_shape_impl.h" />
-    <ClInclude Include="Sources\Physics3D\physics3d_sweep_test_impl.h" />
     <ClInclude Include="Sources\Physics3D\physics3d_world_impl.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\Scene3D\Culling\OctTree\oct_tree.h" />
@@ -497,9 +493,7 @@
     <ClCompile Include="Sources\Physics3D\physics3d_contact_pair_test.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_contact_test.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_object.cpp" />
-    <ClCompile Include="Sources\Physics3D\physics3d_ray_test.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_shape.cpp" />
-    <ClCompile Include="Sources\Physics3D\physics3d_sweep_test.cpp" />
     <ClCompile Include="Sources\Physics3D\physics3d_world.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

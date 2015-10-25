@@ -114,7 +114,6 @@ void LightmapTexture::raytrace_visible_lights(std::shared_ptr<LightmapBuffers> &
 
 	Vec3f diffuse_contribution;
 
-	//auto ray_test = Physics3DRayTest::create(world);
 	for (const auto &light : model_data->lights)
 	{
 		Vec3f light_pos = light.position.get_single_value();
@@ -124,7 +123,7 @@ void LightmapTexture::raytrace_visible_lights(std::shared_ptr<LightmapBuffers> &
 		if (distance_to_light > light.attenuation_end.get_single_value())
 			continue;
 
-		//if (!ray_test.test(fragment_pos + fragment_normal * margin, light_pos))
+		//if (!world->ray_test_any(fragment_pos + fragment_normal * margin, light_pos))
 		if (!TriangleMeshShape::find_any_hit(triangle_mesh.get(), fragment_pos + fragment_normal * margin, light_pos))
 		{
 			Vec3f light_direction = (distance_to_light > 0.0f) ? fragment_to_light * (1.0f / distance_to_light) : Vec3f();
@@ -166,13 +165,13 @@ void LightmapTexture::shooting_rays()
 			}
 			dir.normalize();
 
-			auto ray_test = Physics3DRayTest::create(world);
-			if (ray_test->test(pos, pos + dir * attenuation_end))
+			auto ray_hit = world->ray_test_nearest(pos, pos + dir * attenuation_end);
+			if (ray_hit)
 			{
-				float length_travelled = ray_test->hit_fraction() * attenuation_end;
+				float length_travelled = ray_hit.fraction * attenuation_end;
 
-				Vec3f new_pos = ray_test->hit_position() + ray_test->hit_normal() * margin;
-				float lambertian_diffuse_contribution = std::max(Vec3f::dot(ray_test->hit_normal(), -dir), 0.0f);
+				Vec3f new_pos = ray_hit.position + ray_hit.normal * margin;
+				float lambertian_diffuse_contribution = std::max(Vec3f::dot(ray_hit.normal, -dir), 0.0f);
 
 				float radian_emittance = 0.5f;
 

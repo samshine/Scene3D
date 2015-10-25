@@ -113,12 +113,9 @@ void Elevator::tick_moving_up(const GameTick &tick)
 	Vec3f from_pos = mix(pos1, pos2, time);
 	Vec3f to_pos = mix(pos1, pos2, new_time);
 
-	auto test = Physics3DSweepTest::create(world()->collision);
-	test->test_all_hits(box_shape, from_pos, orientation, to_pos, orientation);
-	for (int i = 0; i < test->hit_count(); i++)
+	for (const auto &hit : world()->collision->sweep_test_all(box_shape, from_pos, orientation, to_pos, orientation))
 	{
-		Physics3DObjectPtr obj = test->hit_object(i);
-		PlayerPawn *hit_player = obj->data<PlayerPawn>();
+		PlayerPawn *hit_player = hit.object->data<PlayerPawn>();
 		if (hit_player)
 		{
 			hit_player->ground_moved(to_pos - from_pos);
@@ -195,20 +192,10 @@ bool Elevator::test_start_trigger()
 {
 	Vec3f trigger_pos = pos1 + Vec3f(0.0, 1.0f, 0.0f);
 
-	auto test = Physics3DSweepTest::create(world()->collision);
-	test->test_all_hits(box_shape, pos1, orientation, trigger_pos, orientation);
-
-	for (int i = 0; i < test->hit_count(); i++)
+	return world()->collision->sweep_test_any(box_shape, pos1, orientation, trigger_pos, orientation, 0.0f, [](const Physics3DTestResult &result)
 	{
-		Physics3DObjectPtr obj = test->hit_object(i);
-		PlayerPawn *hit_player = obj->data<PlayerPawn>();
-		if (hit_player)
-		{
-			return true;
-		}
-	}
-
-	return false;
+		return result.object->data<PlayerPawn>() != nullptr;
+	});
 }
 
 std::shared_ptr<ModelData> Elevator::create_box()

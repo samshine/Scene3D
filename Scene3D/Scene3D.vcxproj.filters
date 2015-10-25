@@ -210,13 +210,7 @@
     <ClInclude Include="Include\Physics3D\physics3d_object.h">
       <Filter>Include\Physics3D</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Physics3D\physics3d_ray_test.h">
-      <Filter>Include\Physics3D</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Physics3D\physics3d_shape.h">
-      <Filter>Include\Physics3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Physics3D\physics3d_sweep_test.h">
       <Filter>Include\Physics3D</Filter>
     </ClInclude>
     <ClInclude Include="Include\Physics3D\physics3d_world.h">
@@ -345,13 +339,7 @@
     <ClInclude Include="Sources\Physics3D\physics3d_object_impl.h">
       <Filter>Sources\Physics3D</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Physics3D\physics3d_ray_test_impl.h">
-      <Filter>Sources\Physics3D</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Physics3D\physics3d_shape_impl.h">
-      <Filter>Sources\Physics3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Physics3D\physics3d_sweep_test_impl.h">
       <Filter>Sources\Physics3D</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Physics3D\physics3d_world_impl.h">
@@ -1268,13 +1256,7 @@
     <ClCompile Include="Sources\Physics3D\physics3d_object.cpp">
       <Filter>Sources\Physics3D</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Physics3D\physics3d_ray_test.cpp">
-      <Filter>Sources\Physics3D</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Physics3D\physics3d_shape.cpp">
-      <Filter>Sources\Physics3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Physics3D\physics3d_sweep_test.cpp">
       <Filter>Sources\Physics3D</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Physics3D\physics3d_world.cpp">

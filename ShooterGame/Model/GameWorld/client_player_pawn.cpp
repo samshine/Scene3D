@@ -12,7 +12,6 @@ ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
 	camera = SceneCamera::create(world->client->scene);
 	camera_shape = Physics3DShape::sphere(0.5f);
-	camera_sweep_test = Physics3DSweepTest::create(world->collision);
 }
 
 ClientPlayerPawn::~ClientPlayerPawn()
@@ -318,21 +317,14 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		float max_zoom_out = 15.0f;
 		Vec3f ideal_look_pos = look_pos + look_dir.rotate_vector(Vec3f(0.0f, 0.0f, -max_zoom_out));
 
-		int wall_hit_index = -1;
-		camera_sweep_test->test_all_hits(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf());
-		for (int i = 0; i < camera_sweep_test->hit_count(); i++)
+		auto hit = world()->collision->sweep_test_nearest(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf(), 0.0f, [&](const Physics3DTestResult &result)
 		{
-			CollisionGameObject *obj_collision = camera_sweep_test->hit_object(i)->data<CollisionGameObject>();
-			if (!obj_collision)
-			{
-				wall_hit_index = i;
-				break;
-			}
-		}
+			return result.object->data<CollisionGameObject>() == nullptr; // Ignore all game objects
+		});
 
-		if (wall_hit_index >= 0)
+		if (hit)
 		{
-			available_zoom_out = look_pos.distance(camera_sweep_test->hit_position(wall_hit_index));
+			available_zoom_out = look_pos.distance(hit.position);
 		}
 		else
 		{

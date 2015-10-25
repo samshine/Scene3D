@@ -12,8 +12,6 @@ using namespace uicore;
 Bullet::Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation)
 	: GameObject(world), pos(init_pos), orientation(init_orientation)
 {
-	ray_test = Physics3DRayTest::create(world->collision);
-
 	JsonValue desc = world->weapon_data["bullets"][type];
 
 	time_left = desc["lifespan"].to_float();
@@ -82,9 +80,10 @@ void Bullet::tick(const GameTick &tick)
 
 	velocity.y -= tick.time_elapsed * gravity;
 
-	if (ray_test->test(last_pos, pos))
+	auto ray_hit = world()->collision->ray_test_nearest(last_pos, pos);
+	if (ray_hit)
 	{
-		PlayerPawn *pawn = ray_test->hit_object()->data<PlayerPawn>();
+		PlayerPawn *pawn = ray_hit.object->data<PlayerPawn>();
 		if (pawn)
 			pawn->apply_damage(tick, damage);
 

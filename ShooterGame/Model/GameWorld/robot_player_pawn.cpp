@@ -40,8 +40,7 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 		auto eye_pos = get_position() + eye_offset;
 		auto target_eye_pos = target->get_position() + eye_offset;
 
-		auto ray_test = Physics3DRayTest::create(world()->collision);
-		bool line_of_sight = !ray_test->test(eye_pos, target_eye_pos);
+		bool line_of_sight = !world()->collision->ray_test_any(eye_pos, target_eye_pos);
 
 		if (line_of_sight)
 			last_seen_target_pos = target_eye_pos;
