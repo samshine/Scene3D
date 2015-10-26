@@ -29,7 +29,7 @@ protected:
 	uicore::Vec3f pos1, pos2;
 	uicore::Quaternionf orientation;
 
-	uicore::Vec3f box_size = uicore::Vec3f(7.0f, 0.2f, 9.0f);
+	uicore::Vec3f box_size = uicore::Vec3f(7.0f * 6.0f, 0.2f, 9.0f * 6.0f);
 	Physics3DShapePtr box_shape;
 	Physics3DObjectPtr body;
 

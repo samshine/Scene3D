@@ -131,13 +131,23 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 
 void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
-	sound = AudioObject::create(world()->client->audio);
-	sound->set_sound("Sound/Character/hurt1.ogg");
-	sound->set_attenuation_begin(1.0f);
-	sound->set_attenuation_end(100.0f);
-	sound->set_volume(1.0f);
-	sound->set_position(get_position());
-	sound->play();
+	if (!sound || !sound->playing())
+	{
+		sound = AudioObject::create(world()->client->audio);
+		switch (rand() * 4 / (RAND_MAX + 1))
+		{
+		default:
+		case 0: sound->set_sound("Sound/Character/hurt1.ogg"); break;
+		case 1: sound->set_sound("Sound/Character/hurt2.ogg"); break;
+		case 2: sound->set_sound("Sound/Character/hurt3.ogg"); break;
+		case 3: sound->set_sound("Sound/Character/hurt4.ogg"); break;
+		}
+		sound->set_attenuation_begin(1.0f);
+		sound->set_attenuation_end(20.0f);
+		sound->set_volume(0.5f);
+		sound->set_position(get_position());
+		sound->play();
+	}
 }
 
 void ClientPlayerPawn::tick(const GameTick &tick)

@@ -12,6 +12,8 @@ using namespace uicore;
 Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
 : GameObject(world), level_obj_id(level_obj_id), pos1(pos1), pos2(pos2), orientation(orientation)
 {
+	box_size.x *= scale;
+	box_size.z *= scale;
 	box_shape = Physics3DShape::box(box_size);
 	body = Physics3DObject::collision_body(world->collision, box_shape, pos1, orientation);
 	body->set_kinematic_object();
@@ -35,18 +37,8 @@ void Elevator::net_update(const GameTick &net_tick, const uicore::NetGameEvent &
 {
 	if (world()->client)
 	{
-		int age = std::max(net_tick.arrival_tick_time - net_tick.receive_tick_time, 0);
-
 		state = (State)net_event.get_argument(1).get_integer();
 		time = net_event.get_argument(2).get_number();
-
-		for (int i = 0; i < age; i++)
-		{
-			GameTick past_tick = net_tick;
-			past_tick.receive_tick_time += i;
-			past_tick.arrival_tick_time += i;
-			tick(past_tick);
-		}
 	}
 }
 

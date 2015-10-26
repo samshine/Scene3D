@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "character_controller.h"
+#include "player_pawn.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -128,7 +129,11 @@ bool CharacterController::step_move(uicore::Vec3f move_vec)
 		Vec3f to_pos = position + move_vec;
 		Quaternionf orientation;
 
-		auto hits = collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd);
+		auto hits = collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd, [](const Physics3DHit &result)
+		{
+			return result.object->data<PlayerPawn>() == nullptr;
+		});
+
 		if (!hits.empty())
 		{
 			// Look for a floor/ceiling first as multiple faces might have contact at face edges
@@ -233,7 +238,11 @@ void CharacterController::apply_velocity(float tick_elapsed)
 		Vec3f to_pos = position + velocity * (1.0f - t) * tick_elapsed;
 		Quaternionf orientation;
 		bool found = false;
-		for (const auto &hit : collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd))
+		auto hits = collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd, [](const Physics3DHit &result)
+		{
+			return result.object->data<PlayerPawn>() == nullptr;
+		});
+		for (const auto &hit : hits)
 		{
 			//if (Vec3f::dot(velocity, hit.normal) > 0)
 			//	continue;
