@@ -176,12 +176,12 @@ void Physics3DObjectImpl::set_debug_drawn(bool enable)
 
 Physics3DDataObject *Physics3DObjectImpl::data_object()
 {
-	return static_cast<Physics3DDataObject*>(object->getUserPointer());
+	return data;
 }
 
 void Physics3DObjectImpl::set_data(Physics3DDataObject *obj)
 {
-	object->setUserPointer(obj);
+	data = obj;
 }
 
 void Physics3DObjectImpl::set_mass(float mass, const Vec3f &local_inertia)

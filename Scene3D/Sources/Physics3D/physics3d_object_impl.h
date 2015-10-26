@@ -56,4 +56,5 @@ public:
 	Physics3DWorldImpl *world;
 	Physics3DShapePtr shape;
 	std::unique_ptr<btCollisionObject> object;
+	Physics3DDataObject *data = nullptr;
 };

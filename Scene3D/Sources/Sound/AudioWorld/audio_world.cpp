@@ -70,8 +70,9 @@ void AudioWorldImpl::update_session(AudioObjectImpl *obj)
 	if (obj->_attenuation_begin != obj->_attenuation_end)
 	{
 		// Calculate volume from distance
-		float distance = obj->_position.distance(_listener_position);
-		float t = 1.0f - smoothstep(obj->_attenuation_begin, obj->_attenuation_end, distance);
+		float distance = (obj->_position - _listener_position).length();
+		float t = 1.0f - clamp((distance - obj->_attenuation_begin) / (obj->_attenuation_end - obj->_attenuation_begin), 0.0f, 1.0f);
+		t = t * t;
 
 		// Calculate pan from ear angle
 		Vec3f sound_direction = Vec3f::normalize(obj->_position - _listener_position);
