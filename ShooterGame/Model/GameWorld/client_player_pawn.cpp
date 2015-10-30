@@ -201,7 +201,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 
 		auto sound_land = AudioObject::create(world()->client->audio);
 
-		shake_camera(0.05f, 0.2f);
+		shake_camera(0.04f, 0.2f);
 
 		if (character_controller.get_land_impact() > 17.0f)
 		{
@@ -270,6 +270,9 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 	if (anim != last_anim)
 	{
 		last_anim = anim;
+
+		if (anim == "jump" || anim == "dodge-left" || anim == "dodge-right" || anim == "dodge-forward" || anim == "dodge-backward")
+			shake_camera(0.04f, 0.2f);
 
 		if (anim == "jump")
 		{
