@@ -147,6 +147,16 @@ Physics3DConstraintImpl::~Physics3DConstraintImpl()
 		world->dynamics_world->removeConstraint(constraint.get());
 }
 
+void Physics3DConstraintImpl::set_cone_twist_limit(float swing_span1, float swing_span2, float twist_span, float softness, float bias_factor, float relaxation_factor)
+{
+	static_cast<btConeTwistConstraint*>(constraint.get())->setLimit(swing_span1, swing_span2, twist_span, softness, bias_factor, relaxation_factor);
+}
+
+void Physics3DConstraintImpl::set_hinge_limit(float low, float high, float softness, float bias_factor, float relaxation_factor)
+{
+	static_cast<btHingeConstraint*>(constraint.get())->setLimit(low, high, softness, bias_factor, relaxation_factor);
+}
+
 void Physics3DConstraintImpl::set_linear_lower_limit(const Vec3f &limit)
 {
 	static_cast<btGeneric6DofConstraint*>(constraint.get())->setLinearLowerLimit(btVector3(limit.x, limit.y, limit.z));

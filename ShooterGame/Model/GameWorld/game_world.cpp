@@ -180,6 +180,12 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		add(pawn);
 		server_player_pawns["server"] = pawn;
 	}
+	else
+	{
+		float random = rand() / (float)RAND_MAX;
+		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
+		add(std::make_shared<PlayerRagdoll>(this, spawn_points[spawn_index]->pos + Vec3f(0.0f, 7.0f, 0.0f), Quaternionf()));
+	}
 }
 
 GameWorld::~GameWorld()

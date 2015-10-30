@@ -12,23 +12,7 @@ public:
 	void tick(const GameTick &tick) override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
-protected:
-	std::shared_ptr<ModelData> create_box(const uicore::Vec3f &box_size);
-
-	SceneObjectPtr scene_object1;
-	SceneObjectPtr scene_object2;
-
-	Physics3DConstraintPtr hinge_constraint;
-	Physics3DObjectPtr physics_object1;
-	Physics3DObjectPtr physics_object2;
-
-	uicore::Vec3f prev_pos1, next_pos1;
-	uicore::Vec3f prev_pos2, next_pos2;
-	uicore::Quaternionf prev_orientation1, next_orientation1;
-	uicore::Quaternionf prev_orientation2, next_orientation2;
-
-	bool first_tick = true;
-
+private:
 	enum PartName
 	{
 		part_torso,
@@ -58,7 +42,25 @@ protected:
 		total_joints
 	};
 
-	Physics3DShape shapes[total_parts];
+	void calc_constraint_location(JointName joint, PartName part_a, uicore::Vec3f pos_a, PartName part_b, uicore::Vec3f pos_b, uicore::Quaternionf rotation);
+
+	SceneObjectPtr scene_box(const uicore::Vec3f &box_size);
+	SceneObjectPtr scene_capsule(float radius, float height);
+
+	std::shared_ptr<ModelData> create_box(const uicore::Vec3f &box_size);
+
+	bool first_tick = true;
+
+	SceneObjectPtr objects[total_parts];
+	uicore::Vec3f prev_pos[total_parts], next_pos[total_parts];
+	uicore::Quaternionf prev_orientation[total_parts], next_orientation[total_parts];
+
+	Physics3DShapePtr shapes[total_parts];
 	Physics3DObjectPtr parts[total_parts];
+	float mass[total_parts];
 	Physics3DConstraintPtr joints[total_joints];
+	uicore::Vec3f joints_pos_a[total_joints];
+	uicore::Vec3f joints_pos_b[total_joints];
+	uicore::Quaternionf joints_rotate_a[total_joints];
+	uicore::Quaternionf joints_rotate_b[total_joints];
 };
