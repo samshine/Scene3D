@@ -7,21 +7,11 @@ using namespace uicore;
 
 RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
 {
-
 }
 
 void RobotPlayerPawn::tick(const GameTick &tick)
 {
 	ServerPlayerPawn::tick(tick);
-
-	std::shared_ptr<ServerPlayerPawn> target = nullptr;
-
-	for (auto it : world()->server_player_pawns)
-	{
-		auto other_pawn = it.second;
-		if (other_pawn.get() != this)
-			target = other_pawn;
-	}
 
 	cur_movement.key_forward.next_pressed = false;
 	cur_movement.key_back.next_pressed = false;
@@ -34,6 +24,28 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 
 	move_cooldown = std::max(move_cooldown - tick.time_elapsed, 0.0f);
 	weapon_change_cooldown = std::max(weapon_change_cooldown - tick.time_elapsed, 0.0f);
+
+	switch (mode)
+	{
+	case RobotPlayerMode::idle: tick_idle(tick); break;
+	case RobotPlayerMode::follow: tick_follow(tick); break;
+	}
+}
+
+void RobotPlayerPawn::tick_idle(const GameTick &tick)
+{
+}
+
+void RobotPlayerPawn::tick_follow(const GameTick &tick)
+{
+	std::shared_ptr<ServerPlayerPawn> target = nullptr;
+
+	for (auto it : world()->server_player_pawns)
+	{
+		auto other_pawn = it.second;
+		if (other_pawn.get() != this)
+			target = other_pawn;
+	}
 
 	if (target)
 	{
