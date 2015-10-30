@@ -201,6 +201,8 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 
 		auto sound_land = AudioObject::create(world()->client->audio);
 
+		shake_camera(0.05f, 0.2f);
+
 		if (character_controller.get_land_impact() > 17.0f)
 		{
 			sound_land->set_volume(0.5f);
@@ -320,6 +322,10 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	Quaternionf look_dir = Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, angle_degrees, order_YXZ);
 	Vec3f look_pos = mix(last_position, next_position, interpolated_time) + eye_offset;
 
+	shake_timer = std::max(shake_timer - time_elapsed * shake_speed, 0.0f);
+	if (shake_timer > 0.0f)
+		look_pos.y += std::sin(shake_timer * 2.0f * PI) * shake_magnitude;
+
 	float available_zoom_out = 0.0f;
 
 	if (!first_person_camera)
@@ -385,6 +391,16 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	camera->set_orientation(look_dir);
 
 	weapon->frame(time_elapsed, interpolated_time);
+}
+
+void ClientPlayerPawn::shake_camera(float magnitude, float duration)
+{
+	if (shake_timer == 0.0f)
+	{
+		shake_magnitude = magnitude;
+		shake_timer = 1.0f;
+		shake_speed = 1.0f / duration;
+	}
 }
 
 /*
