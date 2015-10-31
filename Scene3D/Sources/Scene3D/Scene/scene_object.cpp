@@ -119,6 +119,16 @@ void SceneObjectImpl::attachment_location(const std::string &name, Vec3f &attach
 	attach_scale = scale();
 }
 
+void SceneObjectImpl::set_bone_positions(const std::vector<uicore::Vec3f> &positions)
+{
+	instance.ragdoll_bone_positions = positions;
+}
+
+void SceneObjectImpl::set_bone_orientations(const std::vector<uicore::Quaternionf> &orientations)
+{
+	instance.ragdoll_bone_orientations = orientations;
+}
+
 void SceneObjectImpl::create_lights(const ScenePtr &scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;

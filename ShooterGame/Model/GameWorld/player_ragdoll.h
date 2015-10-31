@@ -51,6 +51,7 @@ private:
 
 	bool first_tick = true;
 
+	SceneObjectPtr scene_object;
 	SceneObjectPtr objects[total_parts];
 	uicore::Vec3f prev_pos[total_parts], next_pos[total_parts];
 	uicore::Quaternionf prev_orientation[total_parts], next_orientation[total_parts];

@@ -57,7 +57,10 @@ public:
 
 	void get_attachment_location(const std::string &name, uicore::Vec3f &position, uicore::Quaternionf &orientation) const;
 
-	void get_bone_transform(const ModelDataBone &bone, uicore::Vec3f &position, uicore::Quaternionf &orientation) const;
+	void get_bone_transform(size_t bone_index, const ModelDataBone &bone, uicore::Vec3f &position, uicore::Quaternionf &orientation) const;
+
+	std::vector<uicore::Vec3f> ragdoll_bone_positions;
+	std::vector<uicore::Quaternionf> ragdoll_bone_orientations;
 
 private:
 	ModelAnimationTime last_anim;

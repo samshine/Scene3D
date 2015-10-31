@@ -20,6 +20,9 @@ public:
 	virtual void set_orientation(const uicore::Quaternionf &orientation) = 0;
 	virtual void set_scale(const uicore::Vec3f &scale) = 0;
 
+	virtual void set_bone_positions(const std::vector<uicore::Vec3f> &positions) = 0;
+	virtual void set_bone_orientations(const std::vector<uicore::Quaternionf> &orientations) = 0;
+
 	virtual bool light_probe_receiver() const = 0;
 	virtual void set_light_probe_receiver(bool enable) = 0;
 

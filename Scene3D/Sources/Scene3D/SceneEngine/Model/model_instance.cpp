@@ -59,7 +59,7 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 
 				Vec3f bone_position;
 				Quaternionf bone_orientation;
-				get_bone_transform(bone, bone_position, bone_orientation);
+				get_bone_transform(attachment.bone_selector, bone, bone_position, bone_orientation);
 
 				Mat4f transform = Mat4f::translate(bone_position) * bone_orientation.to_matrix();
 
@@ -74,12 +74,19 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 	}
 }
 
-void ModelInstance::get_bone_transform(const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation) const
+void ModelInstance::get_bone_transform(size_t bone_index, const ModelDataBone &bone, Vec3f &position, Quaternionf &orientation) const
 {
 	if (!renderer)
 	{
 		position = Vec3f();
 		orientation = Quaternionf();
+		return;
+	}
+
+	if (ragdoll_bone_positions.size() > bone_index && ragdoll_bone_orientations.size() > bone_index)
+	{
+		position = ragdoll_bone_positions[bone_index];
+		orientation = ragdoll_bone_orientations[bone_index];
 		return;
 	}
 

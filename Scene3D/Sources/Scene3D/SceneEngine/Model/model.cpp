@@ -121,7 +121,7 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 		{
 			Vec3f position;
 			Quaternionf orientation;
-			instances[j]->get_bone_transform(model_data->bones[i], position, orientation);
+			instances[j]->get_bone_transform(i, model_data->bones[i], position, orientation);
 
 			if (model_data->bones[i].billboarded)
 			{

@@ -32,6 +32,8 @@ public:
 	void moved(float units_moved) override;
 	void attachment_location(const std::string &name, uicore::Vec3f &position, uicore::Quaternionf &orientation, uicore::Vec3f &scale) const override;
 
+	void set_bone_positions(const std::vector<uicore::Vec3f> &positions) override;
+	void set_bone_orientations(const std::vector<uicore::Quaternionf> &orientations) override;
 
 
 	void create_lights(const ScenePtr &scene_base);

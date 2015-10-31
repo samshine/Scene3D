@@ -10,6 +10,9 @@ using namespace uicore;
 
 PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation) : GameObject(world)
 {
+	//auto model = SceneModel::create(world->client->scene, "Models/Kachujin/Kachujin.cmodel");
+	//scene_object = SceneObject::create(world->client->scene, model);
+
 	objects[part_torso] = scene_box(Vec3f(0.35f, 0.625f, 0.275f));
 	objects[part_head] = scene_box(Vec3f(0.175f, 0.2f, 0.2f));
 	objects[part_upper_arm_right] = scene_capsule(0.1f, 0.55f);
@@ -148,6 +151,17 @@ void PlayerRagdoll::tick(const GameTick &tick)
 
 void PlayerRagdoll::frame(float time_elapsed, float interpolated_time)
 {
+	/*
+	std::vector<Vec3f> positions;
+	std::vector<Quaternionf> rotations;
+	positions.resize(30);
+	rotations.resize(30);
+	scene_object->set_bone_positions(positions);
+	scene_object->set_bone_orientations(rotations);
+	scene_object->set_position(mix(prev_pos[part_torso], next_pos[part_torso], interpolated_time) + Vec3f(0.0f, 4.0f, 0.0f));
+	scene_object->set_orientation(Quaternionf::slerp(prev_orientation[part_torso], next_orientation[part_torso], interpolated_time));
+	*/
+
 	for (int i = 0; i < total_parts; i++)
 	{
 		objects[i]->update(time_elapsed);
