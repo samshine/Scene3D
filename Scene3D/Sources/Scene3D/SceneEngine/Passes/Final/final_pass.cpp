@@ -3,19 +3,23 @@
 #include "final_pass.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "vertex_present_glsl.h"
+#include "vertex_present_hlsl.h"
+#include "fragment_present_glsl.h"
+#include "fragment_present_hlsl.h"
 
 using namespace uicore;
 
-FinalPass::FinalPass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+FinalPass::FinalPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");
+		present_shader = ShaderSetup::compile(gc, "present", vertex_present_glsl(), fragment_present_glsl(), "");
 		present_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "Final/fragment_present.hlsl"), "");
+		present_shader = ShaderSetup::compile(gc, "present", vertex_present_hlsl(), fragment_present_hlsl(), "");
 	}
 	if (!present_shader->try_link())
 		throw Exception("Shader linking failed!");

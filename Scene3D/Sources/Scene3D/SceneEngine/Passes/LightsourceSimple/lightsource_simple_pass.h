@@ -14,14 +14,14 @@ class SceneImpl;
 class LightsourceSimplePass : public ScenePass
 {
 public:
-	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout);
+	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	~LightsourceSimplePass();
 
 	std::string name() const override { return "light"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
 private:
-	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &shader_path, const std::string &type);
+	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &vertex, const std::string &fragment, const std::string &defines = std::string());
 
 	void setup(const uicore::GraphicContextPtr &gc);
 	void find_lights(const uicore::GraphicContextPtr &gc, SceneImpl *scene);

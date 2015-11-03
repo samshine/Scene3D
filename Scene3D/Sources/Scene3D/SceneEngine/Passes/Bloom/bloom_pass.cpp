@@ -3,22 +3,26 @@
 #include "bloom_pass.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "vertex_bloom_extract_glsl.h"
+#include "vertex_bloom_extract_hlsl.h"
+#include "fragment_bloom_extract_glsl.h"
+#include "fragment_bloom_extract_hlsl.h"
 
 using namespace uicore;
 
-BloomPass::BloomPass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+BloomPass::BloomPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.glsl"), "");
+		bloom_shader = ShaderSetup::compile(gc, "bloom extract", vertex_bloom_extract_glsl(), fragment_bloom_extract_glsl(), "");
 		bloom_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.hlsl"), "");
+		bloom_shader = ShaderSetup::compile(gc, "bloom extract", vertex_bloom_extract_hlsl(), fragment_bloom_extract_hlsl(), "");
 	}
 
-	ShaderSetup::link(bloom_shader, "bloom extract program");
+	ShaderSetup::link(bloom_shader, "bloom extract");
 
 	bloom_shader->bind_attribute_location(0, "PositionInProjection");
 	bloom_shader->set_uniform1i("FinalColors", 0);

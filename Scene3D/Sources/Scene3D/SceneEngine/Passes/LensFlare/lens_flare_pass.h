@@ -8,7 +8,7 @@
 class LensFlarePass : public ScenePass
 {
 public:
-	LensFlarePass(const std::string &shader_path, SceneRender &inout);
+	LensFlarePass(SceneRender &inout);
 	std::string name() const override { return "lensflare"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
@@ -21,7 +21,6 @@ private:
 		uicore::Mat4f eye_to_projection;
 	};
 
-	std::string shader_path;
 	SceneRender &inout;
 
 	uicore::BlendStatePtr blend_state;

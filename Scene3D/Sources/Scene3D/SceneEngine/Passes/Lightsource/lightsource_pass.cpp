@@ -9,20 +9,24 @@
 #include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
+#include "cull_tiles_glsl.h"
+#include "cull_tiles_hlsl.h"
+#include "render_tiles_glsl.h"
+#include "render_tiles_hlsl.h"
 
 using namespace uicore;
 
-LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.glsl"));
-		render_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/render_tiles.glsl"));
+		cull_tiles_program = compile_and_link(gc, "cull tiles", cull_tiles_glsl());
+		render_tiles_program = compile_and_link(gc, "render tiles", render_tiles_glsl());
 	}
 	else
 	{
-		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.hlsl"));
-		render_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/render_tiles.hlsl"));
+		cull_tiles_program = compile_and_link(gc, "cull tiles", cull_tiles_hlsl());
+		render_tiles_program = compile_and_link(gc, "render tiles", render_tiles_hlsl());
 	}
 
 	compute_uniforms = UniformVector<Uniforms>(gc, 1);
@@ -221,10 +225,8 @@ void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
 	}
 }
 
-ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, const std::string &compute_filename, const std::string &defines)
+ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, const std::string &program_name, const std::string &source, const std::string &defines)
 {
-	std::string source = File::read_all_text(compute_filename);
-
 	std::string prefix;
 	std::vector<std::string> define_list = Text::split(defines, " ");
 	for (size_t i = 0; i < define_list.size(); i++)
@@ -233,12 +235,12 @@ ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, 
 
 	auto compute_shader = ShaderObject::create(gc, ShaderType::compute, prefix + source);
 	if (!compute_shader->try_compile())
-		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader->info_log()));
+		throw Exception(string_format("Unable to compile %1 compute shader: %2", program_name, compute_shader->info_log()));
 
 	auto program = ProgramObject::create(gc);
 	program->attach(compute_shader);
 	if (!program->try_link())
-		throw Exception(string_format("Failed to link %1: %2", compute_filename, program->get_info_log()));
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
 
 	// Uniforms
 	program->set_uniform_buffer_index("Uniforms", 0);

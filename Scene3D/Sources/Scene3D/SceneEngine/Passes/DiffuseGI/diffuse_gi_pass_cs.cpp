@@ -3,26 +3,31 @@
 #include "diffuse_gi_pass_cs.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Scene/scene_impl.h"
+#include "accumulate_lpv_hlsl.h"
+#include "init_gv_hlsl.h"
+#include "init_lpv_hlsl.h"
+#include "propagate_lpv_hlsl.h"
+#include "render_result_hlsl.h"
 
 using namespace uicore;
 
-DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+DiffuseGIPassCS::DiffuseGIPassCS(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.glsl"));
-		init_gv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_gv.glsl"));
-		propagate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/propagate_lpv.glsl"));
-		accumulate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/accumulate_lpv.glsl"));
-		render_result_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/render_result.glsl"));
+		//init_lpv_program = compile_and_link(gc, "init lpv", init_lpv_glsl());
+		//init_gv_program = compile_and_link(gc, "init gv", init_gv_glsl());
+		//propagate_lpv_program = compile_and_link(gc, "propagate lpv", propagate_lpv_glsl());
+		//accumulate_lpv_program = compile_and_link(gc, "accumulate lpv", accumulate_lpv_glsl());
+		//render_result_program = compile_and_link(gc, "render result", render_result_glsl());
 	}
 	else
 	{
-		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.hlsl"));
-		init_gv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_gv.hlsl"));
-		propagate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/propagate_lpv.hlsl"));
-		accumulate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/accumulate_lpv.hlsl"));
-		render_result_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/render_result.hlsl"));
+		init_lpv_program = compile_and_link(gc, "init lpv", init_lpv_hlsl());
+		init_gv_program = compile_and_link(gc, "init gv", init_gv_hlsl());
+		propagate_lpv_program = compile_and_link(gc, "propagate lpv", propagate_lpv_hlsl());
+		accumulate_lpv_program = compile_and_link(gc, "accumulate lpv", accumulate_lpv_hlsl());
+		render_result_program = compile_and_link(gc, "render result", render_result_hlsl());
 	}
 }
 
@@ -59,18 +64,16 @@ void DiffuseGIPassCS::update_buffers(const GraphicContextPtr &gc)
 	ScopeTimeFunction();
 }
 
-ProgramObjectPtr DiffuseGIPassCS::compile_and_link(const GraphicContextPtr &gc, const std::string &compute_filename)
+ProgramObjectPtr DiffuseGIPassCS::compile_and_link(const GraphicContextPtr &gc, const std::string &program_name, const std::string &source)
 {
-	std::string source = File::read_all_text(compute_filename);
-
 	auto compute_shader = ShaderObject::create(gc, ShaderType::compute, source);
 	if (!compute_shader->try_compile())
-		throw Exception(string_format("Unable to compile %1 compute shader: %2", compute_filename, compute_shader->info_log()));
+		throw Exception(string_format("Unable to compile %1 compute shader: %2", program_name, compute_shader->info_log()));
 
 	auto program = ProgramObject::create(gc);
 	program->attach(compute_shader);
 	if (!program->try_link())
-		throw Exception(string_format("Failed to link %1: %2", compute_filename, program->get_info_log()));
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
 
 	// Uniforms
 	//program.set_uniform_buffer_index("Uniforms", 0);

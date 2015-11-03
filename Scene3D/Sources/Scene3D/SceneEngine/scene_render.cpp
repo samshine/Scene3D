@@ -4,9 +4,9 @@
 
 using namespace uicore;
 
-SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneEngineImpl *engine) : shader_path(shader_path)
+SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *engine)
 {
-	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
+	model_shader_cache = std::make_unique<ModelShaderCache>();
 
 	bool use_compute_shader_pass = true;
 
@@ -22,24 +22,24 @@ SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, const std::string 
 	// use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
 
 	passes.push_back(std::make_shared<GBufferPass>(*this));
-	passes.push_back(std::make_shared<SkyboxPass>(shader_path, *this));
+	passes.push_back(std::make_shared<SkyboxPass>(*this));
 	passes.push_back(std::make_shared<VSMShadowMapPass>(gc, *this));
 
 	if (use_compute_shader_pass)
 	{
-		passes.push_back(std::make_shared<LightsourcePass>(gc, shader_path, *this));
+		passes.push_back(std::make_shared<LightsourcePass>(gc, *this));
 	}
 	else
 	{
-		passes.push_back(std::make_shared<LightsourceSimplePass>(gc, shader_path, *this));
+		passes.push_back(std::make_shared<LightsourceSimplePass>(gc, *this));
 	}
 
 	passes.push_back(std::make_shared<TransparencyPass>(*this));
 	passes.push_back(std::make_shared<ParticleEmitterPass>(engine));
-	passes.push_back(std::make_shared<LensFlarePass>(shader_path, *this));
-	passes.push_back(std::make_shared<BloomPass>(gc, shader_path, *this));
-	//passes.push_back(std::make_shared<SSAOPass>(gc, shader_path, *this));
-	passes.push_back(std::make_shared<FinalPass>(gc, shader_path, *this));
+	passes.push_back(std::make_shared<LensFlarePass>(*this));
+	passes.push_back(std::make_shared<BloomPass>(gc, *this));
+	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));
+	passes.push_back(std::make_shared<FinalPass>(gc, *this));
 }
 
 void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)

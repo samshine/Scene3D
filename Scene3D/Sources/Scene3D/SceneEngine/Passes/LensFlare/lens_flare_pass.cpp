@@ -3,10 +3,12 @@
 #include "lens_flare_pass.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_light_impl.h"
+#include "vertex_lens_flare_hlsl.h"
+#include "fragment_lens_flare_hlsl.h"
 
 using namespace uicore;
 
-LensFlarePass::LensFlarePass(const std::string &shader_path, SceneRender &inout) : shader_path(shader_path), inout(inout)
+LensFlarePass::LensFlarePass(SceneRender &inout) : inout(inout)
 {
 }
 
@@ -77,9 +79,15 @@ void LensFlarePass::setup(const GraphicContextPtr &gc)
 {
 	if (!program)
 	{
-		std::string vertex_filename = PathHelp::combine(shader_path, "LensFlare/vertex.hlsl");
-		std::string fragment_filename = PathHelp::combine(shader_path, "LensFlare/fragment.hlsl");
-		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
+		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_lens_flare_hlsl());
+		vertex_shader->compile();
+
+		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_lens_flare_hlsl());
+		fragment_shader->compile();
+
+		program = ProgramObject::create(gc);
+		program->attach(vertex_shader);
+		program->attach(fragment_shader);
 		program->bind_attribute_location(0, "AttrPosition");
 		program->bind_frag_data_location(0, "FragColor");
 		if (!program->try_link())

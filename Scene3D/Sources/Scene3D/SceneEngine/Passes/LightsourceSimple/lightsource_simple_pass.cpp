@@ -8,13 +8,24 @@
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Performance/gpu_timer.h"
 #include <algorithm>
+#include "vertex_icosahedron_hlsl.h"
+#include "vertex_rect_hlsl.h"
+#include "fragment_light_hlsl.h"
 
 using namespace uicore;
 
-LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
-	icosahedron_light_program = compile_and_link(gc, shader_path, "icosahedron");
-	rect_light_program = compile_and_link(gc, shader_path, "rect");
+	if (gc->shader_language() == shader_glsl)
+	{
+		//icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_glsl(), fragment_light_glsl());
+		//rect_light_program = compile_and_link(gc, vertex_rect_glsl(), fragment_light_glsl(), "RECT_PASS");
+	}
+	else
+	{
+		icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_hlsl(), fragment_light_hlsl());
+		rect_light_program = compile_and_link(gc, vertex_rect_hlsl(), fragment_light_hlsl(), "RECT_PASS");
+	}
 
 	light_instance_texture = Texture1D::create(gc, max_lights * vectors_per_light, tf_rgba32f);
 	light_instance_transfer = PixelBuffer::create(max_lights * vectors_per_light, 1, tf_rgba32f);
@@ -26,14 +37,9 @@ LightsourceSimplePass::~LightsourceSimplePass()
 {
 }
 
-ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr &gc, const std::string &shader_path, const std::string &type)
+ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr &gc, const std::string &vertex_code, const std::string &fragment_code, const std::string &defines)
 {
-	ProgramObjectPtr program;
-
-	std::string vertex_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/vertex_%1.%2", type, gc->shader_language() == shader_glsl ? "glsl" : "hlsl"));
-	std::string fragment_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/fragment_light.%1", gc->shader_language() == shader_glsl ? "glsl" : "hlsl"));
-
-	program = ShaderSetup::compile(gc, "", vertex_filename, fragment_filename, type == "rect" ? "RECT_PASS" : "");
+	auto program = ShaderSetup::compile(gc, "lightsource simple", vertex_code, fragment_code, defines);
 
 	program->bind_frag_data_location(0, "FragColor");
 

@@ -2,19 +2,22 @@
 #include "precomp.h"
 #include "ssao_pass.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "vertex_ssao_extract_glsl.h"
+#include "vertex_ssao_extract_hlsl.h"
+#include "fragment_ssao_extract_glsl.h"
 
 using namespace uicore;
 
-SSAOPass::SSAOPass(const GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout) : inout(inout)
+SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.glsl"), "");
+		extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_glsl(), fragment_ssao_extract_glsl(), "");
 		extract_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.hlsl"), "");
+		//extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_hlsl(), fragment_ssao_extract_hlsl(), "");
 	}
 	ShaderSetup::link(extract_shader, "ssao extract program");
 	extract_shader->bind_attribute_location(0, "AttrPositionInProjection");

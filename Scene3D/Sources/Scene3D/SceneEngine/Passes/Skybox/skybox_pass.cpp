@@ -5,10 +5,16 @@
 #include "noise_2d.h"
 #include "noise_3d.h"
 #include "Scene3D/Scene/scene_impl.h"
+#include "vertex_billboard_hlsl.h"
+#include "vertex_cube_hlsl.h"
+#include "fragment_angular_hlsl.h"
+#include "fragment_billboard_hlsl.h"
+#include "fragment_cube_hlsl.h"
+#include "fragment_sphere_hlsl.h"
 
 using namespace uicore;
 
-SkyboxPass::SkyboxPass(const std::string &shader_path, SceneRender &inout) : shader_path(shader_path), inout(inout)
+SkyboxPass::SkyboxPass(SceneRender &inout) : inout(inout)
 {
 }
 
@@ -181,7 +187,15 @@ void SkyboxPass::create_billboard_program(const GraphicContextPtr &gc)
 {
 	billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 
-	billboard_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_billboard.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_billboard.hlsl"));
+	auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_billboard_hlsl());
+	vertex_shader->compile();
+
+	auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_billboard_hlsl());
+	fragment_shader->compile();
+
+	billboard_program = ProgramObject::create(gc);
+	billboard_program->attach(vertex_shader);
+	billboard_program->attach(fragment_shader);
 	billboard_program->bind_attribute_location(0, "AttrPosition");
 	billboard_program->bind_frag_data_location(0, "FragColor");
 	if (!billboard_program->try_link())
@@ -196,7 +210,15 @@ void SkyboxPass::create_cube_program(const GraphicContextPtr &gc)
 {
 	cube_positions = VertexArrayVector<Vec3f>(gc, cpu_cube_positions, 36);
 
-	cube_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_cube.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_sphere.hlsl"));
+	auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_cube_hlsl());
+	vertex_shader->compile();
+
+	auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_sphere_hlsl());
+	fragment_shader->compile();
+
+	cube_program = ProgramObject::create(gc);
+	cube_program->attach(vertex_shader);
+	cube_program->attach(fragment_shader);
 	cube_program->bind_attribute_location(0, "AttrPosition");
 	cube_program->bind_frag_data_location(0, "FragColor");
 	if (!cube_program->try_link())

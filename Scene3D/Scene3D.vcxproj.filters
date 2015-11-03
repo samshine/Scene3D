@@ -1203,6 +1203,141 @@
     <ClInclude Include="Sources\Sound\SoundProviders\soundprovider_wave.h">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_extract_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_extract_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\fragment_present_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\fragment_present_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\vertex_present_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\vertex_present_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\accumulate_lpv_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\init_gv_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\init_lpv_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\propagate_lpv_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\render_result_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\fragment_gbuffer_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\fragment_gbuffer_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\vertex_gbuffer_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\vertex_gbuffer_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensFlare\vertex_lens_flare_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensFlare\fragment_lens_flare_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LensFlare</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\cull_tiles_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\cull_tiles_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\render_tiles_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\render_tiles_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Lightsource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\fragment_light_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\vertex_icosahedron_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\vertex_rect_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\vertex_particle_emitter_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\fragment_particle_emitter_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_angular_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_billboard_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_cube_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_sphere_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_billboard_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_cube_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\fragment_transparency_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\fragment_transparency_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

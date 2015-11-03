@@ -8,8 +8,8 @@
 
 using namespace uicore;
 
-SceneEngineImpl::SceneEngineImpl(const GraphicContextPtr &gc, const std::string &shader_path)
-	: gc(gc), render(gc, shader_path, this)
+SceneEngineImpl::SceneEngineImpl(const GraphicContextPtr &gc)
+	: gc(gc), render(gc, this)
 {
 }
 

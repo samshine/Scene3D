@@ -9,7 +9,7 @@ class SceneImpl;
 class SkyboxPass : public ScenePass
 {
 public:
-	SkyboxPass(const std::string &shader_path, SceneRender &inout);
+	SkyboxPass(SceneRender &inout);
 	std::string name() const override { return "skybox"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 
@@ -24,7 +24,6 @@ private:
 	void create_cube_program(const uicore::GraphicContextPtr &gc);
 	static float random(float min_value, float max_value);
 
-	std::string shader_path;
 	SceneRender &inout;
 
 	struct Uniforms

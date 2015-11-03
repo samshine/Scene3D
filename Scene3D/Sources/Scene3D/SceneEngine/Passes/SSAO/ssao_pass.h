@@ -9,7 +9,7 @@
 class SSAOPass : public ScenePass
 {
 public:
-	SSAOPass(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout);
+	SSAOPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	std::string name() const override { return "ssao"; }
 	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
 

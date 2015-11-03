@@ -8,7 +8,7 @@
 class SceneEngine
 {
 public:
-	static std::shared_ptr<SceneEngine> create(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
+	static std::shared_ptr<SceneEngine> create(const uicore::GraphicContextPtr &gc);
 
 	virtual int models_drawn() const = 0;
 	virtual int instances_drawn() const = 0;

@@ -11,7 +11,7 @@ class SceneImpl;
 class DiffuseGIPassCS : public ScenePass
 {
 public:
-	DiffuseGIPassCS(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneRender &inout);
+	DiffuseGIPassCS(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	~DiffuseGIPassCS();
 
 	std::string name() const override { return "diffuse_gi"; }
@@ -19,7 +19,7 @@ public:
 
 private:
 	void update_buffers(const uicore::GraphicContextPtr &gc);
-	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &compute_filename);
+	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &program_name, const std::string &source);
 
 	SceneRender &inout;
 

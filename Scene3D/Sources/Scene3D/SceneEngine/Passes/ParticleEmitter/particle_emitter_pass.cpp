@@ -5,6 +5,8 @@
 #include "Scene3D/SceneEngine/mapped_buffer.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
+#include "vertex_particle_emitter_hlsl.h"
+#include "fragment_particle_emitter_hlsl.h"
 
 using namespace uicore;
 
@@ -174,9 +176,15 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 {
 	if (!program)
 	{
-		std::string vertex_filename = PathHelp::combine(engine->render.shader_path, "ParticleEmitter/vertex.hlsl");
-		std::string fragment_filename = PathHelp::combine(engine->render.shader_path, "ParticleEmitter/fragment.hlsl");
-		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
+		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_particle_emitter_hlsl());
+		vertex_shader->compile();
+
+		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_particle_emitter_hlsl());
+		fragment_shader->compile();
+
+		program = ProgramObject::create(gc);
+		program->attach(vertex_shader);
+		program->attach(fragment_shader);
 		program->bind_attribute_location(0, "AttrPosition");
 		program->bind_frag_data_location(0, "FragColor");
 		if (!program->try_link())

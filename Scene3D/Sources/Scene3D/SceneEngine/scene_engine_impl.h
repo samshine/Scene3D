@@ -14,7 +14,7 @@ class SceneImpl;
 class SceneEngineImpl : public SceneEngine
 {
 public:
-	SceneEngineImpl(const uicore::GraphicContextPtr &gc, const std::string &shader_path);
+	SceneEngineImpl(const uicore::GraphicContextPtr &gc);
 	~SceneEngineImpl();
 
 	int models_drawn() const override { return render.models_drawn; }

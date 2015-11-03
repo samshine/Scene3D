@@ -26,13 +26,11 @@ class SceneEngineImpl;
 class SceneRender
 {
 public:
-	SceneRender(const uicore::GraphicContextPtr &gc, const std::string &shader_path, SceneEngineImpl *engine);
+	SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *engine);
 	SceneRender(const SceneRender &) = delete;
 	SceneRender &operator=(const SceneRender &) = delete;
 
 	void setup_pass_buffers(const uicore::GraphicContextPtr &gc);
-
-	std::string shader_path;
 
 	uicore::Rect viewport = uicore::Size(640, 480);
 	uicore::FrameBufferPtr fb_viewport;

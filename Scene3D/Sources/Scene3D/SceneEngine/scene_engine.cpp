@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-std::shared_ptr<SceneEngine> SceneEngine::create(const uicore::GraphicContextPtr &gc, const std::string &shader_path)
+std::shared_ptr<SceneEngine> SceneEngine::create(const uicore::GraphicContextPtr &gc)
 {
-	return std::make_shared<SceneEngineImpl>(gc, shader_path);
+	return std::make_shared<SceneEngineImpl>(gc);
 }

@@ -4,7 +4,7 @@
 
 using namespace uicore;
 
-ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines)
+ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, const std::string &program_name, const std::string &vertex_code, const std::string &fragment_code, const std::string &defines)
 {
 	std::string prefix;
 	if (gc->shader_language() == shader_glsl)
@@ -16,16 +16,16 @@ ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, std::string s
 
 	auto program = ProgramObject::create(gc);
 
-	if (!vertex.empty())
+	if (!vertex_code.empty())
 	{
-		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, prefix + File::read_all_text(PathHelp::combine(shader_path, vertex)));
+		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, prefix + vertex_code);
 		vertex_shader->compile();
 		program->attach(vertex_shader);
 	}
 
-	if (!fragment.empty())
+	if (!fragment_code.empty())
 	{
-		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + File::read_all_text(PathHelp::combine(shader_path, fragment)));
+		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + fragment_code);
 		fragment_shader->compile();
 		program->attach(fragment_shader);
 	}

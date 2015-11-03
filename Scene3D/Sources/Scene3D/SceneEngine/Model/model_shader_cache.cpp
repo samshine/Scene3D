@@ -6,13 +6,20 @@
 #include "model_render_command.h"
 #include "model.h"
 #include "model_lod.h"
+#include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_glsl.h"
+#include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/GBuffer/fragment_gbuffer_glsl.h"
+#include "Scene3D/SceneEngine/Passes/GBuffer/fragment_gbuffer_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/Transparency/vertex_transparency_glsl.h"
+#include "Scene3D/SceneEngine/Passes/Transparency/vertex_transparency_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/Transparency/fragment_transparency_glsl.h"
+#include "Scene3D/SceneEngine/Passes/Transparency/fragment_transparency_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vertex_shadow_glsl.h"
+#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vertex_shadow_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/VSMShadowMap/fragment_shadow_glsl.h"
+#include "Scene3D/SceneEngine/Passes/VSMShadowMap/fragment_shadow_hlsl.h"
 
 using namespace uicore;
-
-ModelShaderCache::ModelShaderCache(const std::string &shader_path)
-	: base_path(shader_path)
-{
-}
 
 void ModelShaderCache::create_gbuffer_commands(const GraphicContextPtr &gc, Model *model, int level)
 {
@@ -287,9 +294,9 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(const GraphicContextPt
 
 	ProgramObjectPtr gbuffer;
 	if (gc->shader_language() == shader_glsl)
-		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.glsl", "GBuffer/fragment_gbuffer.glsl", defines);
+		gbuffer = ShaderSetup::compile(gc, "gbuffer", vertex_gbuffer_glsl(), fragment_gbuffer_glsl(), defines);
 	else
-		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.hlsl", "GBuffer/fragment_gbuffer.hlsl", defines);
+		gbuffer = ShaderSetup::compile(gc, "gbuffer", vertex_gbuffer_hlsl(), fragment_gbuffer_hlsl(), defines);
 
 	gbuffer->bind_frag_data_location(0, "FragColor");
 	gbuffer->bind_frag_data_location(1, "FragFaceNormal");
@@ -358,9 +365,9 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(const GraphicCont
 
 	ProgramObjectPtr transparency;
 	if (gc->shader_language() == shader_glsl)
-		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.glsl", "Transparency/fragment.glsl", defines);
+		transparency = ShaderSetup::compile(gc, "transparency", vertex_transparency_glsl(), fragment_transparency_glsl(), defines);
 	else
-		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.hlsl", "Transparency/fragment.hlsl", defines);
+		transparency = ShaderSetup::compile(gc, "transparency", vertex_transparency_hlsl(), fragment_transparency_hlsl(), defines);
 
 	transparency->bind_frag_data_location(0, "FragColor");
 	transparency->bind_frag_data_location(1, "FragFaceNormal");
@@ -420,9 +427,9 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(const GraphicContextPtr &g
 
 	ProgramObjectPtr program;
 	if (gc->shader_language() == shader_glsl)
-		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "SceneLights/fragment_shadow.glsl", defines);
+		program = ShaderSetup::compile(gc, "shadow", vertex_shadow_glsl(), fragment_shadow_glsl(), defines);
 	else
-		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "SceneLights/fragment_shadow.hlsl", defines);
+		program = ShaderSetup::compile(gc, "shadow", vertex_shadow_hlsl(), fragment_shadow_hlsl(), defines);
 
 	program->bind_frag_data_location(0, "FragMoment");
 
@@ -460,9 +467,9 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(const GraphicContextPtr &
 
 	ProgramObjectPtr program;
 	if (gc->shader_language() == shader_glsl)
-		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "", defines);
+		program = ShaderSetup::compile(gc, "early z", vertex_shadow_glsl(), "", defines);
 	else
-		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "", defines);
+		program = ShaderSetup::compile(gc, "early z", vertex_shadow_hlsl(), "", defines);
 
 	program->bind_frag_data_location(0, "FragMoment");
 
