@@ -38,7 +38,7 @@ SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *e
 	passes.push_back(std::make_shared<ParticleEmitterPass>(engine));
 	passes.push_back(std::make_shared<LensFlarePass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(gc, *this));
-	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));
+	passes.push_back(std::make_shared<SSAOPass>(gc, *this));
 	passes.push_back(std::make_shared<FinalPass>(gc, *this));
 }
 
@@ -78,7 +78,7 @@ void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 	Size bloom_size = viewport_size / 2;
 	bloom_contribution = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
 
-	ambient_occlusion = Texture2D::create(gc, viewport_size.width / 2, viewport_size.height / 2, tf_r8);
+	ambient_occlusion = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_r8);
 	ambient_occlusion->set_min_filter(filter_linear);
 	ambient_occlusion->set_mag_filter(filter_linear);
 

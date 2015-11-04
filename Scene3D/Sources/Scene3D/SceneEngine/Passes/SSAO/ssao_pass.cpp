@@ -5,6 +5,7 @@
 #include "vertex_ssao_extract_glsl.h"
 #include "vertex_ssao_extract_hlsl.h"
 #include "fragment_ssao_extract_glsl.h"
+#include "fragment_ssao_extract_hlsl.h"
 
 using namespace uicore;
 
@@ -17,21 +18,17 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inou
 	}
 	else
 	{
-		//extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_hlsl(), fragment_ssao_extract_hlsl(), "");
+		extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_hlsl(), fragment_ssao_extract_hlsl(), "");
 	}
-	ShaderSetup::link(extract_shader, "ssao extract program");
-	extract_shader->bind_attribute_location(0, "AttrPositionInProjection");
-	extract_shader->set_uniform1i("NormalZ", 0);
 
-/*	To do: port this to uniform buffer
-	for (int i = 0; i < 160; i++)
-	{
-		Vec3f sampleVector(random_value(), random_value(), random_value());
-		float sampleWeight = 0.2f;//(1.733f - sampleVector.length()) * 0.3f;
-		extract_shader.set_uniform3f(string_format("SampleVector[%1]", i), sampleVector * 0.4f);
-		extract_shader.set_uniform1f(string_format("SampleWeight[%1]", i), sampleWeight);
-	}
-*/
+	extract_shader->bind_attribute_location(0, "PositionInProjection");
+	extract_shader->bind_frag_data_location(0, "FragColor");
+
+	ShaderSetup::link(extract_shader, "ssao extract program");
+
+	extract_shader->set_uniform_buffer_index("Uniforms", 0);
+	extract_shader->set_uniform1i("NormalZ", 0);
+	extract_shader->set_uniform1i("NormalZSampler", 0);
 
 	Vec4f positions[6] =
 	{
@@ -53,14 +50,27 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inou
 
 void SSAOPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 {
-	/*		To do: port this to uniform buffer
-	float aspect = viewport_size.width/(float)viewport_size.height;
-	float field_of_view_y_degrees = 60.0f;
-	float field_of_view_y_rad = (float)(field_of_view_y_degrees * M_PI / 180.0);
-	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
-	extract_shader.set_uniform1f("f", f);
-	extract_shader.set_uniform1f("f_div_aspect", f/aspect);
-	*/
+	if (!uniforms.buffer()) // To do: also do this if viewport size changes
+	{
+		UniformBuffer uniform_buffer;
+		for (int i = 0; i < 160; i++)
+		{
+			Vec3f sample_vector;
+			do
+			{
+				sample_vector = Vec3f(random_value(), random_value(), random_value());
+			} while (sample_vector.length() < 0.1f);
+			float sample_weight = (1.733f - sample_vector.length()) * 0.3f;
+			uniform_buffer.sampledata[i] = Vec4f(sample_vector * 0.4f, sample_weight);
+		}
+		float aspect = inout.viewport.width() / (float)inout.viewport.height();
+		float field_of_view_y_degrees = inout.field_of_view;
+		float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
+		float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+		uniform_buffer.f = f;
+		uniform_buffer.f_div_aspect = f / aspect;
+		uniforms = UniformVector<UniformBuffer>(gc, &uniform_buffer, 1);
+	}
 
 	inout.normal_z_gbuffer->set_min_filter(filter_nearest);
 	inout.normal_z_gbuffer->set_mag_filter(filter_nearest);
@@ -68,15 +78,18 @@ void SSAOPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_frame_buffer(inout.fb_ambient_occlusion);
 	gc->set_viewport(inout.ambient_occlusion->size(), gc->texture_image_y_axis());
 	gc->set_texture(0, inout.normal_z_gbuffer);
+	gc->set_uniform_buffer(0, uniforms);
 	gc->set_blend_state(blend_state);
 	gc->set_program_object(extract_shader);
 	gc->draw_primitives(type_triangles, 6, rect_primarray);
 	gc->reset_program_object();
+	gc->set_uniform_buffer(0, nullptr);
+	gc->set_blend_state(nullptr);
 	gc->reset_frame_buffer();
 
-	inout.blur.input = inout.ambient_occlusion;
-	inout.blur.output = inout.fb_ambient_occlusion;
-	inout.blur.blur(gc, tf_r8, 2.0f, 7);
+	//inout.blur.input = inout.ambient_occlusion;
+	//inout.blur.output = inout.fb_ambient_occlusion;
+	//inout.blur.blur(gc, tf_r8, 3.0f, 15);
 }
 
 float SSAOPass::random_value()

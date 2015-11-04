@@ -354,6 +354,7 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_billboard_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_cube_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\ssao_pass.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_hlsl.h" />

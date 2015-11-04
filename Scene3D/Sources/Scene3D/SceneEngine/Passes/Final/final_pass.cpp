@@ -30,6 +30,7 @@ FinalPass::FinalPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(in
 	present_shader->set_uniform1i("BloomColors", 2);
 	present_shader->set_uniform1i("BloomColorsSampler", 2);
 	present_shader->set_uniform1i("AmbientOcclusion", 3);
+	present_shader->set_uniform1i("AmbientOcclusionSampler", 3);
 
 	Vec4f positions[6] =
 	{
@@ -56,6 +57,8 @@ void FinalPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	inout.bloom_contribution->set_min_filter(filter_linear);
 	inout.bloom_contribution->set_mag_filter(filter_linear);
+	inout.ambient_occlusion->set_min_filter(filter_linear);
+	inout.ambient_occlusion->set_mag_filter(filter_linear);
 	inout.final_color->set_min_filter(filter_nearest);
 	inout.final_color->set_mag_filter(filter_nearest);
 
@@ -63,11 +66,13 @@ void FinalPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->set_viewport(inout.viewport, gc->texture_image_y_axis());
 	gc->set_texture(0, inout.final_color);
 	gc->set_texture(2, inout.bloom_contribution);
+	gc->set_texture(3, inout.ambient_occlusion);
 	gc->set_program_object(present_shader);
 	gc->set_rasterizer_state(rasterizer_state);
 	gc->draw_primitives(type_triangles, 6, rect_primarray);
 	gc->reset_program_object();
 	gc->reset_texture(0);
 	gc->reset_texture(2);
+	gc->reset_texture(3);
 	gc->reset_frame_buffer();
 }

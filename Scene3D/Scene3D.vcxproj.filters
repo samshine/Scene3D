@@ -1338,6 +1338,9 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_glsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

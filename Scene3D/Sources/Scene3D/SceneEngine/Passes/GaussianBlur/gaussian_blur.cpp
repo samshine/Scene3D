@@ -77,6 +77,7 @@ void GaussianBlur::setup(const GraphicContextPtr &gc, Size new_size, TextureForm
 		if (!blur_setup.vertical_blur_program->try_link())
 			throw Exception("Could not link vertical Gaussian blur program");
 		blur_setup.vertical_blur_program->set_uniform1i("SourceTexture", 0);
+		blur_setup.vertical_blur_program->set_uniform1i("SourceSampler", 0);
 
 		blur_setup.horizontal_blur_program = ProgramObject::create(gc);
 		blur_setup.horizontal_blur_program->attach(vertex);
@@ -86,6 +87,7 @@ void GaussianBlur::setup(const GraphicContextPtr &gc, Size new_size, TextureForm
 		if (!blur_setup.horizontal_blur_program->try_link())
 			throw Exception("Could not link horizontal Gaussian blur program");
 		blur_setup.horizontal_blur_program->set_uniform1i("SourceTexture", 0);
+		blur_setup.horizontal_blur_program->set_uniform1i("SourceSampler", 0);
 
 		blur_setups.push_back(blur_setup);
 		current_blur_setup = blur_setups.begin() + (blur_setups.size() - 1);
