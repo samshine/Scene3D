@@ -27,9 +27,9 @@ PixelOut main(PixelIn input)
 	PixelOut output;
 	float4 color = FinalColors.Sample(FinalColorsSampler, input.TexCoord);
 	float4 bloom = BloomColors.Sample(BloomColorsSampler, input.TexCoord);
-	float ao = AmbientOcclusion.Sample(AmbientOcclusionSampler, input.TexCoord).x;
-	color.xyz /= max(max(color.x, max(color.y, color.z)), 1);
-	output.FragColor = sRGB(float4(color.rgb * ao, 1) + bloom);
+	//float ao = AmbientOcclusion.Sample(AmbientOcclusionSampler, input.TexCoord).x;
+	//output.FragColor = sRGB(float4(color.rgb * ao, 1) + bloom);
+	output.FragColor = sRGB(float4(color.rgb, 1) + bloom);
 	return output;
 }
 

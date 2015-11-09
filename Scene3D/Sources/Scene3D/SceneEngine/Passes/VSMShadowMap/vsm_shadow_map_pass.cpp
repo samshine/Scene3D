@@ -147,9 +147,13 @@ void VSMShadowMapPass::blur_maps()
 		size_t i = blur_indexes[j];
 		if (lights[i]->vsm_data->shadow_map.get_index() != -1)
 		{
-			inout.blur.input = lights[i]->vsm_data->shadow_map.get_view();
-			inout.blur.output = lights[i]->vsm_data->shadow_map.get_framebuffer();
-			inout.blur.blur(gc, tf_rg32f, 1.3f, 9);
+			auto view_texture = lights[i]->vsm_data->shadow_map.get_view();
+			auto fb_view = lights[i]->vsm_data->shadow_map.get_framebuffer();
+			const auto &fb_blur = lights[i]->vsm_data->shadow_map.fb_blur();
+			const auto &blur_texture = lights[i]->vsm_data->shadow_map.blur_texture();
+
+			inout.blur.horizontal(gc, 1.3f, 9, view_texture, fb_blur);
+			inout.blur.vertical(gc, 1.3f, 9, blur_texture, fb_view);
 		}
 	}
 }

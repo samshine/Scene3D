@@ -40,6 +40,7 @@ public:
 
 	uicore::FrameBufferPtr fb_gbuffer;
 	uicore::FrameBufferPtr fb_self_illumination;
+	uicore::FrameBufferPtr fb_bloom_blur;
 	uicore::FrameBufferPtr fb_bloom_extract;
 	uicore::FrameBufferPtr fb_ambient_occlusion;
 	uicore::FrameBufferPtr fb_final_color;
@@ -52,6 +53,7 @@ public:
 	uicore::Texture2DPtr self_illumination_gbuffer;
 	uicore::Texture2DPtr normal_z_gbuffer;
 
+	uicore::Texture2DPtr bloom_blur;
 	uicore::Texture2DPtr bloom_contribution;
 	uicore::Texture2DPtr ambient_occlusion;
 	uicore::Texture2DPtr final_color;

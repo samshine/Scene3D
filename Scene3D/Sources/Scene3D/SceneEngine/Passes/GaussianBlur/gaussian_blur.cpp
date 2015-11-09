@@ -5,114 +5,107 @@
 using namespace uicore;
 
 GaussianBlur::GaussianBlur()
-: format(tf_rgba8)
 {
 }
 
-void GaussianBlur::blur(const GraphicContextPtr &gc, TextureFormat format, float blur_amount, int sample_count)
+void GaussianBlur::vertical(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output)
 {
-	setup(gc, input.get()->size(), format, blur_amount, sample_count);
+	setup(gc, blur_amount, sample_count);
 
 	input.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 	input.get()->set_mag_filter(filter_nearest);
 	input.get()->set_min_filter(filter_nearest);
 
-	gc->set_blend_state(blend_state);
+	auto size = output->get_size();
 
-	// Horizontal blur
-	gc->set_program_object(current_blur_setup->horizontal_blur_program);
-	gc->set_frame_buffer(fb0);
-	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
-	gc->set_texture(0, input);
-	gc->draw_primitives(type_triangles, 6, prim_array);
-	gc->reset_texture(0);
-	gc->reset_frame_buffer();
-
-	// Vertical blur
-	gc->set_program_object(current_blur_setup->vertical_blur_program);
 	gc->set_frame_buffer(output);
 	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
-	gc->set_texture(0, pass0_texture);
+	gc->set_blend_state(blend_state);
+	gc->set_program_object(blur_setups[blur_setup_index].vertical_blur_program);
+	gc->set_texture(0, input);
 	gc->draw_primitives(type_triangles, 6, prim_array);
-	gc->reset_texture(0);
-	gc->reset_frame_buffer();
-
-	gc->reset_program_object();
+	gc->set_texture(0, nullptr);
+	gc->set_program_object(nullptr);
+	gc->set_blend_state(nullptr);
+	gc->set_frame_buffer(nullptr);
+	gc->set_viewport(Rectf(0.0f, 0.0f, (float)gc->width(), (float)gc->height()), gc->texture_image_y_axis());
 }
 
-void GaussianBlur::setup(const GraphicContextPtr &gc, Size new_size, TextureFormat new_format, float blur_amount, int sample_count)
+void GaussianBlur::horizontal(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output)
 {
-	size = new_size;
+	setup(gc, blur_amount, sample_count);
 
-	for (current_blur_setup = blur_setups.begin(); current_blur_setup != blur_setups.end(); ++current_blur_setup)
+	input.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	input.get()->set_mag_filter(filter_nearest);
+	input.get()->set_min_filter(filter_nearest);
+
+	gc->set_frame_buffer(output);
+	gc->set_viewport(Rectf(0.0f, 0.0f, (float)input->width(), (float)input->height()), gc->texture_image_y_axis());
+	gc->set_blend_state(blend_state);
+	gc->set_program_object(blur_setups[blur_setup_index].horizontal_blur_program);
+	gc->set_texture(0, input);
+	gc->draw_primitives(type_triangles, 6, prim_array);
+	gc->set_texture(0, nullptr);
+	gc->set_program_object(nullptr);
+	gc->set_blend_state(nullptr);
+	gc->set_frame_buffer(nullptr);
+	gc->set_viewport(Rectf(0.0f, 0.0f, (float)gc->width(), (float)gc->height()), gc->texture_image_y_axis());
+}
+
+void GaussianBlur::setup(const GraphicContextPtr &gc, float blur_amount, int sample_count)
+{
+	for (blur_setup_index = 0; blur_setup_index < blur_setups.size(); blur_setup_index++)
 	{
-		if (current_blur_setup->blur_amount == blur_amount && current_blur_setup->sample_count == sample_count)
-			break;
+		if (blur_setups[blur_setup_index].blur_amount == blur_amount && blur_setups[blur_setup_index].sample_count == sample_count)
+			return;
 	}
 
-	if (current_blur_setup == blur_setups.end())
+	std::string vertex_shader, vertical_fragment_shader, horizontal_fragment_shader;
+	if (gc->shader_language() == shader_glsl)
 	{
-		std::string vertex_shader, vertical_fragment_shader, horizontal_fragment_shader;
-		if (gc->shader_language() == shader_glsl)
-			get_shader_glsl(blur_amount, sample_count, vertex_shader, vertical_fragment_shader, horizontal_fragment_shader);
-		else
-			get_shader_hlsl(blur_amount, sample_count, vertex_shader, vertical_fragment_shader, horizontal_fragment_shader);
-
-		auto vertex = ShaderObject::create(gc, ShaderType::vertex, vertex_shader);
-		auto vertical_fragment = ShaderObject::create(gc, ShaderType::fragment, vertical_fragment_shader);
-		auto horizontal_fragment = ShaderObject::create(gc, ShaderType::fragment, horizontal_fragment_shader);
-		if (!vertex->try_compile())
-			throw Exception(string_format("Could not compile Gaussian blur vertex shader: %1", vertex->info_log()));
-		if (!vertical_fragment->try_compile())
-			throw Exception(string_format("Could not compile vertical Gaussian blur fragment shader: %1", vertical_fragment->info_log()));
-		if (!horizontal_fragment->try_compile())
-			throw Exception(string_format("Could not compile horizontal Gaussian blur fragment shader: %1", horizontal_fragment->info_log()));
-
-		BlurSetup blur_setup(blur_amount, sample_count);
-		blur_setup.vertical_blur_program = ProgramObject::create(gc);
-		blur_setup.vertical_blur_program->attach(vertex);
-		blur_setup.vertical_blur_program->attach(vertical_fragment);
-		blur_setup.vertical_blur_program->bind_frag_data_location(0, "FragColor");
-		blur_setup.vertical_blur_program->bind_attribute_location(0, "PositionInProjection");
-		if (!blur_setup.vertical_blur_program->try_link())
-			throw Exception("Could not link vertical Gaussian blur program");
-		blur_setup.vertical_blur_program->set_uniform1i("SourceTexture", 0);
-		blur_setup.vertical_blur_program->set_uniform1i("SourceSampler", 0);
-
-		blur_setup.horizontal_blur_program = ProgramObject::create(gc);
-		blur_setup.horizontal_blur_program->attach(vertex);
-		blur_setup.horizontal_blur_program->attach(horizontal_fragment);
-		blur_setup.horizontal_blur_program->bind_frag_data_location(0, "FragColor");
-		blur_setup.horizontal_blur_program->bind_attribute_location(0, "PositionInProjection");
-		if (!blur_setup.horizontal_blur_program->try_link())
-			throw Exception("Could not link horizontal Gaussian blur program");
-		blur_setup.horizontal_blur_program->set_uniform1i("SourceTexture", 0);
-		blur_setup.horizontal_blur_program->set_uniform1i("SourceSampler", 0);
-
-		blur_setups.push_back(blur_setup);
-		current_blur_setup = blur_setups.begin() + (blur_setups.size() - 1);
+		vertex_shader = vertex_shader_glsl();
+		horizontal_fragment_shader = fragment_shader_glsl(blur_amount, sample_count, false);
+		vertical_fragment_shader = fragment_shader_glsl(blur_amount, sample_count, true);
+	}
+	else
+	{
+		vertex_shader = vertex_shader_hlsl();
+		horizontal_fragment_shader = fragment_shader_hlsl(blur_amount, sample_count, false);
+		vertical_fragment_shader = fragment_shader_hlsl(blur_amount, sample_count, true);
 	}
 
-	if ((pass0_texture && (pass0_texture->width() != size.width || pass0_texture->height() != size.height)) || format != new_format)
-	{
-		pass0_texture.reset();
-		fb0.reset();
-		format = new_format;
-	}
+	auto vertex = ShaderObject::create(gc, ShaderType::vertex, vertex_shader);
+	auto vertical_fragment = ShaderObject::create(gc, ShaderType::fragment, vertical_fragment_shader);
+	auto horizontal_fragment = ShaderObject::create(gc, ShaderType::fragment, horizontal_fragment_shader);
+	if (!vertex->try_compile())
+		throw Exception(string_format("Could not compile Gaussian blur vertex shader: %1", vertex->info_log()));
+	if (!vertical_fragment->try_compile())
+		throw Exception(string_format("Could not compile vertical Gaussian blur fragment shader: %1", vertical_fragment->info_log()));
+	if (!horizontal_fragment->try_compile())
+		throw Exception(string_format("Could not compile horizontal Gaussian blur fragment shader: %1", horizontal_fragment->info_log()));
 
-	if (!pass0_texture)
-	{
-		pass0_texture = Texture2D::create(gc, size.width, size.height, format);
-		pass0_texture->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
-		pass0_texture->set_mag_filter(filter_nearest);
-		pass0_texture->set_min_filter(filter_nearest);
-	}
+	BlurSetup blur_setup(blur_amount, sample_count);
+	blur_setup.vertical_blur_program = ProgramObject::create(gc);
+	blur_setup.vertical_blur_program->attach(vertex);
+	blur_setup.vertical_blur_program->attach(vertical_fragment);
+	blur_setup.vertical_blur_program->bind_frag_data_location(0, "FragColor");
+	blur_setup.vertical_blur_program->bind_attribute_location(0, "PositionInProjection");
+	if (!blur_setup.vertical_blur_program->try_link())
+		throw Exception("Could not link vertical Gaussian blur program");
+	blur_setup.vertical_blur_program->set_uniform1i("SourceTexture", 0);
+	blur_setup.vertical_blur_program->set_uniform1i("SourceSampler", 0);
 
-	if (!fb0 || !gc->is_frame_buffer_owner(fb0))
-	{
-		fb0 = FrameBuffer::create(gc);
-		fb0->attach_color(0, pass0_texture);
-	}
+	blur_setup.horizontal_blur_program = ProgramObject::create(gc);
+	blur_setup.horizontal_blur_program->attach(vertex);
+	blur_setup.horizontal_blur_program->attach(horizontal_fragment);
+	blur_setup.horizontal_blur_program->bind_frag_data_location(0, "FragColor");
+	blur_setup.horizontal_blur_program->bind_attribute_location(0, "PositionInProjection");
+	if (!blur_setup.horizontal_blur_program->try_link())
+		throw Exception("Could not link horizontal Gaussian blur program");
+	blur_setup.horizontal_blur_program->set_uniform1i("SourceTexture", 0);
+	blur_setup.horizontal_blur_program->set_uniform1i("SourceSampler", 0);
+
+	blur_setups.push_back(blur_setup);
 
 	if (!gpu_positions.buffer())
 	{
@@ -136,119 +129,122 @@ void GaussianBlur::setup(const GraphicContextPtr &gc, Size new_size, TextureForm
 	}
 }
 
-void GaussianBlur::get_shader_glsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader)
+std::string GaussianBlur::vertex_shader_glsl()
 {
-	std::vector<float> sample_weights_x, sample_weights_y;
-	std::vector<Vec2i> sample_offsets_x, sample_offsets_y;
-	compute_blur_samples(sample_count, blur_amount, 1, 0, sample_weights_x, sample_offsets_x);
-	compute_blur_samples(sample_count, blur_amount, 0, 1, sample_weights_y, sample_offsets_y);
+	return R"(
+		#version 330
 
-	out_vertex_shader =
-		"#version 330\r\n"
-		"\r\n"
-		"in vec4 PositionInProjection;\r\n"
-		"out vec2 TexCoord;\r\n"
-		"\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	gl_Position = PositionInProjection;\r\n"
-		"	TexCoord = (gl_Position.xy + 1.0) * 0.5;\r\n"
-		"}";
+		in vec4 PositionInProjection;
+		out vec2 TexCoord;
 
-	std::string fragment_shader =
-		"#version 330\r\n"
-		"\r\n"
-		"in vec2 TexCoord;\r\n"
-		"\r\n"
-		"uniform sampler2D SourceTexture;\r\n"
-		"out vec4 FragColor;\r\n"
-		"\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	FragColor = %1;\r\n"
-		"}";
-
-	std::string vertical_loop_code;
-	std::string horizontal_loop_code;
-	for (int i = 0; i < sample_count; i++)
-	{
-		if (i > 0)
+		void main()
 		{
-			vertical_loop_code += " + ";
-			horizontal_loop_code += " + ";
+			gl_Position = PositionInProjection;
+			TexCoord = (gl_Position.xy + 1.0) * 0.5;
 		}
-		horizontal_loop_code += string_format("\r\n\t\ttextureOffset(SourceTexture, TexCoord, ivec2(%1,%2)) * %3", sample_offsets_x[i].x, sample_offsets_x[i].y, sample_weights_x[i]);
-		vertical_loop_code   += string_format("\r\n\t\ttextureOffset(SourceTexture, TexCoord, ivec2(%1,%2)) * %3", sample_offsets_y[i].x, sample_offsets_y[i].y, sample_weights_y[i]);
-	}
-
-	out_vertical_fragment_shader = string_format(fragment_shader, vertical_loop_code);
-	out_horizontal_fragment_shader = string_format(fragment_shader, horizontal_loop_code);
+	)";
 }
 
-void GaussianBlur::get_shader_hlsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader)
+std::string GaussianBlur::vertex_shader_hlsl()
 {
-	std::vector<float> sample_weights_x, sample_weights_y;
-	std::vector<Vec2i> sample_offsets_x, sample_offsets_y;
-	compute_blur_samples(sample_count, blur_amount, 1, 0, sample_weights_x, sample_offsets_x);
-	compute_blur_samples(sample_count, blur_amount, 0, 1, sample_weights_y, sample_offsets_y);
+	return R"(
+		struct VertexIn
+		{
+			float4 PositionInProjection : PositionInProjection;
+		};
+		
+		struct VertexOut
+		{
+			float4 Position : SV_Position;
+			float2 TexCoord : TexCoord;
+		};
+		
+		VertexOut main(VertexIn input)
+		{
+			VertexOut output;
+			output.Position = input.PositionInProjection;
+			output.TexCoord = output.Position.xy * 0.5 + 0.5;
+			return output;
+		}
+	)";
+}
 
-	out_vertex_shader =
-		"struct VertexIn\r\n"
-		"{\r\n"
-		"	float4 PositionInProjection : PositionInProjection;\r\n"
-		"};\r\n"
-		"\r\n"
-		"struct VertexOut\r\n"
-		"{\r\n"
-		"	float4 Position : SV_Position;\r\n"
-		"	float2 TexCoord : TexCoord;\r\n"
-		"};\r\n"
-		"\r\n"
-		"VertexOut main(VertexIn input)\r\n"
-		"{\r\n"
-		"	VertexOut output;\r\n"
-		"	output.Position = input.PositionInProjection;\r\n"
-		"	output.TexCoord = output.Position.xy * 0.5 + 0.5;\r\n"
-		"	return output;\r\n"
-		"}";
+std::string GaussianBlur::fragment_shader_glsl(float blur_amount, int sample_count, bool vertical)
+{
+	std::vector<float> sample_weights;
+	std::vector<int> sample_offsets;
+	compute_blur_samples(sample_count, blur_amount, sample_weights, sample_offsets);
 
 	std::string fragment_shader =
-		"struct PixelIn\r\n"
-		"{\r\n"
-		"	float4 ScreenPos : SV_Position;\r\n"
-		"	float2 TexCoord : TexCoord;\r\n"
-		"};\r\n"
-		"\r\n"
-		"struct PixelOut\r\n"
-		"{\r\n"
-		"	float4 FragColor : SV_Target0;\r\n"
-		"};\r\n"
-		"\r\n"
-		"Texture2D SourceTexture;\r\n"
-		"SamplerState SourceSampler;\r\n"
-		"\r\n"
-		"PixelOut main(PixelIn input)\r\n"
-		"{\r\n"
-		"	PixelOut output;\r\n"
-		"	output.FragColor = %1;\r\n"
-		"	return output;\r\n"
-		"}";
+		R"(
+		#version 330
+		in vec2 TexCoord;
+		uniform sampler2D SourceTexture;
+		out vec4 FragColor;
+		void main()
+		{
+			FragColor = %1;
+		}
+		)";
 
-	std::string vertical_loop_code;
-	std::string horizontal_loop_code;
+	std::string loop_code;
 	for (int i = 0; i < sample_count; i++)
 	{
 		if (i > 0)
-		{
-			vertical_loop_code += " + ";
-			horizontal_loop_code += " + ";
-		}
-		horizontal_loop_code += string_format("\r\n\t\tSourceTexture.Sample(SourceSampler, input.TexCoord, int2(%1,%2)) * %3", sample_offsets_x[i].x, sample_offsets_x[i].y, sample_weights_x[i]);
-		vertical_loop_code   += string_format("\r\n\t\tSourceTexture.Sample(SourceSampler, input.TexCoord, int2(%1,%2)) * %3", sample_offsets_y[i].x, sample_offsets_y[i].y, sample_weights_y[i]);
+			loop_code += " + ";
+
+		if (vertical)
+			loop_code += string_format("\r\n\t\t\ttextureOffset(SourceTexture, TexCoord, ivec2(0, %1)) * %2", sample_offsets[i], sample_weights[i]);
+		else
+			loop_code += string_format("\r\n\t\t\ttextureOffset(SourceTexture, TexCoord, ivec2(%1, 0)) * %2", sample_offsets[i], sample_weights[i]);
 	}
 
-	out_vertical_fragment_shader = string_format(fragment_shader, vertical_loop_code);
-	out_horizontal_fragment_shader = string_format(fragment_shader, horizontal_loop_code);
+	return string_format(fragment_shader, loop_code);
+}
+
+std::string GaussianBlur::fragment_shader_hlsl(float blur_amount, int sample_count, bool vertical)
+{
+	std::vector<float> sample_weights;
+	std::vector<int> sample_offsets;
+	compute_blur_samples(sample_count, blur_amount, sample_weights, sample_offsets);
+
+	std::string fragment_shader =
+		R"(
+		struct PixelIn
+		{
+			float4 ScreenPos : SV_Position;
+			float2 TexCoord : TexCoord;
+		};
+		
+		struct PixelOut
+		{
+			float4 FragColor : SV_Target0;
+		};
+		
+		Texture2D SourceTexture;
+		SamplerState SourceSampler;
+		
+		PixelOut main(PixelIn input)
+		{
+			PixelOut output;
+			output.FragColor = %1;
+			return output;
+		}
+		)";
+
+	std::string loop_code;
+	for (int i = 0; i < sample_count; i++)
+	{
+		if (i > 0)
+			loop_code += " + ";
+
+		if (vertical)
+			loop_code += string_format("\r\n\t\t\tSourceTexture.Sample(SourceSampler, input.TexCoord, int2(0, %1)) * %2", sample_offsets[i], sample_weights[i]);
+		else
+			loop_code += string_format("\r\n\t\t\tSourceTexture.Sample(SourceSampler, input.TexCoord, int2(%1, 0)) * %2", sample_offsets[i], sample_weights[i]);
+	}
+
+	return string_format(fragment_shader, loop_code);
 }
 
 float GaussianBlur::compute_gaussian(float n, float theta) // theta = Blur Amount
@@ -256,24 +252,28 @@ float GaussianBlur::compute_gaussian(float n, float theta) // theta = Blur Amoun
 	return (float)((1.0f / sqrtf(2 * (float)PI * theta)) * expf(-(n * n) / (2.0f * theta * theta)));
 }
 
-void GaussianBlur::compute_blur_samples(int sample_count, float blur_amount, int dx, int dy, std::vector<float> &sample_weights, std::vector<Vec2i> &sample_offsets)
+void GaussianBlur::compute_blur_samples(int sample_count, float blur_amount, std::vector<float> &sample_weights, std::vector<int> &sample_offsets)
 {
 	sample_weights.resize(sample_count);
 	sample_offsets.resize(sample_count);
+
 	sample_weights[0] = compute_gaussian(0, blur_amount);
-	sample_offsets[0] = Vec2i(0, 0);
+	sample_offsets[0] = 0;
+
 	float total_weights = sample_weights[0];
+
 	for (int i = 0; i < sample_count / 2; i++)
 	{
 		float weight = compute_gaussian(i + 1.0f, blur_amount);
+
 		sample_weights[i * 2 + 1] = weight;
 		sample_weights[i * 2 + 2] = weight;
+		sample_offsets[i * 2 + 1] = i + 1;
+		sample_offsets[i * 2 + 2] = i - 1;
+
 		total_weights += weight * 2;
-		int sample_offset = i + 1;
-		Vec2i delta = Vec2i(dx * sample_offset, dy * sample_offset);
-		sample_offsets[i * 2 + 1] = delta;
-		sample_offsets[i * 2 + 2] = Vec2i(-delta.x, -delta.y);
 	}
+
 	for (int i = 0; i < sample_count; i++)
 	{
 		sample_weights[i] /= total_weights;

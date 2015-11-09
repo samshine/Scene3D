@@ -38,7 +38,7 @@ SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *e
 	passes.push_back(std::make_shared<ParticleEmitterPass>(engine));
 	passes.push_back(std::make_shared<LensFlarePass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(gc, *this));
-	passes.push_back(std::make_shared<SSAOPass>(gc, *this));
+	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));
 	passes.push_back(std::make_shared<FinalPass>(gc, *this));
 }
 
@@ -51,6 +51,7 @@ void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 
 	fb_gbuffer = nullptr;
 	fb_self_illumination = nullptr;
+	fb_bloom_blur = nullptr;
 	fb_bloom_extract = nullptr;
 	fb_ambient_occlusion = nullptr;
 	fb_final_color = nullptr;
@@ -60,6 +61,7 @@ void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 	specular_level_gbuffer = nullptr;
 	self_illumination_gbuffer = nullptr;
 	normal_z_gbuffer = nullptr;
+	bloom_blur = nullptr;
 	bloom_contribution = nullptr;
 	ambient_occlusion = nullptr;
 	final_color = nullptr;
@@ -76,6 +78,7 @@ void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 
 	Size bloom_size = viewport_size / 2;
+	bloom_blur = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
 	bloom_contribution = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
 
 	ambient_occlusion = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_r8);
@@ -97,6 +100,9 @@ void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
 	fb_final_color = FrameBuffer::create(gc);
 	fb_final_color->attach_color(0, final_color);
 	fb_final_color->attach_depth(zbuffer);
+
+	fb_bloom_blur = FrameBuffer::create(gc);
+	fb_bloom_blur->attach_color(0, bloom_blur);
 
 	fb_bloom_extract = FrameBuffer::create(gc);
 	fb_bloom_extract->attach_color(0, bloom_contribution);

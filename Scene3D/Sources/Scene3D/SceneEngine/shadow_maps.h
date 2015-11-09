@@ -27,6 +27,9 @@ private:
 
 	SceneRender &render;
 
+	uicore::FrameBufferPtr fb_blur;
+	uicore::Texture2DPtr blur_texture;
+
 	std::vector<uicore::FrameBufferPtr> framebuffers;
 	std::vector<uicore::Texture2DPtr> views;
 
@@ -50,6 +53,9 @@ public:
 	int get_index() const;
 	uicore::FrameBufferPtr get_framebuffer() const;
 	uicore::Texture2DPtr get_view() const;
+
+	const uicore::FrameBufferPtr &fb_blur() const;
+	const uicore::Texture2DPtr &blur_texture() const;
 
 private:
 	std::shared_ptr<ShadowMapEntryImpl> impl;

@@ -156,3 +156,13 @@ Texture2DPtr ShadowMapEntry::get_view() const
 	else
 		return nullptr;
 }
+
+const uicore::FrameBufferPtr &ShadowMapEntry::fb_blur() const
+{
+	return impl->shadow_maps->fb_blur;
+}
+
+const uicore::Texture2DPtr &ShadowMapEntry::blur_texture() const
+{
+	return impl->shadow_maps->blur_texture;
+}

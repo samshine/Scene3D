@@ -63,7 +63,6 @@ void BloomPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	gc->reset_texture(0);
 	gc->reset_frame_buffer();
 
-	inout.blur.input = inout.bloom_contribution;
-	inout.blur.output = inout.fb_bloom_extract;
-	inout.blur.blur(gc, tf_rgba8, 4.0f, 15);
+	inout.blur.horizontal(gc, 4.0f, 15, inout.bloom_contribution, inout.fb_bloom_blur);
+	inout.blur.vertical(gc, 4.0f, 15, inout.bloom_blur, inout.fb_bloom_extract);
 }

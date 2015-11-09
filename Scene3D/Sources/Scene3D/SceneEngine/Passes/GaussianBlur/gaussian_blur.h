@@ -7,18 +7,13 @@ class GaussianBlur
 {
 public:
 	GaussianBlur();
-	void blur(const uicore::GraphicContextPtr &gc, uicore::TextureFormat format, float blur_amount, int sample_count = 15);
 
-	uicore::Texture2DPtr input;
-	uicore::FrameBufferPtr output;
+	void vertical(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output);
+	void horizontal(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output);
 
 private:
-	void setup(const uicore::GraphicContextPtr &gc, uicore::Size new_size, uicore::TextureFormat new_format, float blur_amount, int sample_count);
-
-	void get_shader_glsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
-	void get_shader_hlsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
-	float compute_gaussian(float n, float theta);
-	void compute_blur_samples(int sample_count, float blur_amount, int dx, int dy, std::vector<float> &sample_weights, std::vector<uicore::Vec2i> &sample_offsets);
+	GaussianBlur(const GaussianBlur&) = delete;
+	GaussianBlur &operator=(const GaussianBlur &) = delete;
 
 	struct BlurSetup
 	{
@@ -30,13 +25,20 @@ private:
 		uicore::ProgramObjectPtr horizontal_blur_program;
 	};
 
+	void setup(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count);
+
+	std::string vertex_shader_glsl();
+	std::string vertex_shader_hlsl();
+	std::string fragment_shader_glsl(float blur_amount, int sample_count, bool vertical);
+	std::string fragment_shader_hlsl(float blur_amount, int sample_count, bool vertical);
+
+	float compute_gaussian(float n, float theta);
+	void compute_blur_samples(int sample_count, float blur_amount, std::vector<float> &sample_weights, std::vector<int> &sample_offsets);
+
 	uicore::PrimitivesArrayPtr prim_array;
 	uicore::VertexArrayVector<uicore::Vec4f> gpu_positions;
-	uicore::FrameBufferPtr fb0;
-	uicore::Texture2DPtr pass0_texture;
-	uicore::Size size;
-	uicore::TextureFormat format;
-	std::vector<BlurSetup> blur_setups;
-	std::vector<BlurSetup>::iterator current_blur_setup;
 	uicore::BlendStatePtr blend_state;
+
+	std::vector<BlurSetup> blur_setups;
+	size_t blur_setup_index = 0;
 };
