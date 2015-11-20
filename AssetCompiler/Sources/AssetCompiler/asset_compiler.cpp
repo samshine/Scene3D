@@ -70,8 +70,7 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 
 			TextureBuilder::build(model_data, base_path);
 
-			auto file = File::create_always(output_filename);
-			ModelData::save(*file, model_data);
+			ModelData::save(File::create_always(output_filename), model_data);
 		}
 		else if (Text::equal_caseless(filetype, "mapdesc"))
 		{
@@ -82,8 +81,7 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 
 			TextureBuilder::build(model_data, base_path);
 
-			auto file = File::create_always(output_filename);
-			ModelData::save(*file, model_data);
+			ModelData::save(File::create_always(output_filename), model_data);
 		}
 		else
 		{

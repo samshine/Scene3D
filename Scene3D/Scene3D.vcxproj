@@ -32,6 +32,7 @@
     <ClInclude Include="Include\Scene3D\LevelData\level_data_object.h" />
     <ClInclude Include="Include\Scene3D\LevelData\level_data_portal.h" />
     <ClInclude Include="Include\Scene3D\LevelData\level_data_sector.h" />
+    <ClInclude Include="Include\Scene3D\MapData\map_data.h" />
     <ClInclude Include="Include\Scene3D\ModelData\model_data.h" />
     <ClInclude Include="Include\Scene3D\ModelData\model_data_animation.h" />
     <ClInclude Include="Include\Scene3D\ModelData\model_data_animation_data.h" />
@@ -548,6 +549,7 @@
     <ClCompile Include="Sources\Scene3D\Culling\QuadTree\quad_tree.cpp" />
     <ClCompile Include="Sources\Scene3D\Culling\QuadTree\quad_tree_node.cpp" />
     <ClCompile Include="Sources\Scene3D\Culling\RTree\rtree.cpp" />
+    <ClCompile Include="Sources\Scene3D\MapData\map_data.cpp" />
     <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp" />
