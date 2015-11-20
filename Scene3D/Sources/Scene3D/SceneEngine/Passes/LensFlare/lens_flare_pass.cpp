@@ -27,6 +27,9 @@ void LensFlarePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 	std::vector<SceneLightImpl*> lights;
 	scene->foreach_light(frustum, [&](SceneLightImpl *light) { lights.push_back(light); });
 
+	if (lights.empty())
+		return;
+
 	if (!instance_texture || instance_texture->width() < (int)lights.size())
 	{
 		instance_texture = Texture2D::create(gc, (int)lights.size(), 1, tf_rgba32f);

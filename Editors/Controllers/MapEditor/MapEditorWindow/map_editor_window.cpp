@@ -20,6 +20,7 @@ using namespace uicore;
 
 MapEditorWindow::MapEditorWindow()
 {
+	set_root_view(view);
 	set_title("Scene3D Map Editor");
 	set_frame_size({ 1280.0f, 768.0f });
 	set_icon({"Icons/App/AppIcon-256.png", "Icons/App/AppIcon-16.png"});
