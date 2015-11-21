@@ -21,7 +21,7 @@ public:
 	const std::vector<std::string> &camera_names() const;
 
 	std::shared_ptr<ModelData> convert(const ModelDesc &desc);
-	std::shared_ptr<ModelData> convert(const MapDesc &desc, bool bake_light = false);
+	//std::shared_ptr<ModelData> convert(const MapDesc &desc, bool bake_light = false);
 
 private:
 	std::shared_ptr<FBXModelImpl> impl;

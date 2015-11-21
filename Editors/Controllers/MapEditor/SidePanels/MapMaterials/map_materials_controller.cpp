@@ -47,6 +47,7 @@ void MapMaterialsController::update_materials()
 
 	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
+	/*
 	if (MapAppModel::instance()->map_fbx)
 	{
 		for (const auto &mesh_mat : MapAppModel::instance()->map_fbx->material_names())
@@ -75,6 +76,7 @@ void MapMaterialsController::update_materials()
 			first = false;
 		}
 	}
+	*/
 
 	if (!materials_list->selection())
 		material->set_hidden(true);

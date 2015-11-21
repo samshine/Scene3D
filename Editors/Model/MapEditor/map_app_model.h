@@ -31,21 +31,16 @@ public:
 	std::string open_filename;
 	MapDesc desc;
 
-	std::shared_ptr<FBXModel> map_fbx;
-	std::shared_ptr<ModelData> map_model_data;
-
 	UndoSystem undo_system;
 
 	MapToolType tool = MapToolType::select_move;
 
 	uicore::Signal<void()> sig_load_finished;
-	uicore::Signal<void()> sig_map_model_data_updated;
+	uicore::Signal<void()> sig_map_updated;
 	uicore::Signal<void()> sig_map_tool_changed;
 
 	void open(const std::string &filename);
 	void save(const std::string &filename);
-
-	void update_map_model_data();
 
 private:
 	static MapAppModel *instance_ptr;

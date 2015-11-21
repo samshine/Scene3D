@@ -259,9 +259,6 @@
     <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="Model\MapEditor\Commands\set_map_fbx_filename_command.cpp">
-      <Filter>Model\MapEditor\Commands</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\MapEditor\SidePanels\Create\create_controller.cpp">
       <Filter>Controllers\MapEditor\SidePanels\Create</Filter>
     </ClCompile>
@@ -270,6 +267,9 @@
     </ClCompile>
     <ClCompile Include="Views\Rollout\rollout_button.cpp">
       <Filter>Views\Rollout</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\MapEditor\Commands\set_map_object_mesh_command.cpp">
+      <Filter>Model\MapEditor\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,9 +415,6 @@
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="Model\MapEditor\Commands\set_map_fbx_filename_command.h">
-      <Filter>Model\MapEditor\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="Controllers\MapEditor\SidePanels\Create\create_controller.h">
       <Filter>Controllers\MapEditor\SidePanels\Create</Filter>
     </ClInclude>
@@ -426,6 +423,9 @@
     </ClInclude>
     <ClInclude Include="Views\Rollout\rollout_button.h">
       <Filter>Views\Rollout</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MapEditor\Commands\set_map_object_mesh_command.h">
+      <Filter>Model\MapEditor\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

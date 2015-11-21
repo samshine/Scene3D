@@ -34,7 +34,6 @@ private:
 	void on_show_materials();
 	void on_show_triggers();
 	void on_show_path_nodes();
-	void on_change_model();
 
 	std::shared_ptr<uicore::ColumnView> view = std::make_shared<uicore::ColumnView>();
 	std::shared_ptr<HeaderView> header_view;

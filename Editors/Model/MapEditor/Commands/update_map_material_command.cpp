@@ -13,11 +13,11 @@ void UpdateMapMaterialCommand::execute()
 {
 	old_material = MapAppModel::instance()->desc.materials.at(index);
 	MapAppModel::instance()->desc.materials.at(index) = new_material;
-	MapAppModel::instance()->update_map_model_data();
+	MapAppModel::instance()->sig_map_updated();
 }
 
 void UpdateMapMaterialCommand::rollback()
 {
 	MapAppModel::instance()->desc.materials.at(index) = old_material;
-	MapAppModel::instance()->update_map_model_data();
+	MapAppModel::instance()->sig_map_updated();
 }

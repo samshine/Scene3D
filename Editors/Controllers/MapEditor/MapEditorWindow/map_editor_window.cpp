@@ -48,8 +48,6 @@ MapEditorWindow::MapEditorWindow()
 	header_view->add_right_button("Undo", "Icons/Undo/undo-24.png", []() {});
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
 
-	header_view->add_right_button("Change Map Model", "Icons/Model/model-24.png", bind_member(this, &MapEditorWindow::on_change_model));
-
 	auto options = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
 	options->add_item("Tools", bind_member(this, &MapEditorWindow::on_show_create));
 	options->add_item("Selection", bind_member(this, &MapEditorWindow::on_show_modify));
@@ -137,7 +135,7 @@ void MapEditorWindow::on_compile()
 	AssetCompiler compiler;
 	compiler.compile(MapAppModel::instance()->open_filename, [](const CompilerMessage &msg) {});
 }
-
+/*
 void MapEditorWindow::on_change_model()
 {
 	OpenFileDialog dialog(view.get());
@@ -150,7 +148,7 @@ void MapEditorWindow::on_change_model()
 		MapAppModel::instance()->undo_system.execute<SetMapFbxFilenameCommand>(dialog.get_filename());
 	}
 }
-
+*/
 void MapEditorWindow::on_show_create()
 {
 	workspace_controller->set_docked(create_controller);

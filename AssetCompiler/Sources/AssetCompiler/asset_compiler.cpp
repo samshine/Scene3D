@@ -72,7 +72,7 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 
 			ModelData::save(File::create_always(output_filename), model_data);
 		}
-		else if (Text::equal_caseless(filetype, "mapdesc"))
+		/*else if (Text::equal_caseless(filetype, "mapdesc"))
 		{
 			MapDesc desc = MapDesc::load(filename);
 
@@ -82,7 +82,7 @@ void AssetCompiler::compile(const std::string &filename, const std::function<voi
 			TextureBuilder::build(model_data, base_path);
 
 			ModelData::save(File::create_always(output_filename), model_data);
-		}
+		}*/
 		else
 		{
 			throw Exception("Unknown file type");

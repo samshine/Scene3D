@@ -41,7 +41,7 @@ std::shared_ptr<ModelData> FBXModel::convert(const ModelDesc &desc)
 	FBXModelLoader loader(impl.get(), desc);
 	return loader.model_data;
 }
-
+/*
 std::shared_ptr<ModelData> FBXModel::convert(const MapDesc &desc, bool bake_light)
 {
 	ModelDesc model_desc;
@@ -63,7 +63,7 @@ std::shared_ptr<ModelData> FBXModel::convert(const MapDesc &desc, bool bake_ligh
 	}
 	return data;
 }
-
+*/
 /////////////////////////////////////////////////////////////////////////
 
 FBXModelImpl::FBXModelImpl(const std::string &filename)

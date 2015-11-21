@@ -3,15 +3,16 @@
 
 #include "Model/UndoSystem/model_command.h"
 
-class SetMapFbxFilenameCommand : public ModelCommand
+class SetMapObjectMeshCommand : public ModelCommand
 {
 public:
-	SetMapFbxFilenameCommand(const std::string &filename);
+	SetMapObjectMeshCommand(size_t index, const std::string &filename);
 
 	void execute() override;
 	void rollback() override;
 
 private:
+	size_t index = 0;
 	std::string old_filename;
 	std::string new_filename;
 };

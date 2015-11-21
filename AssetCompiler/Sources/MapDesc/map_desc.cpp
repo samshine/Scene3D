@@ -18,8 +18,6 @@ MapDesc MapDesc::load(const std::string &filename)
 	if (json["version"].to_number() != 1)
 		throw Exception("Unsupported map description file version");
 
-	desc.fbx_filename = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json["fbx_filename"].to_string());
-
 	for (const auto &json_light : json["lights"].items())
 	{
 		MapDescLight light;
@@ -59,7 +57,7 @@ MapDesc MapDesc::load(const std::string &filename)
 		object.up = json_object["up"].to_float();
 		object.tilt = json_object["tilt"].to_float();
 		object.scale = json_object["scale"].to_float();
-		object.mesh = json_object["mesh"].to_string();
+		object.mesh = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json_object["mesh"].to_string());
 		object.animation = json_object["animation"].to_string();
 		object.fields = json_object["fields"];
 		desc.objects.push_back(object);
@@ -160,7 +158,7 @@ void MapDesc::save(const std::string &filename)
 		json_object["up"].set_number(object.up);
 		json_object["tilt"].set_number(object.tilt);
 		json_object["scale"].set_number(object.scale);
-		json_object["mesh"].set_string(object.mesh);
+		json_object["mesh"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(object.mesh), object.mesh));
 		json_object["animation"].set_string(object.animation);
 		json_object["fields"] = object.fields;
 		json_objects.items().push_back(json_object);
@@ -214,7 +212,6 @@ void MapDesc::save(const std::string &filename)
 	json["emitters"] = json_emitters;
 	json["path_nodes"] = json_nodes;
 	json["triggers"] = json_triggers;
-	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename));
 
 	File::write_all_text(filename, json.to_json());
 }

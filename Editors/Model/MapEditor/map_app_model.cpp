@@ -20,8 +20,7 @@ void MapAppModel::open(const std::string &filename)
 {
 	desc = MapDesc::load(filename);
 	open_filename = filename;
-	map_fbx = std::make_shared<FBXModel>(desc.fbx_filename);
-	update_map_model_data();
+	sig_map_updated();
 	sig_load_finished();
 }
 
@@ -29,16 +28,6 @@ void MapAppModel::save(const std::string &filename)
 {
 	desc.save(filename);
 	open_filename = filename;
-}
-
-void MapAppModel::update_map_model_data()
-{
-	if (map_fbx)
-		map_model_data = map_fbx->convert(desc);
-	else
-		map_model_data.reset();
-
-	sig_map_model_data_updated();
 }
 
 MapAppModel *MapAppModel::instance()

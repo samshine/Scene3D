@@ -15,7 +15,6 @@ class MapDesc
 public:
 	MapDesc();
 
-	std::string fbx_filename;
 	std::vector<MapDescLight> lights;
 	std::vector<MapDescLightProbe> light_probes;
 	std::vector<MapDescParticleEmitter> emitters;
