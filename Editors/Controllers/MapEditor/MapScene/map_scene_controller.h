@@ -5,6 +5,13 @@
 
 class SceneView;
 
+class MapSceneObject : public Physics3DDataObject
+{
+public:
+	SceneObjectPtr scene_object;
+	Physics3DObjectPtr collision_object;
+};
+
 class MapSceneController : public WorkspaceDockableController
 {
 public:
@@ -18,6 +25,10 @@ private:
 
 	uicore::SlotContainer slots;
 
-	std::vector<SceneObjectPtr> objects;
+	Physics3DWorldPtr collision = Physics3DWorld::create();
+
+	std::vector<std::shared_ptr<MapSceneObject>> objects;
+
 	std::map<std::string, SceneModelPtr> models;
+	std::map<std::string, Physics3DShapePtr> shapes;
 };

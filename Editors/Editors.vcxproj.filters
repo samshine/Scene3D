@@ -121,6 +121,9 @@
     <Filter Include="Controllers\MapEditor\SidePanels\Modify">
       <UniqueIdentifier>{08868b1e-1603-4ee6-b847-c568eaf17fb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views\Theme">
+      <UniqueIdentifier>{bfe8c56e-819f-420e-a2bd-8085608b2217}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -270,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="Model\MapEditor\Commands\set_map_object_mesh_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Theme\theme_views.cpp">
+      <Filter>Views\Theme</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -426,6 +432,9 @@
     </ClInclude>
     <ClInclude Include="Model\MapEditor\Commands\set_map_object_mesh_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Theme\theme_views.h">
+      <Filter>Views\Theme</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

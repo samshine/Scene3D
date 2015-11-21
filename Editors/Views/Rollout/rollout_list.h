@@ -1,9 +1,11 @@
 
 #pragma once
 
+#include "Views/Theme/theme_views.h"
+
 class RolloutListItemView;
 
-class RolloutList : public uicore::View
+class RolloutList : public ThemeScrollView
 {
 public:
 	RolloutList();
@@ -30,7 +32,7 @@ private:
 class RolloutListItemView : public uicore::View
 {
 public:
-	RolloutListItemView(size_t index);
+	RolloutListItemView(RolloutList *list, size_t index);
 
 	std::string text() const;
 
@@ -49,4 +51,5 @@ private:
 	bool is_selected = false;
 	std::shared_ptr<uicore::LabelView> label;
 	std::shared_ptr<uicore::TextFieldView> textfield;
+	RolloutList *list = nullptr;
 };

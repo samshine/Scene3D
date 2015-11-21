@@ -6,13 +6,18 @@ using namespace uicore;
 
 RolloutList::RolloutList()
 {
+	style()->set("border: 1px solid rgb(100,100,100)");
+	style()->set("flex: 1 0 main-size");
 	style()->set("flex-direction: column");
-	style()->set("padding: 5px 0");
+	style()->set("height: 150px");
+	style()->set("padding: 5px");
+
+	content_view()->style()->set("flex-direction: column");
 }
 
 std::shared_ptr<RolloutListItemView> RolloutList::selection()
 {
-	for (auto &subview : subviews())
+	for (auto &subview : content_view()->subviews())
 	{
 		auto item = std::dynamic_pointer_cast<RolloutListItemView>(subview);
 		if (item->selected()) return item;
@@ -22,23 +27,23 @@ std::shared_ptr<RolloutListItemView> RolloutList::selection()
 
 void RolloutList::clear()
 {
-	auto s = subviews();
+	auto s = content_view()->subviews();
 	for (const auto &v : s)
 		v->remove_from_super();
 }
 
 std::shared_ptr<RolloutListItemView> RolloutList::add_item(const std::string &item_name)
 {
-	auto item = std::make_shared<RolloutListItemView>(subviews().size());
+	auto item = std::make_shared<RolloutListItemView>(this, content_view()->subviews().size());
 	item->set_text(item_name);
 
-	add_subview(item);
+	content_view()->add_subview(item);
 	return item;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-RolloutListItemView::RolloutListItemView(size_t index) : index(index)
+RolloutListItemView::RolloutListItemView(RolloutList *init_list, size_t index) : list(init_list), index(index)
 {
 	style()->set("flex-direction: column");
 	style()->set("padding: 3px");
@@ -60,13 +65,9 @@ RolloutListItemView::RolloutListItemView(size_t index) : index(index)
 		set_focus();
 		if (selected())
 		{
-			RolloutList *list = dynamic_cast<RolloutList*>(superview());
-			if (list)
-			{
-				list->sig_selection_clicked()();
-				if (list->is_edit_allowed())
-					begin_edit();
-			}
+			list->sig_selection_clicked()();
+			if (list->is_edit_allowed())
+				begin_edit();
 		}
 		else
 		{
@@ -111,9 +112,9 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 {
 	if (is_selected != value)
 	{
-		if (superview() && value)
+		if (value)
 		{
-			for (auto view : superview()->subviews())
+			for (auto view : list->content_view()->subviews())
 			{
 				if (view.get() != this)
 					std::dynamic_pointer_cast<RolloutListItemView>(view)->set_selected(false);
@@ -142,7 +143,7 @@ void RolloutListItemView::set_selected(bool value, bool animate_change)
 		}
 
 		if (value)
-			static_cast<RolloutList*>(superview())->sig_selection_changed()();
+			list->sig_selection_changed()();
 	}
 }
 
@@ -160,7 +161,7 @@ void RolloutListItemView::save_edit()
 	label->set_hidden(false);
 	textfield->set_hidden(true);
 
-	static_cast<RolloutList*>(superview())->sig_edit_saved()();
+	list->sig_edit_saved()();
 }
 
 void RolloutListItemView::cancel_edit()

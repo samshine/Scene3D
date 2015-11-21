@@ -28,10 +28,14 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 	{
 		for (const auto &obj_desc : model->desc.objects)
 		{
+			auto object = std::make_shared<MapSceneObject>();
+			objects.push_back(object);
+
 			if (obj_desc.mesh.empty())
 				continue;
 
 			auto &model = models[obj_desc.mesh];
+			auto &shape = shapes[obj_desc.mesh];
 			if (!model)
 			{
 				try
@@ -40,6 +44,7 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 					auto fbx = std::make_shared<FBXModel>(model_desc.fbx_filename);
 					auto model_data = fbx->convert(model_desc);
 					model = SceneModel::create(scene, model_data);
+					shape = Physics3DShape::model(model_data);
 				}
 				catch (...)
 				{
@@ -49,8 +54,14 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 			}
 
 			Quaternionf rotation(obj_desc.up, obj_desc.dir, obj_desc.tilt, angle_degrees, order_YXZ);
-			auto object = SceneObject::create(scene, model, obj_desc.position, rotation, Vec3f(obj_desc.scale));
-			objects.push_back(object);
+			object->scene_object = SceneObject::create(scene, model, obj_desc.position, rotation, Vec3f(obj_desc.scale));
+
+			auto scaled_shape = shape;
+			if (obj_desc.scale != 1.0f)
+				scaled_shape = Physics3DShape::scale_model(shape, Vec3f(obj_desc.scale));
+
+			object->collision_object = Physics3DObject::rigid_body(collision, scaled_shape, 0.0f, obj_desc.position, rotation);
+			object->collision_object->set_data(object.get());
 		}
 	}
 

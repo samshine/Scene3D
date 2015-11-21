@@ -29,12 +29,14 @@ private:
 
 	std::shared_ptr<RolloutView> object;
 	std::shared_ptr<RolloutTextFieldProperty> id;
+	std::shared_ptr<RolloutTextFieldProperty> type;
 	std::shared_ptr<RolloutPositionProperty> position;
 	std::shared_ptr<RolloutTextFieldProperty> dir;
 	std::shared_ptr<RolloutTextFieldProperty> up;
 	std::shared_ptr<RolloutTextFieldProperty> tilt;
 	std::shared_ptr<RolloutTextFieldProperty> scale;
-	std::shared_ptr<RolloutBrowseFieldProperty> model_desc_filename;
+	std::shared_ptr<RolloutBrowseFieldProperty> mesh;
+	std::shared_ptr<RolloutTextFieldProperty> fields;
 
 	uicore::SlotContainer slots;
 };
