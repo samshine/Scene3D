@@ -44,6 +44,7 @@
     <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\set_map_object_mesh_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\update_map_object_command.cpp" />
     <ClCompile Include="Model\MapEditor\map_app_model.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_animation_command.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\add_attachment_command.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\set_map_object_mesh_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h" />
+    <ClInclude Include="Model\MapEditor\Commands\update_map_object_command.h" />
     <ClInclude Include="Model\MapEditor\map_app_model.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\add_attachment_command.h" />

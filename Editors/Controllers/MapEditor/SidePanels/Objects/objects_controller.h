@@ -22,6 +22,16 @@ private:
 	void objects_list_selection_changed();
 	void objects_list_selection_clicked();
 
+	void id_value_changed();
+	void type_value_changed();
+	void position_value_changed();
+	void dir_value_changed();
+	void up_value_changed();
+	void tilt_value_changed();
+	void scale_value_changed();
+	void mesh_browse();
+	void field_value_changed();
+
 	int get_select_item_index();
 
 	std::shared_ptr<RolloutView> objects;

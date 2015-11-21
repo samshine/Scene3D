@@ -277,6 +277,9 @@
     <ClCompile Include="Views\Theme\theme_views.cpp">
       <Filter>Views\Theme</Filter>
     </ClCompile>
+    <ClCompile Include="Model\MapEditor\Commands\update_map_object_command.cpp">
+      <Filter>Model\MapEditor\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -435,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="Views\Theme\theme_views.h">
       <Filter>Views\Theme</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MapEditor\Commands\update_map_object_command.h">
+      <Filter>Model\MapEditor\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

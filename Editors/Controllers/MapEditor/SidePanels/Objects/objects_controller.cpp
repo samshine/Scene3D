@@ -7,6 +7,7 @@
 #include "Views/Rollout/rollout_position_property.h"
 #include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/MapEditor/map_app_model.h"
+#include "Model/MapEditor/Commands/update_map_object_command.h"
 
 using namespace uicore;
 
@@ -44,6 +45,16 @@ ObjectsController::ObjectsController()
 
 	slots.connect(objects_list->sig_selection_changed(), this, &ObjectsController::objects_list_selection_changed);
 	slots.connect(objects_list->sig_selection_clicked(), this, &ObjectsController::objects_list_selection_clicked);
+
+	slots.connect(id->sig_value_changed(), this, &ObjectsController::id_value_changed);
+	slots.connect(type->sig_value_changed(), this, &ObjectsController::type_value_changed);
+	slots.connect(position->sig_value_changed(), this, &ObjectsController::position_value_changed);
+	slots.connect(dir->sig_value_changed(), this, &ObjectsController::dir_value_changed);
+	slots.connect(up->sig_value_changed(), this, &ObjectsController::up_value_changed);
+	slots.connect(tilt->sig_value_changed(), this, &ObjectsController::tilt_value_changed);
+	slots.connect(scale->sig_value_changed(), this, &ObjectsController::scale_value_changed);
+	slots.connect(mesh->sig_browse(), this, &ObjectsController::mesh_browse);
+	slots.connect(fields->sig_value_changed(), this, &ObjectsController::field_value_changed);
 
 	slots.connect(MapAppModel::instance()->sig_load_finished, [this]() { update_objects(); });
 
@@ -137,5 +148,125 @@ void ObjectsController::objects_list_selection_clicked()
 
 		update_object_fields();
 		*/
+	}
+}
+
+void ObjectsController::id_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.id = id->text_field->text();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::type_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.type = type->text_field->text();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::position_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.position.x = position->input_x->text_float();
+		object.position.y = position->input_y->text_float();
+		object.position.z = position->input_z->text_float();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::dir_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.dir = dir->text_field->text_float();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::up_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.up = up->text_field->text_float();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::tilt_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.tilt = tilt->text_field->text_float();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::scale_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.scale = scale->text_field->text_float();
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+	}
+}
+
+void ObjectsController::mesh_browse()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+
+		OpenFileDialog dialog(view.get());
+		dialog.set_title("Select Mesh Model");
+		dialog.add_filter("Model description files (*.modeldesc)", "*.modeldesc", true);
+		dialog.add_filter("All files (*.*)", "*.*", false);
+		dialog.set_filename(object.mesh);
+		if (dialog.show())
+		{
+			object.mesh = dialog.get_filename();
+			MapAppModel::instance()->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+			mesh->browse_field->set_text(PathHelp::get_basename(object.mesh));
+		}
+	}
+}
+
+void ObjectsController::field_value_changed()
+{
+	auto selection = objects_list->selection();
+	if (selection)
+	{
+		auto app_model = MapAppModel::instance();
+		auto object = app_model->desc.objects.at(selection->index);
+		object.fields = JsonValue::parse(fields->text_field->text());
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
 	}
 }
