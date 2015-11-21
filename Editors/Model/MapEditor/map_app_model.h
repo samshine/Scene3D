@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Model/UndoSystem/undo_system.h"
-#include "Commands/set_map_fbx_filename_command.h"
+#include "Commands/set_map_object_mesh_command.h"
 #include "Commands/add_map_material_command.h"
 #include "Commands/update_map_material_command.h"
 
