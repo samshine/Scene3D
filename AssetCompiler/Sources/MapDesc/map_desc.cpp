@@ -158,7 +158,7 @@ void MapDesc::save(const std::string &filename)
 		json_object["up"].set_number(object.up);
 		json_object["tilt"].set_number(object.tilt);
 		json_object["scale"].set_number(object.scale);
-		json_object["mesh"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(object.mesh), object.mesh));
+		json_object["mesh"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), object.mesh));
 		json_object["animation"].set_string(object.animation);
 		json_object["fields"] = object.fields;
 		json_objects.items().push_back(json_object);
