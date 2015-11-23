@@ -13,6 +13,10 @@ ShadowMaps::ShadowMaps(const GraphicContextPtr &gc, SceneRender &render, int sha
 	
 	render.shadow_maps = Texture2DArray::create(gc, shadow_map_size, shadow_map_size, max_active_maps, format);
 
+	blur_texture = Texture2D::create(gc, shadow_map_size, shadow_map_size, format);
+	fb_blur = FrameBuffer::create(gc);
+	fb_blur->attach_color(0, blur_texture);
+
 	auto depth_texture = Texture2D::create(gc, shadow_map_size, shadow_map_size, tf_depth_component32);
 	for (int i = 0; i < max_active_maps; i++)
 	{
