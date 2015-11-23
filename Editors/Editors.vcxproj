@@ -122,6 +122,7 @@
     <ClInclude Include="Model\UndoSystem\model_command.h" />
     <ClInclude Include="Model\UndoSystem\undo_system.h" />
     <ClInclude Include="precomp.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\asset_compiler_window_view.h" />
     <ClInclude Include="Views\Header\header_menu_view.h" />
     <ClInclude Include="Views\Header\header_view.h" />
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h" />

@@ -29,3 +29,5 @@ ipch
 /ShooterGame/*.aps
 /ShooterGame/x64
 /ShooterGame/Resources/Assets
+/AssetCompilerTool/Debug
+/AssetCompilerTool/Release

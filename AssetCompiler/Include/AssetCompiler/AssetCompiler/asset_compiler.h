@@ -29,8 +29,14 @@ class AssetCompilerImpl;
 class AssetCompiler
 {
 public:
-	AssetCompiler();
-	void compile(const std::string &filename, const std::function<void(const CompilerMessage&)> &output);
+	AssetCompiler() { }
+	AssetCompiler(const std::string &asset_directory, const std::string &build_directory, const std::function<void(const CompilerMessage&)> &log);
+
+	void clean();
+	void build();
+	void cancel();
+
+	operator bool() const { return (bool)impl; }
 
 private:
 	std::shared_ptr<AssetCompilerImpl> impl;

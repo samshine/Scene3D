@@ -130,6 +130,9 @@
     <Filter Include="Controllers\AssetCompiler\AssetCompilerWindow">
       <UniqueIdentifier>{3b0bb7a0-c41c-4af7-a42c-a5597d4cca57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views\AssetCompilerWindow">
+      <UniqueIdentifier>{4a910a44-165e-4898-9563-18d2987cca77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -453,6 +456,9 @@
     </ClInclude>
     <ClInclude Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.h">
       <Filter>Controllers\AssetCompiler\AssetCompilerWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\AssetCompilerWindow\asset_compiler_window_view.h">
+      <Filter>Views\AssetCompilerWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
