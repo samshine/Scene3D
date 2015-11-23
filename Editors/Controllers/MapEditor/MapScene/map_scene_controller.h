@@ -31,4 +31,13 @@ private:
 
 	std::map<std::string, SceneModelPtr> models;
 	std::map<std::string, Physics3DShapePtr> shapes;
+
+	float mouse_speed_x = 5.0f;
+	float mouse_speed_y = 5.0f;
+	float move_speed = 5.0f;
+
+	uicore::Vec3f position = uicore::Vec3f(4.0f, 10.0f, -10.0f);
+	uicore::Vec3f rotation;
+
+	uicore::GameTime gametime;
 };

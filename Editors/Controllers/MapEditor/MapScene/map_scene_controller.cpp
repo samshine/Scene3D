@@ -19,9 +19,36 @@ void MapSceneController::map_updated()
 	objects.clear();
 }
 
-void MapSceneController::update_scene(const ScenePtr &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &)
+void MapSceneController::update_scene(const ScenePtr &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
-	scene->camera()->set_position(Vec3f(4.0f, 10.0f, -10.0f));
+	gametime.update();
+
+	rotation.y = std::fmod(rotation.y + mouse_delta.x * gametime.get_time_elapsed() * mouse_speed_x, 360.0f);
+	rotation.x = clamp(rotation.x + mouse_delta.y * gametime.get_time_elapsed() * mouse_speed_y, -90.0f, 90.0f);
+
+	Quaternionf camera_quaternion(rotation.x, rotation.y, rotation.z, angle_degrees, order_YXZ);
+
+	if (view->has_focus())
+	{
+		Vec3f thrust;
+		if (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q))
+			thrust.x -= 1.0f;
+		if (ic->keyboard()->keycode(keycode_d))
+			thrust.x += 1.0f;
+		if (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z))
+			thrust.z += 1.0f;
+		if (ic->keyboard()->keycode(keycode_s))
+			thrust.z -= 1.0f;
+		if (ic->keyboard()->keycode(keycode_lshift) || ic->keyboard()->keycode(keycode_space))
+			thrust.y += 1.0f;
+		if (ic->keyboard()->keycode(keycode_lcontrol))
+			thrust.y -= 1.0f;
+
+		position += camera_quaternion.rotate_vector(thrust) * gametime.get_time_elapsed() * move_speed;
+	}
+
+	scene->camera()->set_position(position);
+	scene->camera()->set_orientation(camera_quaternion);
 
 	auto model = MapAppModel::instance();
 	if (objects.empty())
@@ -65,5 +92,5 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 		}
 	}
 
-	scene->update(gc, 0.0f/*gametime.get_time_elapsed()*/);
+	scene->update(gc, gametime.get_time_elapsed());
 }
