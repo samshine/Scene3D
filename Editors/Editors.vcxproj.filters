@@ -124,6 +124,12 @@
     <Filter Include="Views\Theme">
       <UniqueIdentifier>{bfe8c56e-819f-420e-a2bd-8085608b2217}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\AssetCompiler">
+      <UniqueIdentifier>{25d3c5e6-dff1-4d35-875a-1721b80f05e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\AssetCompiler\AssetCompilerWindow">
+      <UniqueIdentifier>{3b0bb7a0-c41c-4af7-a42c-a5597d4cca57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -279,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="Model\MapEditor\Commands\update_map_object_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.cpp">
+      <Filter>Controllers\AssetCompiler\AssetCompilerWindow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="Model\MapEditor\Commands\update_map_object_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.h">
+      <Filter>Controllers\AssetCompiler\AssetCompilerWindow</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

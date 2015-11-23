@@ -22,7 +22,6 @@ private:
 	void on_open();
 	void on_save();
 	void on_save_as();
-	void on_compile();
 	void on_show_attachments();
 	void on_show_animations();
 	void on_show_materials();

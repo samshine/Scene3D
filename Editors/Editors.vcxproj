@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.cpp" />
     <ClCompile Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.cpp" />
     <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_controller.cpp" />
     <ClCompile Include="Controllers\MapEditor\SidePanels\Create\create_controller.cpp" />
@@ -78,6 +79,7 @@
     <ClCompile Include="Views\Theme\theme_views.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.h" />
     <ClInclude Include="Controllers\MapEditor\MapEditorWindow\map_editor_window.h" />
     <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_controller.h" />
     <ClInclude Include="Controllers\MapEditor\SidePanels\Create\create_controller.h" />

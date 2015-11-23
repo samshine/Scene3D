@@ -24,7 +24,6 @@ private:
 	void on_open();
 	void on_save();
 	void on_save_as();
-	void on_compile();
 	void on_show_create();
 	void on_show_modify();
 	void on_show_objects();

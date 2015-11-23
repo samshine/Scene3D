@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scene3D", "Scene3D\Scene3D.vcxproj", "{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetCompilerTool", "AssetCompilerTool\AssetCompilerTool.vcxproj", "{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapEditor", "MapEditor\MapEditor.vcxproj", "{CFB3642B-8B59-4257-812A-F17B2601DACE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelEditor", "ModelEditor\ModelEditor.vcxproj", "{B6A33079-0462-4E4E-A313-0386FAA94DE4}"
@@ -37,6 +39,18 @@ Global
 		{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}.Release|Win32.Build.0 = Release|Win32
 		{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}.Release|x64.ActiveCfg = Release|x64
 		{4DCCAE36-0FE1-4D41-8E43-7DD7723E23D8}.Release|x64.Build.0 = Release|x64
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|Win32.Build.0 = Debug|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|x64.ActiveCfg = Debug|x64
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Debug|x64.Build.0 = Debug|x64
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|Win32.ActiveCfg = Release|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|Win32.Build.0 = Release|Win32
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|x64.ActiveCfg = Release|x64
+		{BE6F9F0F-4484-4F1F-B5B7-D919FB80F7E4}.Release|x64.Build.0 = Release|x64
 		{CFB3642B-8B59-4257-812A-F17B2601DACE}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{CFB3642B-8B59-4257-812A-F17B2601DACE}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{CFB3642B-8B59-4257-812A-F17B2601DACE}.Debug|Win32.ActiveCfg = Debug|Win32
