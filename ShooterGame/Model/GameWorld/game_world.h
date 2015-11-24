@@ -34,7 +34,6 @@ public:
 
 	SceneEnginePtr scene_engine;
 	ScenePtr scene;
-	SceneObjectPtr level_instance;
 	std::vector<SceneObjectPtr> objects;
 
 	AudioWorldPtr audio;
@@ -62,7 +61,7 @@ public:
 	std::vector<Physics3DObjectPtr> level_collision_objects;
 
 	uicore::JsonValue game_data;
-	uicore::JsonValue level_data;
+	std::shared_ptr<MapData> map_data;
 	uicore::JsonValue weapon_data;
 
 	std::shared_ptr<PlayerList> player_list = std::make_shared<PlayerList>();

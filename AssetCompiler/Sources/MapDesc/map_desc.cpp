@@ -8,7 +8,7 @@ MapDesc::MapDesc()
 {
 }
 
-std::shared_ptr<MapData> MapDesc::convert()
+std::shared_ptr<MapData> MapDesc::convert(const std::string &asset_directory)
 {
 	auto map = std::make_shared<MapData>();
 	for (const auto &obj : objects)
@@ -21,7 +21,8 @@ std::shared_ptr<MapData> MapDesc::convert()
 		map_obj.up = obj.up;
 		map_obj.tilt = obj.tilt;
 		map_obj.scale = obj.scale;
-		map_obj.mesh = obj.mesh; // To do: change .modeldesc to .cmodel
+		if (!obj.mesh.empty())
+			map_obj.mesh = PathHelp::combine(PathHelp::get_fullpath(PathHelp::make_relative(asset_directory, obj.mesh)), PathHelp::get_basename(obj.mesh) + ".cmodel");
 		map_obj.animation = obj.animation;
 		map_obj.fields = obj.fields;
 		map->objects.push_back(map_obj);

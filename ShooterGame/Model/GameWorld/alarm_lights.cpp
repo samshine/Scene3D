@@ -7,17 +7,17 @@ using namespace uicore;
 
 AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {
-	for (const auto &item : world->level_data["objects"].items())
+	for (const auto &item : world->map_data->objects)
 	{
-		if (item["type"].to_string() != "alarmLights") continue;
+		if (item.type != "alarmLights") continue;
 
-		std::string group = item["fields"]["group"].to_string();
+		std::string group = item.fields["group"].to_string();
 
-		auto model = SceneModel::create(world->client->scene, item["mesh"].to_string());
+		auto model = SceneModel::create(world->client->scene, item.mesh);
 		auto light = SceneObject::create(world->client->scene, model);
-		light->set_scale(Vec3f(item["scale"].to_float()));
-		light->set_position(Vec3f(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float()));
-		light->set_orientation(Quaternionf(item["up"].to_float(), item["dir"].to_float(), item["tilt"].to_float(), angle_degrees, order_YXZ));
+		light->set_scale(Vec3f(item.scale));
+		light->set_position(item.position);
+		light->set_orientation(Quaternionf(item.up, item.dir, item.tilt, angle_degrees, order_YXZ));
 		light->play_animation("blinking", true);
 
 		groups[group].push_back(light);

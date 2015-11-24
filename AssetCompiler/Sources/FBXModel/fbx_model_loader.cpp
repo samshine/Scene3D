@@ -468,7 +468,11 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 
 			for (int i = 0; i < num_indices; i++)
 			{
-				for (VertexMapping *mapping = vertices[indices[i]]; mapping != nullptr; mapping = mapping->next)
+				int cp_index = indices[i];
+				if (cp_index < 0 || cp_index >= (int)vertices.size())
+					continue;
+
+				for (VertexMapping *mapping = vertices[cp_index]; mapping != nullptr; mapping = mapping->next)
 				{
 					unsigned char *bone_selectors = reinterpret_cast<unsigned char*>(&mapping->bone_selectors);
 					unsigned char *bone_weights = reinterpret_cast<unsigned char*>(&mapping->bone_weights);

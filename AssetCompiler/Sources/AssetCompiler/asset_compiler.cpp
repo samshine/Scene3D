@@ -45,7 +45,7 @@ void AssetCompilerImpl::build()
 				for (const auto &filename : Directory::files(path))
 				{
 					auto path = PathHelp::get_fullpath(filename);
-					auto name = PathHelp::get_filename(filename);
+					auto name = PathHelp::get_basename(filename);
 					auto ext = PathHelp::get_extension(filename);
 
 					auto output_path = PathHelp::combine(build_directory, PathHelp::make_relative(asset_directory, path));
@@ -55,7 +55,7 @@ void AssetCompilerImpl::build()
 						log_message({ CompilerMessageType::info, name });
 
 						MapDesc desc = MapDesc::load(filename);
-						std::shared_ptr<MapData> map_data = desc.convert();
+						std::shared_ptr<MapData> map_data = desc.convert(asset_directory);
 
 						Directory::create(output_path, true);
 						MapData::save(File::create_always(PathHelp::combine(output_path, name + ".cmap")), map_data);

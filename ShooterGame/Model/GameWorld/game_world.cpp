@@ -16,6 +16,7 @@
 #include "Model/Network/game_network_server.h"
 #include "Model/Network/lock_step_client_time.h"
 #include "Model/Network/lock_step_server_time.h"
+#include <unordered_map>
 
 using namespace uicore;
 
@@ -42,22 +43,19 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 	std::string map_name = game_data["map"].to_string();
 
-	level_data = JsonValue::parse(File::read_all_text(PathHelp::combine("Resources/Assets", map_name + ".mapdesc")));
-	map_cmodel_filename = map_name + ".cmodel";
+	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name + ".cmap"));
 
-	level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::model(ModelData::load(PathHelp::combine("Resources/Assets", map_cmodel_filename)))));
+	std::unordered_map<std::string, Physics3DShapePtr> level_shapes;
 
-	std::map<std::string, Physics3DShapePtr> level_shapes;
-
-	for (auto &item : level_data["objects"].items())
+	for (const auto &item : map_data->objects)
 	{
-		if (item["type"].to_string() != "Static")
+		if (item.type != "Static")
 			continue;
 
-		Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
-		Vec3f scale(item["scale"].to_float());
-		Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
-		std::string model_name = item["mesh"].to_string();
+		Vec3f position = item.position;
+		Vec3f scale = Vec3f(item.scale);
+		Vec3f rotate(item.dir, item.up, item.tilt);
+		std::string model_name = item.mesh;
 
 		auto it = level_shapes.find(model_name);
 		if (it == level_shapes.end())
@@ -96,21 +94,19 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
 		client->scene->set_skybox_gradient(client->window->gc(), colors);
 
-		for (auto &item : level_data["objects"].items())
+		for (const auto &item : map_data->objects)
 		{
-			if (item["type"].to_string() != "Static" || item["fields"]["no_render"].to_boolean())
+			if (item.type != "Static" || item.fields["no_render"].to_boolean())
 				continue;
 
-			Vec3f position(item["position"]["x"].to_float(), item["position"]["y"].to_float(), item["position"]["z"].to_float());
-			Vec3f scale(item["scale"].to_float());
-			Vec3f rotate(item["dir"].to_float(), item["up"].to_float(), item["tilt"].to_float());
-			std::string model_name = item["mesh"].to_string();
-			std::string animation_name = item["animation"].to_string();
+			Vec3f position = item.position;
+			Vec3f scale = Vec3f(item.scale);
+			Vec3f rotate(item.dir, item.up, item.tilt);
+			std::string model_name = item.mesh;
+			std::string animation_name = item.animation;
 			client->objects.push_back(SceneObject::create(client->scene, SceneModel::create(client->scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
 			client->objects.back()->play_animation(animation_name, true);
 		}
-
-		client->level_instance = SceneObject::create(client->scene, SceneModel::create(client->scene, map_cmodel_filename), Vec3f(), Quaternionf(), Vec3f(1.0f));
 
 		auto json = JsonValue::parse(File::read_all_text("Resources/Config/input.json"));
 		client->buttons.load(client->window, json["buttons"]);
@@ -121,51 +117,43 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 	int level_obj_id = 0;
 
-	for (auto &objdesc : level_data["objects"].items())
+	for (const auto &objdesc : map_data->objects)
 	{
-		std::string type = objdesc["type"].to_string();
-		Vec3f pos(objdesc["position"]["x"].to_float(), objdesc["position"]["y"].to_float(), objdesc["position"]["z"].to_float());
-		float dir = objdesc["dir"].to_float();
-		float up = objdesc["up"].to_float();
-		float tilt = objdesc["tilt"].to_float();
-		Quaternionf orientation(up, dir, tilt, angle_degrees, order_YXZ);
-		std::string mesh = objdesc["mesh"].to_string();
-		std::string animation = objdesc["animation"].to_string();
-		float scale = objdesc["scale"].to_float();
+		Quaternionf orientation(objdesc.up, objdesc.dir, objdesc.tilt, angle_degrees, order_YXZ);
 
-		auto &fields = objdesc["fields"];
+		auto &fields = objdesc.fields;
 
-		if (type == "Elevator")
+		if (objdesc.type == "Elevator")
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
 
-			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, pos, pos2, orientation, mesh);
+			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, objdesc.position, pos2, orientation, objdesc.mesh);
 			add(elevator);
 
 			elevators[elevator->level_obj_id] = elevator;
 		}
-		else if (type == "Powerup")
+		else if (objdesc.type == "Powerup")
 		{
 			std::string powerup_type = fields["powerupType"].to_string();
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			float respawn_time = fields["respawnTime"].to_float();
 
-			auto powerup = std::make_shared<Powerup>(this, pos, orientation, mesh, scale, animation, collision_box_size, respawn_time, powerup_type);
+			auto powerup = std::make_shared<Powerup>(this, objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, respawn_time, powerup_type);
 			add(powerup);
 		}
-		else if (type == "Flag")
+		else if (objdesc.type == "Flag")
 		{
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			std::string team = fields["team"].to_string();
 
-			auto flag = std::make_shared<Flag>(this, pos, orientation, mesh, scale, animation, collision_box_size, team);
+			auto flag = std::make_shared<Flag>(this, objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, team);
 			add(flag);
 		}
-		else if (type == "SpawnPoint")
+		else if (objdesc.type == "SpawnPoint")
 		{
 			std::string team = fields["team"].to_string();
 
-			auto spawn = std::make_shared<SpawnPoint>(this, pos, dir, up, tilt, team);
+			auto spawn = std::make_shared<SpawnPoint>(this, objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
 			add(spawn);
 			spawn_points.push_back(spawn);
 		}
@@ -222,7 +210,6 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement)
 
 	if (client)
 	{
-		client->level_instance->update(time_elapsed);
 		for (auto &object : client->objects)
 			object->update(time_elapsed);
 

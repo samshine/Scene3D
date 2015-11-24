@@ -23,7 +23,7 @@ public:
 	std::vector<MapDescTrigger> triggers;
 	std::vector<MapDescPathNode> path_nodes;
 
-	std::shared_ptr<MapData> convert();
+	std::shared_ptr<MapData> convert(const std::string &asset_directory);
 
 	static MapDesc load(const std::string &filename);
 	void save(const std::string &filename);
