@@ -74,7 +74,103 @@ std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 
 std::shared_ptr<ModelData> SceneEngineImpl::get_model_data(const std::string &name)
 {
-	return ModelData::load(PathHelp::combine("Resources/Assets", name));
+#if defined(BOX_IF_NOT_FOUND)
+	try
+#endif
+	{
+		return ModelData::load(PathHelp::combine("Resources/Assets", name));
+	}
+#if defined(BOX_IF_NOT_FOUND)
+	catch (...)
+	{
+		auto box_size = Vec3f(0.01f);
+		auto model_data = std::make_shared<ModelData>();
+
+		model_data->aabb_min = -box_size;
+		model_data->aabb_max = box_size;
+
+		model_data->animations.resize(3);
+		model_data->animations[0].name = "default";
+		model_data->animations[1].name = "up";
+		model_data->animations[2].name = "down";
+
+		model_data->meshes.resize(1);
+		model_data->meshes[0].channels.resize(4);
+
+		Vec3f normal[6] =
+		{
+			Vec3f(0.0f, 1.0f, 0.0f),
+			Vec3f(0.0f, -1.0f, 0.0f),
+			Vec3f(1.0f, 0.0f, 0.0f),
+			Vec3f(-1.0f, 0.0f, 0.0f),
+			Vec3f(0.0f, 0.0f, 1.0f),
+			Vec3f(0.0f, 0.0f, -1.0f)
+		};
+
+		Vec3f tangent[6] =
+		{
+			Vec3f(1.0, 0.0f, 0.0f),
+			Vec3f(1.0, 0.0f, 0.0f),
+			Vec3f(0.0f, 1.0f, 0.0f),
+			Vec3f(0.0f, -1.0f, 0.0f),
+			Vec3f(0.0f, 1.0f, 0.0f),
+			Vec3f(0.0f, -1.0f, 0.0f)
+		};
+
+		for (int i = 0; i < 6; i++)
+		{
+			Vec3f bitangent = Vec3f::cross(normal[i], tangent[i]);
+
+			model_data->meshes[0].vertices.push_back((normal[i] - tangent[i] - bitangent) * box_size);
+			model_data->meshes[0].vertices.push_back((normal[i] + tangent[i] - bitangent) * box_size);
+			model_data->meshes[0].vertices.push_back((normal[i] - tangent[i] + bitangent) * box_size);
+			model_data->meshes[0].vertices.push_back((normal[i] + tangent[i] + bitangent) * box_size);
+
+			for (int j = 0; j < 4; j++)
+			{
+				model_data->meshes[0].normals.push_back(normal[i]);
+				model_data->meshes[0].tangents.push_back(tangent[i]);
+				model_data->meshes[0].bitangents.push_back(bitangent);
+			}
+
+			for (int j = 0; j < 4; j++)
+			{
+				model_data->meshes[0].channels[j].push_back(Vec2f(0.0f, 0.0f));
+				model_data->meshes[0].channels[j].push_back(Vec2f(1.0f, 0.0f));
+				model_data->meshes[0].channels[j].push_back(Vec2f(0.0f, 1.0f));
+				model_data->meshes[0].channels[j].push_back(Vec2f(1.0f, 1.0f));
+			}
+
+			model_data->meshes[0].elements.push_back(i * 4 + 0);
+			model_data->meshes[0].elements.push_back(i * 4 + 1);
+			model_data->meshes[0].elements.push_back(i * 4 + 2);
+			model_data->meshes[0].elements.push_back(i * 4 + 3);
+			model_data->meshes[0].elements.push_back(i * 4 + 2);
+			model_data->meshes[0].elements.push_back(i * 4 + 1);
+		}
+
+		ModelDataDrawRange range;
+		range.start_element = 0;
+		range.num_elements = 36;
+		range.ambient.set_single_value(Vec3f(1.0f));
+		range.diffuse.set_single_value(Vec3f(1.0f));
+		range.specular.set_single_value(Vec3f(1.0f));
+		range.glossiness.set_single_value(20.0f);
+		range.specular_level.set_single_value(25.0f);
+
+		range.self_illumination_amount.timelines.resize(1);
+		range.self_illumination_amount.timelines[0].timestamps.push_back(0.0f);
+		range.self_illumination_amount.timelines[0].values.push_back(0.0);
+
+		range.self_illumination.timelines.resize(1);
+		range.self_illumination.timelines[0].timestamps.push_back(0.0f);
+		range.self_illumination.timelines[0].values.push_back(Vec3f());
+
+		model_data->meshes[0].draw_ranges.push_back(range);
+
+		return model_data;
+	}
+#endif
 }
 
 void SceneEngineImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)

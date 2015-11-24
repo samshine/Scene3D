@@ -122,7 +122,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		Quaternionf orientation(objdesc.up, objdesc.dir, objdesc.tilt, angle_degrees, order_YXZ);
 
 		auto &fields = objdesc.fields;
-
+		
 		if (objdesc.type == "Elevator")
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
@@ -153,7 +153,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		{
 			std::string team = fields["team"].to_string();
 
-			auto spawn = std::make_shared<SpawnPoint>(this, objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
+			auto spawn = std::make_shared<SpawnPoint>(this, /*Vec3f(0,10,0)*/objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
 			add(spawn);
 			spawn_points.push_back(spawn);
 		}

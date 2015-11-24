@@ -9,7 +9,7 @@ AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 {
 	for (const auto &item : world->map_data->objects)
 	{
-		if (item.type != "alarmLights") continue;
+		if (item.type != "AlarmLight") continue;
 
 		std::string group = item.fields["group"].to_string();
 
@@ -18,7 +18,7 @@ AlarmLights::AlarmLights(GameWorld *world) : GameObject(world)
 		light->set_scale(Vec3f(item.scale));
 		light->set_position(item.position);
 		light->set_orientation(Quaternionf(item.up, item.dir, item.tilt, angle_degrees, order_YXZ));
-		light->play_animation("blinking", true);
+		light->play_animation(item.animation, true);
 
 		groups[group].push_back(light);
 	}
