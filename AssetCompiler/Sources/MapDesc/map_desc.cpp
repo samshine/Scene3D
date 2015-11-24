@@ -8,6 +8,34 @@ MapDesc::MapDesc()
 {
 }
 
+std::shared_ptr<MapData> MapDesc::convert()
+{
+	auto map = std::make_shared<MapData>();
+	for (const auto &obj : objects)
+	{
+		MapDataObject map_obj;
+		map_obj.id = obj.id;
+		map_obj.type = obj.type;
+		map_obj.position = obj.position;
+		map_obj.dir = obj.dir;
+		map_obj.up = obj.up;
+		map_obj.tilt = obj.tilt;
+		map_obj.scale = obj.scale;
+		map_obj.mesh = obj.mesh; // To do: change .modeldesc to .cmodel
+		map_obj.animation = obj.animation;
+		map_obj.fields = obj.fields;
+		map->objects.push_back(map_obj);
+	}
+	for (const auto &path : path_nodes)
+	{
+		MapDataPathNode map_path;
+		map_path.position = path.position;
+		map_path.connections = path.connections;
+		map->path_nodes.push_back(map_path);
+	}
+	return map;
+}
+
 MapDesc MapDesc::load(const std::string &filename)
 {
 	MapDesc desc;

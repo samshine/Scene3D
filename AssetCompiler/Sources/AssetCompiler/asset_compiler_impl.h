@@ -36,7 +36,7 @@ private:
 
 	std::string asset_directory;
 	std::string build_directory;
-	std::function<void(const CompilerMessage&)> log;
+	std::function<void(const CompilerMessage&)> log_message;
 
 	std::thread worker_thread;
 	std::mutex mutex;
