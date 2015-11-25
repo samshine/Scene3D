@@ -55,7 +55,7 @@ void EditScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const
 	update_model(scene, gc);
 
 	camera->set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
-	camera->set_position(camera->orientation().rotate_vector(Vec3f(0.0f, 10.0f, -25.0f)));
+	camera->set_position(camera->orientation().rotate_vector(Vec3f(0.0f, 1.0f, -2.5f)));
 
 	gametime.update();
 
