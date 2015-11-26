@@ -131,7 +131,7 @@ void SceneObjectImpl::set_bone_orientations(const std::vector<uicore::Quaternion
 
 void SceneObjectImpl::create_lights(const ScenePtr &scene_base)
 {
-	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
+	const std::vector<ModelDataLight> &model_lights = instance.get_renderer()->model_data->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)
 		lights.push_back(SceneLight::create(scene_base));
 	update_lights();
@@ -145,7 +145,7 @@ void SceneObjectImpl::update_lights()
 	float animation_time = instance.get_animation_time();
 	if (animation_index != -1)
 	{
-		std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
+		std::vector<ModelDataLight> &model_lights = instance.get_renderer()->model_data->lights;
 		for (size_t i = 0; i < model_lights.size(); i++)
 		{
 			// To do: apply bone_selector
@@ -169,7 +169,7 @@ void SceneObjectImpl::update_lights()
 AxisAlignedBoundingBox SceneObjectImpl::get_aabb() const
 {
 	if (instance.get_renderer())
-		return AxisAlignedBoundingBox(instance.get_renderer()->get_model_data()->aabb_min * _scale + _position, instance.get_renderer()->get_model_data()->aabb_max * _scale + _position);
+		return AxisAlignedBoundingBox(instance.get_renderer()->model_data->aabb_min * _scale + _position, instance.get_renderer()->model_data->aabb_max * _scale + _position);
 	else
 		return AxisAlignedBoundingBox();
 }

@@ -15,7 +15,7 @@ class SceneImpl;
 class SceneEngineImpl : public SceneEngine
 {
 public:
-	SceneEngineImpl(const uicore::GraphicContextPtr &gc);
+	SceneEngineImpl();
 	~SceneEngineImpl();
 
 	int models_drawn() const override { return render.models_drawn; }
@@ -25,8 +25,6 @@ public:
 	int scene_visits() const override { return render.scene_visits; }
 	const std::vector<GPUTimer::Result> &gpu_results() const override { return render.gpu_results; }
 
-	uicore::GraphicContextPtr get_gc() const { return gc; }
-
 	std::shared_ptr<Model> get_model(const std::string &model_name);
 	std::shared_ptr<ModelData> get_model_data(const std::string &name);
 	Resource<uicore::TexturePtr> get_texture(const uicore::GraphicContextPtr &gc, const std::string &name, bool linear);
@@ -34,8 +32,6 @@ public:
 
 	void render_viewport(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport);
 	void update_viewport(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed);
-
-	void process_work_completed() { work_queue->process_work_completed(); }
 
 	SceneRender render;
 

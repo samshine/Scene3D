@@ -3,14 +3,10 @@
 #include "scene_engine_impl.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/SceneEngine/Model/model.h"
-#include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/Scene/scene_camera_impl.h"
-#include "scene_viewport_impl.h"
 
 using namespace uicore;
 
-SceneEngineImpl::SceneEngineImpl(const GraphicContextPtr &gc)
-	: gc(gc), render(gc, this)
+SceneEngineImpl::SceneEngineImpl() : render(this)
 {
 }
 
@@ -21,69 +17,16 @@ SceneEngineImpl::~SceneEngineImpl()
 
 void SceneEngineImpl::render_viewport(const GraphicContextPtr &gc, SceneViewportImpl *viewport)
 {
-	ScopeTimeFunction();
-
-	render.models_drawn = 0;
-	render.instances_drawn = 0;
-	render.draw_calls = 0;
-	render.triangles_drawn = 0;
-	render.scene_visits = 0;
-
-	if (!viewport->camera())
-		return;
-
-	render.engine = this;
-	render.scene = viewport->scene();
-	render.camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
-
-	render.viewport = viewport->_viewport;
-	render.fb_viewport = viewport->_fb_viewport;
-
-	render.gc = gc;
-	render.gpu_timer.begin_frame(gc);
-
-	render.setup_pass_buffers(gc);
-
-	if (render.field_of_view != viewport->camera()->field_of_view())
-		render.field_of_view = viewport->camera()->field_of_view();
-
-	Quaternionf inv_orientation = Quaternionf::inverse(viewport->camera()->orientation());
-	render.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-viewport->camera()->position());
-
-	for (const auto &pass : render.passes)
-	{
-		render.gpu_timer.begin_time(gc, pass->name());
-		pass->run();
-		render.gpu_timer.end_time(gc);
-	}
-
-	render.gpu_timer.end_frame(gc);
-	render.gpu_results = render.gpu_timer.get_results(gc);
-	render.gc = nullptr;
-	render.camera = nullptr;
-	render.scene = nullptr;
-
-	if (gc->shader_language() == shader_glsl)
-		OpenGL::check_error();
+	render.render(gc, viewport);
 }
 
-void SceneEngineImpl::update_viewport(const GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed)
+void SceneEngineImpl::update_viewport(const GraphicContextPtr &update_gc, SceneViewportImpl *viewport, float time_elapsed)
 {
-	process_work_completed();
+	gc = update_gc;
+	work_queue->process_work_completed();
 	update_textures(gc, time_elapsed);
-	if (!viewport->camera())
-		return;
-	render.scene = viewport->scene();
-	render.camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
-	render.gc = gc;
-	render.time_elapsed = time_elapsed;
-	for (const auto &pass : render.passes)
-		pass->update();
-	render.gc = nullptr;
-	render.camera = nullptr;
-	render.scene = nullptr;
-	render.time_elapsed = 0.0f;
-	// To do: update scene object animations here too
+	render.update(gc, viewport, time_elapsed);
+	gc = nullptr;
 }
 
 std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
@@ -91,7 +34,7 @@ std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 	auto &renderer = models[model_name];
 	if (!renderer)
 	{
-		renderer = std::make_shared<Model>(get_gc(), this, get_model_data(model_name), render.instances_buffer.new_offset_index());
+		renderer = std::make_shared<Model>(this, get_model_data(model_name), render.instances_buffer.new_offset_index());
 	}
 	return renderer;
 }

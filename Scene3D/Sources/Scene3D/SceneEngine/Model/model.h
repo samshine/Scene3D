@@ -14,38 +14,12 @@ class SceneEngineImpl;
 class Model
 {
 public:
-	Model(const uicore::GraphicContextPtr &gc, SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data, int model_index);
-	const std::vector<ModelDataLight> &get_lights();
-	const std::shared_ptr<ModelData> &get_model_data() const { return model_data; }
+	Model(SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data, int model_index);
 
-	bool add_instance(int frame, const ModelInstance &instance, const uicore::Mat4f &object_to_world, const uicore::Vec3f &light_probe_color);
+	void create_mesh(const uicore::GraphicContextPtr &gc);
 
-	int get_instance_vectors_count() const;
-	int get_vectors_per_instance() const;
-	void upload(InstancesBuffer &instances_buffer, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection);
-
-	static const int vectors_per_bone = 3;
-	static const int instance_base_vectors = 16;
-	static const int vectors_per_material = 14;
-
-private:
-	SceneEngineImpl *engine = nullptr;
+	SceneEngineImpl *engine;
 	std::shared_ptr<ModelData> model_data;
-	std::vector<Resource<uicore::TexturePtr> > textures;
-
-	std::vector<std::shared_ptr<ModelLOD> > levels;
-
-	int frame;
-	std::vector<const ModelInstance *> instances;
-	std::vector<uicore::Mat4f> instances_object_to_world;
-	std::vector<uicore::Vec3f> instances_light_probe_color;
-
-	uicore::PixelBufferPtr instance_bones_transfer;
-	uicore::Texture2DPtr instance_bones;
-	int max_instances;
-
+	std::shared_ptr<ModelLOD> mesh;
 	int model_index;
-
-	friend class ModelShaderCache;
-	friend class InstancesBuffer;
 };

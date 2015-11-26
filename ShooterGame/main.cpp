@@ -35,16 +35,7 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	MouseMovement mouse_movement;
 
-	try
-	{
-		Screen::scene_engine() = SceneEngine::create(gc);
-	}
-	catch (...)
-	{
-		ExceptionDialog::show(std::current_exception());
-		return 0;
-	}
-
+	Screen::scene_engine() = SceneEngine::create();
 	Screen::sound_cache() = std::make_shared<SoundCache>();
 
 	SlotContainer slots;

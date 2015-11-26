@@ -20,7 +20,7 @@ private:
 	void pointer_release(uicore::PointerEvent &e);
 	void pointer_move(uicore::PointerEvent &e);
 
-	void setup_scene(const uicore::GraphicContextPtr &gc);
+	void setup_scene();
 
 	uicore::TimerPtr timer;
 	MouseMovement mouse_movement;

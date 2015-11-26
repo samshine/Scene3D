@@ -23,15 +23,15 @@
 
 class SceneCameraImpl;
 class SceneEngineImpl;
+class SceneViewportImpl;
 
 class SceneRender
 {
 public:
-	SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *engine);
-	SceneRender(const SceneRender &) = delete;
-	SceneRender &operator=(const SceneRender &) = delete;
+	SceneRender(SceneEngineImpl *engine);
 
-	void setup_pass_buffers(const uicore::GraphicContextPtr &gc);
+	void render(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport);
+	void update(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed);
 
 	SceneEngineImpl *engine = nullptr;
 	SceneImpl *scene = nullptr;
@@ -74,7 +74,7 @@ public:
 
 	std::vector<std::shared_ptr<ScenePass>> passes;
 
-	std::unique_ptr<ModelShaderCache> model_shader_cache;
+	std::unique_ptr<ModelShaderCache> model_shader_cache = std::make_unique<ModelShaderCache>();
 	InstancesBuffer instances_buffer;
 
 	int models_drawn = 0;
@@ -84,4 +84,11 @@ public:
 	int scene_visits = 0;
 	std::vector<GPUTimer::Result> gpu_results;
 	GPUTimer gpu_timer;
+
+private:
+	SceneRender(const SceneRender &) = delete;
+	SceneRender &operator=(const SceneRender &) = delete;
+
+	void setup_passes();
+	void setup_pass_buffers();
 };

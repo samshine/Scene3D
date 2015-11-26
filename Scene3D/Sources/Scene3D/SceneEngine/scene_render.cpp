@@ -1,12 +1,87 @@
 
 #include "precomp.h"
 #include "scene_render.h"
+#include "Scene3D/Performance/scope_timer.h"
+#include "Scene3D/Scene/scene_camera_impl.h"
+#include "Scene3D/SceneEngine/scene_viewport_impl.h"
 
 using namespace uicore;
 
-SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *engine)
+SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine)
 {
-	model_shader_cache = std::make_unique<ModelShaderCache>();
+}
+
+void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *scene_viewport)
+{
+	ScopeTimeFunction();
+
+	models_drawn = 0;
+	instances_drawn = 0;
+	draw_calls = 0;
+	triangles_drawn = 0;
+	scene_visits = 0;
+
+	if (!scene_viewport->camera())
+		return;
+
+	scene = scene_viewport->scene();
+	camera = static_cast<SceneCameraImpl*>(scene_viewport->camera().get());
+
+	viewport = scene_viewport->_viewport;
+	fb_viewport = scene_viewport->_fb_viewport;
+
+	field_of_view = camera->field_of_view();
+
+	gc = render_gc;
+	gpu_timer.begin_frame(gc);
+
+	setup_passes();
+	setup_pass_buffers();
+
+	Quaternionf inv_orientation = Quaternionf::inverse(scene_viewport->camera()->orientation());
+	world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene_viewport->camera()->position());
+
+	for (const auto &pass : passes)
+	{
+		gpu_timer.begin_time(gc, pass->name());
+		pass->run();
+		gpu_timer.end_time(gc);
+	}
+
+	gpu_timer.end_frame(gc);
+	gpu_results = gpu_timer.get_results(gc);
+	gc = nullptr;
+	camera = nullptr;
+	scene = nullptr;
+
+	if (render_gc->shader_language() == shader_glsl)
+		OpenGL::check_error();
+}
+
+void SceneRender::update(const GraphicContextPtr &render_gc, SceneViewportImpl *viewport, float time_elapsed)
+{
+	if (!viewport->camera())
+		return;
+
+	scene = viewport->scene();
+	camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
+	gc = render_gc;
+	time_elapsed = time_elapsed;
+
+	for (const auto &pass : passes)
+		pass->update();
+
+	gc = nullptr;
+	camera = nullptr;
+	scene = nullptr;
+	time_elapsed = 0.0f;
+	// To do: update scene object animations here too
+}
+
+void SceneRender::setup_passes()
+{
+	if (!passes.empty())
+		return;
 
 	bool use_compute_shader_pass = true;
 
@@ -42,7 +117,7 @@ SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *e
 	passes.push_back(std::make_shared<FinalPass>(gc, *this));
 }
 
-void SceneRender::setup_pass_buffers(const GraphicContextPtr &gc)
+void SceneRender::setup_pass_buffers()
 {
 	Size viewport_size = viewport.size();
 

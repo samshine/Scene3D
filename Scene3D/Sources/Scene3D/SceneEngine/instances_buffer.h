@@ -51,5 +51,5 @@ private:
 	uicore::Texture2DPtr indexes[num_buffers];
 	uicore::Texture2DPtr vectors[num_buffers];
 
-	friend class Model;
+	friend class ModelLOD;
 };

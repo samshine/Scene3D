@@ -50,7 +50,7 @@ void ModelInstance::get_attachment_location(const std::string &name, Vec3f &out_
 
 	if (renderer)
 	{
-		auto &model_data = renderer->get_model_data();
+		const auto &model_data = renderer->model_data;
 		for (const auto &attachment : model_data->attachment_points)
 		{
 			if (attachment.name == name)
@@ -90,7 +90,7 @@ void ModelInstance::get_bone_transform(size_t bone_index, const ModelDataBone &b
 		return;
 	}
 
-	auto &model_data = renderer->get_model_data();
+	const auto &model_data = renderer->model_data;
 
 	int animation_index = cur_anim.get_animation_index();
 	float animation_time = cur_anim.get_animation_time();
@@ -139,7 +139,7 @@ void ModelAnimationTime::update(std::shared_ptr<Model> &renderer, float time_ela
 		if (animation_index == -1)
 			break;
 
-		const auto &animation = renderer->get_model_data()->animations[animation_index];
+		const auto &animation = renderer->model_data->animations[animation_index];
 		if (animation.playback_speed <= 0.0f || animation.length <= 0.0f)
 		{
 			next_animation(renderer);
@@ -172,7 +172,7 @@ void ModelAnimationTime::moved(std::shared_ptr<Model> &renderer, float units_mov
 		if (animation_index == -1)
 			break;
 
-		const auto &animation = renderer->get_model_data()->animations[animation_index];
+		const auto &animation = renderer->model_data->animations[animation_index];
 		if (animation.moving_speed <= 0.0f || animation.length <= 0.0f)
 			break;
 
@@ -199,21 +199,21 @@ void ModelAnimationTime::update_animation_index(std::shared_ptr<Model> &renderer
 	if (renderer)
 	{
 		int playback_rarity = -1;
-		for (size_t i = 0; i < renderer->get_model_data()->animations.size(); i++)
+		for (size_t i = 0; i < renderer->model_data->animations.size(); i++)
 		{
-			if (renderer->get_model_data()->animations[i].name == animation_name)
+			if (renderer->model_data->animations[i].name == animation_name)
 			{
-				if (renderer->get_model_data()->animations[i].rarity != 0xffff && playback_rarity == -1)
+				if (renderer->model_data->animations[i].rarity != 0xffff && playback_rarity == -1)
 					playback_rarity = rand() * 0xffff / RAND_MAX;
 
-				if (playback_rarity <= renderer->get_model_data()->animations[i].rarity)
+				if (playback_rarity <= renderer->model_data->animations[i].rarity)
 				{
 					animation_index = i;
 					break;
 				}
 				else
 				{
-					playback_rarity -= renderer->get_model_data()->animations[i].rarity;
+					playback_rarity -= renderer->model_data->animations[i].rarity;
 				}
 			}
 		}

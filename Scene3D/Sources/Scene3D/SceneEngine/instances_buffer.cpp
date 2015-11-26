@@ -6,6 +6,7 @@
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/SceneEngine/Model/model.h"
+#include "Scene3D/SceneEngine/Model/model_lod.h"
 
 using namespace uicore;
 
@@ -24,12 +25,14 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 	ScopeTimeFunction();
 	scene->engine()->render.scene_visits++;
 
-	std::vector<Model *> models;
+	std::vector<ModelLOD *> model_meshes;
 
 	scene->foreach_object(frustum, [&](SceneObjectImpl *object)
 	{
 		if (object->instance.get_renderer())
 		{
+			object->instance.get_renderer()->create_mesh(gc);
+
 			Vec3f light_probe_color;
 			if (object->light_probe_receiver())
 			{
@@ -39,10 +42,10 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 			}
 
 			scene->engine()->render.instances_drawn++;
-			bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
+			bool first_instance = object->instance.get_renderer()->mesh->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 			if (first_instance)
 			{
-				models.push_back(object->instance.get_renderer().get());
+				model_meshes.push_back(object->instance.get_renderer()->mesh.get());
 				scene->engine()->render.models_drawn++;
 			}
 		}
@@ -51,21 +54,19 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 	frame++;
 
 	clear();
-	for (size_t i = 0; i < models.size(); i++)
-		add(models[i]->get_instance_vectors_count());
+	for (auto mesh : model_meshes)
+		add(mesh->get_instance_vectors_count());
 
 	lock(gc);
-	for (size_t i = 0; i < models.size(); i++)
-		models[i]->upload(*this, world_to_eye, eye_to_projection);
+	for (auto mesh : model_meshes)
+		mesh->upload(*this, world_to_eye, eye_to_projection);
 	unlock(gc);
 
 	gc->set_texture(0, get_indexes());
 	gc->set_texture(1, get_vectors());
 
-	for (Model *model : models)
-	{
-		pass_callback(model->levels[0].get(), model->instances.size());
-	}
+	for (auto mesh : model_meshes)
+		pass_callback(mesh, mesh->instances.size());
 
 	// We cannot reset those because GBufferPass::run contains a hack relying on them being bound
 	//gc->set_texture(0, nullptr);

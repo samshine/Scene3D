@@ -82,7 +82,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	last_mouse_movement = move;
 
 
-	setup_scene(gc);
+	setup_scene();
 	sig_update_scene(scene, scene_viewport, gc, window, delta_mouse_move);
 
 	if (!scene_frame_buffer || !scene_texture || scene_texture->size() != viewport_size_i)
@@ -110,11 +110,11 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	timer->start(10, true);
 }
 
-void SceneView::setup_scene(const GraphicContextPtr &gc)
+void SceneView::setup_scene()
 {
 	if (scene) return;
 
-	cache = SceneEngine::create(gc);
+	cache = SceneEngine::create();
 	scene = Scene::create(cache);
 	scene_viewport = SceneViewport::create(cache);
 
