@@ -23,7 +23,7 @@ public:
 	ModelDesc desc;
 	std::string map_model;
 
-	std::shared_ptr<FBXModel> fbx;
+	FBXModelPtr fbx;
 	std::shared_ptr<ModelData> model_data;
 
 	std::shared_ptr<EditorScene> editor_scene;

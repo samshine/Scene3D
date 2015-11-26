@@ -52,8 +52,8 @@ void AssetCompilerImpl::build()
 
 						ModelDesc desc = ModelDesc::load(filename);
 
-						FBXModel model(desc.fbx_filename);
-						std::shared_ptr<ModelData> model_data = model.convert(desc);
+						auto model = FBXModel::load(desc.fbx_filename);
+						std::shared_ptr<ModelData> model_data = model->convert(desc);
 
 						auto texture_output_path = PathHelp::combine(build_directory, "Textures");
 						Directory::create(texture_output_path, true);

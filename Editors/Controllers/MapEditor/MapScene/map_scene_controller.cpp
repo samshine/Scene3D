@@ -68,7 +68,7 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 				try
 				{
 					auto model_desc = ModelDesc::load(obj_desc.mesh);
-					auto fbx = std::make_shared<FBXModel>(model_desc.fbx_filename);
+					auto fbx = FBXModel::load(model_desc.fbx_filename);
 					auto model_data = fbx->convert(model_desc);
 					model = SceneModel::create(scene, model_data);
 					shape = Physics3DShape::model(model_data);

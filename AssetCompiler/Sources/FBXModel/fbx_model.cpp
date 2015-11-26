@@ -1,6 +1,5 @@
 
 #include "precomp.h"
-#include "AssetCompiler/FBXModel/fbx_model.h"
 #include "AssetCompiler/ModelDescription/model_desc.h"
 #include "AssetCompiler/MapDescription/map_desc.h"
 #include "Lightmap/lightmap_uv.h"
@@ -12,58 +11,11 @@
 
 using namespace uicore;
 
-FBXModel::FBXModel(const std::string &filename) : impl(std::make_shared<FBXModelImpl>(filename))
+std::shared_ptr<FBXModel> FBXModel::load(const std::string &filename)
 {
+	return std::make_shared<FBXModelImpl>(filename);
 }
 
-const std::vector<std::string> &FBXModel::material_names() const
-{
-	return impl->material_names;
-}
-
-const std::vector<std::string> &FBXModel::bone_names() const
-{
-	return impl->bone_names;
-}
-
-const std::vector<std::string> &FBXModel::light_names() const
-{
-	return impl->light_names;
-}
-
-const std::vector<std::string> &FBXModel::camera_names() const
-{
-	return impl->camera_names;
-}
-
-std::shared_ptr<ModelData> FBXModel::convert(const ModelDesc &desc)
-{
-	FBXModelLoader loader(impl.get(), desc);
-	return loader.model_data;
-}
-/*
-std::shared_ptr<ModelData> FBXModel::convert(const MapDesc &desc, bool bake_light)
-{
-	ModelDesc model_desc;
-	model_desc.fbx_filename = desc.fbx_filename;
-	model_desc.materials = desc.materials;
-	model_desc.emitters = desc.emitters;
-
-	FBXModelLoader loader(impl.get(), model_desc);
-	std::shared_ptr<ModelData> data = loader.model_data;
-	if (bake_light)
-	{
-		LightmapUV lightmap_uv;
-		lightmap_uv.generate(data);
-
-		LightmapTexture lightmap_texture;
-		lightmap_texture.generate(data);
-
-		data->lights.clear();
-	}
-	return data;
-}
-*/
 /////////////////////////////////////////////////////////////////////////
 
 FBXModelImpl::FBXModelImpl(const std::string &filename)
@@ -90,6 +42,55 @@ FBXModelImpl::~FBXModelImpl()
 	if (manager)
 		manager->Destroy();
 }
+
+const std::vector<std::string> &FBXModelImpl::material_names() const
+{
+	return _material_names;
+}
+
+const std::vector<std::string> &FBXModelImpl::bone_names() const
+{
+	return _bone_names;
+}
+
+const std::vector<std::string> &FBXModelImpl::light_names() const
+{
+	return _light_names;
+}
+
+const std::vector<std::string> &FBXModelImpl::camera_names() const
+{
+	return _camera_names;
+}
+
+std::shared_ptr<ModelData> FBXModelImpl::convert(const ModelDesc &desc)
+{
+	FBXModelLoader loader(this, desc);
+	return loader.model_data;
+}
+/*
+std::shared_ptr<ModelData> FBXModel::convert(const MapDesc &desc, bool bake_light)
+{
+	ModelDesc model_desc;
+	model_desc.fbx_filename = desc.fbx_filename;
+	model_desc.materials = desc.materials;
+	model_desc.emitters = desc.emitters;
+
+	FBXModelLoader loader(impl.get(), model_desc);
+	std::shared_ptr<ModelData> data = loader.model_data;
+	if (bake_light)
+	{
+		LightmapUV lightmap_uv;
+		lightmap_uv.generate(data);
+
+		LightmapTexture lightmap_texture;
+		lightmap_texture.generate(data);
+
+		data->lights.clear();
+	}
+	return data;
+}
+*/
 
 void FBXModelImpl::inspect_node(FbxNode *node)
 {
@@ -134,8 +135,8 @@ void FBXModelImpl::inspect_mesh(FbxNode *node)
 		FbxSurfaceMaterial *material = node->GetMaterial(material_index);
 
 		std::string name = material->GetName();
-		if (std::find(material_names.begin(), material_names.end(), name) == material_names.end())
-			material_names.push_back(name);
+		if (std::find(_material_names.begin(), _material_names.end(), name) == _material_names.end())
+			_material_names.push_back(name);
 	}
 
 	inspect_skins(node, mesh);
@@ -160,8 +161,8 @@ void FBXModelImpl::inspect_skins(FbxNode *node, FbxMesh *mesh)
 			if (link)
 			{
 				std::string name = link->GetName();
-				if (std::find(bone_names.begin(), bone_names.end(), name) == bone_names.end())
-					bone_names.push_back(name);
+				if (std::find(_bone_names.begin(), _bone_names.end(), name) == _bone_names.end())
+					_bone_names.push_back(name);
 			}
 		}
 	}
@@ -172,8 +173,8 @@ void FBXModelImpl::inspect_camera(FbxNode *node)
 	// FbxCamera *camera = static_cast<FbxCamera*>(node->GetNodeAttribute());
 
 	std::string name = node->GetName();
-	if (std::find(camera_names.begin(), camera_names.end(), name) == camera_names.end())
-		camera_names.push_back(name);
+	if (std::find(_camera_names.begin(), _camera_names.end(), name) == _camera_names.end())
+		_camera_names.push_back(name);
 }
 
 void FBXModelImpl::inspect_light(FbxNode *node)
@@ -181,8 +182,8 @@ void FBXModelImpl::inspect_light(FbxNode *node)
 	// FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
 
 	std::string name = node->GetName();
-	if (std::find(light_names.begin(), light_names.end(), name) == light_names.end())
-		light_names.push_back(name);
+	if (std::find(_light_names.begin(), _light_names.end(), name) == _light_names.end())
+		_light_names.push_back(name);
 }
 
 void FBXModelImpl::triangulate_scene()

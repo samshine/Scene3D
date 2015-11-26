@@ -37,7 +37,7 @@ void ModelAppModel::save(const std::string &filename)
 void ModelAppModel::set_fbx_model(const std::string &filename)
 {
 	desc.fbx_filename = filename;
-	fbx = std::make_shared<FBXModel>(desc.fbx_filename);
+	fbx = FBXModel::load(desc.fbx_filename);
 	update_scene_model();
 }
 

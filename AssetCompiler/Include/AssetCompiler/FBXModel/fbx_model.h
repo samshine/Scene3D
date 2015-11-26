@@ -13,16 +13,14 @@ class FBXModelImpl;
 class FBXModel
 {
 public:
-	FBXModel(const std::string &filename);
+	static std::shared_ptr<FBXModel> load(const std::string &filename);
 
-	const std::vector<std::string> &material_names() const;
-	const std::vector<std::string> &bone_names() const;
-	const std::vector<std::string> &light_names() const;
-	const std::vector<std::string> &camera_names() const;
+	virtual const std::vector<std::string> &material_names() const = 0;
+	virtual const std::vector<std::string> &bone_names() const = 0;
+	virtual const std::vector<std::string> &light_names() const = 0;
+	virtual const std::vector<std::string> &camera_names() const = 0;
 
-	std::shared_ptr<ModelData> convert(const ModelDesc &desc);
-	//std::shared_ptr<ModelData> convert(const MapDesc &desc, bool bake_light = false);
-
-private:
-	std::shared_ptr<FBXModelImpl> impl;
+	virtual std::shared_ptr<ModelData> convert(const ModelDesc &desc) = 0;
 };
+
+typedef std::shared_ptr<FBXModel> FBXModelPtr;

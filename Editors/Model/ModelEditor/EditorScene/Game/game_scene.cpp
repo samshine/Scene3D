@@ -199,8 +199,8 @@ void GameScene::update_map(const ScenePtr &scene, const GraphicContextPtr &gc)
 		try
 		{
 			ModelDesc model_desc = ModelDesc::load(map_filename);
-			FBXModel fbx_model(model_desc.fbx_filename);
-			auto model_data = fbx_model.convert(model_desc);
+			auto fbx_model = FBXModel::load(model_desc.fbx_filename);
+			auto model_data = fbx_model->convert(model_desc);
 
 			map_object = SceneObject::create(scene, SceneModel::create(scene, model_data));
 			map_collision = Physics3DObject::collision_body(collision_world, Physics3DShape::model(model_data));
@@ -229,8 +229,8 @@ void GameScene::update_model(const ScenePtr &scene, const GraphicContextPtr &gc)
 			{
 				ModelDesc model_desc = ModelDesc::load(attachment.model_name);
 
-				FBXModel fbx_model(model_desc.fbx_filename);
-				auto attachment_model_data = fbx_model.convert(model_desc);
+				auto fbx_model = FBXModel::load(model_desc.fbx_filename);
+				auto attachment_model_data = fbx_model->convert(model_desc);
 
 				attachment.model = SceneModel::create(scene, attachment_model_data);
 				attachment.object = SceneObject::create(scene, attachment.model, Vec3f(), Quaternionf(), Vec3f(attachment.model_scale));
