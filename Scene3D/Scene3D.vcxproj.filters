@@ -1053,9 +1053,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\file_search_path.h">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\instances_buffer.h">
-      <Filter>Sources\Scene3D\SceneEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\mapped_buffer.h">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClInclude>
@@ -1355,6 +1352,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\scene_viewport_impl.h">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1841,9 +1841,6 @@
     <ClCompile Include="Sources\Sound\SoundProviders\soundprovider_wave_session.cpp">
       <Filter>Sources\Sound\SoundProviders</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\instances_buffer.cpp">
-      <Filter>Sources\Scene3D\SceneEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine.cpp">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClCompile>
@@ -1954,6 +1951,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_viewport.cpp">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

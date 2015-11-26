@@ -1,16 +1,16 @@
 
 #pragma once
 
-#include "mapped_buffer.h"
+#include "../mapped_buffer.h"
 
 class SceneImpl;
 class SceneLightProbeImpl;
 class ModelLOD;
 
-class InstancesBuffer
+class ModelInstancesBuffer
 {
 public:
-	InstancesBuffer();
+	ModelInstancesBuffer();
 
 	int new_offset_index();
 

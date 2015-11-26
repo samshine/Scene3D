@@ -291,13 +291,13 @@
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree.h" />
     <ClInclude Include="Sources\Scene3D\Culling\RTree\rtree_root.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\file_search_path.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\instances_buffer.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Level\level.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Level\level_instance.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\mapped_buffer.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\dual_quaternion.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_lod.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render_command.h" />
@@ -555,10 +555,10 @@
     <ClCompile Include="Sources\Scene3D\ModelData\model_data.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\gpu_timer.cpp" />
     <ClCompile Include="Sources\Scene3D\Performance\scope_timer.cpp" />
-    <ClCompile Include="Sources\Scene3D\SceneEngine\instances_buffer.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Level\level.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_lod.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp" />

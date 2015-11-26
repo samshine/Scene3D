@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "instances_buffer.h"
+#include "model_instances_buffer.h"
 #include "Scene3D/Scene/scene_object_impl.h"
 #include "Scene3D/Scene/scene_light_probe_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
@@ -10,17 +10,17 @@
 
 using namespace uicore;
 
-InstancesBuffer::InstancesBuffer()
+ModelInstancesBuffer::ModelInstancesBuffer()
 	: max_offset_indexes(0), next_offset_index(0), max_vectors(0), num_vectors(0), current_buffer(0)
 {
 }
 
-int InstancesBuffer::new_offset_index()
+int ModelInstancesBuffer::new_offset_index()
 {
 	return next_offset_index++;
 }
 
-void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
+void ModelInstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
 {
 	ScopeTimeFunction();
 	scene->engine()->render.scene_visits++;
@@ -73,7 +73,7 @@ void InstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene,
 	//gc->set_texture(1, nullptr);
 }
 
-SceneLightProbeImpl *InstancesBuffer::find_nearest_probe(SceneImpl *scene, const Vec3f &position)
+SceneLightProbeImpl *ModelInstancesBuffer::find_nearest_probe(SceneImpl *scene, const Vec3f &position)
 {
 	SceneLightProbeImpl *probe = 0;
 	float sqr_distance = 0.0f;
@@ -92,18 +92,18 @@ SceneLightProbeImpl *InstancesBuffer::find_nearest_probe(SceneImpl *scene, const
 	return probe;
 }
 
-void InstancesBuffer::clear()
+void ModelInstancesBuffer::clear()
 {
 	num_vectors = 0;
 	current_buffer = (current_buffer + 1) % num_buffers;
 }
 
-void InstancesBuffer::add(int vectors_count)
+void ModelInstancesBuffer::add(int vectors_count)
 {
 	num_vectors += vectors_count;
 }
 
-void InstancesBuffer::lock(const GraphicContextPtr &gc)
+void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 {
 	if (num_vectors == 0)
 		return;
@@ -138,7 +138,7 @@ void InstancesBuffer::lock(const GraphicContextPtr &gc)
 	num_vectors = 0;
 }
 
-MappedBuffer<Vec4f> InstancesBuffer::upload(int offset_index, int vectors)
+MappedBuffer<Vec4f> ModelInstancesBuffer::upload(int offset_index, int vectors)
 {
 	if (offset_index < 0 || offset_index >= indexes_transfer[current_buffer]->width() * indexes_transfer[current_buffer]->height())
 	{
@@ -158,7 +158,7 @@ MappedBuffer<Vec4f> InstancesBuffer::upload(int offset_index, int vectors)
 	return MappedBuffer<Vec4f>(v, vectors);
 }
 
-void InstancesBuffer::unlock(const GraphicContextPtr &gc)
+void ModelInstancesBuffer::unlock(const GraphicContextPtr &gc)
 {
 	if (num_vectors == 0)
 		return;

@@ -8,7 +8,7 @@ class ModelDataLight;
 class ModelLightInstance;
 class ModelMeshVisitor;
 class ModelLOD;
-class InstancesBuffer;
+class ModelInstancesBuffer;
 class SceneEngineImpl;
 
 class Model

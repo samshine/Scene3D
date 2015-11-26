@@ -5,7 +5,7 @@
 #include "Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
 #include "model_lod.h"
-#include "Scene3D/SceneEngine/instances_buffer.h"
+#include "model_instances_buffer.h"
 #include "Scene3D/SceneEngine/scene_engine_impl.h"
 
 using namespace uicore;

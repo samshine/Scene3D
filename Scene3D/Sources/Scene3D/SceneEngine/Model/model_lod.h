@@ -17,7 +17,7 @@ public:
 
 	int get_instance_vectors_count() const;
 	int get_vectors_per_instance() const;
-	void upload(InstancesBuffer &instances_buffer, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection);
+	void upload(ModelInstancesBuffer &model_instances_buffer, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection);
 
 	static const int vectors_per_bone = 3;
 	static const int instance_base_vectors = 16;
@@ -58,5 +58,5 @@ private:
 	int max_instances = 0;
 
 	friend class ModelShaderCache;
-	friend class InstancesBuffer;
+	friend class ModelInstancesBuffer;
 };

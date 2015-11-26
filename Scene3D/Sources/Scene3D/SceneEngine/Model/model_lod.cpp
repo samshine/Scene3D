@@ -112,11 +112,11 @@ int ModelLOD::get_vectors_per_instance() const
 	return instance_base_vectors + model_data->bones.size() * vectors_per_bone + num_materials * vectors_per_material;
 }
 
-void ModelLOD::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye, const Mat4f &eye_to_projection)
+void ModelLOD::upload(ModelInstancesBuffer &model_instances_buffer, const Mat4f &world_to_eye, const Mat4f &eye_to_projection)
 {
 	int vectors_per_instance = get_vectors_per_instance();
 
-	MappedBuffer<Vec4f> instance_data = instances_buffer.upload(model_index, get_instance_vectors_count());
+	MappedBuffer<Vec4f> instance_data = model_instances_buffer.upload(model_index, get_instance_vectors_count());
 	for (size_t j = 0; j < instances.size(); j++)
 	{
 		MappedBuffer<Vec4f> vectors = instance_data + j * vectors_per_instance;
