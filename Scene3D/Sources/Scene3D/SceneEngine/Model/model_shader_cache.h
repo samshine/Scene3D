@@ -25,7 +25,6 @@ public:
 	uicore::RasterizerStatePtr two_sided_rasterizer_state;
 
 private:
-
 	uicore::ProgramObjectPtr create_gbuffer_program(const uicore::GraphicContextPtr &gc, const ModelShaderDescription &description);
 	uicore::ProgramObjectPtr create_transparency_program(const uicore::GraphicContextPtr &gc, const ModelShaderDescription &description);
 

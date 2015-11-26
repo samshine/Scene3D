@@ -300,6 +300,7 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_lod.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render_command.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h" />

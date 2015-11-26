@@ -4,8 +4,7 @@
 #include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/SceneEngine/resource.h"
-#include "Scene3D/SceneEngine/Model/model_instances_buffer.h"
-#include "Scene3D/SceneEngine/Model/model_shader_cache.h"
+#include "Scene3D/SceneEngine/Model/model_render.h"
 #include "Scene3D/SceneEngine/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/SceneEngine/Passes/Lightsource/lightsource_pass.h"
@@ -74,8 +73,7 @@ public:
 
 	std::vector<std::shared_ptr<ScenePass>> passes;
 
-	std::unique_ptr<ModelShaderCache> model_shader_cache = std::make_unique<ModelShaderCache>();
-	ModelInstancesBuffer model_instances_buffer;
+	ModelRender model_render;
 
 	int models_drawn = 0;
 	int instances_drawn = 0;

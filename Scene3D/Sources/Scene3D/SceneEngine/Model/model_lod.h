@@ -38,10 +38,10 @@ private:
 	template<typename Type>
 	uicore::VertexArrayVector<Type> upload_vector(const uicore::GraphicContextPtr &gc, const uicore::PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec, bool normalize);
 
-	void create_gbuffer_commands(const uicore::GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache);
-	void create_transparency_commands(const uicore::GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache);
-	void create_shadow_commands(const uicore::GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache);
-	void create_early_z_commands(const uicore::GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache);
+	void create_gbuffer_commands(const uicore::GraphicContextPtr &gc, ModelShaderCache *shader_cache);
+	void create_transparency_commands(const uicore::GraphicContextPtr &gc, ModelShaderCache *shader_cache);
+	void create_shadow_commands(const uicore::GraphicContextPtr &gc, ModelShaderCache *shader_cache);
+	void create_early_z_commands(const uicore::GraphicContextPtr &gc, ModelShaderCache *shader_cache);
 
 	static uicore::TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
 

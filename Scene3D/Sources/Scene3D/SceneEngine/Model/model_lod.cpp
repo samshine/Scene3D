@@ -74,10 +74,10 @@ ModelLOD::ModelLOD(SceneEngineImpl *engine, const GraphicContextPtr &gc, int mod
 	for (size_t i = 0; i < model_data->textures.size(); i++)
 		textures.push_back(engine->get_texture(gc, model_data->textures[i].name, model_data->textures[i].gamma == 1.0f));
 
-	create_gbuffer_commands(gc, engine->render.model_shader_cache);
-	create_transparency_commands(gc, engine->render.model_shader_cache);
-	create_shadow_commands(gc, engine->render.model_shader_cache);
-	create_early_z_commands(gc, engine->render.model_shader_cache);
+	create_gbuffer_commands(gc, &engine->render.model_render.shader_cache);
+	create_transparency_commands(gc, &engine->render.model_render.shader_cache);
+	create_shadow_commands(gc, &engine->render.model_render.shader_cache);
+	create_early_z_commands(gc, &engine->render.model_render.shader_cache);
 }
 
 bool ModelLOD::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color)
@@ -237,7 +237,7 @@ VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, con
 	}
 }
 
-void ModelLOD::create_gbuffer_commands(const GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache)
+void ModelLOD::create_gbuffer_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -314,7 +314,7 @@ void ModelLOD::create_gbuffer_commands(const GraphicContextPtr &gc, const std::u
 	}
 }
 
-void ModelLOD::create_transparency_commands(const GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache)
+void ModelLOD::create_transparency_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -403,7 +403,7 @@ void ModelLOD::create_transparency_commands(const GraphicContextPtr &gc, const s
 	}
 }
 
-void ModelLOD::create_shadow_commands(const GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache)
+void ModelLOD::create_shadow_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -424,7 +424,7 @@ void ModelLOD::create_shadow_commands(const GraphicContextPtr &gc, const std::un
 	}
 }
 
-void ModelLOD::create_early_z_commands(const GraphicContextPtr &gc, const std::unique_ptr<ModelShaderCache> &shader_cache)
+void ModelLOD::create_early_z_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 

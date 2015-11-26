@@ -1356,6 +1356,9 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
