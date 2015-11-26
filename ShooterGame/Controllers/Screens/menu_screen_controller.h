@@ -12,6 +12,7 @@ public:
 
 private:
 	ScenePtr scene;
+	SceneViewportPtr scene_viewport;
 	SceneObjectPtr map_object;
 
 	float t = 0.0f;

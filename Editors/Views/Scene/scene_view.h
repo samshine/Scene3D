@@ -11,8 +11,9 @@ public:
 	void render_content(const uicore::CanvasPtr &canvas) override;
 
 	const ScenePtr &get_scene() { return scene; }
+	const SceneViewportPtr &get_viewport() { return scene_viewport; }
 
-	uicore::Signal<void(const ScenePtr &, const uicore::GraphicContextPtr &, const uicore::DisplayWindowPtr &, const uicore::Vec2i &)> sig_update_scene;
+	uicore::Signal<void(const ScenePtr &, const SceneViewportPtr &, const uicore::GraphicContextPtr &, const uicore::DisplayWindowPtr &, const uicore::Vec2i &)> sig_update_scene;
 
 private:
 	void pointer_press(uicore::PointerEvent &e);
@@ -31,5 +32,6 @@ private:
 	uicore::FrameBufferPtr scene_frame_buffer;
 
 	SceneEnginePtr cache;
+	SceneViewportPtr scene_viewport;
 	ScenePtr scene;
 };

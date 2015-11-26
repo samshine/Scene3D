@@ -32,7 +32,7 @@ void GameScreenController::update_desktop(const uicore::CanvasPtr &canvas, const
 		server_game->update(mouse_delta);
 		client_game->update(mouse_delta);
 
-		render_scene(canvas, client_game->client->scene);
+		render_scene(canvas, client_game->client->scene_viewport);
 	}
 	catch (...)
 	{

@@ -21,6 +21,7 @@
 #include <memory>
 #include <map>
 
+class SceneCameraImpl;
 class SceneEngineImpl;
 
 class SceneRender
@@ -32,11 +33,17 @@ public:
 
 	void setup_pass_buffers(const uicore::GraphicContextPtr &gc);
 
+	SceneEngineImpl *engine = nullptr;
+	SceneImpl *scene = nullptr;
+	SceneCameraImpl *camera = nullptr;
 	uicore::Rect viewport = uicore::Size(640, 480);
 	uicore::FrameBufferPtr fb_viewport;
 
 	float field_of_view = 60.0f;
 	uicore::Mat4f world_to_eye;
+
+	uicore::GraphicContextPtr gc;
+	float time_elapsed = 0.0f;
 
 	uicore::FrameBufferPtr fb_gbuffer;
 	uicore::FrameBufferPtr fb_self_illumination;

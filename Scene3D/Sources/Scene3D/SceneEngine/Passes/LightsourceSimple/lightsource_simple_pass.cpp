@@ -3,6 +3,7 @@
 #include "lightsource_simple_pass.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
 #include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
+#include "Scene3D/Scene/scene_camera_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"
@@ -60,7 +61,7 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 	return program;
 }
 
-void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
+void LightsourceSimplePass::setup()
 {
 	Size viewport_size = inout.viewport.size();
 	if (!blend_state)
@@ -68,30 +69,30 @@ void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_one, blend_one, blend_one, blend_one);
-		blend_state = gc->create_blend_state(blend_desc);
+		blend_state = inout.gc->create_blend_state(blend_desc);
 
 		DepthStencilStateDescription icosahedron_depth_stencil_desc;
 		icosahedron_depth_stencil_desc.enable_depth_write(false);
 		icosahedron_depth_stencil_desc.enable_depth_test(true);
 		icosahedron_depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		icosahedron_depth_stencil_state = gc->create_depth_stencil_state(icosahedron_depth_stencil_desc);
+		icosahedron_depth_stencil_state = inout.gc->create_depth_stencil_state(icosahedron_depth_stencil_desc);
 
 		RasterizerStateDescription icosahedron_rasterizer_desc;
 		icosahedron_rasterizer_desc.set_culled(true);
-		icosahedron_rasterizer_state = gc->create_rasterizer_state(icosahedron_rasterizer_desc);
+		icosahedron_rasterizer_state = inout.gc->create_rasterizer_state(icosahedron_rasterizer_desc);
 
 		DepthStencilStateDescription rect_depth_stencil_desc;
 		rect_depth_stencil_desc.enable_depth_write(false);
 		rect_depth_stencil_desc.enable_depth_test(false);
-		rect_depth_stencil_state = gc->create_depth_stencil_state(rect_depth_stencil_desc);
+		rect_depth_stencil_state = inout.gc->create_depth_stencil_state(rect_depth_stencil_desc);
 
 		RasterizerStateDescription rect_rasterizer_desc;
 		rect_rasterizer_desc.set_culled(false);
-		rect_rasterizer_state = gc->create_rasterizer_state(rect_rasterizer_desc);
+		rect_rasterizer_state = inout.gc->create_rasterizer_state(rect_rasterizer_desc);
 
-		uniforms = UniformVector<Uniforms>(gc, 1);
+		uniforms = UniformVector<Uniforms>(inout.gc, 1);
 
-		icosahedron_prim_array = PrimitivesArray::create(gc);
+		icosahedron_prim_array = PrimitivesArray::create(inout.gc);
 		icosahedron_prim_array->set_attributes(0, icosahedron->vertices);
 
 		Vec4f positions[6] =
@@ -103,31 +104,31 @@ void LightsourceSimplePass::setup(const GraphicContextPtr &gc)
 			Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
 			Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
 		};
-		rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
+		rect_positions = VertexArrayVector<Vec4f>(inout.gc, positions, 6);
 
-		rect_prim_array = PrimitivesArray::create(gc);
+		rect_prim_array = PrimitivesArray::create(inout.gc);
 		rect_prim_array->set_attributes(0, rect_positions);
 	}
 }
 
-void LightsourceSimplePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
+void LightsourceSimplePass::run()
 {
-	setup(gc);
-	find_lights(gc, scene);
-	upload(gc, scene);
-	render(gc, inout.gpu_timer);
+	setup();
+	find_lights();
+	upload();
+	render();
 }
 
-void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, SceneImpl *scene)
+void LightsourceSimplePass::find_lights()
 {
 	lights.clear();
 
 	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
-	scene->foreach_light(frustum, [&](SceneLightImpl *light)
+	inout.scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
 		{
@@ -136,12 +137,12 @@ void LightsourceSimplePass::find_lights(const GraphicContextPtr &gc, SceneImpl *
 	});
 }
 
-void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene)
+void LightsourceSimplePass::upload()
 {
 	ScopeTimeFunction();
 
 	Size viewport_size = inout.viewport.size();
-	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e4f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e4f, handed_left, inout.gc->clip_z_range());
 
 	float aspect = inout.viewport.width()/(float)inout.viewport.height();
 	float field_of_view_y_degrees = inout.field_of_view;
@@ -153,11 +154,11 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
-	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->camera()->orientation()).to_matrix();
+	cpu_uniforms.object_to_eye = Quaternionf::inverse(inout.camera->orientation()).to_matrix();
 	cpu_uniforms.rcp_f = rcp_f;
 	cpu_uniforms.rcp_f_div_aspect = rcp_f_div_aspect;
 	cpu_uniforms.two_rcp_viewport_size = two_rcp_viewport_size;
-	uniforms.upload_data(gc, &cpu_uniforms, 1);
+	uniforms.upload_data(inout.gc, &cpu_uniforms, 1);
 
 	int num_lights = lights.size();
 
@@ -214,74 +215,74 @@ void LightsourceSimplePass::upload(const GraphicContextPtr &gc, SceneImpl *scene
 	instance_data[num_lights * vectors_per_light + 4] = Vec4f(0.0f);
 	instance_data[num_lights * vectors_per_light + 5] = Vec4f(0.0f);
 
-	light_instance_texture->set_image(gc, light_instance_transfer);
+	light_instance_texture->set_image(inout.gc, light_instance_transfer);
 }
 
-void LightsourceSimplePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
+void LightsourceSimplePass::render()
 {
 	ScopeTimeFunction();
 
-	//timer.begin_time(gc, "light(simple)");
+	//inout.timer.begin_time(inout.gc, "light(simple)");
 
-	gc->set_frame_buffer(inout.fb_final_color);
+	inout.gc->set_frame_buffer(inout.fb_final_color);
 
-	gc->set_viewport(inout.viewport.size(), gc->texture_image_y_axis());
+	inout.gc->set_viewport(inout.viewport.size(), inout.gc->texture_image_y_axis());
 
-	gc->set_depth_range(0.0f, 0.9f);
+	inout.gc->set_depth_range(0.0f, 0.9f);
 
-	gc->set_uniform_buffer(0, uniforms);
-	gc->set_texture(0, light_instance_texture);
-	gc->set_texture(1, inout.normal_z_gbuffer);
-	gc->set_texture(2, inout.diffuse_color_gbuffer);
-	gc->set_texture(3, inout.specular_color_gbuffer);
-	gc->set_texture(4, inout.specular_level_gbuffer);
-	gc->set_texture(5, inout.shadow_maps);
-	gc->set_texture(6, inout.self_illumination_gbuffer);
+	inout.gc->set_uniform_buffer(0, uniforms);
+	inout.gc->set_texture(0, light_instance_texture);
+	inout.gc->set_texture(1, inout.normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.diffuse_color_gbuffer);
+	inout.gc->set_texture(3, inout.specular_color_gbuffer);
+	inout.gc->set_texture(4, inout.specular_level_gbuffer);
+	inout.gc->set_texture(5, inout.shadow_maps);
+	inout.gc->set_texture(6, inout.self_illumination_gbuffer);
 
-	gc->set_blend_state(blend_state);
+	inout.gc->set_blend_state(blend_state);
 
-	gc->clear();
+	inout.gc->clear();
 
 	// To do: use icosahedron for smaller lights and when the camera is not inside the light influence sphere
 	// To do: combine multiple lights into the same rect pass to reduce overdraw penalty
 
-	gc->set_depth_stencil_state(rect_depth_stencil_state);
-	gc->set_rasterizer_state(rect_rasterizer_state);
-	gc->set_program_object(rect_light_program);
+	inout.gc->set_depth_stencil_state(rect_depth_stencil_state);
+	inout.gc->set_rasterizer_state(rect_rasterizer_state);
+	inout.gc->set_program_object(rect_light_program);
 
-	gc->set_primitives_array(rect_prim_array);
-	gc->draw_primitives_array_instanced(type_triangles, 0, 6, std::max(lights.size(), (size_t)1));
-	gc->reset_primitives_array();
+	inout.gc->set_primitives_array(rect_prim_array);
+	inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6, std::max(lights.size(), (size_t)1));
+	inout.gc->reset_primitives_array();
 
 /*
-	gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
-	gc->set_rasterizer_state(icosahedron_rasterizer_state);
-	gc->set_program_object(icosahedron_light_program);
+	inout.gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
+	inout.gc->set_rasterizer_state(icosahedron_rasterizer_state);
+	inout.gc->set_program_object(icosahedron_light_program);
 
-	gc->set_primitives_array(icosahedron_prim_array);
-	gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
-	gc->reset_primitives_array();
+	inout.gc->set_primitives_array(icosahedron_prim_array);
+	inout.gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
+	inout.gc->reset_primitives_array();
 */
 
-	gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
-	gc->set_rasterizer_state(icosahedron_rasterizer_state);
-	gc->set_program_object(icosahedron_light_program);
+	inout.gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
+	inout.gc->set_rasterizer_state(icosahedron_rasterizer_state);
+	inout.gc->set_program_object(icosahedron_light_program);
 
-	gc->set_primitives_array(icosahedron_prim_array);
-	gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, type_unsigned_int, 0, lights.size());
-	gc->reset_primitives_array();
+	inout.gc->set_primitives_array(icosahedron_prim_array);
+	inout.gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, type_unsigned_int, 0, lights.size());
+	inout.gc->reset_primitives_array();
 
-	//timer.end_time(gc);
-	//timer.begin_time(gc, "light(simple)");
+	//inout.timer.end_time(inout.gc);
+	//inout.timer.begin_time(inout.gc, "light(simple)");
 
-	gc->reset_texture(6);
-	gc->reset_texture(5);
-	gc->reset_texture(4);
-	gc->reset_texture(3);
-	gc->reset_texture(2);
-	gc->reset_texture(1);
-	gc->reset_texture(0);
-	gc->reset_uniform_buffer(0);
+	inout.gc->reset_texture(6);
+	inout.gc->reset_texture(5);
+	inout.gc->reset_texture(4);
+	inout.gc->reset_texture(3);
+	inout.gc->reset_texture(2);
+	inout.gc->reset_texture(1);
+	inout.gc->reset_texture(0);
+	inout.gc->reset_uniform_buffer(0);
 
-	//timer.end_time(gc);
+	//inout.timer.end_time(inout.gc);
 }

@@ -26,15 +26,15 @@ void GameScene::set_attachments(std::vector<SceneModelAttachment> attachments)
 	model_updated = true;
 }
 
-void GameScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void GameScene::update(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
 	gametime.update();
 	update_map(scene, gc);
 	update_input(ic, has_focus, mouse_delta);
 	update_character_controller();
 	update_model(scene, gc);
-	update_camera(scene, gc);
-	scene->update(gc, gametime.get_time_elapsed());
+	update_camera(scene, scene_viewport, gc);
+	scene_viewport->update(gc, gametime.get_time_elapsed());
 }
 
 void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
@@ -167,7 +167,7 @@ void GameScene::update_input(const DisplayWindowPtr &ic, bool has_focus, const u
 	character_controller.thrust(thrust);
 }
 
-void GameScene::update_camera(const ScenePtr &scene, const GraphicContextPtr &gc)
+void GameScene::update_camera(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc)
 {
 	auto sphere_shape = Physics3DShape::sphere(0.25f);
 
@@ -183,7 +183,7 @@ void GameScene::update_camera(const ScenePtr &scene, const GraphicContextPtr &gc
 		camera_pos = hit.position;
 	}
 
-	SceneCameraPtr camera = scene->camera();
+	SceneCameraPtr camera = scene_viewport->camera();
 	camera->set_orientation(camera_orientation);
 	camera->set_position(camera_pos);
 }

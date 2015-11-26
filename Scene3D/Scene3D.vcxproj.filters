@@ -1350,6 +1350,12 @@
     <ClInclude Include="Include\Scene3D\MapData\map_data.h">
       <Filter>Include\Scene3D\MapData</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene3D\scene_viewport.h">
+      <Filter>Include\Scene3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\scene_viewport_impl.h">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -1945,6 +1951,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\MapData\map_data.cpp">
       <Filter>Sources\Scene3D\MapData</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\scene_viewport.cpp">
+      <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

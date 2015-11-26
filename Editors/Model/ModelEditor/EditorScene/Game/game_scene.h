@@ -15,12 +15,12 @@ public:
 	void set_model_data(std::shared_ptr<ModelData> model_data) override;
 	void set_attachments(std::vector<SceneModelAttachment> attachments) override;
 
-	void update(const ScenePtr &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta) override;
+	void update(const ScenePtr &scene, const SceneViewportPtr &viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta) override;
 
 private:
 	void update_map(const ScenePtr &scene, const uicore::GraphicContextPtr &gc);
 	void update_model(const ScenePtr &scene, const uicore::GraphicContextPtr &gc);
-	void update_camera(const ScenePtr &scene, const uicore::GraphicContextPtr &gc);
+	void update_camera(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc);
 	void update_input(const uicore::DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta);
 	void update_character_controller();
 

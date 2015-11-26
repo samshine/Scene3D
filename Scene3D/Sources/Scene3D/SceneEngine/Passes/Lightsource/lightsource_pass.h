@@ -19,13 +19,13 @@ public:
 	~LightsourcePass();
 
 	std::string name() const override { return "light"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void find_lights(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
-	void upload(const uicore::GraphicContextPtr &gc);
-	void render(const uicore::GraphicContextPtr &gc, GPUTimer &timer);
-	void update_buffers(const uicore::GraphicContextPtr &gc);
+	void find_lights();
+	void upload();
+	void render();
+	void update_buffers();
 	uicore::ProgramObjectPtr compile_and_link(const uicore::GraphicContextPtr &gc, const std::string &program_name, const std::string &source, const std::string &defines = std::string());
 
 	SceneRender &inout;

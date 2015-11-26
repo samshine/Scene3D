@@ -11,17 +11,17 @@ class SkyboxPass : public ScenePass
 public:
 	SkyboxPass(SceneRender &inout);
 	std::string name() const override { return "skybox"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void setup(const uicore::GraphicContextPtr &gc);
-	void create_clouds(const uicore::GraphicContextPtr &gc);
-	void create_cloud_texture(const uicore::GraphicContextPtr &gc);
-	void create_stars(const uicore::GraphicContextPtr &gc);
-	void create_star_texture(const uicore::GraphicContextPtr &gc);
-	void create_programs(const uicore::GraphicContextPtr &gc);
-	void create_billboard_program(const uicore::GraphicContextPtr &gc);
-	void create_cube_program(const uicore::GraphicContextPtr &gc);
+	void setup();
+	void create_clouds();
+	void create_cloud_texture();
+	void create_stars();
+	void create_star_texture();
+	void create_programs();
+	void create_billboard_program();
+	void create_cube_program();
 	static float random(float min_value, float max_value);
 
 	SceneRender &inout;

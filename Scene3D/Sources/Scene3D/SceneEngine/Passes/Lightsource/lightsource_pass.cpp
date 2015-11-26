@@ -38,23 +38,23 @@ LightsourcePass::~LightsourcePass()
 {
 }
 
-void LightsourcePass::run(const GraphicContextPtr &gc, SceneImpl *scene)
+void LightsourcePass::run()
 {
-	find_lights(gc, scene);
-	upload(gc);
-	render(gc, inout.gpu_timer);
+	find_lights();
+	upload();
+	render();
 }
 
-void LightsourcePass::find_lights(const GraphicContextPtr &gc, SceneImpl *scene)
+void LightsourcePass::find_lights()
 {
 	lights.clear();
 
 	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
-	scene->foreach_light(frustum, [&](SceneLightImpl *light)
+	inout.scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		if ((light->type() == SceneLight::type_omni || light->type() == SceneLight::type_spot) && light->light_caster() && lights.size() < max_lights - 1)
 		{
@@ -84,7 +84,7 @@ public:
 	}
 };
 
-void LightsourcePass::upload(const GraphicContextPtr &gc)
+void LightsourcePass::upload()
 {
 	ScopeTimeFunction();
 
@@ -107,12 +107,12 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 	uniforms.num_lights = num_lights;
 	uniforms.num_tiles_x = num_tiles_x;
 	uniforms.num_tiles_y = num_tiles_y;
-	compute_uniforms.upload_data(gc, &uniforms, 1);
+	compute_uniforms.upload_data(inout.gc, &uniforms, 1);
 
 	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
 	Mat4f eye_to_world = Mat4f::inverse(inout.world_to_eye);
 
-	transfer_lights.lock(gc, access_write_only);
+	transfer_lights.lock(inout.gc, access_write_only);
 	MappedBuffer<GPULight> data(transfer_lights.data(), max_lights);
 	for (int i = 0; i < num_lights; i++)
 	{
@@ -158,57 +158,57 @@ void LightsourcePass::upload(const GraphicContextPtr &gc)
 	data[num_lights].color = Vec4f(0.0f);
 	data[num_lights].range = Vec4f(0.0f);
 	transfer_lights.unlock();
-	compute_lights.copy_from(gc, transfer_lights, 0, 0, num_lights + 1);
+	compute_lights.copy_from(inout.gc, transfer_lights, 0, 0, num_lights + 1);
 }
 
-void LightsourcePass::render(const GraphicContextPtr &gc, GPUTimer &timer)
+void LightsourcePass::render()
 {
 	ScopeTimeFunction();
 
 	zminmax.viewport = inout.viewport;
 	zminmax.normal_z = inout.normal_z_gbuffer;
-	zminmax.minmax(gc);
-	update_buffers(gc);
+	zminmax.minmax(inout.gc);
+	update_buffers();
 
-	//timer.begin_time(gc, "light(cull)");
+	//inout.timer.begin_time(inout.gc, "light(cull)");
 
-	gc->set_uniform_buffer(0, compute_uniforms);
-	gc->set_storage_buffer(0, compute_lights);
-	gc->set_storage_buffer(1, compute_visible_lights);
-	gc->set_texture(0, zminmax.result);
-	gc->set_texture(1, inout.normal_z_gbuffer);
-	gc->set_texture(2, inout.diffuse_color_gbuffer);
-	gc->set_texture(3, inout.specular_color_gbuffer);
-	gc->set_texture(4, inout.specular_level_gbuffer);
-	gc->set_texture(5, inout.shadow_maps);
-	gc->set_texture(6, inout.self_illumination_gbuffer);
-	gc->set_image_texture(0, inout.final_color);
+	inout.gc->set_uniform_buffer(0, compute_uniforms);
+	inout.gc->set_storage_buffer(0, compute_lights);
+	inout.gc->set_storage_buffer(1, compute_visible_lights);
+	inout.gc->set_texture(0, zminmax.result);
+	inout.gc->set_texture(1, inout.normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.diffuse_color_gbuffer);
+	inout.gc->set_texture(3, inout.specular_color_gbuffer);
+	inout.gc->set_texture(4, inout.specular_level_gbuffer);
+	inout.gc->set_texture(5, inout.shadow_maps);
+	inout.gc->set_texture(6, inout.self_illumination_gbuffer);
+	inout.gc->set_image_texture(0, inout.final_color);
 
-	gc->set_program_object(cull_tiles_program);
-	gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
+	inout.gc->set_program_object(cull_tiles_program);
+	inout.gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
 
-	//timer.end_time(gc);
-	//timer.begin_time(gc, "light(render)");
+	//timer.end_time(inout.gc);
+	//timer.begin_time(inout.gc, "light(render)");
 
-	gc->set_program_object(render_tiles_program);
-	gc->dispatch(num_tiles_x, num_tiles_y);
+	inout.gc->set_program_object(render_tiles_program);
+	inout.gc->dispatch(num_tiles_x, num_tiles_y);
 
-	gc->reset_image_texture(0);
-	gc->reset_texture(6);
-	gc->reset_texture(5);
-	gc->reset_texture(4);
-	gc->reset_texture(3);
-	gc->reset_texture(2);
-	gc->reset_texture(1);
-	gc->reset_texture(0);
-	gc->reset_uniform_buffer(2);
-	gc->reset_uniform_buffer(1);
-	gc->reset_uniform_buffer(0);
+	inout.gc->reset_image_texture(0);
+	inout.gc->reset_texture(6);
+	inout.gc->reset_texture(5);
+	inout.gc->reset_texture(4);
+	inout.gc->reset_texture(3);
+	inout.gc->reset_texture(2);
+	inout.gc->reset_texture(1);
+	inout.gc->reset_texture(0);
+	inout.gc->reset_uniform_buffer(2);
+	inout.gc->reset_uniform_buffer(1);
+	inout.gc->reset_uniform_buffer(0);
 
-	//timer.end_time(gc);
+	//timer.end_time(inout.gc);
 }
 
-void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
+void LightsourcePass::update_buffers()
 {
 	int needed_num_tiles_x = (inout.viewport.width() + tile_size - 1) / tile_size;
 	int needed_num_tiles_y = (inout.viewport.height() + tile_size - 1) / tile_size;
@@ -216,12 +216,12 @@ void LightsourcePass::update_buffers(const GraphicContextPtr &gc)
 	if (!compute_visible_lights.buffer() || num_tiles_x != needed_num_tiles_x || num_tiles_y != needed_num_tiles_y)
 	{
 		compute_visible_lights = StorageVector<unsigned int>();
-		gc->flush();
+		inout.gc->flush();
 
 		num_tiles_x = needed_num_tiles_x;
 		num_tiles_y = needed_num_tiles_y;
 
-		compute_visible_lights = StorageVector<unsigned int>(gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
+		compute_visible_lights = StorageVector<unsigned int>(inout.gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 	}
 }
 

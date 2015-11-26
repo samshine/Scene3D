@@ -83,7 +83,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 
 
 	setup_scene(gc);
-	sig_update_scene(scene, gc, window, delta_mouse_move);
+	sig_update_scene(scene, scene_viewport, gc, window, delta_mouse_move);
 
 	if (!scene_frame_buffer || !scene_texture || scene_texture->size() != viewport_size_i)
 	{
@@ -96,9 +96,9 @@ void SceneView::render_content(const CanvasPtr &canvas)
 		scene_frame_buffer->attach_color(0, scene_texture);
 	}
 
-	//scene->set_viewport(RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
-	scene->set_viewport(viewport_size_i, scene_frame_buffer);
-	scene->render(gc);
+	//scene_viewport->set_viewport(RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
+	scene_viewport->set_viewport(viewport_size_i, scene_frame_buffer);
+	scene_viewport->render(gc);
 
 	gc->set_viewport(gc->size(), y_axis_top_down);
 
@@ -116,8 +116,9 @@ void SceneView::setup_scene(const GraphicContextPtr &gc)
 
 	cache = SceneEngine::create(gc);
 	scene = Scene::create(cache);
+	scene_viewport = SceneViewport::create(cache);
 
-	scene->set_camera(SceneCamera::create(scene));
+	scene_viewport->set_camera(SceneCamera::create(scene));
 
 	scene->show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -136,5 +137,5 @@ void SceneView::setup_scene(const GraphicContextPtr &gc)
 		g.g = std::pow(g.g, 2.2f);
 		g.b = std::pow(g.b, 2.2f);
 	}
-	scene->set_skybox_gradient(gc, gradient);
+	scene->set_skybox_gradient(gradient);
 }

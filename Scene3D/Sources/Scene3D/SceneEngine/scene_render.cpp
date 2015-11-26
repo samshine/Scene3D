@@ -35,7 +35,7 @@ SceneRender::SceneRender(const uicore::GraphicContextPtr &gc, SceneEngineImpl *e
 	}
 
 	passes.push_back(std::make_shared<TransparencyPass>(*this));
-	passes.push_back(std::make_shared<ParticleEmitterPass>(engine));
+	passes.push_back(std::make_shared<ParticleEmitterPass>(*this));
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(gc, *this));
 	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));

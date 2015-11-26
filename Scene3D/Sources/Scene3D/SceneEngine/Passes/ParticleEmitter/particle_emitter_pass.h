@@ -15,16 +15,17 @@ class MaterialCache;
 class ParticleEmitterPass : public ScenePass
 {
 public:
-	ParticleEmitterPass(SceneEngineImpl *engine);
+	ParticleEmitterPass(SceneRender &render);
 	std::string name() const override { return "particle"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
-	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
+	void run() override;
+	void update() override;
 
 private:
-	void select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const uicore::FrustumPlanes &frustum);
-	void setup(const uicore::GraphicContextPtr &gc);
+	void select_active_emitters(const uicore::FrustumPlanes &frustum);
+	void setup();
 
-	SceneEngineImpl *engine;
+	SceneRender &inout;
+
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;

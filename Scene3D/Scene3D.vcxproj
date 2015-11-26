@@ -56,6 +56,7 @@
     <ClInclude Include="Include\Scene3D\scene_model.h" />
     <ClInclude Include="Include\Scene3D\scene_object.h" />
     <ClInclude Include="Include\Scene3D\scene_particle_emitter.h" />
+    <ClInclude Include="Include\Scene3D\scene_viewport.h" />
     <ClInclude Include="Include\sound.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_world.h" />
@@ -373,6 +374,7 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\resource.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\scene_engine_impl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\scene_render.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\scene_viewport_impl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\shader_setup.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\shadow_maps.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\work_queue.h" />
@@ -578,6 +580,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine_impl.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_render.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\scene_viewport.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\shader_setup.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\shadow_maps.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\work_queue.cpp" />

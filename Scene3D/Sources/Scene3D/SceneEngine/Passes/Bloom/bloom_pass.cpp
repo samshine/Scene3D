@@ -47,22 +47,22 @@ BloomPass::BloomPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(in
 	blend_state = gc->create_blend_state(blend_desc);
 }
 
-void BloomPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
+void BloomPass::run()
 {
 	inout.final_color->set_min_filter(filter_linear);
 	inout.final_color->set_mag_filter(filter_linear);
 
 	ScopeTimeFunction();
-	gc->set_frame_buffer(inout.fb_bloom_extract);
-	gc->set_viewport(inout.bloom_contribution->size(), gc->texture_image_y_axis());
-	gc->set_texture(0, inout.final_color);
-	gc->set_blend_state(blend_state);
-	gc->set_program_object(bloom_shader);
-	gc->draw_primitives(type_triangles, 6, rect_primarray);
-	gc->reset_program_object();
-	gc->reset_texture(0);
-	gc->reset_frame_buffer();
+	inout.gc->set_frame_buffer(inout.fb_bloom_extract);
+	inout.gc->set_viewport(inout.bloom_contribution->size(), inout.gc->texture_image_y_axis());
+	inout.gc->set_texture(0, inout.final_color);
+	inout.gc->set_blend_state(blend_state);
+	inout.gc->set_program_object(bloom_shader);
+	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
+	inout.gc->reset_program_object();
+	inout.gc->reset_texture(0);
+	inout.gc->reset_frame_buffer();
 
-	inout.blur.horizontal(gc, 4.0f, 15, inout.bloom_contribution, inout.fb_bloom_blur);
-	inout.blur.vertical(gc, 4.0f, 15, inout.bloom_blur, inout.fb_bloom_extract);
+	inout.blur.horizontal(inout.gc, 4.0f, 15, inout.bloom_contribution, inout.fb_bloom_blur);
+	inout.blur.vertical(inout.gc, 4.0f, 15, inout.bloom_blur, inout.fb_bloom_extract);
 }

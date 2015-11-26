@@ -6,7 +6,6 @@
 #include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/SceneEngine/resource.h"
 
-class SceneImpl;
 class ModelLOD;
 
 class GBufferPass : public ScenePass
@@ -14,15 +13,13 @@ class GBufferPass : public ScenePass
 public:
 	GBufferPass(SceneRender &inout);
 	std::string name() const override { return "gbuffer"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void setup_gbuffer(const uicore::GraphicContextPtr &gc);
+	void setup_gbuffer();
 
 	SceneRender &inout;
 
-	uicore::GraphicContextPtr gc;
-	SceneImpl *scene;
 	uicore::BlendStatePtr blend_state;
 	uicore::BlendStatePtr early_z_blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;

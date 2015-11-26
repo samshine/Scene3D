@@ -11,7 +11,7 @@ class BloomPass : public ScenePass
 public:
 	BloomPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	std::string name() const override { return "bloom"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
 	SceneRender &inout;

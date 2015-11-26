@@ -10,10 +10,10 @@ class LensFlarePass : public ScenePass
 public:
 	LensFlarePass(SceneRender &inout);
 	std::string name() const override { return "lensflare"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void setup(const uicore::GraphicContextPtr &gc);
+	void setup();
 
 	struct UniformBlock
 	{

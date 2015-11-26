@@ -19,7 +19,7 @@ void MapSceneController::map_updated()
 	objects.clear();
 }
 
-void MapSceneController::update_scene(const ScenePtr &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void MapSceneController::update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
 	gametime.update();
 
@@ -47,8 +47,8 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 		position += camera_quaternion.rotate_vector(thrust) * gametime.get_time_elapsed() * move_speed;
 	}
 
-	scene->camera()->set_position(position);
-	scene->camera()->set_orientation(camera_quaternion);
+	scene_viewport->camera()->set_position(position);
+	scene_viewport->camera()->set_orientation(camera_quaternion);
 
 	auto model = MapAppModel::instance();
 	if (objects.empty())
@@ -92,5 +92,5 @@ void MapSceneController::update_scene(const ScenePtr &scene, const uicore::Graph
 		}
 	}
 
-	scene->update(gc, gametime.get_time_elapsed());
+	scene_viewport->update(gc, gametime.get_time_elapsed());
 }

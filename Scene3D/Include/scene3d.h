@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Scene3D/scene_engine.h"
+#include "Scene3D/scene_viewport.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/scene_camera.h"
 #include "Scene3D/scene_light.h"

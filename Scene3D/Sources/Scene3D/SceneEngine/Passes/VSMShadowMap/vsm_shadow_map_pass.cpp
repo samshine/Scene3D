@@ -21,30 +21,25 @@ VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, SceneRender &ino
 	depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 }
 
-void VSMShadowMapPass::run(const GraphicContextPtr &render_gc, SceneImpl *render_scene)
+void VSMShadowMapPass::run()
 {
-	gc = render_gc;
-	scene = render_scene;
-
-	find_lights(scene);
+	find_lights();
 	assign_shadow_map_indexes();
-	render_maps(scene);
+	render_maps();
 	blur_maps();
-
-	gc.reset();
 }
 
-void VSMShadowMapPass::find_lights(SceneImpl *scene)
+void VSMShadowMapPass::find_lights()
 {
 	lights.clear();
 
 	Size viewport_size = inout.viewport.size();
 
-	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	scene->foreach_light(frustum, [&](SceneLightImpl *light)
+	inout.scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		// Create data always needed by lightsource pass:
 
@@ -57,11 +52,11 @@ void VSMShadowMapPass::find_lights(SceneImpl *scene)
 		if (light->type() == SceneLight::type_spot)
 		{
 			float field_of_view = light->falloff();
-			light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio(), 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+			light->vsm_data->eye_to_projection = Mat4f::perspective(field_of_view, light->aspect_ratio(), 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 		}
 		else if (light->type() == SceneLight::type_directional)
 		{
-			light->vsm_data->eye_to_projection = Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
+			light->vsm_data->eye_to_projection = Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 		}
 		else
 		{
@@ -91,10 +86,10 @@ void VSMShadowMapPass::assign_shadow_map_indexes()
 	maps.assign_indexes();
 }
 
-void VSMShadowMapPass::render_maps(SceneImpl *scene)
+void VSMShadowMapPass::render_maps()
 {
-	gc->set_depth_stencil_state(depth_stencil_state);
-	gc->set_blend_state(blend_state);
+	inout.gc->set_depth_stencil_state(depth_stencil_state);
+	inout.gc->set_blend_state(blend_state);
 
 	const size_t max_lights_per_frame = 4;
 	round_robin += max_lights_per_frame;
@@ -106,38 +101,38 @@ void VSMShadowMapPass::render_maps(SceneImpl *scene)
 
 		if (lights[i]->vsm_data->shadow_map.get_index() != -1)
 		{
-			gc->set_frame_buffer(lights[i]->vsm_data->shadow_map.get_framebuffer());
-			gc->set_viewport(lights[i]->vsm_data->shadow_map.get_view()->size(), gc->texture_image_y_axis());
-			gc->clear_depth(1.0f);
+			inout.gc->set_frame_buffer(lights[i]->vsm_data->shadow_map.get_framebuffer());
+			inout.gc->set_viewport(lights[i]->vsm_data->shadow_map.get_view()->size(), inout.gc->texture_image_y_axis());
+			inout.gc->clear_depth(1.0f);
 
 			float field_of_view = lights[i]->falloff();
 			Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view, lights[i]->aspect_ratio(), 0.1f, lights[i]->attenuation_end() + 5.0f, handed_left, clip_negative_positive_w);
 
 			FrustumPlanes frustum(eye_to_cull_projection * lights[i]->vsm_data->world_to_eye);
 
-			inout.instances_buffer.render_pass(gc, scene, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+			inout.instances_buffer.render_pass(inout.gc, inout.scene, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
 			{
-				model_lod->shadow_commands.execute(scene, gc, num_instances);
+				model_lod->shadow_commands.execute(inout.scene, inout.gc, num_instances);
 			});
 
 			blur_indexes.push_back(i);
 		}
 	}
 
-	gc->reset_rasterizer_state();
-	gc->reset_depth_stencil_state();
+	inout.gc->reset_rasterizer_state();
+	inout.gc->reset_depth_stencil_state();
 
-	gc->reset_program_object();
-	gc->reset_primitives_elements();
-	gc->reset_texture(0);
-	gc->reset_texture(1);
-	gc->reset_texture(2);
-	gc->reset_texture(3);
-	gc->reset_texture(4);
-	gc->reset_texture(5);
-	gc->reset_uniform_buffer(0);
-	gc->reset_uniform_buffer(1);
-	gc->reset_frame_buffer();
+	inout.gc->reset_program_object();
+	inout.gc->reset_primitives_elements();
+	inout.gc->reset_texture(0);
+	inout.gc->reset_texture(1);
+	inout.gc->reset_texture(2);
+	inout.gc->reset_texture(3);
+	inout.gc->reset_texture(4);
+	inout.gc->reset_texture(5);
+	inout.gc->reset_uniform_buffer(0);
+	inout.gc->reset_uniform_buffer(1);
+	inout.gc->reset_frame_buffer();
 }
 
 void VSMShadowMapPass::blur_maps()
@@ -152,8 +147,8 @@ void VSMShadowMapPass::blur_maps()
 			const auto &fb_blur = lights[i]->vsm_data->shadow_map.fb_blur();
 			const auto &blur_texture = lights[i]->vsm_data->shadow_map.blur_texture();
 
-			inout.blur.horizontal(gc, 1.3f, 9, view_texture, fb_blur);
-			inout.blur.vertical(gc, 1.3f, 9, blur_texture, fb_view);
+			inout.blur.horizontal(inout.gc, 1.3f, 9, view_texture, fb_blur);
+			inout.blur.vertical(inout.gc, 1.3f, 9, blur_texture, fb_view);
 		}
 	}
 }

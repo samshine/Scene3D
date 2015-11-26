@@ -12,15 +12,13 @@ class TransparencyPass : public ScenePass
 public:
 	TransparencyPass(SceneRender &inout);
 	std::string name() const override { return "transparency"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void setup(const uicore::GraphicContextPtr &gc);
+	void setup();
 
 	SceneRender &inout;
 
-	SceneImpl *scene;
-	uicore::GraphicContextPtr gc;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 };

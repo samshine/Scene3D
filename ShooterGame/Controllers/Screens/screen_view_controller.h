@@ -11,7 +11,7 @@ public:
 	virtual bool cursor_hidden() { return false; }
 	virtual void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) { }
 
-	void render_scene(const uicore::CanvasPtr &canvas, const ScenePtr &scene);
+	void render_scene(const uicore::CanvasPtr &canvas, const SceneViewportPtr &scene_viewport);
 };
 
 class Screen

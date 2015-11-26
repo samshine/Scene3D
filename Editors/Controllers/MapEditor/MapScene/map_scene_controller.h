@@ -21,7 +21,7 @@ private:
 	std::shared_ptr<SceneView> view = std::make_shared<SceneView>();
 
 	void map_updated();
-	void update_scene(const ScenePtr &scene, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);
+	void update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);
 
 	uicore::SlotContainer slots;
 

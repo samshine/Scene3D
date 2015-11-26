@@ -9,6 +9,7 @@
 
 class Model;
 class ModelData;
+class SceneViewportImpl;
 class SceneImpl;
 
 class SceneEngineImpl : public SceneEngine
@@ -31,8 +32,8 @@ public:
 	Resource<uicore::TexturePtr> get_texture(const uicore::GraphicContextPtr &gc, const std::string &name, bool linear);
 	void update_textures(const uicore::GraphicContextPtr &gc, float time_elapsed);
 
-	void render_scene(const uicore::GraphicContextPtr &gc, SceneImpl *scene);
-	void update_scene(const uicore::GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed);
+	void render_viewport(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport);
+	void update_viewport(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed);
 
 	void process_work_completed() { work_queue->process_work_completed(); }
 

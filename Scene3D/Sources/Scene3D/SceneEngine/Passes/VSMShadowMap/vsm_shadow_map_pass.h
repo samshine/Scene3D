@@ -18,12 +18,12 @@ class VSMShadowMapPass : public ScenePass
 public:
 	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	std::string name() const override { return "shadow"; }
-	void run(const uicore::GraphicContextPtr &gc, SceneImpl *scene) override;
+	void run() override;
 
 private:
-	void find_lights(SceneImpl *scene);
+	void find_lights();
 	void assign_shadow_map_indexes();
-	void render_maps(SceneImpl *scene);
+	void render_maps();
 	void blur_maps();
 
 	SceneRender &inout;
@@ -32,8 +32,6 @@ private:
 	std::vector<size_t> blur_indexes;
 
 	ShadowMaps maps;
-	SceneImpl *scene;
-	uicore::GraphicContextPtr gc;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 

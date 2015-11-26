@@ -28,11 +28,14 @@ public:
 	{
 		audio = AudioWorld::create(sound_cache);
 		scene = Scene::create(scene_engine);
+		scene_viewport = SceneViewport::create(scene_engine);
+		scene_viewport->set_camera(SceneCamera::create(scene));
 	}
 
 	uicore::DisplayWindowPtr window;
 
 	SceneEnginePtr scene_engine;
+	SceneViewportPtr scene_viewport;
 	ScenePtr scene;
 	std::vector<SceneObjectPtr> objects;
 

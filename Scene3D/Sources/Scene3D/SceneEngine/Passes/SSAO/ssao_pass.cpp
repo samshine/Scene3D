@@ -48,7 +48,7 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inou
 	blend_state = gc->create_blend_state(blend_desc);
 }
 
-void SSAOPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
+void SSAOPass::run()
 {
 	if (!uniforms.buffer()) // To do: also do this if viewport size changes
 	{
@@ -69,27 +69,27 @@ void SSAOPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 		uniform_buffer.f = f;
 		uniform_buffer.f_div_aspect = f / aspect;
-		uniforms = UniformVector<UniformBuffer>(gc, &uniform_buffer, 1);
+		uniforms = UniformVector<UniformBuffer>(inout.gc, &uniform_buffer, 1);
 	}
 
 	inout.normal_z_gbuffer->set_min_filter(filter_nearest);
 	inout.normal_z_gbuffer->set_mag_filter(filter_nearest);
 
-	gc->set_frame_buffer(inout.fb_ambient_occlusion);
-	gc->set_viewport(inout.ambient_occlusion->size(), gc->texture_image_y_axis());
-	gc->set_texture(0, inout.normal_z_gbuffer);
-	gc->set_uniform_buffer(0, uniforms);
-	gc->set_blend_state(blend_state);
-	gc->set_program_object(extract_shader);
-	gc->draw_primitives(type_triangles, 6, rect_primarray);
-	gc->reset_program_object();
-	gc->set_uniform_buffer(0, nullptr);
-	gc->set_blend_state(nullptr);
-	gc->reset_frame_buffer();
+	inout.gc->set_frame_buffer(inout.fb_ambient_occlusion);
+	inout.gc->set_viewport(inout.ambient_occlusion->size(), inout.gc->texture_image_y_axis());
+	inout.gc->set_texture(0, inout.normal_z_gbuffer);
+	inout.gc->set_uniform_buffer(0, uniforms);
+	inout.gc->set_blend_state(blend_state);
+	inout.gc->set_program_object(extract_shader);
+	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
+	inout.gc->reset_program_object();
+	inout.gc->set_uniform_buffer(0, nullptr);
+	inout.gc->set_blend_state(nullptr);
+	inout.gc->reset_frame_buffer();
 
 	//inout.blur.input = inout.ambient_occlusion;
 	//inout.blur.output = inout.fb_ambient_occlusion;
-	//inout.blur.blur(gc, tf_r8, 3.0f, 15);
+	//inout.blur.blur(inout.gc, tf_r8, 3.0f, 15);
 }
 
 float SSAOPass::random_value()

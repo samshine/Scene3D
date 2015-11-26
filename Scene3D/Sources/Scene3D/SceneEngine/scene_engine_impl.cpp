@@ -4,7 +4,8 @@
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/SceneEngine/Model/model.h"
 #include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/Scene/scene_impl.h"
+#include "Scene3D/Scene/scene_camera_impl.h"
+#include "scene_viewport_impl.h"
 
 using namespace uicore;
 
@@ -18,7 +19,7 @@ SceneEngineImpl::~SceneEngineImpl()
 	work_queue.reset(); // Make sure all pending items finish before we shut down
 }
 
-void SceneEngineImpl::render_scene(const GraphicContextPtr &gc, SceneImpl *scene)
+void SceneEngineImpl::render_viewport(const GraphicContextPtr &gc, SceneViewportImpl *viewport)
 {
 	ScopeTimeFunction();
 
@@ -28,37 +29,60 @@ void SceneEngineImpl::render_scene(const GraphicContextPtr &gc, SceneImpl *scene
 	render.triangles_drawn = 0;
 	render.scene_visits = 0;
 
+	if (!viewport->camera())
+		return;
+
+	render.engine = this;
+	render.scene = viewport->scene();
+	render.camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
+
+	render.viewport = viewport->_viewport;
+	render.fb_viewport = viewport->_fb_viewport;
+
+	render.gc = gc;
 	render.gpu_timer.begin_frame(gc);
 
 	render.setup_pass_buffers(gc);
 
-	if (render.field_of_view != scene->camera()->field_of_view())
-		render.field_of_view = scene->camera()->field_of_view();
+	if (render.field_of_view != viewport->camera()->field_of_view())
+		render.field_of_view = viewport->camera()->field_of_view();
 
-	Quaternionf inv_orientation = Quaternionf::inverse(scene->camera()->orientation());
-	render.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene->camera()->position());
+	Quaternionf inv_orientation = Quaternionf::inverse(viewport->camera()->orientation());
+	render.world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-viewport->camera()->position());
 
 	for (const auto &pass : render.passes)
 	{
 		render.gpu_timer.begin_time(gc, pass->name());
-		pass->run(gc, scene);
+		pass->run();
 		render.gpu_timer.end_time(gc);
 	}
 
 	render.gpu_timer.end_frame(gc);
-
 	render.gpu_results = render.gpu_timer.get_results(gc);
+	render.gc = nullptr;
+	render.camera = nullptr;
+	render.scene = nullptr;
 
 	if (gc->shader_language() == shader_glsl)
 		OpenGL::check_error();
 }
 
-void SceneEngineImpl::update_scene(const GraphicContextPtr &gc, SceneImpl *scene, float time_elapsed)
+void SceneEngineImpl::update_viewport(const GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed)
 {
 	process_work_completed();
 	update_textures(gc, time_elapsed);
+	if (!viewport->camera())
+		return;
+	render.scene = viewport->scene();
+	render.camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
+	render.gc = gc;
+	render.time_elapsed = time_elapsed;
 	for (const auto &pass : render.passes)
-		pass->update(gc, time_elapsed);
+		pass->update();
+	render.gc = nullptr;
+	render.camera = nullptr;
+	render.scene = nullptr;
+	render.time_elapsed = 0.0f;
 	// To do: update scene object animations here too
 }
 
@@ -74,103 +98,7 @@ std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 
 std::shared_ptr<ModelData> SceneEngineImpl::get_model_data(const std::string &name)
 {
-#if defined(BOX_IF_NOT_FOUND)
-	try
-#endif
-	{
-		return ModelData::load(PathHelp::combine("Resources/Assets", name));
-	}
-#if defined(BOX_IF_NOT_FOUND)
-	catch (...)
-	{
-		auto box_size = Vec3f(0.01f);
-		auto model_data = std::make_shared<ModelData>();
-
-		model_data->aabb_min = -box_size;
-		model_data->aabb_max = box_size;
-
-		model_data->animations.resize(3);
-		model_data->animations[0].name = "default";
-		model_data->animations[1].name = "up";
-		model_data->animations[2].name = "down";
-
-		model_data->meshes.resize(1);
-		model_data->meshes[0].channels.resize(4);
-
-		Vec3f normal[6] =
-		{
-			Vec3f(0.0f, 1.0f, 0.0f),
-			Vec3f(0.0f, -1.0f, 0.0f),
-			Vec3f(1.0f, 0.0f, 0.0f),
-			Vec3f(-1.0f, 0.0f, 0.0f),
-			Vec3f(0.0f, 0.0f, 1.0f),
-			Vec3f(0.0f, 0.0f, -1.0f)
-		};
-
-		Vec3f tangent[6] =
-		{
-			Vec3f(1.0, 0.0f, 0.0f),
-			Vec3f(1.0, 0.0f, 0.0f),
-			Vec3f(0.0f, 1.0f, 0.0f),
-			Vec3f(0.0f, -1.0f, 0.0f),
-			Vec3f(0.0f, 1.0f, 0.0f),
-			Vec3f(0.0f, -1.0f, 0.0f)
-		};
-
-		for (int i = 0; i < 6; i++)
-		{
-			Vec3f bitangent = Vec3f::cross(normal[i], tangent[i]);
-
-			model_data->meshes[0].vertices.push_back((normal[i] - tangent[i] - bitangent) * box_size);
-			model_data->meshes[0].vertices.push_back((normal[i] + tangent[i] - bitangent) * box_size);
-			model_data->meshes[0].vertices.push_back((normal[i] - tangent[i] + bitangent) * box_size);
-			model_data->meshes[0].vertices.push_back((normal[i] + tangent[i] + bitangent) * box_size);
-
-			for (int j = 0; j < 4; j++)
-			{
-				model_data->meshes[0].normals.push_back(normal[i]);
-				model_data->meshes[0].tangents.push_back(tangent[i]);
-				model_data->meshes[0].bitangents.push_back(bitangent);
-			}
-
-			for (int j = 0; j < 4; j++)
-			{
-				model_data->meshes[0].channels[j].push_back(Vec2f(0.0f, 0.0f));
-				model_data->meshes[0].channels[j].push_back(Vec2f(1.0f, 0.0f));
-				model_data->meshes[0].channels[j].push_back(Vec2f(0.0f, 1.0f));
-				model_data->meshes[0].channels[j].push_back(Vec2f(1.0f, 1.0f));
-			}
-
-			model_data->meshes[0].elements.push_back(i * 4 + 0);
-			model_data->meshes[0].elements.push_back(i * 4 + 1);
-			model_data->meshes[0].elements.push_back(i * 4 + 2);
-			model_data->meshes[0].elements.push_back(i * 4 + 3);
-			model_data->meshes[0].elements.push_back(i * 4 + 2);
-			model_data->meshes[0].elements.push_back(i * 4 + 1);
-		}
-
-		ModelDataDrawRange range;
-		range.start_element = 0;
-		range.num_elements = 36;
-		range.ambient.set_single_value(Vec3f(1.0f));
-		range.diffuse.set_single_value(Vec3f(1.0f));
-		range.specular.set_single_value(Vec3f(1.0f));
-		range.glossiness.set_single_value(20.0f);
-		range.specular_level.set_single_value(25.0f);
-
-		range.self_illumination_amount.timelines.resize(1);
-		range.self_illumination_amount.timelines[0].timestamps.push_back(0.0f);
-		range.self_illumination_amount.timelines[0].values.push_back(0.0);
-
-		range.self_illumination.timelines.resize(1);
-		range.self_illumination.timelines[0].timestamps.push_back(0.0f);
-		range.self_illumination.timelines[0].values.push_back(Vec3f());
-
-		model_data->meshes[0].draw_ranges.push_back(range);
-
-		return model_data;
-	}
-#endif
+	return ModelData::load(PathHelp::combine("Resources/Assets", name));
 }
 
 void SceneEngineImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)

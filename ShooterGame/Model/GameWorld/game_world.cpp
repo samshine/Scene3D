@@ -92,7 +92,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		colors.push_back(Colorf(0.001f, 0.002f, 0.005f, 1.0f));
 		colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
 		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
-		client->scene->set_skybox_gradient(client->window->gc(), colors);
+		client->scene->set_skybox_gradient(colors);
 
 		for (const auto &item : map_data->objects)
 		{
@@ -217,7 +217,7 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement)
 
 		client->music_player.update();
 
-		client->audio->set_listener(client->scene->camera()->position(), client->scene->camera()->orientation());
+		client->audio->set_listener(client->scene_viewport->camera()->position(), client->scene_viewport->camera()->orientation());
 		client->audio->update();
 	}
 }
@@ -284,7 +284,7 @@ void GameWorld::frame(float time_elapsed, float interpolated_time)
 	}
 
 	if (client)
-		client->scene->update(client->window->gc(), time_elapsed);
+		client->scene_viewport->update(client->window->gc(), time_elapsed);
 }
 
 void GameWorld::net_peer_connected(const std::string &peer_id)

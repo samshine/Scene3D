@@ -8,9 +8,9 @@ EditScene::EditScene()
 {
 }
 
-void EditScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
+void EditScene::update(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, bool has_focus, const uicore::Vec2i &mouse_delta)
 {
-	setup_default_scene(scene, gc);
+	setup_default_scene(scene, scene_viewport, gc);
 
 	auto keyboard = ic->keyboard();
 
@@ -76,10 +76,10 @@ void EditScene::update(const ScenePtr &scene, const GraphicContextPtr &gc, const
 			attachment.object->update(gametime.get_time_elapsed());
 		}
 	}
-	scene->update(gc, gametime.get_time_elapsed());
+	scene_viewport->update(gc, gametime.get_time_elapsed());
 }
 
-void EditScene::setup_default_scene(const ScenePtr &scene, const GraphicContextPtr &gc)
+void EditScene::setup_default_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc)
 {
 	if (light1)
 		return;
@@ -103,7 +103,7 @@ void EditScene::setup_default_scene(const ScenePtr &scene, const GraphicContextP
 	light2->set_color(Vec3f(0.1f, 0.1f, 0.12f));
 
 	camera = SceneCamera::create(scene);
-	scene->set_camera(camera);
+	scene_viewport->set_camera(camera);
 
 	gametime.reset();
 }

@@ -25,30 +25,12 @@ class SceneImpl : public Scene
 public:
 	SceneImpl(const SceneEnginePtr &engine);
 
-	const SceneCameraPtr &camera() const override { return _camera; }
-	void set_camera(const SceneCameraPtr &camera) override { _camera = camera; }
-
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb) override;
-	void render(const uicore::GraphicContextPtr &gc) override;
-
-	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
-
-	uicore::Mat4f world_to_eye() const override;
-	uicore::Mat4f eye_to_projection() const override;
-	uicore::Mat4f world_to_projection() const override;
-
-	void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction) override;
-
 	void set_cull_oct_tree(const uicore::AxisAlignedBoundingBox &aabb) override;
 	void set_cull_oct_tree(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max) override;
 	void set_cull_oct_tree(float max_size) override;
 
 	void show_skybox_stars(bool enable) override;
-	void set_skybox_gradient(const uicore::GraphicContextPtr &gc, std::vector<uicore::Colorf> &colors) override;
-
-	void set_camera(const uicore::Vec3f &position, const uicore::Quaternionf &orientation);
-	void set_camera_position(const uicore::Vec3f &position);
-	void set_camera_orientation(const uicore::Quaternionf &orientation);
+	void set_skybox_gradient(std::vector<uicore::Colorf> &colors) override;
 
 	void foreach(const uicore::FrustumPlanes &frustum, const std::function<void(SceneItem *)> &callback);
 	void foreach(const uicore::Vec3f &position, const std::function<void(SceneItem *)> &callback);
@@ -73,6 +55,8 @@ public:
 
 	SceneEngineImpl *engine() const { return _engine.get(); }
 
+	std::vector<uicore::Colorf> skybox_gradient;
+
 private:
 	std::shared_ptr<SceneEngineImpl> _engine;
 
@@ -82,8 +66,6 @@ private:
 	std::list<SceneParticleEmitterImpl *> emitters;
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
-
-	SceneCameraPtr _camera;
 
 	friend class SceneObject;
 	friend class SceneObjectImpl;

@@ -3,6 +3,7 @@
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/SceneEngine/mapped_buffer.h"
+#include "Scene3D/Scene/scene_camera_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
 #include "vertex_particle_emitter_hlsl.h"
@@ -10,20 +11,19 @@
 
 using namespace uicore;
 
-ParticleEmitterPass::ParticleEmitterPass(SceneEngineImpl *engine)
-: engine(engine)
+ParticleEmitterPass::ParticleEmitterPass(SceneRender &render) : inout(render)
 {
 	emitter_slots.resize(32);
 	for (size_t i = 0; i < emitter_slots.size(); i++)
 		free_emitters.push_back((int)i);
 }
 
-void ParticleEmitterPass::select_active_emitters(const uicore::GraphicContextPtr &gc, SceneImpl *scene, const FrustumPlanes &frustum)
+void ParticleEmitterPass::select_active_emitters(const FrustumPlanes &frustum)
 {
 	std::vector<SceneParticleEmitterImpl*> visible_emitters;
-	scene->foreach_emitter(frustum, [&](SceneParticleEmitterImpl *emitter) { visible_emitters.push_back(emitter); });
+	inout.scene->foreach_emitter(frustum, [&](SceneParticleEmitterImpl *emitter) { visible_emitters.push_back(emitter); });
 
-	auto camera_pos = scene->camera()->position();
+	auto camera_pos = inout.camera->position();
 	std::sort(visible_emitters.begin(), visible_emitters.end(), [&](SceneParticleEmitterImpl *a, SceneParticleEmitterImpl *b)
 	{
 		Vec3f vec_a = a->position() - camera_pos;
@@ -52,24 +52,24 @@ void ParticleEmitterPass::select_active_emitters(const uicore::GraphicContextPtr
 			emitter->pass_data = &emitter_slots[slot];
 			emitter->pass_data->emitter = emitter;
 			emitter->pass_data->visible = true;
-			emitter->pass_data->life_color_gradient = engine->get_texture(gc, emitter->gradient_texture(), false);
-			emitter->pass_data->particle_animation = engine->get_texture(gc, emitter->particle_texture(), false);
+			emitter->pass_data->life_color_gradient = inout.engine->get_texture(inout.gc, emitter->gradient_texture(), false);
+			emitter->pass_data->particle_animation = inout.engine->get_texture(inout.gc, emitter->particle_texture(), false);
 			if (!emitter->pass_data->gpu_uniforms.buffer())
-				emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(gc, 1);
+				emitter->pass_data->gpu_uniforms = UniformVector<ParticleUniforms>(inout.gc, 1);
 		}
 	}
 }
 
-void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
+void ParticleEmitterPass::run()
 {
-	setup(gc);
+	setup();
 
-	Size viewport_size = engine->render.viewport.size();
-	Mat4f eye_to_projection = Mat4f::perspective(engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc->clip_z_range());
-	Mat4f eye_to_cull_projection = Mat4f::perspective(engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	FrustumPlanes frustum(eye_to_cull_projection * engine->render.world_to_eye);
+	Size viewport_size = inout.engine->render.viewport.size();
+	Mat4f eye_to_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
+	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
+	FrustumPlanes frustum(eye_to_cull_projection * inout.engine->render.world_to_eye);
 
-	select_active_emitters(gc, scene, frustum);
+	select_active_emitters(frustum);
 
 	const int vectors_per_particle = 2;
 
@@ -83,10 +83,10 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		float depth_fade_distance = 1.0f;
 		ParticleUniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
-		uniforms.object_to_eye = engine->render.world_to_eye;
+		uniforms.object_to_eye = inout.engine->render.world_to_eye;
 		uniforms.rcp_depth_fade_distance = 1.0f / depth_fade_distance;
 		uniforms.instance_vectors_offset = total_particle_count * vectors_per_particle;
-		pass_data->gpu_uniforms.upload_data(gc, &uniforms, 1);
+		pass_data->gpu_uniforms.upload_data(inout.gc, &uniforms, 1);
 
 		total_particle_count += pass_data->cpu_particles.size();
 	}
@@ -96,11 +96,11 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 
 	if (!instance_texture || instance_texture->width() < (int)total_particle_count * vectors_per_particle)
 	{
-		instance_texture = Texture2D::create(gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
-		instance_transfer = StagingTexture::create(gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
+		instance_texture = Texture2D::create(inout.gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
+		instance_transfer = StagingTexture::create(inout.gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 	}
 
-	instance_transfer->lock(gc, access_write_discard);
+	instance_transfer->lock(inout.gc, access_write_discard);
 	MappedBuffer<Vec4f> vectors(instance_transfer->data<Vec4f>(), instance_transfer->width() * instance_transfer->height());
 	size_t vector_offset = 0;
 	for (int slot : active_emitters)
@@ -109,7 +109,7 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		if (pass_data->cpu_particles.empty())
 			continue;
 
-		Vec3f eye_pos = scene->camera()->position();
+		Vec3f eye_pos = inout.camera->position();
 		std::vector<ParticleOrderIndex> sorted_particles;
 		sorted_particles.reserve(pass_data->cpu_particles.size());
 		for (size_t i = 0; i < pass_data->cpu_particles.size(); i++)
@@ -130,20 +130,20 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		vector_offset += pass_data->cpu_particles.size() * vectors_per_particle;
 	}
 	instance_transfer->unlock();
-	instance_texture->set_image(gc, instance_transfer);
+	instance_texture->set_image(inout.gc, instance_transfer);
 
-	gc->set_depth_range(0.0f, 0.9f);
+	inout.gc->set_depth_range(0.0f, 0.9f);
 
-	gc->set_frame_buffer(engine->render.fb_final_color);
-	gc->set_viewport(viewport_size, gc->texture_image_y_axis());
-	gc->set_depth_stencil_state(depth_stencil_state);
-	gc->set_blend_state(blend_state);
-	gc->set_rasterizer_state(rasterizer_state);
-	gc->set_primitives_array(prim_array);
+	inout.gc->set_frame_buffer(inout.engine->render.fb_final_color);
+	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
+	inout.gc->set_depth_stencil_state(depth_stencil_state);
+	inout.gc->set_blend_state(blend_state);
+	inout.gc->set_rasterizer_state(rasterizer_state);
+	inout.gc->set_primitives_array(prim_array);
 
-	gc->set_program_object(program);
-	gc->set_texture(0, engine->render.normal_z_gbuffer);
-	gc->set_texture(1, instance_texture);
+	inout.gc->set_program_object(program);
+	inout.gc->set_texture(0, inout.engine->render.normal_z_gbuffer);
+	inout.gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)
 	{
@@ -151,38 +151,38 @@ void ParticleEmitterPass::run(const GraphicContextPtr &gc, SceneImpl *scene)
 		if (pass_data->cpu_particles.empty())
 			continue;
 
-		gc->set_uniform_buffer(0, pass_data->gpu_uniforms);
-		gc->set_texture(2, pass_data->particle_animation.get());
-		gc->set_texture(3, pass_data->life_color_gradient.get());
-		gc->draw_primitives_array_instanced(type_triangles, 0, 6, pass_data->cpu_particles.size());
+		inout.gc->set_uniform_buffer(0, pass_data->gpu_uniforms);
+		inout.gc->set_texture(2, pass_data->particle_animation.get());
+		inout.gc->set_texture(3, pass_data->life_color_gradient.get());
+		inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6, pass_data->cpu_particles.size());
 	}
 
-	gc->reset_primitives_array();
-	gc->reset_rasterizer_state();
-	gc->reset_depth_stencil_state();
-	gc->reset_program_object();
-	gc->reset_primitives_elements();
-	gc->reset_texture(0);
-	gc->reset_texture(1);
-	gc->reset_texture(2);
-	gc->reset_texture(3);
-	gc->reset_uniform_buffer(0);
-	gc->reset_frame_buffer();
+	inout.gc->reset_primitives_array();
+	inout.gc->reset_rasterizer_state();
+	inout.gc->reset_depth_stencil_state();
+	inout.gc->reset_program_object();
+	inout.gc->reset_primitives_elements();
+	inout.gc->reset_texture(0);
+	inout.gc->reset_texture(1);
+	inout.gc->reset_texture(2);
+	inout.gc->reset_texture(3);
+	inout.gc->reset_uniform_buffer(0);
+	inout.gc->reset_frame_buffer();
 
-	gc->set_depth_range(0.0f, 1.0f);
+	inout.gc->set_depth_range(0.0f, 1.0f);
 }
 
-void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
+void ParticleEmitterPass::setup()
 {
 	if (!program)
 	{
-		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, vertex_particle_emitter_hlsl());
+		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_particle_emitter_hlsl());
 		vertex_shader->compile();
 
-		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, fragment_particle_emitter_hlsl());
+		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_particle_emitter_hlsl());
 		fragment_shader->compile();
 
-		program = ProgramObject::create(gc);
+		program = ProgramObject::create(inout.gc);
 		program->attach(vertex_shader);
 		program->attach(fragment_shader);
 		program->bind_attribute_location(0, "AttrPosition");
@@ -197,36 +197,36 @@ void ParticleEmitterPass::setup(const GraphicContextPtr &gc)
 		program->set_uniform1i("ColorGradientTexture", 3);
 		program->set_uniform1i("ColorGradientSampler", 3);
 
-		billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
+		billboard_positions = VertexArrayVector<Vec3f>(inout.gc, cpu_billboard_positions, 6);
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
 		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
-		blend_state = gc->create_blend_state(blend_desc);
+		blend_state = inout.gc->create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(false);
 		depth_stencil_desc.enable_depth_test(true);
 		depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
+		depth_stencil_state = inout.gc->create_depth_stencil_state(depth_stencil_desc);
 
 		RasterizerStateDescription rasterizer_desc;
 		rasterizer_desc.set_culled(false);
-		rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
+		rasterizer_state = inout.gc->create_rasterizer_state(rasterizer_desc);
 
-		prim_array = PrimitivesArray::create(gc);
+		prim_array = PrimitivesArray::create(inout.gc);
 		prim_array->set_attributes(0, billboard_positions);
 	}
 }
 
-void ParticleEmitterPass::update(const GraphicContextPtr &gc, float time_elapsed)
+void ParticleEmitterPass::update()
 {
 	size_t i = 0;
 	while (i != active_emitters.size())
 	{
 		int slot = active_emitters[i];
 		auto pass_data = &emitter_slots[slot];
-		bool active = pass_data->update(time_elapsed);
+		bool active = pass_data->update(inout.time_elapsed);
 		if (!active)
 		{
 			if (pass_data->emitter)
