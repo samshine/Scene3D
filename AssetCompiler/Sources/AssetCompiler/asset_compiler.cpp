@@ -1,6 +1,5 @@
 
 #include "precomp.h"
-#include "AssetCompiler/AssetCompiler/asset_compiler.h"
 #include "AssetCompiler/ModelDescription/model_desc.h"
 #include "AssetCompiler/MapDescription/map_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
@@ -9,26 +8,13 @@
 
 using namespace uicore;
 
-AssetCompiler::AssetCompiler(const std::string &asset_directory, const std::string &build_directory, const std::function<void(const CompilerMessage&)> &log) : impl(std::make_shared<AssetCompilerImpl>())
+std::shared_ptr<AssetCompiler> AssetCompiler::create(const std::string &asset_directory, const std::string &build_directory, const std::function<void(const CompilerMessage&)> &log)
 {
+	auto impl = std::make_shared<AssetCompilerImpl>();
 	impl->asset_directory = asset_directory;
 	impl->build_directory = build_directory;
 	impl->log_message = log;
-}
-
-void AssetCompiler::cancel()
-{
-	impl->cancel();
-}
-
-void AssetCompiler::clean()
-{
-	impl->clean();
-}
-
-void AssetCompiler::build()
-{
-	impl->build();
+	return impl;
 }
 
 void AssetCompilerImpl::build()

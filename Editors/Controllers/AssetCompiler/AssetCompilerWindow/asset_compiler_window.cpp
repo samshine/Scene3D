@@ -44,25 +44,25 @@ void AssetCompilerWindow::output_browse_clicked()
 void AssetCompilerWindow::build_button_clicked()
 {
 	create_compiler();
-	compiler.build();
+	compiler->build();
 }
 
 void AssetCompilerWindow::clean_button_clicked()
 {
 	create_compiler();
-	compiler.clean();
+	compiler->clean();
 }
 
 void AssetCompilerWindow::cancel_button_clicked()
 {
 	if (compiler)
-		compiler.cancel();
+		compiler->cancel();
 }
 
 void AssetCompilerWindow::create_compiler()
 {
 	view->clear();
-	compiler = AssetCompiler(view->asset_list_edit->text(), view->output_edit->text(), [this](const CompilerMessage &msg)
+	compiler = AssetCompiler::create(view->asset_list_edit->text(), view->output_edit->text(), [this](const CompilerMessage &msg)
 	{
 		auto msg_copy = msg;
 		RunLoop::main_thread_task([=]{

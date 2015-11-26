@@ -24,20 +24,14 @@ public:
 	int line = 0;
 };
 
-class AssetCompilerImpl;
-
 class AssetCompiler
 {
 public:
-	AssetCompiler() { }
-	AssetCompiler(const std::string &asset_directory, const std::string &build_directory, const std::function<void(const CompilerMessage&)> &log);
+	static std::shared_ptr<AssetCompiler> create(const std::string &asset_directory, const std::string &build_directory, const std::function<void(const CompilerMessage&)> &log);
 
-	void clean();
-	void build();
-	void cancel();
-
-	operator bool() const { return (bool)impl; }
-
-private:
-	std::shared_ptr<AssetCompilerImpl> impl;
+	virtual void clean() = 0;
+	virtual void build() = 0;
+	virtual void cancel() = 0;
 };
+
+typedef std::shared_ptr<AssetCompiler> AssetCompilerPtr;

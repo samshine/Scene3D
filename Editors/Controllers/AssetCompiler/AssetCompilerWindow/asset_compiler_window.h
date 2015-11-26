@@ -17,7 +17,7 @@ private:
 
 	void create_compiler();
 
-	AssetCompiler compiler;
+	AssetCompilerPtr compiler;
 	std::shared_ptr<AssetCompilerWindowView> view = std::make_shared<AssetCompilerWindowView>();
 
 	uicore::SlotContainer slots;

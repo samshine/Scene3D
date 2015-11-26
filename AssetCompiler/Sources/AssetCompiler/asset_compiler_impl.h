@@ -1,7 +1,9 @@
 
 #pragma once
 
-class AssetCompilerImpl
+#include "AssetCompiler/AssetCompiler/asset_compiler.h"
+
+class AssetCompilerImpl : public AssetCompiler
 {
 public:
 	~AssetCompilerImpl()
@@ -9,7 +11,7 @@ public:
 		cancel();
 	}
 
-	void cancel()
+	void cancel() override
 	{
 		if (!worker_thread.joinable())
 			return;
@@ -21,8 +23,8 @@ public:
 		worker_thread.join();
 	}
 
-	void build();
-	void clean();
+	void build() override;
+	void clean() override;
 
 private:
 	void execute(std::function<void()> work)
