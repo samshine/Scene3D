@@ -20,78 +20,6 @@ int ModelInstancesBuffer::new_offset_index()
 	return next_offset_index++;
 }
 
-void ModelInstancesBuffer::render_pass(const GraphicContextPtr &gc, SceneImpl *scene, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, const std::function<void(ModelLOD*, int)> &pass_callback)
-{
-	ScopeTimeFunction();
-	scene->engine()->render.scene_visits++;
-
-	std::vector<ModelLOD *> model_meshes;
-
-	scene->foreach_object(frustum, [&](SceneObjectImpl *object)
-	{
-		if (object->instance.get_renderer())
-		{
-			object->instance.get_renderer()->create_mesh(gc);
-
-			Vec3f light_probe_color;
-			if (object->light_probe_receiver())
-			{
-				SceneLightProbeImpl *probe = find_nearest_probe(scene, object->position());
-				if (probe)
-					light_probe_color = probe->color();
-			}
-
-			scene->engine()->render.instances_drawn++;
-			bool first_instance = object->instance.get_renderer()->mesh->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
-			if (first_instance)
-			{
-				model_meshes.push_back(object->instance.get_renderer()->mesh.get());
-				scene->engine()->render.models_drawn++;
-			}
-		}
-	});
-
-	frame++;
-
-	clear();
-	for (auto mesh : model_meshes)
-		add(mesh->get_instance_vectors_count());
-
-	lock(gc);
-	for (auto mesh : model_meshes)
-		mesh->upload(*this, world_to_eye, eye_to_projection);
-	unlock(gc);
-
-	gc->set_texture(0, get_indexes());
-	gc->set_texture(1, get_vectors());
-
-	for (auto mesh : model_meshes)
-		pass_callback(mesh, mesh->instances.size());
-
-	// We cannot reset those because GBufferPass::run contains a hack relying on them being bound
-	//gc->set_texture(0, nullptr);
-	//gc->set_texture(1, nullptr);
-}
-
-SceneLightProbeImpl *ModelInstancesBuffer::find_nearest_probe(SceneImpl *scene, const Vec3f &position)
-{
-	SceneLightProbeImpl *probe = 0;
-	float sqr_distance = 0.0f;
-
-	scene->foreach_light_probe(position, [&](SceneLightProbeImpl *current_probe)
-	{
-		Vec3f delta = current_probe->position() - position;
-		float current_sqr_distance = Vec3f::dot(delta, delta);
-		if (probe == 0 || current_sqr_distance < sqr_distance)
-		{
-			probe = current_probe;
-			sqr_distance = current_sqr_distance;
-		}
-	});
-
-	return probe;
-}
-
 void ModelInstancesBuffer::clear()
 {
 	num_vectors = 0;
@@ -141,16 +69,10 @@ void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 MappedBuffer<Vec4f> ModelInstancesBuffer::upload(int offset_index, int vectors)
 {
 	if (offset_index < 0 || offset_index >= indexes_transfer[current_buffer]->width() * indexes_transfer[current_buffer]->height())
-	{
-		int *foobar = 0;
-		*foobar = 0xdeadbabe;
-	}
+		CrashReporter::invoke();
 
 	if (num_vectors + vectors > vectors_transfer[current_buffer]->width() * vectors_transfer[current_buffer]->height())
-	{
-		int *foobar = 0;
-		*foobar = 0xdeadbeef;
-	}
+		CrashReporter::invoke();
 
 	indexes_transfer[current_buffer]->data<float>()[offset_index] = (float)num_vectors;
 	Vec4f *v = vectors_transfer[current_buffer]->data<Vec4f>() + num_vectors;

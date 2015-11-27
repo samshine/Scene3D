@@ -14,7 +14,7 @@ class SceneEngineImpl;
 class Model
 {
 public:
-	Model(SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data, int model_index);
+	Model(SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data);
 
 	void create_mesh(const uicore::GraphicContextPtr &gc);
 

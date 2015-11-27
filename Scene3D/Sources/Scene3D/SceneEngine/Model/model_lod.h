@@ -57,6 +57,5 @@ private:
 	uicore::Texture2DPtr instance_bones;
 	int max_instances = 0;
 
-	friend class ModelShaderCache;
-	friend class ModelInstancesBuffer;
+	friend class ModelRender;
 };

@@ -28,10 +28,13 @@ void TransparencyPass::run()
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	inout.model_render.instances_buffer.render_pass(inout.gc, inout.scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	inout.model_render.clear(inout.scene);
+	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object)
 	{
-		model_lod->transparency_commands.execute(inout.scene, inout.gc, num_instances);
+		inout.model_render.add_instance(object);
 	});
+	inout.model_render.upload(inout.world_to_eye, eye_to_projection);
+	inout.model_render.render_transparency();
 
 	inout.gc->reset_rasterizer_state();
 	inout.gc->reset_depth_stencil_state();

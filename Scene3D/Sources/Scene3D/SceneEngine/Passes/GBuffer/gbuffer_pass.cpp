@@ -34,22 +34,23 @@ void GBufferPass::run()
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
-	inout.gc->set_blend_state(early_z_blend_state);
 
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	render_list.clear();
-	inout.model_render.instances_buffer.render_pass(inout.gc, inout.scene, inout.world_to_eye, eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+	inout.model_render.clear(inout.scene);
+	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object)
 	{
-		model_lod->early_z_commands.execute(inout.scene, inout.gc, num_instances);
-		render_list.push_back(RenderEntry(model_lod, num_instances));
+		inout.model_render.add_instance(object);
 	});
+	inout.model_render.upload(inout.world_to_eye, eye_to_projection);
+
+	inout.gc->set_blend_state(early_z_blend_state);
+	inout.model_render.render_early_z();
 
 	inout.gc->set_blend_state(blend_state);
-	for (size_t i = 0; i < render_list.size(); i++)
-		render_list[i].model_lod->gbuffer_commands.execute(inout.scene, inout.gc, render_list[i].num_instances);
+	inout.model_render.render_gbuffer();
 
 	if (inout.gc->shader_language() == shader_glsl)
 	{

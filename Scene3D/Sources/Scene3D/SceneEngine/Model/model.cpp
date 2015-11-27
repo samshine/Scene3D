@@ -10,8 +10,9 @@
 
 using namespace uicore;
 
-Model::Model(SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data, int model_index) : engine(engine), model_data(model_data), model_index(model_index)
+Model::Model(SceneEngineImpl *engine, std::shared_ptr<ModelData> model_data) : engine(engine), model_data(model_data)
 {
+	model_index = engine->render.model_render.new_model_index();
 }
 
 void Model::create_mesh(const uicore::GraphicContextPtr &gc)

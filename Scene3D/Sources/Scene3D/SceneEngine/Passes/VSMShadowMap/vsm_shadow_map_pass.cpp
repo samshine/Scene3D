@@ -110,10 +110,13 @@ void VSMShadowMapPass::render_maps()
 
 			FrustumPlanes frustum(eye_to_cull_projection * lights[i]->vsm_data->world_to_eye);
 
-			inout.model_render.instances_buffer.render_pass(inout.gc, inout.scene, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, [&](ModelLOD *model_lod, int num_instances)
+			inout.model_render.clear(inout.scene);
+			inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object)
 			{
-				model_lod->shadow_commands.execute(inout.scene, inout.gc, num_instances);
+				inout.model_render.add_instance(object);
 			});
+			inout.model_render.upload(lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection);
+			inout.model_render.render_shadow();
 
 			blur_indexes.push_back(i);
 		}

@@ -561,6 +561,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_lod.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp" />

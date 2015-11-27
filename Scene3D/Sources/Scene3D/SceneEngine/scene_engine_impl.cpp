@@ -34,7 +34,7 @@ std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 	auto &renderer = models[model_name];
 	if (!renderer)
 	{
-		renderer = std::make_shared<Model>(this, get_model_data(model_name), render.model_render.instances_buffer.new_offset_index());
+		renderer = std::make_shared<Model>(this, get_model_data(model_name));
 	}
 	return renderer;
 }

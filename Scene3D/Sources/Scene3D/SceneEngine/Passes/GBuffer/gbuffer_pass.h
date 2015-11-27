@@ -23,13 +23,4 @@ private:
 	uicore::BlendStatePtr blend_state;
 	uicore::BlendStatePtr early_z_blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
-
-	struct RenderEntry
-	{
-		RenderEntry(ModelLOD *model_lod, int num_instances) : model_lod(model_lod), num_instances(num_instances) { }
-
-		ModelLOD *model_lod;
-		int num_instances;
-	};
-	std::vector<RenderEntry> render_list;
 };
