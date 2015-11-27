@@ -5,7 +5,7 @@
 #include "Scene3D/SceneEngine/shader_setup.h"
 #include "model_render_command.h"
 #include "model.h"
-#include "model_lod.h"
+#include "model_mesh.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_glsl.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_hlsl.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/fragment_gbuffer_glsl.h"

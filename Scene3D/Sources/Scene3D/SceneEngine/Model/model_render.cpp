@@ -7,7 +7,7 @@
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/SceneEngine/Model/model.h"
-#include "Scene3D/SceneEngine/Model/model_lod.h"
+#include "Scene3D/SceneEngine/Model/model_mesh.h"
 
 using namespace uicore;
 

@@ -7,7 +7,7 @@
 class ModelDataLight;
 class ModelLightInstance;
 class ModelMeshVisitor;
-class ModelLOD;
+class ModelMesh;
 class ModelInstancesBuffer;
 class SceneEngineImpl;
 
@@ -20,6 +20,6 @@ public:
 
 	SceneEngineImpl *engine;
 	std::shared_ptr<ModelData> model_data;
-	std::shared_ptr<ModelLOD> mesh;
+	std::shared_ptr<ModelMesh> mesh;
 	int model_index;
 };

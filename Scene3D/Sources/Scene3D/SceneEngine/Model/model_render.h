@@ -7,7 +7,7 @@
 class SceneImpl;
 class SceneObjectImpl;
 class SceneLightProbeImpl;
-class ModelLOD;
+class ModelMesh;
 
 class ModelRender
 {
@@ -33,5 +33,5 @@ private:
 	std::function<void()> execute_commands;
 
 	int frame = 0;
-	std::vector<ModelLOD *> model_meshes;
+	std::vector<ModelMesh *> model_meshes;
 };

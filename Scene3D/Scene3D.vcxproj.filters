@@ -1089,9 +1089,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_lod.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
@@ -1357,6 +1354,9 @@
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1871,9 +1871,6 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_lod.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
@@ -1959,6 +1956,9 @@
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_mesh.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
   </ItemGroup>

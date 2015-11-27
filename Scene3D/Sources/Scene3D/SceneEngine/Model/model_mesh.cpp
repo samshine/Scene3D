@@ -1,12 +1,12 @@
 
 #include "precomp.h"
-#include "model_lod.h"
+#include "model_mesh.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/SceneEngine/Model/model.h"
 
 using namespace uicore;
 
-ModelLOD::ModelLOD(SceneEngineImpl *engine, const GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data) : model_index(model_index), model_data(model_data)
+ModelMesh::ModelMesh(SceneEngineImpl *engine, const GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data) : model_index(model_index), model_data(model_data)
 {
 /*
 	// Small hack until we support rendering unskinned meshes
@@ -80,7 +80,7 @@ ModelLOD::ModelLOD(SceneEngineImpl *engine, const GraphicContextPtr &gc, int mod
 	create_early_z_commands(gc, &engine->render.model_render.shader_cache);
 }
 
-bool ModelLOD::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color)
+bool ModelMesh::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color)
 {
 	if (instance.cur_anim.get_animation_index() == -1)
 		return false;
@@ -99,12 +99,12 @@ bool ModelLOD::add_instance(int instance_frame, const ModelInstance &instance, c
 	return instances.size() == 1;
 }
 
-int ModelLOD::get_instance_vectors_count() const
+int ModelMesh::get_instance_vectors_count() const
 {
 	return instances.size() * get_vectors_per_instance();
 }
 
-int ModelLOD::get_vectors_per_instance() const
+int ModelMesh::get_vectors_per_instance() const
 {
 	if (model_data->meshes.size() != 1)
 		throw Exception("Model::get_vectors_per_instance does not support multiple meshes yet");
@@ -112,7 +112,7 @@ int ModelLOD::get_vectors_per_instance() const
 	return instance_base_vectors + model_data->bones.size() * vectors_per_bone + num_materials * vectors_per_material;
 }
 
-void ModelLOD::upload(ModelInstancesBuffer &model_instances_buffer, const Mat4f &world_to_eye, const Mat4f &eye_to_projection)
+void ModelMesh::upload(ModelInstancesBuffer &model_instances_buffer, const Mat4f &world_to_eye, const Mat4f &eye_to_projection)
 {
 	int vectors_per_instance = get_vectors_per_instance();
 
@@ -208,7 +208,7 @@ void ModelLOD::upload(ModelInstancesBuffer &model_instances_buffer, const Mat4f 
 }
 
 template<typename Type>
-VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec)
+VertexArrayVector<Type> ModelMesh::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec)
 {
 	if (!vec.empty())
 	{
@@ -223,7 +223,7 @@ VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, con
 }
 
 template<typename Type>
-VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec, bool normalize)
+VertexArrayVector<Type> ModelMesh::upload_vector(const GraphicContextPtr &gc, const PrimitivesArrayPtr &primitives_array, int index, const std::vector<Type> &vec, bool normalize)
 {
 	if (!vec.empty())
 	{
@@ -237,7 +237,7 @@ VertexArrayVector<Type> ModelLOD::upload_vector(const GraphicContextPtr &gc, con
 	}
 }
 
-void ModelLOD::create_gbuffer_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
+void ModelMesh::create_gbuffer_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -314,7 +314,7 @@ void ModelLOD::create_gbuffer_commands(const GraphicContextPtr &gc, ModelShaderC
 	}
 }
 
-void ModelLOD::create_transparency_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
+void ModelMesh::create_transparency_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -403,7 +403,7 @@ void ModelLOD::create_transparency_commands(const GraphicContextPtr &gc, ModelSh
 	}
 }
 
-void ModelLOD::create_shadow_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
+void ModelMesh::create_shadow_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -424,7 +424,7 @@ void ModelLOD::create_shadow_commands(const GraphicContextPtr &gc, ModelShaderCa
 	}
 }
 
-void ModelLOD::create_early_z_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
+void ModelMesh::create_early_z_commands(const GraphicContextPtr &gc, ModelShaderCache *shader_cache)
 {
 	shader_cache->create_states(gc);
 
@@ -467,7 +467,7 @@ void ModelLOD::create_early_z_commands(const GraphicContextPtr &gc, ModelShaderC
 	}
 }
 
-TextureWrapMode ModelLOD::to_wrap_mode(ModelDataTextureMap::WrapMode mode)
+TextureWrapMode ModelMesh::to_wrap_mode(ModelDataTextureMap::WrapMode mode)
 {
 	switch (mode)
 	{

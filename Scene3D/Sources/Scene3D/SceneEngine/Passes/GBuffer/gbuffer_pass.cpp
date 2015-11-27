@@ -2,7 +2,6 @@
 #include "precomp.h"
 #include "gbuffer_pass.h"
 #include "Scene3D/scene.h"
-#include "Scene3D/SceneEngine/Model/model_lod.h"
 #include "Scene3D/SceneEngine/scene_viewport_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 

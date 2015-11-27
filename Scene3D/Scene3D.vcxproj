@@ -298,7 +298,7 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_lod.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render_command.h" />
@@ -560,7 +560,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.cpp" />
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_lod.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_mesh.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp" />

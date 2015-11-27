@@ -6,7 +6,7 @@
 #include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/SceneEngine/resource.h"
 
-class ModelLOD;
+class ModelMesh;
 
 class GBufferPass : public ScenePass
 {

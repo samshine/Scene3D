@@ -8,10 +8,10 @@
 class ModelData;
 class ModelInstance;
 
-class ModelLOD
+class ModelMesh
 {
 public:
-	ModelLOD(SceneEngineImpl *engine, const uicore::GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data);
+	ModelMesh(SceneEngineImpl *engine, const uicore::GraphicContextPtr &gc, int model_index, std::shared_ptr<ModelData> model_data);
 
 	bool add_instance(int frame, const ModelInstance &instance, const uicore::Mat4f &object_to_world, const uicore::Vec3f &light_probe_color);
 
