@@ -217,5 +217,8 @@ void ModelAnimationTime::update_animation_index(std::shared_ptr<Model> &renderer
 				}
 			}
 		}
+
+		if (animation_index == -1 && !renderer->model_data->animations.empty())
+			animation_index = 0;
 	}
 }
