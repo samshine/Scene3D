@@ -3,6 +3,7 @@
 
 #include "Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/SceneEngine/scene_render.h"
+#include "Scene3D/SceneEngine/shadow_maps.h"
 #include "Scene3D/SceneEngine/resource.h"
 #include "Scene3D/SceneEngine/Model/model_render.h"
 #include "Scene3D/SceneEngine/Passes/GaussianBlur/gaussian_blur.h"
@@ -64,8 +65,7 @@ public:
 	uicore::Texture2DPtr ambient_occlusion;
 	uicore::Texture2DPtr final_color;
 
-	uicore::Texture2DArrayPtr shadow_maps;
-
+	ShadowMaps shadow_maps;
 	GaussianBlur blur;
 
 	uicore::Texture2DPtr skybox_texture;

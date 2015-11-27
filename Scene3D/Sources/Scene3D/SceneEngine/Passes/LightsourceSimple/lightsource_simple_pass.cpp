@@ -192,11 +192,9 @@ void LightsourceSimplePass::upload()
 			sqr_falloff_begin = falloff_begin * falloff_begin;
 		}
 		Vec3f position_in_eye = Vec3f(inout.world_to_eye * Vec4f(lights[i]->position(), 1.0f));
-		Mat4f eye_to_shadow_projection = lights[i]->vsm_data->world_to_shadow_projection * eye_to_world;
+		Mat4f eye_to_shadow_projection = lights[i]->world_to_shadow_projection(inout.gc->clip_z_range()) * eye_to_world;
 
-		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
-
-		instance_data[i * vectors_per_light + 0] = Vec4f(position_in_eye, (float)shadow_map_index);
+		instance_data[i * vectors_per_light + 0] = Vec4f(position_in_eye, (float)lights[i]->shadow_map_index);
 		instance_data[i * vectors_per_light + 1] = Vec4f(lights[i]->color(), lights[i]->ambient_illumination());
 #ifdef USE_QUADRATIC_ATTENUATION
 		instance_data[i * vectors_per_light + 2] = Vec4f(sqr_radius, sqr_attenuation_start, 1.0f / sqr_attenuation_delta, sqr_falloff_begin);
@@ -236,7 +234,7 @@ void LightsourceSimplePass::render()
 	inout.gc->set_texture(2, inout.diffuse_color_gbuffer);
 	inout.gc->set_texture(3, inout.specular_color_gbuffer);
 	inout.gc->set_texture(4, inout.specular_level_gbuffer);
-	inout.gc->set_texture(5, inout.shadow_maps);
+	inout.gc->set_texture(5, inout.shadow_maps.shadow_maps);
 	inout.gc->set_texture(6, inout.self_illumination_gbuffer);
 
 	inout.gc->set_blend_state(blend_state);

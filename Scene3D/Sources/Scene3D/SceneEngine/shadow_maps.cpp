@@ -2,171 +2,85 @@
 #include "precomp.h"
 #include "shadow_maps.h"
 #include "scene_render.h"
+#include "Scene3D/Scene/scene_camera_impl.h"
 
 using namespace uicore;
 
-ShadowMaps::ShadowMaps(const GraphicContextPtr &gc, SceneRender &render, int shadow_map_size, int max_active_maps, TextureFormat format)
-: render(render), used_entries(0), unused_entries(0)
+ShadowMaps::ShadowMaps(SceneRender &render) : render(render)
 {
-	framebuffers.reserve(max_active_maps);
-	views.reserve(max_active_maps);
-	
-	render.shadow_maps = Texture2DArray::create(gc, shadow_map_size, shadow_map_size, max_active_maps, format);
-
-	blur_texture = Texture2D::create(gc, shadow_map_size, shadow_map_size, format);
-	fb_blur = FrameBuffer::create(gc);
-	fb_blur->attach_color(0, blur_texture);
-
-	auto depth_texture = Texture2D::create(gc, shadow_map_size, shadow_map_size, tf_depth_component32);
-	for (int i = 0; i < max_active_maps; i++)
-	{
-		auto fb = FrameBuffer::create(gc);
-		fb->attach_color(0, render.shadow_maps, i);
-		fb->attach_depth(depth_texture);
-		framebuffers.push_back(fb);
-
-		views.push_back(render.shadow_maps->create_2d_view(i, tf_rg32f, 0, 1));
-
-		free_indexes.push_back(i);
-	}
 }
 
-ShadowMaps::~ShadowMaps()
+void ShadowMaps::setup(int shadow_map_size, int max_active_maps, TextureFormat format)
 {
+	if (shadow_maps)
+		return;
+
+	shadow_maps = Texture2DArray::create(render.gc, shadow_map_size, shadow_map_size, max_active_maps, format);
+
+	blur_texture = Texture2D::create(render.gc, shadow_map_size, shadow_map_size, format);
+	fb_blur = FrameBuffer::create(render.gc);
+	fb_blur->attach_color(0, blur_texture);
+
+	auto depth_texture = Texture2D::create(render.gc, shadow_map_size, shadow_map_size, tf_depth_component32);
+	for (int i = 0; i < max_active_maps; i++)
+	{
+		ShadowMapLight light;
+		light.framebuffer = FrameBuffer::create(render.gc);
+		light.framebuffer->attach_color(0, shadow_maps, i);
+		light.framebuffer->attach_depth(depth_texture);
+		light.view = shadow_maps->create_2d_view(i, tf_rg32f, 0, 1);
+		lights.push_back(light);
+	}
 }
 
 void ShadowMaps::start_frame()
 {
-	// Move all entries to unused list:
-	while (used_entries)
+	// Free all slots containing destroyed lights
+	// Update camera distance for remaining lights
+	for (auto &light : lights)
 	{
-		ShadowMapEntryImpl *entry = used_entries;
-		unlink(entry);
-		add_unused(entry);
-	}
-}
-
-void ShadowMaps::assign_indexes()
-{
-	// Assign an index to all used entries, or page them out if we run out of slots
-	ShadowMapEntryImpl *entry = used_entries;
-	while (entry)
-	{
-		if (entry->index == -1)
+		if (!light.light_weakptr.lock())
 		{
-			if (!free_indexes.empty())
-			{
-				entry->index = free_indexes.back();
-				free_indexes.pop_back();
-			}
-			else if (unused_entries)
-			{
-				entry->index = unused_entries->index;
-				unused_entries->index = -1;
-				unlink(unused_entries);
-			}
+			light.light = nullptr;
+			light.light_weakptr.reset();
 		}
-
-		ShadowMapEntryImpl *next_entry = entry->next;
-		if (entry->index == -1)
-			unlink(entry);
-		entry = next_entry;
+		else
+		{
+			auto delta = light.light->position() - render.camera->position();
+			light.sqr_distance = Vec3f::dot(delta, delta);
+		}
 	}
 }
 
-void ShadowMaps::add_used(ShadowMapEntryImpl *entry)
+void ShadowMaps::add_light(SceneLightImpl *light)
 {
-	unlink(entry);
-	if (used_entries)
-		used_entries->prev = entry;
-	entry->next = used_entries;
-	used_entries = entry;
-}
+	auto delta = light->position() - render.camera->position();
+	auto sqr_distance = Vec3f::dot(delta, delta);
 
-void ShadowMaps::add_unused(ShadowMapEntryImpl *entry)
-{
-	unlink(entry);
-	if (unused_entries)
-		unused_entries->prev = entry;
-	entry->next = unused_entries;
-	unused_entries = entry;
-}
-
-void ShadowMaps::unlink(ShadowMapEntryImpl *entry)
-{
-	if (used_entries == entry)
-		used_entries = entry->next;
-	else if (unused_entries == entry)
-		unused_entries = entry->next;
-
-	if (entry->prev)
-		entry->prev->next = entry->next;
-	if (entry->next)
-		entry->next->prev = entry->prev;
-
-	entry->prev = 0;
-	entry->next = 0;
-}
-
-void ShadowMaps::use_entry(ShadowMapEntryImpl *entry)
-{
-	unlink(entry);
-	add_used(entry);
-}
-
-void ShadowMaps::entry_destroyed(ShadowMapEntryImpl *entry)
-{
-	unlink(entry);
-	if (entry->index != -1)
+	// Find light slot with furthest distance, or empty
+	int slot = -1;
+	for (int i = 0; i < (int)lights.size(); i++)
 	{
-		free_indexes.push_back(entry->index);
-		entry->index = -1;
+		if (lights[i].light)
+		{
+			if (slot == -1 || lights[slot].sqr_distance > lights[i].sqr_distance)
+				slot = i;
+		}
+		else
+		{
+			slot = i;
+			break;
+		}
 	}
-}
 
-/////////////////////////////////////////////////////////////////////////////
+	if (lights[slot].sqr_distance > sqr_distance || !lights[slot].light)
+	{
+		if (lights[slot].light)
+			lights[slot].light->shadow_map_index = -1;
 
-ShadowMapEntry::ShadowMapEntry()
-{
-}
-
-ShadowMapEntry::ShadowMapEntry(ShadowMaps *shadow_maps)
-: impl(std::make_shared<ShadowMapEntryImpl>(shadow_maps))
-{
-}
-
-void ShadowMapEntry::use_in_frame()
-{
-	impl->shadow_maps->use_entry(impl.get());
-}
-
-int ShadowMapEntry::get_index() const
-{
-	return impl->index;
-}
-
-FrameBufferPtr ShadowMapEntry::get_framebuffer() const
-{
-	if (impl->index != -1)
-		return impl->shadow_maps->framebuffers[impl->index];
-	else
-		return nullptr;
-}
-
-Texture2DPtr ShadowMapEntry::get_view() const
-{
-	if (impl->index != -1)
-		return impl->shadow_maps->views[impl->index];
-	else
-		return nullptr;
-}
-
-const uicore::FrameBufferPtr &ShadowMapEntry::fb_blur() const
-{
-	return impl->shadow_maps->fb_blur;
-}
-
-const uicore::Texture2DPtr &ShadowMapEntry::blur_texture() const
-{
-	return impl->shadow_maps->blur_texture;
+		lights[slot].light = light;
+		lights[slot].light_weakptr = light->shared_from_this();
+		lights[slot].light->shadow_map_index = slot;
+		lights[slot].sqr_distance = sqr_distance;
+	}
 }

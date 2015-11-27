@@ -5,10 +5,9 @@
 #include "Scene3D/Culling/scene_cull_provider.h"
 #include <list>
 
-class VSMShadowMapPassLightData;
 class SceneImpl;
 
-class SceneLightImpl : public SceneLight, public SceneItem
+class SceneLightImpl : public SceneLight, public SceneItem, public std::enable_shared_from_this<SceneLightImpl>
 {
 public:
 	SceneLightImpl(SceneImpl *scene);
@@ -71,5 +70,35 @@ public:
 	bool _light_caster = true;
 	SceneLightPtr _shadow_source;
 
-	std::unique_ptr<VSMShadowMapPassLightData> vsm_data;
+	int shadow_map_index = -1;
+
+	uicore::Mat4f shadow_to_projection(uicore::ClipZRange clip_z_range) const
+	{
+		using namespace uicore;
+		if (type() == SceneLight::type_spot)
+		{
+			float field_of_view = falloff();
+			return Mat4f::perspective(field_of_view, aspect_ratio(), 0.1f, 1.e10f, handed_left, clip_z_range);
+		}
+		else if (type() == SceneLight::type_directional)
+		{
+			return Mat4f::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 1.e10f, handed_left, clip_z_range);
+		}
+		else
+		{
+			return Mat4f::identity();
+		}
+	}
+
+	uicore::Mat4f world_to_shadow() const
+	{
+		using namespace uicore;
+		Quaternionf inv_orientation = Quaternionf::inverse(orientation());
+		return inv_orientation.to_matrix() * Mat4f::translate(-position());
+	}
+
+	uicore::Mat4f world_to_shadow_projection(uicore::ClipZRange clip_z_range) const
+	{
+		return shadow_to_projection(clip_z_range) * world_to_shadow();
+	}
 };

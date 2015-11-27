@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine)
+SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine), shadow_maps(*this)
 {
 }
 

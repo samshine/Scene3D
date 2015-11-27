@@ -1,76 +1,36 @@
 
 #pragma once
 
-#include <list>
-
-class ShadowMaps;
-class ShadowMapEntry;
-class ShadowMapEntryImpl;
+class SceneLightImpl;
 class SceneRender;
+
+class ShadowMapLight
+{
+public:
+	uicore::FrameBufferPtr framebuffer;
+	uicore::Texture2DPtr view;
+
+	SceneLightImpl *light = nullptr;
+	std::weak_ptr<SceneLightImpl> light_weakptr; // Used to detect destroyed lights in start_frame
+
+	float sqr_distance = 0.0f;
+};
 
 class ShadowMaps
 {
 public:
-	ShadowMaps(const uicore::GraphicContextPtr &gc, SceneRender &render, int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
-	~ShadowMaps();
+	ShadowMaps(SceneRender &render);
+
+	void setup(int shadow_map_size, int max_active_maps, uicore::TextureFormat format);
 
 	void start_frame();
-	void assign_indexes();
+	void add_light(SceneLightImpl *light);
 
-private:
-	void use_entry(ShadowMapEntryImpl *entry);
-	void entry_destroyed(ShadowMapEntryImpl *entry);
-
-	void add_used(ShadowMapEntryImpl *entry);
-	void add_unused(ShadowMapEntryImpl *entry);
-	void unlink(ShadowMapEntryImpl *entry);
-
-	SceneRender &render;
-
+	uicore::Texture2DArrayPtr shadow_maps;
 	uicore::FrameBufferPtr fb_blur;
 	uicore::Texture2DPtr blur_texture;
-
-	std::vector<uicore::FrameBufferPtr> framebuffers;
-	std::vector<uicore::Texture2DPtr> views;
-
-	ShadowMapEntryImpl *used_entries;
-	ShadowMapEntryImpl *unused_entries;
-	std::vector<int> free_indexes;
-
-	friend class ShadowMapEntry;
-	friend class ShadowMapEntryImpl;
-};
-
-class ShadowMapEntry
-{
-public:
-	ShadowMapEntry();
-	ShadowMapEntry(ShadowMaps *shadow_maps);
-	bool is_null() const { return !impl; }
-
-	void use_in_frame();
-
-	int get_index() const;
-	uicore::FrameBufferPtr get_framebuffer() const;
-	uicore::Texture2DPtr get_view() const;
-
-	const uicore::FrameBufferPtr &fb_blur() const;
-	const uicore::Texture2DPtr &blur_texture() const;
+	std::vector<ShadowMapLight> lights;
 
 private:
-	std::shared_ptr<ShadowMapEntryImpl> impl;
+	SceneRender &render;
 };
-
-class ShadowMapEntryImpl
-{
-public:
-	ShadowMapEntryImpl(ShadowMaps *maps) : shadow_maps(maps), index(-1), prev(0), next(0) { }
-	~ShadowMapEntryImpl() { shadow_maps->entry_destroyed(this); }
-
-	ShadowMaps *shadow_maps;
-	int index;
-
-	ShadowMapEntryImpl *prev;
-	ShadowMapEntryImpl *next;
-};
-
