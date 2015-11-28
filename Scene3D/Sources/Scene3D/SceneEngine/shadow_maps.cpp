@@ -54,26 +54,28 @@ void ShadowMaps::start_frame()
 
 void ShadowMaps::add_light(SceneLightImpl *light)
 {
+	if (light->shadow_map_index != -1)
+		return;
+
 	auto delta = light->position() - render.camera->position();
 	auto sqr_distance = Vec3f::dot(delta, delta);
 
 	// Find light slot with furthest distance, or empty
-	int slot = -1;
+	int slot = 0;
 	for (int i = 0; i < (int)lights.size(); i++)
 	{
-		if (lights[i].light)
-		{
-			if (slot == -1 || lights[slot].sqr_distance > lights[i].sqr_distance)
-				slot = i;
-		}
-		else
+		if (!lights[i].light)
 		{
 			slot = i;
 			break;
 		}
+		else if (lights[i].sqr_distance > lights[slot].sqr_distance)
+		{
+			slot = i;
+		}
 	}
 
-	if (lights[slot].sqr_distance > sqr_distance || !lights[slot].light)
+	if (!lights[slot].light || lights[slot].sqr_distance > sqr_distance)
 	{
 		if (lights[slot].light)
 			lights[slot].light->shadow_map_index = -1;
