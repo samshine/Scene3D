@@ -24,8 +24,8 @@ Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const 
 		scene_object = SceneObject::create(world->client->scene, model, pos1, orientation, Vec3f(scale));
 
 		// For debugging collision box
-		//SceneModel model(world->client->window->gc(), *world->client->scene, create_box());
-		//scene_object = SceneObject(*world->client->scene, model, pos1, orientation, Vec3f(1.0f));
+		//auto model = SceneModel::create(world->client->scene, create_box());
+		//scene_object = SceneObject::create(world->client->scene, model, pos1, orientation, Vec3f(1.0f));
 	}
 }
 

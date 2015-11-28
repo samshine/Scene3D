@@ -24,5 +24,5 @@ private:
 	float move_cooldown = 20.0f;
 	float weapon_change_cooldown = 15.0f;
 
-	RobotPlayerMode mode = RobotPlayerMode::idle;
+	RobotPlayerMode mode = RobotPlayerMode::follow;
 };

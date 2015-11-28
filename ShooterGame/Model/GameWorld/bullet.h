@@ -3,10 +3,12 @@
 
 #include "game_object.h"
 
+class PlayerPawn;
+
 class Bullet : public GameObject
 {
 public:
-	Bullet(GameWorld *world, const std::string &type, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
+	Bullet(PlayerPawn *owner, const std::string &type, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~Bullet();
 
 	void tick(const GameTick &tick) override;
@@ -14,6 +16,8 @@ public:
 
 private:
 	float time_left = 0.0f;
+
+	PlayerPawn *owner = nullptr;
 
 	uicore::Vec3f pos;
 	uicore::Quaternionf orientation;

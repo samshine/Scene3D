@@ -54,7 +54,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 		}
 	}
 
-	float radius = 30.0f;
+	float radius = 1.0f;
 	float damage = 45.0f;
 
 	// Check if we hit anyone nearby

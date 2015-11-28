@@ -381,7 +381,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 				scene_object->play_animation("default", false);
 		}
 
-		scene_object->set_position(mix(last_position, next_position, interpolated_time) + Vec3f(0.0f, 0.3f, 0.0f));
+		scene_object->set_position(mix(last_position, next_position, interpolated_time));
 		scene_object->set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
 		scene_object->update(time_elapsed);
 	}

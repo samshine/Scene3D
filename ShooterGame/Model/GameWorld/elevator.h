@@ -6,7 +6,7 @@
 class Elevator : public GameObject
 {
 public:
-	Elevator(GameWorld *world, int level_obj_id, const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale = 0.05f);
+	Elevator(GameWorld *world, int level_obj_id, const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale);
 	~Elevator();
 
 	void tick(const GameTick &tick) override;
@@ -29,7 +29,7 @@ protected:
 	uicore::Vec3f pos1, pos2;
 	uicore::Quaternionf orientation;
 
-	uicore::Vec3f box_size = uicore::Vec3f(7.0f * 6.0f, 0.2f, 9.0f * 6.0f);
+	uicore::Vec3f box_size = uicore::Vec3f(1.118f, 0.2f, 1.436f); // Note: this size actually only fits for middle elevators
 	Physics3DShapePtr box_shape;
 	Physics3DObjectPtr body;
 

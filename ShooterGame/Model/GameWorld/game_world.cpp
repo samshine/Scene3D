@@ -127,7 +127,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
 
-			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, objdesc.position, pos2, orientation, objdesc.mesh);
+			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale);
 			add(elevator);
 
 			elevators[elevator->level_obj_id] = elevator;
@@ -153,7 +153,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		{
 			std::string team = fields["team"].to_string();
 
-			auto spawn = std::make_shared<SpawnPoint>(this, /*Vec3f(0,10,0)*/objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
+			auto spawn = std::make_shared<SpawnPoint>(this, objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
 			add(spawn);
 			spawn_points.push_back(spawn);
 		}
@@ -172,7 +172,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 	{
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
-		add(std::make_shared<PlayerRagdoll>(this, spawn_points[spawn_index]->pos + Vec3f(0.0f, 7.0f, 0.0f), Quaternionf()));
+		add(std::make_shared<PlayerRagdoll>(this, spawn_points[spawn_index]->pos + Vec3f(0.0f, 1.0f, 0.0f), Quaternionf()));
 	}
 }
 
