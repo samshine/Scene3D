@@ -17,8 +17,37 @@ SceneController::SceneController()
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);
 	slots.connect(view->sig_update_scene, this, &SceneController::update_scene);
 
+	setup_scene();
+
 	map_model_updated();
 	model_data_updated();
+}
+
+void SceneController::setup_scene()
+{
+	if (scene) return;
+
+	scene = Scene::create(SceneView::engine());
+	scene->show_skybox_stars(false);
+	std::vector<Colorf> gradient;
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 6 / 10, 240 * 6 / 10, 243 * 6 / 10));
+	gradient.push_back(Colorf(236 * 7 / 10, 240 * 7 / 10, 243 * 7 / 10));
+	gradient.push_back(Colorf(236 * 8 / 10, 240 * 8 / 10, 243 * 8 / 10));
+	for (auto &g : gradient)
+	{
+		g.r = std::pow(g.r, 2.2f);
+		g.g = std::pow(g.g, 2.2f);
+		g.b = std::pow(g.b, 2.2f);
+	}
+	scene->set_skybox_gradient(gradient);
+
+	view->viewport()->set_camera(SceneCamera::create(scene));
 }
 
 void SceneController::model_data_updated()
@@ -38,7 +67,7 @@ void SceneController::map_model_updated()
 	ModelAppModel::instance()->editor_scene->set_map_model(ModelAppModel::instance()->map_model);
 }
 
-void SceneController::update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void SceneController::update_scene(const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
 	bool has_focus = view.get() == view->focus_view();
 	ModelAppModel::instance()->editor_scene->update(scene, scene_viewport, gc, ic, has_focus, mouse_delta);

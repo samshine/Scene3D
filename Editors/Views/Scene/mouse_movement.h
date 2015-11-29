@@ -7,6 +7,8 @@ public:
 	MouseMovement();
 	~MouseMovement();
 
+	static const MouseMovement &instance();
+
 	uicore::Point pos() const { return uicore::Point(x(), y()); }
 	int x() const { return _x; }
 	int y() const { return _y; }

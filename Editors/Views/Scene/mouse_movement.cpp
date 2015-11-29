@@ -4,6 +4,12 @@
 
 using namespace uicore;
 
+const MouseMovement &MouseMovement::instance()
+{
+	static MouseMovement instance;
+	return instance;
+}
+
 MouseMovement::MouseMovement()
 {
 	stop_event = CreateEvent(0, TRUE, FALSE, 0);

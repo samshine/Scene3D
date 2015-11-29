@@ -14,16 +14,22 @@ MapSceneController::MapSceneController()
 	{
 		for (int x = 0; x < 2; x++)
 		{
-			auto &scene_view = scene_views[x + y * 2];
+			int index = x + y * 2;
+			auto &scene_view = scene_views[index];
 
 			scene_view = std::make_shared<SceneView>();
 			grid_view->set_cell(x, y, scene_view);
 
-			slots.connect(scene_view->sig_update_scene, this, &MapSceneController::update_scene);
+			slots.connect(scene_view->sig_update_scene, [=](const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+			{
+				update_scene(index, scene_viewport, gc, ic, mouse_delta);
+			});
 		}
 	}
 
 	slots.connect(MapAppModel::instance()->sig_map_updated, this, &MapSceneController::map_updated);
+
+	setup_scene();
 }
 
 void MapSceneController::map_updated()
@@ -31,16 +37,47 @@ void MapSceneController::map_updated()
 	objects.clear();
 }
 
-void MapSceneController::update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void MapSceneController::setup_scene()
 {
-	auto &scene_view = scene_views[0];
+	if (scene) return;
 
-	gametime.update();
+	scene = Scene::create(SceneView::engine());
+	scene->show_skybox_stars(false);
+	std::vector<Colorf> gradient;
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
+	gradient.push_back(Colorf(236 * 6 / 10, 240 * 6 / 10, 243 * 6 / 10));
+	gradient.push_back(Colorf(236 * 7 / 10, 240 * 7 / 10, 243 * 7 / 10));
+	gradient.push_back(Colorf(236 * 8 / 10, 240 * 8 / 10, 243 * 8 / 10));
+	for (auto &g : gradient)
+	{
+		g.r = std::pow(g.r, 2.2f);
+		g.g = std::pow(g.g, 2.2f);
+		g.b = std::pow(g.b, 2.2f);
+	}
+	scene->set_skybox_gradient(gradient);
 
-	rotation.y = std::fmod(rotation.y + mouse_delta.x * gametime.get_time_elapsed() * mouse_speed_x, 360.0f);
-	rotation.x = clamp(rotation.x + mouse_delta.y * gametime.get_time_elapsed() * mouse_speed_y, -90.0f, 90.0f);
+	scene_views[0]->viewport()->set_camera(SceneCamera::create(scene));
+	scene_views[1]->viewport()->set_camera(SceneCamera::create(scene));
+	scene_views[2]->viewport()->set_camera(SceneCamera::create(scene));
+	scene_views[3]->viewport()->set_camera(SceneCamera::create(scene));
+}
 
-	Quaternionf camera_quaternion(rotation.x, rotation.y, rotation.z, angle_degrees, order_YXZ);
+void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+{
+	auto &scene_view = scene_views[index];
+
+	if (index == 0)
+		gametime.update();
+
+	rotation[index].y = std::fmod(rotation[index].y + mouse_delta.x * gametime.get_time_elapsed() * mouse_speed_x, 360.0f);
+	rotation[index].x = clamp(rotation[index].x + mouse_delta.y * gametime.get_time_elapsed() * mouse_speed_y, -90.0f, 90.0f);
+
+	Quaternionf camera_quaternion(rotation[index].x, rotation[index].y, rotation[index].z, angle_degrees, order_YXZ);
 
 	if (scene_view->has_focus())
 	{
@@ -58,10 +95,10 @@ void MapSceneController::update_scene(const ScenePtr &scene, const SceneViewport
 		if (ic->keyboard()->keycode(keycode_lcontrol))
 			thrust.y -= 1.0f;
 
-		position += camera_quaternion.rotate_vector(thrust) * gametime.get_time_elapsed() * move_speed;
+		position[index] += camera_quaternion.rotate_vector(thrust) * gametime.get_time_elapsed() * move_speed;
 	}
 
-	scene_viewport->camera()->set_position(position);
+	scene_viewport->camera()->set_position(position[index]);
 	scene_viewport->camera()->set_orientation(camera_quaternion);
 
 	auto model = MapAppModel::instance();

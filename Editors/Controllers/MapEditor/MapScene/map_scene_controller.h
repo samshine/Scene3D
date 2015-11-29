@@ -23,9 +23,12 @@ private:
 	std::shared_ptr<SceneView> scene_views[4];
 
 	void map_updated();
-	void update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);
+	void setup_scene();
+	void update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);
 
 	uicore::SlotContainer slots;
+
+	ScenePtr scene;
 
 	Physics3DWorldPtr collision = Physics3DWorld::create();
 
@@ -38,8 +41,8 @@ private:
 	float mouse_speed_y = 5.0f;
 	float move_speed = 5.0f;
 
-	uicore::Vec3f position = uicore::Vec3f(4.0f, 10.0f, -10.0f);
-	uicore::Vec3f rotation;
+	uicore::Vec3f position[4];
+	uicore::Vec3f rotation[4];
 
 	uicore::GameTime gametime;
 };

@@ -21,6 +21,12 @@ SceneView::SceneView()
 	};
 }
 
+SceneEnginePtr SceneView::engine()
+{
+	static SceneEnginePtr engine = SceneEngine::create();
+	return engine;
+}
+
 void SceneView::pointer_press(PointerEvent &e)
 {
 	set_focus();
@@ -73,7 +79,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	auto gc = canvas->gc();
 	auto window = view_tree()->get_display_window();
 
-	Point move = mouse_movement.pos();
+	Point move = MouseMovement::instance().pos();
 	Vec2i delta_mouse_move;
 	if (mouse_down)
 	{
@@ -81,9 +87,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	}
 	last_mouse_movement = move;
 
-
-	setup_scene();
-	sig_update_scene(scene, scene_viewport, gc, window, delta_mouse_move);
+	sig_update_scene(scene_viewport, gc, window, delta_mouse_move);
 
 	if (!scene_frame_buffer || !scene_texture || scene_texture->size() != viewport_size_i)
 	{
@@ -108,34 +112,4 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	image->draw(canvas, geometry().content_size());
 
 	timer->start(10, true);
-}
-
-void SceneView::setup_scene()
-{
-	if (scene) return;
-
-	cache = SceneEngine::create();
-	scene = Scene::create(cache);
-	scene_viewport = SceneViewport::create(cache);
-
-	scene_viewport->set_camera(SceneCamera::create(scene));
-
-	scene->show_skybox_stars(false);
-	std::vector<Colorf> gradient;
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 5 / 10, 240 * 5 / 10, 243 * 5 / 10));
-	gradient.push_back(Colorf(236 * 6 / 10, 240 * 6 / 10, 243 * 6 / 10));
-	gradient.push_back(Colorf(236 * 7 / 10, 240 * 7 / 10, 243 * 7 / 10));
-	gradient.push_back(Colorf(236 * 8 / 10, 240 * 8 / 10, 243 * 8 / 10));
-	for (auto &g : gradient)
-	{
-		g.r = std::pow(g.r, 2.2f);
-		g.g = std::pow(g.g, 2.2f);
-		g.b = std::pow(g.b, 2.2f);
-	}
-	scene->set_skybox_gradient(gradient);
 }
