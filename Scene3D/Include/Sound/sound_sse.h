@@ -35,6 +35,9 @@ public:
 	/// \brief Packs two float channels into a single float samples stream
 	static void pack_float_stereo(float *input[2], int size, float *output);
 
+	/// \brief Packs float channels into a single float samples stream
+	static void pack_float(float *input[], int size, float *output, int channels);
+
 	/// \brief Copy floats from one buffer to another
 	static void copy_float(float *input, int size, float *output);
 

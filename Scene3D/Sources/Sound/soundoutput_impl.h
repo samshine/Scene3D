@@ -31,9 +31,10 @@ protected:
 	std::vector< SoundBuffer_Session > sessions;
 
 	int mix_buffer_size;
-	float *mix_buffers[2];
-	float *temp_buffers[2];
-	float *stereo_buffer;
+	std::vector<float *> mix_buffers;
+	std::vector<float *> temp_buffers;
+	float *packed_buffer;
+	int num_channels = 2;
 
 	/// \brief Called when we have no samples to play - and wants to tell the soundcard
 	/// \brief about this possible event.
@@ -60,7 +61,7 @@ protected:
 	/// \brief Stops the mixer thread.
 	void stop_mixer_thread();
 
-	/// \brief Mixes a single fragment and stores the result in stereo_buffer.
+	/// \brief Mixes a single fragment and stores the result in packed_buffer.
 	void mix_fragment();
 
 private:

@@ -40,13 +40,12 @@ SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_
 		wave_format.Format.nChannels = 2;
 		wave_format.Format.nBlockAlign = 2 * sizeof(float);
 		wave_format.Format.wBitsPerSample = 8 * sizeof(float);
+		wave_format.Format.nSamplesPerSec = mixing_frequency;
+		wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
 		wave_format.Format.cbSize = 22;
 		wave_format.Samples.wValidBitsPerSample = wave_format.Format.wBitsPerSample;
 		wave_format.dwChannelMask = SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT;
 		wave_format.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
-
-		wave_format.Format.nSamplesPerSec = mixing_frequency;
-		wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
 
 		WAVEFORMATEX *closest_match = 0;
 		result = audio_client->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, (WAVEFORMATEX*)&wave_format, &closest_match);
@@ -56,25 +55,19 @@ SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_
 		// We could not get the exact format we wanted. Try to use the frequency that the closest matching format is using:
 		if (result == S_FALSE)
 		{
-			mixing_frequency = closest_match->nSamplesPerSec;
+			if (closest_match->wFormatTag != WAVE_FORMAT_EXTENSIBLE || reinterpret_cast<WAVEFORMATEXTENSIBLE*>(closest_match)->SubFormat != KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+				throw Exception("Floating point audio mixing format not available!");
+
+			wave_format = *reinterpret_cast<WAVEFORMATEXTENSIBLE*>(closest_match);
+
+			mixing_frequency = wave_format.Format.nSamplesPerSec;
 			wait_timeout = mixing_latency * 2;
-			wave_format.Format.nSamplesPerSec = mixing_frequency;
-			wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
 
 			CoTaskMemFree(closest_match);
 			closest_match = 0;
 		}
 
-		/*
-				// For debugging what mixing format Windows is using.
-				WAVEFORMATEX *device_format = 0; // Note: this points at a WAVEFORMATEXTENSIBLE if cbSize is 22
-				result = audio_client->GetMixFormat(&device_format);
-				if (SUCCEEDED(result))
-				{
-				CoTaskMemFree(device_format);
-				device_format = 0;
-				}
-				*/
+		num_channels = wave_format.Format.nChannels;
 
 		result = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, mixing_latency * (REFERENCE_TIME)1000, 0, (WAVEFORMATEX*)&wave_format, 0);
 		if (FAILED(result))
@@ -96,7 +89,7 @@ SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_
 		if (FAILED(result))
 			throw Exception("IAudioClient.GetBufferSize failed");
 
-		next_fragment = DataBuffer::create(sizeof(float) * 2 * fragment_size);
+		next_fragment = DataBuffer::create(sizeof(float) * num_channels * fragment_size);
 
 		start_mixer_thread();
 	}
@@ -156,7 +149,7 @@ void SoundOutput_Win32::wait()
 			HRESULT result = audio_render_client->GetBuffer(buffer_size, &buffer);
 			if (SUCCEEDED(result))
 			{
-				memcpy(buffer, next_fragment->data<float>() + write_pos * 2, sizeof(float) * 2 * buffer_size);
+				memcpy(buffer, next_fragment->data<float>() + write_pos * num_channels, sizeof(float) * num_channels * buffer_size);
 				result = audio_render_client->ReleaseBuffer(buffer_size, 0);
 
 				if (!is_playing)

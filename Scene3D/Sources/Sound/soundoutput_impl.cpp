@@ -14,11 +14,7 @@ SoundOutputImpl::SoundOutputImpl(int mixing_frequency, int latency)
 	: mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
 	pan(0.0f), mix_buffer_size(0)
 {
-	mix_buffers[0] = nullptr;
-	mix_buffers[1] = nullptr;
-	temp_buffers[0] = nullptr;
-	temp_buffers[1] = nullptr;
-	stereo_buffer = nullptr;
+	packed_buffer = nullptr;
 
 	std::unique_lock<std::recursive_mutex> lock(singleton_mutex);
 	if (instance)
@@ -29,11 +25,13 @@ SoundOutputImpl::SoundOutputImpl(int mixing_frequency, int latency)
 
 SoundOutputImpl::~SoundOutputImpl()
 {
-	SoundSSE::aligned_free(stereo_buffer);
-	SoundSSE::aligned_free(mix_buffers[0]);
-	SoundSSE::aligned_free(mix_buffers[1]);
-	SoundSSE::aligned_free(temp_buffers[0]);
-	SoundSSE::aligned_free(temp_buffers[1]);
+	SoundSSE::aligned_free(packed_buffer);
+	for (auto &mix_buffer : mix_buffers)
+		SoundSSE::aligned_free(mix_buffer);
+	mix_buffers.clear();
+	for (auto &temp_buffer : temp_buffers)
+		SoundSSE::aligned_free(temp_buffer);
+	temp_buffers.clear();
 
 	std::unique_lock<std::recursive_mutex> lock(singleton_mutex);
 	instance = nullptr;
@@ -82,7 +80,7 @@ void SoundOutputImpl::mix_fragment()
 	fill_mix_buffers();
 	apply_master_volume_on_mix_buffers();
 	clamp_mix_buffers();
-	SoundSSE::pack_float_stereo(mix_buffers, mix_buffer_size, stereo_buffer);
+	SoundSSE::pack_float(mix_buffers.data(), mix_buffer_size, packed_buffer, mix_buffers.size());
 }
 
 void SoundOutputImpl::mixer_thread()
@@ -95,7 +93,7 @@ void SoundOutputImpl::mixer_thread()
 		mix_fragment();
 
 		// Send mixed data to sound card:
-		write_fragment(stereo_buffer);
+		write_fragment(packed_buffer);
 
 		// Wait for sound card to want more:
 		wait();
@@ -113,30 +111,39 @@ void SoundOutputImpl::resize_mix_buffers()
 {
 	if (get_fragment_size() != mix_buffer_size)
 	{
-		SoundSSE::aligned_free(stereo_buffer); stereo_buffer = nullptr;
-		SoundSSE::aligned_free(mix_buffers[0]); mix_buffers[0] = nullptr;
-		SoundSSE::aligned_free(mix_buffers[1]); mix_buffers[1] = nullptr;
-		SoundSSE::aligned_free(temp_buffers[0]); temp_buffers[0] = nullptr;
-		SoundSSE::aligned_free(temp_buffers[1]); temp_buffers[1] = nullptr;
+		SoundSSE::aligned_free(packed_buffer);
+		packed_buffer = nullptr;
+
+		for (auto &mix_buffer : mix_buffers)
+			SoundSSE::aligned_free(mix_buffer);
+		mix_buffers.clear();
+		for (auto &temp_buffer : temp_buffers)
+			SoundSSE::aligned_free(temp_buffer);
+		temp_buffers.clear();
 
 		mix_buffer_size = get_fragment_size();
 		//if (mix_buffer_size & 3)
 		//	throw Exception("Fragment size must be a multiple of 4");
 
-		mix_buffers[0] = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
-		mix_buffers[1] = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
-		temp_buffers[0] = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
-		temp_buffers[1] = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
-		stereo_buffer = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size * 2);
-		SoundSSE::set_float(stereo_buffer, mix_buffer_size * 2, 0.0f);
+		for (int i = 0; i < num_channels; i++)
+		{
+			auto mix_buffer = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
+			auto temp_buffer = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size);
+			SoundSSE::set_float(mix_buffer, mix_buffer_size, 0.0f);
+			SoundSSE::set_float(temp_buffer, mix_buffer_size, 0.0f);
+			mix_buffers.push_back(mix_buffer);
+			temp_buffers.push_back(temp_buffer);
+		}
+		packed_buffer = (float *)SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size * num_channels);
+		SoundSSE::set_float(packed_buffer, mix_buffer_size * num_channels, 0.0f);
 	}
 }
 
 void SoundOutputImpl::clear_mix_buffers()
 {
 	// Clear channel mixing buffers:
-	SoundSSE::set_float(mix_buffers[0], mix_buffer_size, 0.0f);
-	SoundSSE::set_float(mix_buffers[1], mix_buffer_size, 0.0f);
+	for (auto &mix_buffer : mix_buffers)
+		SoundSSE::set_float(mix_buffer, mix_buffer_size, 0.0f);
 }
 
 void SoundOutputImpl::fill_mix_buffers()
@@ -147,7 +154,7 @@ void SoundOutputImpl::fill_mix_buffers()
 	for (it = sessions.begin(); it != sessions.end(); ++it)
 	{
 		SoundBuffer_Session session = *it;
-		bool playing = session.impl->mix_to(mix_buffers, temp_buffers, mix_buffer_size, 2);
+		bool playing = session.impl->mix_to(mix_buffers.data(), temp_buffers.data(), mix_buffer_size, 2);
 		if (!playing) ended_sessions.push_back(session);
 	}
 

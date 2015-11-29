@@ -202,6 +202,25 @@ void SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 	}
 }
 
+void SoundSSE::pack_float(float *input[], int size, float *output, int channels)
+{
+	if (channels == 2)
+	{
+		pack_float_stereo(input, size, output);
+	}
+	else
+	{
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < channels; j++)
+			{
+				*output = input[j][i];
+				output++;
+			}
+		}
+	}
+}
+
 void SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 {
 #ifndef CL_DISABLE_SSE2
