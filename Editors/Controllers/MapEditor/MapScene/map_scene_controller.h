@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Controllers/Workspace/workspace_controller.h"
+#include "Views/Grid/grid_view.h"
 
 class SceneView;
 
@@ -18,7 +19,8 @@ public:
 	MapSceneController();
 
 private:
-	std::shared_ptr<SceneView> view = std::make_shared<SceneView>();
+	std::shared_ptr<GridView> grid_view = std::make_shared<GridView>();
+	std::shared_ptr<SceneView> scene_views[4];
 
 	void map_updated();
 	void update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);

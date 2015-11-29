@@ -8,10 +8,22 @@ using namespace uicore;
 
 MapSceneController::MapSceneController()
 {
-	set_root_view(view);
+	set_root_view(grid_view);
+
+	for (int y = 0; y < 2; y++)
+	{
+		for (int x = 0; x < 2; x++)
+		{
+			auto &scene_view = scene_views[x + y * 2];
+
+			scene_view = std::make_shared<SceneView>();
+			grid_view->set_cell(x, y, scene_view);
+
+			slots.connect(scene_view->sig_update_scene, this, &MapSceneController::update_scene);
+		}
+	}
 
 	slots.connect(MapAppModel::instance()->sig_map_updated, this, &MapSceneController::map_updated);
-	slots.connect(view->sig_update_scene, this, &MapSceneController::update_scene);
 }
 
 void MapSceneController::map_updated()
@@ -21,6 +33,8 @@ void MapSceneController::map_updated()
 
 void MapSceneController::update_scene(const ScenePtr &scene, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
 {
+	auto &scene_view = scene_views[0];
+
 	gametime.update();
 
 	rotation.y = std::fmod(rotation.y + mouse_delta.x * gametime.get_time_elapsed() * mouse_speed_x, 360.0f);
@@ -28,7 +42,7 @@ void MapSceneController::update_scene(const ScenePtr &scene, const SceneViewport
 
 	Quaternionf camera_quaternion(rotation.x, rotation.y, rotation.z, angle_degrees, order_YXZ);
 
-	if (view->has_focus())
+	if (scene_view->has_focus())
 	{
 		Vec3f thrust;
 		if (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q))

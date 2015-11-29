@@ -12,7 +12,7 @@ WorkspaceController::WorkspaceController()
 	center_view = std::make_shared<View>();
 	center_view->style()->set("flex: auto");
 	center_view->style()->set("flex-direction: column");
-	center_view->style()->set("background: rgb(236,240,243)");
+	//center_view->style()->set("background: rgb(236,240,243)");
 	//center_view->style()->set("padding: 5px");
 
 	dock_view = std::make_shared<View>();

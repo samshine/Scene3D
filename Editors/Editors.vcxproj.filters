@@ -133,6 +133,9 @@
     <Filter Include="Views\AssetCompilerWindow">
       <UniqueIdentifier>{4a910a44-165e-4898-9563-18d2987cca77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views\Grid">
+      <UniqueIdentifier>{979f5a3a-dd6d-418e-a84a-d5f0a9c8bd34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -291,6 +294,9 @@
     </ClCompile>
     <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_compiler_window.cpp">
       <Filter>Controllers\AssetCompiler\AssetCompilerWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Grid\grid_view.cpp">
+      <Filter>Views\Grid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -459,6 +465,9 @@
     </ClInclude>
     <ClInclude Include="Views\AssetCompilerWindow\asset_compiler_window_view.h">
       <Filter>Views\AssetCompilerWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Grid\grid_view.h">
+      <Filter>Views\Grid</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
