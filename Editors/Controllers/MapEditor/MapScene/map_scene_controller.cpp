@@ -5,6 +5,7 @@
 #include "Views/Scene/scene_view.h"
 #include "Views/Scene/scene_rotate_action.h"
 #include "Views/Scene/scene_move_action.h"
+#include "map_scene_create_object_action.h"
 
 using namespace uicore;
 
@@ -57,6 +58,8 @@ MapSceneController::MapSceneController()
 
 				scene_views[index]->set_needs_render();
 			};
+
+			scene_view->add_action<MapSceneCreateObjectAction>();
 
 			slots.connect(scene_view->sig_update_scene, [=](const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic)
 			{

@@ -304,6 +304,9 @@
     <ClCompile Include="Views\Scene\scene_move_action.cpp">
       <Filter>Views\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_create_object_action.cpp">
+      <Filter>Controllers\MapEditor\MapScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -480,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="Views\Scene\scene_move_action.h">
       <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_create_object_action.h">
+      <Filter>Controllers\MapEditor\MapScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
