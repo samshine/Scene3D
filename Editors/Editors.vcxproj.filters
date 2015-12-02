@@ -298,6 +298,12 @@
     <ClCompile Include="Views\Grid\grid_view.cpp">
       <Filter>Views\Grid</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Scene\scene_rotate_action.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\Scene\scene_move_action.cpp">
+      <Filter>Views\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -468,6 +474,12 @@
     </ClInclude>
     <ClInclude Include="Views\Grid\grid_view.h">
       <Filter>Views\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\scene_rotate_action.h">
+      <Filter>Views\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\Scene\scene_move_action.h">
+      <Filter>Views\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

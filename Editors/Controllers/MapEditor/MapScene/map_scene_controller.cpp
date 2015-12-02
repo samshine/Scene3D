@@ -3,6 +3,8 @@
 #include "map_scene_controller.h"
 #include "Model/MapEditor/map_app_model.h"
 #include "Views/Scene/scene_view.h"
+#include "Views/Scene/scene_rotate_action.h"
+#include "Views/Scene/scene_move_action.h"
 
 using namespace uicore;
 
@@ -20,9 +22,45 @@ MapSceneController::MapSceneController()
 			scene_view = std::make_shared<SceneView>();
 			grid_view->set_cell(x, y, scene_view);
 
-			slots.connect(scene_view->sig_update_scene, [=](const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+			auto rotate_action = scene_view->add_action<SceneRotateAction>();
+			rotate_action->func_mouse_move = [=](const uicore::Vec2i &mouse_delta)
 			{
-				update_scene(index, scene_viewport, gc, ic, mouse_delta);
+				rotation[index].y = std::fmod(rotation[index].y + mouse_delta.x * mouse_speed_x, 360.0f);
+				rotation[index].x = clamp(rotation[index].x + mouse_delta.y * mouse_speed_y, -90.0f, 90.0f);
+
+				scene_views[index]->set_needs_render();
+			};
+
+			auto move_action = scene_view->add_action<SceneMoveAction>();
+			move_action->track_keys({ Key::a, Key::q, Key::d, Key::w, Key::z, Key::s, Key::lshift, Key::space, Key::lcontrol });
+			move_action->func_key_repeat = [=](std::map<Key, bool> &keys, float time_elapsed)
+			{
+				if (scene_view->has_focus())
+				{
+					Vec3f thrust;
+					if (keys[Key::a] || keys[Key::q])
+						thrust.x -= 1.0f;
+					if (keys[Key::d])
+						thrust.x += 1.0f;
+					if (keys[Key::w] || keys[Key::z])
+						thrust.z += 1.0f;
+					if (keys[Key::s])
+						thrust.z -= 1.0f;
+					if (keys[Key::lshift] || keys[Key::space])
+						thrust.y += 1.0f;
+					if (keys[Key::lcontrol])
+						thrust.y -= 1.0f;
+
+					Quaternionf camera_quaternion(rotation[index].x, rotation[index].y, rotation[index].z, angle_degrees, order_YXZ);
+					position[index] += camera_quaternion.rotate_vector(thrust) * time_elapsed * move_speed;
+				}
+
+				scene_views[index]->set_needs_render();
+			};
+
+			slots.connect(scene_view->sig_update_scene, [=](const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic)
+			{
+				update_scene(index, scene_viewport, gc, ic);
 			});
 		}
 	}
@@ -67,36 +105,14 @@ void MapSceneController::setup_scene()
 	scene_views[3]->viewport()->set_camera(SceneCamera::create(scene));
 }
 
-void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic)
 {
 	auto &scene_view = scene_views[index];
 
 	if (index == 0)
 		gametime.update();
 
-	rotation[index].y = std::fmod(rotation[index].y + mouse_delta.x * gametime.get_time_elapsed() * mouse_speed_x, 360.0f);
-	rotation[index].x = clamp(rotation[index].x + mouse_delta.y * gametime.get_time_elapsed() * mouse_speed_y, -90.0f, 90.0f);
-
 	Quaternionf camera_quaternion(rotation[index].x, rotation[index].y, rotation[index].z, angle_degrees, order_YXZ);
-
-	if (scene_view->has_focus())
-	{
-		Vec3f thrust;
-		if (ic->keyboard()->keycode(keycode_a) || ic->keyboard()->keycode(keycode_q))
-			thrust.x -= 1.0f;
-		if (ic->keyboard()->keycode(keycode_d))
-			thrust.x += 1.0f;
-		if (ic->keyboard()->keycode(keycode_w) || ic->keyboard()->keycode(keycode_z))
-			thrust.z += 1.0f;
-		if (ic->keyboard()->keycode(keycode_s))
-			thrust.z -= 1.0f;
-		if (ic->keyboard()->keycode(keycode_lshift) || ic->keyboard()->keycode(keycode_space))
-			thrust.y += 1.0f;
-		if (ic->keyboard()->keycode(keycode_lcontrol))
-			thrust.y -= 1.0f;
-
-		position[index] += camera_quaternion.rotate_vector(thrust) * gametime.get_time_elapsed() * move_speed;
-	}
 
 	scene_viewport->camera()->set_position(position[index]);
 	scene_viewport->camera()->set_orientation(camera_quaternion);

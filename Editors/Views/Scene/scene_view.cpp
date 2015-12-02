@@ -11,8 +11,6 @@ SceneView::SceneView()
 	set_focus_policy(FocusPolicy::accept);
 
 	slots.connect(sig_pointer_press(), this, &SceneView::pointer_press);
-	slots.connect(sig_pointer_release(), this, &SceneView::pointer_release);
-	slots.connect(sig_pointer_move(), this, &SceneView::pointer_move);
 
 	timer = Timer::create();
 	timer->func_expired() = [this]()
@@ -30,32 +28,6 @@ SceneEnginePtr SceneView::engine()
 void SceneView::pointer_press(PointerEvent &e)
 {
 	set_focus();
-
-	if (!mouse_down)
-	{
-		view_tree()->get_display_window()->hide_cursor();
-		mouse_down_pos = view_tree()->get_display_window()->mouse()->position();
-		mouse_down = true;
-	}
-}
-
-void SceneView::pointer_release(PointerEvent &e)
-{
-	if (mouse_down)
-	{
-		view_tree()->get_display_window()->mouse()->set_position(mouse_down_pos.x, mouse_down_pos.y);
-		view_tree()->get_display_window()->show_cursor();
-		mouse_down = false;
-	}
-}
-
-void SceneView::pointer_move(PointerEvent &e)
-{
-	if (mouse_down)
-	{
-		Sizef size = view_tree()->get_display_window()->geometry().size();
-		view_tree()->get_display_window()->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
-	}
 }
 
 void SceneView::render_content(const CanvasPtr &canvas)
@@ -79,15 +51,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	auto gc = canvas->gc();
 	auto window = view_tree()->get_display_window();
 
-	Point move = MouseMovement::instance().pos();
-	Vec2i delta_mouse_move;
-	if (mouse_down)
-	{
-		delta_mouse_move = move - last_mouse_movement;
-	}
-	last_mouse_movement = move;
-
-	sig_update_scene(scene_viewport, gc, window, delta_mouse_move);
+	sig_update_scene(scene_viewport, gc, window);
 
 	if (!scene_frame_buffer || !scene_texture || scene_texture->size() != viewport_size_i)
 	{
@@ -110,6 +74,12 @@ void SceneView::render_content(const CanvasPtr &canvas)
 
 	auto image = Image::create(scene_texture, scene_texture->size(), gc->pixel_ratio());
 	image->draw(canvas, geometry().content_size());
+}
 
-	timer->start(10, true);
+void SceneView::set_animate(bool value)
+{
+	if (value)
+		timer->start(10, true);
+	else
+		timer->stop();
 }

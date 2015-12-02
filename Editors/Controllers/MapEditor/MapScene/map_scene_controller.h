@@ -24,7 +24,7 @@ private:
 
 	void map_updated();
 	void setup_scene();
-	void update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window, const uicore::Vec2i &);
+	void update_scene(int index, const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &window);
 
 	uicore::SlotContainer slots;
 
@@ -37,8 +37,8 @@ private:
 	std::map<std::string, SceneModelPtr> models;
 	std::map<std::string, Physics3DShapePtr> shapes;
 
-	float mouse_speed_x = 5.0f;
-	float mouse_speed_y = 5.0f;
+	float mouse_speed_x = 0.2f;
+	float mouse_speed_y = 0.2f;
 	float move_speed = 5.0f;
 
 	uicore::Vec3f position[4];

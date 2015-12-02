@@ -131,5 +131,6 @@ int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		ExceptionDialog::show(std::current_exception());
 	}
 
+	SingletonBugfix::deinitialize();
 	return 0;
 }

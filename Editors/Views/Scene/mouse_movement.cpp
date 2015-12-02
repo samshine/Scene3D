@@ -6,8 +6,8 @@ using namespace uicore;
 
 const MouseMovement &MouseMovement::instance()
 {
-	static MouseMovement instance;
-	return instance;
+	static Singleton<MouseMovement> instance;
+	return *instance.get();
 }
 
 MouseMovement::MouseMovement()

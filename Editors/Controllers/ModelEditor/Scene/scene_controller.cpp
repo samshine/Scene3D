@@ -5,6 +5,7 @@
 #include "Model/ModelEditor/EditorScene/Edit/edit_scene.h"
 #include "Model/ModelEditor/EditorScene/Game/game_scene.h"
 #include "Views/Scene/scene_view.h"
+#include "Views/Scene/scene_rotate_action.h"
 
 using namespace uicore;
 
@@ -12,6 +13,11 @@ SceneController::SceneController()
 {
 	view = std::make_shared<SceneView>();
 	set_root_view(view);
+
+	rotate_action->func_mouse_move = [this](const Vec2i &delta) { mouse_delta = delta; };
+	view->add_action(rotate_action);
+
+	view->set_animate();
 
 	slots.connect(ModelAppModel::instance()->sig_model_data_updated, this, &SceneController::model_data_updated);
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);
@@ -67,8 +73,9 @@ void SceneController::map_model_updated()
 	ModelAppModel::instance()->editor_scene->set_map_model(ModelAppModel::instance()->map_model);
 }
 
-void SceneController::update_scene(const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void SceneController::update_scene(const SceneViewportPtr &scene_viewport, const GraphicContextPtr &gc, const DisplayWindowPtr &ic)
 {
 	bool has_focus = view.get() == view->focus_view();
 	ModelAppModel::instance()->editor_scene->update(scene, scene_viewport, gc, ic, has_focus, mouse_delta);
+	mouse_delta = Vec2i();
 }
