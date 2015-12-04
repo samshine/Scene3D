@@ -13,11 +13,13 @@ void UpdateMapObjectCommand::execute()
 {
 	old_object = MapAppModel::instance()->desc.objects.at(index);
 	MapAppModel::instance()->desc.objects.at(index) = new_object;
+	MapAppModel::instance()->sig_object_updated(index);
 	MapAppModel::instance()->sig_map_updated();
 }
 
 void UpdateMapObjectCommand::rollback()
 {
 	MapAppModel::instance()->desc.objects.at(index) = old_object;
+	MapAppModel::instance()->sig_object_updated(index);
 	MapAppModel::instance()->sig_map_updated();
 }

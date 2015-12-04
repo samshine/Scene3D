@@ -45,4 +45,6 @@ private:
 	uicore::Vec3f rotation[4];
 
 	uicore::GameTime gametime;
+
+	friend class MapSceneCreateObjectAction;
 };

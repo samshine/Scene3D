@@ -59,7 +59,7 @@ MapSceneController::MapSceneController()
 				scene_views[index]->set_needs_render();
 			};
 
-			scene_view->add_action<MapSceneCreateObjectAction>();
+			scene_view->add_action<MapSceneCreateObjectAction>(this, index);
 
 			slots.connect(scene_view->sig_update_scene, [=](const SceneViewportPtr &scene_viewport, const uicore::GraphicContextPtr &gc, const uicore::DisplayWindowPtr &ic)
 			{
@@ -76,6 +76,8 @@ MapSceneController::MapSceneController()
 void MapSceneController::map_updated()
 {
 	objects.clear();
+	for (auto &view : scene_views)
+		view->set_needs_render();
 }
 
 void MapSceneController::setup_scene()

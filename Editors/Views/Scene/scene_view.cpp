@@ -30,6 +30,23 @@ void SceneView::pointer_press(PointerEvent &e)
 	set_focus();
 }
 
+void SceneView::unproject(const Vec2i &pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
+{
+	if (scene_texture && geometry().content_width > 0.0f && geometry().content_height > 0.0f)
+	{
+		viewport()->unproject(
+			Vec2i(
+				(int)std::round(pos.x * scene_texture->width() / geometry().content_width),
+				(int)std::round(pos.y * scene_texture->height() / geometry().content_height)),
+			out_ray_start, out_ray_direction);
+	}
+	else
+	{
+		out_ray_start = Vec3f();
+		out_ray_direction = Vec3f();
+	}
+}
+
 void SceneView::render_content(const CanvasPtr &canvas)
 {
 	Pointf viewport_pos = Vec2f(canvas->transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));

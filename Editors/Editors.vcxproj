@@ -44,6 +44,8 @@
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\add_map_object_command.cpp" />
+    <ClCompile Include="Model\MapEditor\Commands\remove_map_object_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\set_map_object_mesh_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\update_map_object_command.cpp" />
@@ -108,6 +110,8 @@
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
+    <ClInclude Include="Model\MapEditor\Commands\add_map_object_command.h" />
+    <ClInclude Include="Model\MapEditor\Commands\remove_map_object_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\set_map_object_mesh_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h" />
     <ClInclude Include="Model\MapEditor\Commands\update_map_object_command.h" />

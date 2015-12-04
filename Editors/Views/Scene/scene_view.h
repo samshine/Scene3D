@@ -13,6 +13,7 @@ public:
 
 	static SceneEnginePtr engine();
 
+	void unproject(const uicore::Vec2i &pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction);
 	void render_content(const uicore::CanvasPtr &canvas) override;
 
 private:
