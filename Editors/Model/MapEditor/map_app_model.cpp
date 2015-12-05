@@ -9,6 +9,8 @@ MapAppModel::MapAppModel()
 {
 	if (instance_ptr) throw std::exception();
 	instance_ptr = this;
+
+	create_object_template.type = "Static";
 }
 
 MapAppModel::~MapAppModel()
