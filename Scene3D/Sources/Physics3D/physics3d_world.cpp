@@ -180,7 +180,7 @@ Physics3DWorldImpl::Physics3DWorldImpl()
 	broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(ghost_pair_callback.get());
 	constraint_solver.reset(new btSequentialImpulseConstraintSolver());
 	dynamics_world.reset(new btDiscreteDynamicsWorld(dispatcher.get(), broadphase.get(), constraint_solver.get(), collision_configuration.get()));
-	dynamics_world->getDispatchInfo().m_allowedCcdPenetration=0.0001f; // This line is needed by the character controller
+	dynamics_world->getDispatchInfo().m_allowedCcdPenetration=0.001f; // This line is needed by the character controller
 }
 
 Physics3DWorldImpl::~Physics3DWorldImpl()
