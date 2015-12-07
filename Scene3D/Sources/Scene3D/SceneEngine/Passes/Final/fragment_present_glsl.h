@@ -4,16 +4,13 @@ in vec2 TexCoord;
 out vec4 FragColor;
 
 uniform sampler2D FinalColors;
-uniform sampler2D BloomColors;
 
 vec4 sRGB(vec4 c);
 
 void main()
 {
 	vec4 color = texture(FinalColors, TexCoord);
-	vec4 bloom = texture(BloomColors, TexCoord);
-	color.xyz /= max(max(color.x, max(color.y, color.z)), 1);
-	FragColor = sRGB(vec4(color.rgb, 1) + bloom);
+	FragColor = sRGB(vec4(color.rgb, 1));
 }
 
 vec4 sRGB(vec4 c)

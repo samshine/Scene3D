@@ -14,22 +14,13 @@ struct PixelOut
 Texture2D FinalColors;
 SamplerState FinalColorsSampler;
 
-Texture2D BloomColors;
-SamplerState BloomColorsSampler;
-
-Texture2D AmbientOcclusion;
-SamplerState AmbientOcclusionSampler;
-
 float4 sRGB(float4 c);
 
 PixelOut main(PixelIn input)
 {
 	PixelOut output;
 	float4 color = FinalColors.Sample(FinalColorsSampler, input.TexCoord);
-	float4 bloom = BloomColors.Sample(BloomColorsSampler, input.TexCoord);
-	//float ao = AmbientOcclusion.Sample(AmbientOcclusionSampler, input.TexCoord).x;
-	//output.FragColor = sRGB(float4(color.rgb * ao, 1) + bloom);
-	output.FragColor = sRGB(float4(color.rgb, 1) + bloom);
+	output.FragColor = sRGB(float4(color.rgb, 1));
 	return output;
 }
 

@@ -45,10 +45,12 @@ public:
 	uicore::GraphicContextPtr gc;
 	float time_elapsed = 0.0f;
 
+	enum { bloom_levels = 4 };
+
 	uicore::FrameBufferPtr fb_gbuffer;
 	uicore::FrameBufferPtr fb_self_illumination;
-	uicore::FrameBufferPtr fb_bloom_blur;
-	uicore::FrameBufferPtr fb_bloom_extract;
+	uicore::FrameBufferPtr fb_bloom_blurv[bloom_levels];
+	uicore::FrameBufferPtr fb_bloom_blurh[bloom_levels];
 	uicore::FrameBufferPtr fb_ambient_occlusion;
 	uicore::FrameBufferPtr fb_final_color;
 
@@ -59,11 +61,12 @@ public:
 	uicore::Texture2DPtr specular_level_gbuffer;
 	uicore::Texture2DPtr self_illumination_gbuffer;
 	uicore::Texture2DPtr normal_z_gbuffer;
-
-	uicore::Texture2DPtr bloom_blur;
-	uicore::Texture2DPtr bloom_contribution;
 	uicore::Texture2DPtr ambient_occlusion;
+
 	uicore::Texture2DPtr final_color;
+
+	uicore::Texture2DPtr bloom_blurv[bloom_levels];
+	uicore::Texture2DPtr bloom_blurh[bloom_levels];
 
 	ShadowMaps shadow_maps;
 	GaussianBlur blur;

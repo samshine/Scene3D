@@ -1359,6 +1359,18 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

@@ -126,8 +126,8 @@ void SceneRender::setup_pass_buffers()
 
 	fb_gbuffer = nullptr;
 	fb_self_illumination = nullptr;
-	fb_bloom_blur = nullptr;
-	fb_bloom_extract = nullptr;
+	for (auto &fb_blur : fb_bloom_blurv) fb_blur = nullptr;
+	for (auto &fb_blur : fb_bloom_blurh) fb_blur = nullptr;
 	fb_ambient_occlusion = nullptr;
 	fb_final_color = nullptr;
 	zbuffer = nullptr;
@@ -136,8 +136,8 @@ void SceneRender::setup_pass_buffers()
 	specular_level_gbuffer = nullptr;
 	self_illumination_gbuffer = nullptr;
 	normal_z_gbuffer = nullptr;
-	bloom_blur = nullptr;
-	bloom_contribution = nullptr;
+	for (auto &blur : bloom_blurv) blur = nullptr;
+	for (auto &blur : bloom_blurh) blur = nullptr;
 	ambient_occlusion = nullptr;
 	final_color = nullptr;
 
@@ -150,11 +150,15 @@ void SceneRender::setup_pass_buffers()
 	normal_z_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 	zbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_depth_component24);
 
-	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
+	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16);
 
-	Size bloom_size = viewport_size / 2;
-	bloom_blur = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
-	bloom_contribution = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
+	auto bloom_size = Size(std::max(viewport_size.width / 2, 1), std::max(viewport_size.height / 2, 1));
+	for (int i = 0; i < bloom_levels; i++)
+	{
+		bloom_size = Size(std::max(bloom_size.width / 2, 1), std::max(bloom_size.height / 2, 1));
+		bloom_blurv[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
+		bloom_blurh[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
+	}
 
 	ambient_occlusion = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_r8);
 	ambient_occlusion->set_min_filter(filter_linear);
@@ -176,11 +180,14 @@ void SceneRender::setup_pass_buffers()
 	fb_final_color->attach_color(0, final_color);
 	fb_final_color->attach_depth(zbuffer);
 
-	fb_bloom_blur = FrameBuffer::create(gc);
-	fb_bloom_blur->attach_color(0, bloom_blur);
+	for (int i = 0; i < bloom_levels; i++)
+	{
+		fb_bloom_blurv[i] = FrameBuffer::create(gc);
+		fb_bloom_blurv[i]->attach_color(0, bloom_blurv[i]);
 
-	fb_bloom_extract = FrameBuffer::create(gc);
-	fb_bloom_extract->attach_color(0, bloom_contribution);
+		fb_bloom_blurh[i] = FrameBuffer::create(gc);
+		fb_bloom_blurh[i]->attach_color(0, bloom_blurh[i]);
+	}
 
 	fb_ambient_occlusion = FrameBuffer::create(gc);
 	fb_ambient_occlusion->attach_color(0, ambient_occlusion);

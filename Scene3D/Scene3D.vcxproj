@@ -305,8 +305,12 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_extract_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_extract_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\accumulate_lpv_hlsl.h" />
