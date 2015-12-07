@@ -92,8 +92,24 @@ void BloomPass::run()
 	for (int i = inout.bloom_levels - 1; i > 0; i--)
 	{
 		inout.blur.horizontal(inout.gc, 8.0f, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
-		inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i - 1]);
+		inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i]);
+
+		// Linear upscale:
+		inout.bloom_blurv[i]->set_min_filter(filter_linear);
+		inout.bloom_blurv[i]->set_mag_filter(filter_linear);
+		inout.gc->set_frame_buffer(inout.fb_bloom_blurv[i - 1]);
+		inout.gc->set_viewport(inout.bloom_blurv[i - 1]->size(), inout.gc->texture_image_y_axis());
+		inout.gc->set_texture(0, inout.bloom_blurv[i]);
+		inout.gc->set_blend_state(blend_state);
+		inout.gc->set_program_object(combine_shader);
+		inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
+		inout.gc->reset_program_object();
+		inout.gc->reset_texture(0);
+		inout.gc->reset_frame_buffer();
 	}
+
+	inout.blur.horizontal(inout.gc, 8.0f, 5, inout.bloom_blurv[0], inout.fb_bloom_blurh[0]);
+	inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[0], inout.fb_bloom_blurv[0]);
 
 	// Add bloom to render color buffer:
 	inout.bloom_blurv[0]->set_min_filter(filter_linear);

@@ -150,7 +150,7 @@ void SceneRender::setup_pass_buffers()
 	normal_z_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 	zbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_depth_component24);
 
-	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16);
+	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 
 	auto bloom_size = Size(std::max(viewport_size.width / 2, 1), std::max(viewport_size.height / 2, 1));
 	for (int i = 0; i < bloom_levels; i++)
