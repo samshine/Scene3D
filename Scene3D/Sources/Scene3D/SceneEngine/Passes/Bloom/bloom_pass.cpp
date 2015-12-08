@@ -123,6 +123,7 @@ void BloomPass::run()
 	inout.gc->set_program_object(combine_shader);
 	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
 	inout.gc->reset_program_object();
+	inout.gc->reset_blend_state();
 	inout.gc->reset_texture(0);
 	inout.gc->reset_frame_buffer();
 }

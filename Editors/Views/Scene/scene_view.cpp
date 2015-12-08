@@ -49,7 +49,6 @@ void SceneView::unproject(const Vec2i &pos, Vec3f &out_ray_start, Vec3f &out_ray
 
 void SceneView::render_content(const CanvasPtr &canvas)
 {
-	Pointf viewport_pos = Vec2f(canvas->transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 	Sizef viewport_size = geometry().content_size();
 	//Size viewport_size_i = Size(2400*2 + rand() % 160 * 2, 1300*2 + rand() % 160 * 2);
 	Size viewport_size_i = Size(viewport_size) * 2;
@@ -81,7 +80,6 @@ void SceneView::render_content(const CanvasPtr &canvas)
 		scene_frame_buffer->attach_color(0, scene_texture);
 	}
 
-	//scene_viewport->set_viewport(RectfPS(viewport_pos.x, viewport_pos.y, viewport_size.width, viewport_size.height));
 	scene_viewport->set_viewport(viewport_size_i, scene_frame_buffer);
 	scene_viewport->render(gc);
 
