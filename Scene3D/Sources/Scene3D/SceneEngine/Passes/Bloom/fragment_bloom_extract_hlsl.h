@@ -18,7 +18,7 @@ PixelOut main(PixelIn input)
 {
 	PixelOut output;
 	float4 color = FinalColors.Sample(FinalColorsSampler, input.TexCoord);
-	float exposureAdjustment = 2;
+	float exposureAdjustment = 1.5;
 	output.FragColor = float4(color.rgb * exposureAdjustment - 1, 1);
 	return output;
 }

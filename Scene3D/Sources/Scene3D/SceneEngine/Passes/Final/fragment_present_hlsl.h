@@ -26,7 +26,7 @@ PixelOut main(PixelIn input)
 {
 	PixelOut output;
 	float3 color = FinalColors.Sample(FinalColorsSampler, input.TexCoord).rgb;
-	float exposureAdjustment = 2;
+	float exposureAdjustment = 1.5;
 	color = color * exposureAdjustment;
 	output.FragColor = float4(tonemapUncharted2(color), 1);
 	return output;

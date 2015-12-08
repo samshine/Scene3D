@@ -81,18 +81,20 @@ void BloomPass::run()
 	inout.gc->reset_texture(0);
 	inout.gc->reset_frame_buffer();
 
+	const float bloom_amount = 4.0f;
+
 	// Blur and downscale:
 	for (int i = 0; i < inout.bloom_levels - 1; i++)
 	{
-		inout.blur.horizontal(inout.gc, 8.0f, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
-		inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i + 1]);
+		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
+		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i + 1]);
 	}
 
 	// Upscale and blur:
 	for (int i = inout.bloom_levels - 1; i > 0; i--)
 	{
-		inout.blur.horizontal(inout.gc, 8.0f, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
-		inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i]);
+		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
+		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i]);
 
 		// Linear upscale:
 		inout.bloom_blurv[i]->set_min_filter(filter_linear);
@@ -108,8 +110,8 @@ void BloomPass::run()
 		inout.gc->reset_frame_buffer();
 	}
 
-	inout.blur.horizontal(inout.gc, 8.0f, 5, inout.bloom_blurv[0], inout.fb_bloom_blurh[0]);
-	inout.blur.vertical(inout.gc, 8.0f, 5, inout.bloom_blurh[0], inout.fb_bloom_blurv[0]);
+	inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[0], inout.fb_bloom_blurh[0]);
+	inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[0], inout.fb_bloom_blurv[0]);
 
 	// Add bloom to render color buffer:
 	inout.bloom_blurv[0]->set_min_filter(filter_linear);
