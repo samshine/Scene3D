@@ -343,7 +343,11 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\lightsource_pass.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\render_tiles_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Lightsource\render_tiles_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_exposure_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_average_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_downscale_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\vertex_log_average_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\fragment_particle_emitter_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.h" />

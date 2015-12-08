@@ -1371,6 +1371,18 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\vertex_log_average_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_average_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_downscale_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_exposure_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

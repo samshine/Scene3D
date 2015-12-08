@@ -2,6 +2,10 @@
 #include "precomp.h"
 #include "log_average_light.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "vertex_log_average_glsl.h"
+#include "fragment_log_average_glsl.h"
+#include "fragment_log_downscale_glsl.h"
+#include "fragment_exposure_glsl.h"
 
 using namespace uicore;
 
@@ -10,52 +14,11 @@ LogAverageLight::LogAverageLight(const GraphicContextPtr &gc, SceneRender &inout
 {
 	Size texture_size(1 << iterations, 1 << iterations);
 
-	std::string vertex_program =
-		"#version 330\r\n"
-		"in vec4 PositionInProjection;\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	gl_Position = PositionInProjection;\r\n"
-		"}\r\n";
+	std::string vertex_program = vertex_log_average_glsl();
+	std::string fragment_program0 = string_format(fragment_log_average_glsl(), texture_size.width);
 
-	std::string fragment_program0 = string_format(
-		"#version 330\r\n"
-		"out vec4 FragAverage;\r\n"
-		"uniform sampler2D Texture;\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	vec3 rgb = texture(Texture, gl_FragCoord.xy / %1).rgb;\r\n"
-		"	float light = max(max(rgb.r, rgb.g), rgb.b);\r\n"
-		"	FragAverage = vec4(log(0.0001 + light), 0, 0, 0);\r\n"
-		"}\r\n",
-		texture_size.width);
-
-	std::string fragment_program1 =
-		"#version 330\r\n"
-		"out vec4 FragAverage;\r\n"
-		"uniform sampler2D Texture;\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	ivec2 pos = ivec2(gl_FragCoord.xy) * 2;\r\n"
-		"	float light0 = texelFetch(Texture, pos, 0).x; \r\n"
-		"	float light1 = texelFetch(Texture, pos + ivec2(1,0), 0).x; \r\n"
-		"	float light2 = texelFetch(Texture, pos + ivec2(0,1), 0).x; \r\n"
-		"	float light3 = texelFetch(Texture, pos + ivec2(1,1), 0).x; \r\n"
-		"	FragAverage = vec4((light0 + light1 + light2 + light3) * 0.25, 0, 0, 0);\r\n"
-		"}\r\n";
-
-	std::string fragment_program2 =
-		"#version 330\r\n"
-		"out vec4 FragAverage;\r\n"
-		"uniform sampler2D TexturePrev;\r\n"
-		"uniform sampler2D TextureCurrent;\r\n"
-		"void main()\r\n"
-		"{\r\n"
-		"	float lightPrev = texelFetch(TexturePrev, ivec2(0,0), 0).x; \r\n"
-		"	float lightCurrent = exp(texelFetch(TextureCurrent, ivec2(0,0), 0).x); \r\n"
-		"	float c = 0.04;\r\n"
-		"	FragAverage = vec4(lightPrev + c * (lightCurrent - lightPrev), 0, 0, 0);\r\n"
-		"}\r\n";
+	std::string fragment_program1 = fragment_log_downscale_glsl();
+	std::string fragment_program2 = fragment_exposure_glsl();
 
 	program0 = compile_and_link(gc, vertex_program, fragment_program0);
 	program1 = compile_and_link(gc, vertex_program, fragment_program1);

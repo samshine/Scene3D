@@ -156,8 +156,8 @@ void SceneRender::setup_pass_buffers()
 	for (int i = 0; i < bloom_levels; i++)
 	{
 		bloom_size = Size(std::max(bloom_size.width / 2, 1), std::max(bloom_size.height / 2, 1));
-		bloom_blurv[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
-		bloom_blurh[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba8);
+		bloom_blurv[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba16);
+		bloom_blurh[i] = Texture2D::create(gc, bloom_size.width, bloom_size.height, tf_rgba16);
 	}
 
 	ambient_occlusion = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_r8);
