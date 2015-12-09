@@ -1,8 +1,6 @@
 
 #include "precomp.h"
 #include "model_app_model.h"
-#include "Model/ModelEditor/EditorScene/Edit/edit_scene.h"
-#include "Model/ModelEditor/EditorScene/Game/game_scene.h"
 #include <memory>
 
 using namespace uicore;
@@ -11,8 +9,6 @@ ModelAppModel::ModelAppModel()
 {
 	if (instance_ptr) throw std::exception();
 	instance_ptr = this;
-
-	editor_scene = std::make_shared<EditScene>();
 }
 
 ModelAppModel::~ModelAppModel()

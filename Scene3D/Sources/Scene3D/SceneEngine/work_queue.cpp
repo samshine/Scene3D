@@ -130,22 +130,29 @@ void WorkQueueImpl::process_work_completed()
 
 void WorkQueueImpl::worker_main()
 {
-	while (true)
+	try
 	{
-		std::unique_lock<std::mutex> mutex_lock(mutex);
-		worker_event.wait(mutex_lock, [&]() { return stop_flag || !queued_items.empty(); });
+		while (true)
+		{
+			std::unique_lock<std::mutex> mutex_lock(mutex);
+			worker_event.wait(mutex_lock, [&]() { return stop_flag || !queued_items.empty(); });
 
-		if (stop_flag)
-			break;
+			if (stop_flag)
+				break;
 
-		std::shared_ptr<WorkItem> item = queued_items.front();
-		queued_items.erase(queued_items.begin());
-		mutex_lock.unlock();
+			std::shared_ptr<WorkItem> item = queued_items.front();
+			queued_items.erase(queued_items.begin());
+			mutex_lock.unlock();
 
-		item->process_work();
+			item->process_work();
 
-		mutex_lock.lock();
-		finished_items.push_back(item);
-		mutex_lock.unlock();
+			mutex_lock.lock();
+			finished_items.push_back(item);
+			mutex_lock.unlock();
+		}
+	}
+	catch (...)
+	{
+		ExceptionDialog::show(std::current_exception());
 	}
 }

@@ -9,8 +9,6 @@
 #include "Commands/update_attachment_command.h"
 #include "Commands/update_material_command.h"
 
-class EditorScene;
-
 class ModelAppModel
 {
 public:
@@ -25,8 +23,6 @@ public:
 
 	FBXModelPtr fbx;
 	std::shared_ptr<ModelData> model_data;
-
-	std::shared_ptr<EditorScene> editor_scene;
 
 	UndoSystem undo_system;
 

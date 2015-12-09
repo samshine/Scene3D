@@ -28,7 +28,7 @@ private:
 	void on_show_lights();
 	void on_show_bones();
 	void on_show_cameras();
-	void on_show_environment();
+	//void on_show_environment();
 	void on_change_model();
 
 	std::shared_ptr<uicore::ColumnView> view = std::make_shared<uicore::ColumnView>();
@@ -42,7 +42,7 @@ private:
 	std::shared_ptr<LightsController> lights_controller;
 	std::shared_ptr<BonesController> bones_controller;
 	std::shared_ptr<CamerasController> cameras_controller;
-	std::shared_ptr<EnvironmentController> environment_controller;
+	//std::shared_ptr<EnvironmentController> environment_controller;
 
 	uicore::SlotContainer slots;
 };

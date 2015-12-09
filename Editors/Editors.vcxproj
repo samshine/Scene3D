@@ -57,9 +57,6 @@
     <ClCompile Include="Model\ModelEditor\Commands\update_animation_command.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\update_attachment_command.cpp" />
     <ClCompile Include="Model\ModelEditor\Commands\update_material_command.cpp" />
-    <ClCompile Include="Model\ModelEditor\EditorScene\Edit\edit_scene.cpp" />
-    <ClCompile Include="Model\ModelEditor\EditorScene\Game\character_controller.cpp" />
-    <ClCompile Include="Model\ModelEditor\EditorScene\Game\game_scene.cpp" />
     <ClCompile Include="Model\ModelEditor\model_app_model.cpp" />
     <ClCompile Include="Model\UndoSystem\undo_system.cpp" />
     <ClCompile Include="precomp.cpp">
@@ -123,10 +120,6 @@
     <ClInclude Include="Model\ModelEditor\Commands\update_animation_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\update_attachment_command.h" />
     <ClInclude Include="Model\ModelEditor\Commands\update_material_command.h" />
-    <ClInclude Include="Model\ModelEditor\EditorScene\editor_scene.h" />
-    <ClInclude Include="Model\ModelEditor\EditorScene\Edit\edit_scene.h" />
-    <ClInclude Include="Model\ModelEditor\EditorScene\Game\character_controller.h" />
-    <ClInclude Include="Model\ModelEditor\EditorScene\Game\game_scene.h" />
     <ClInclude Include="Model\ModelEditor\model_app_model.h" />
     <ClInclude Include="Model\UndoSystem\model_command.h" />
     <ClInclude Include="Model\UndoSystem\undo_system.h" />

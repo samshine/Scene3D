@@ -85,21 +85,28 @@ void SoundOutputImpl::mix_fragment()
 
 void SoundOutputImpl::mixer_thread()
 {
-	mixer_thread_starting();
-
-	while (if_continue_mixing())
+	try
 	{
-		// Mix some audio:
-		mix_fragment();
+		mixer_thread_starting();
 
-		// Send mixed data to sound card:
-		write_fragment(packed_buffer);
+		while (if_continue_mixing())
+		{
+			// Mix some audio:
+			mix_fragment();
 
-		// Wait for sound card to want more:
-		wait();
+			// Send mixed data to sound card:
+			write_fragment(packed_buffer);
+
+			// Wait for sound card to want more:
+			wait();
+		}
+
+		mixer_thread_stopping();
 	}
-
-	mixer_thread_stopping();
+	catch (...)
+	{
+		CrashReporter::invoke();
+	}
 }
 
 bool SoundOutputImpl::if_continue_mixing()

@@ -21,70 +21,77 @@ MouseMovement::~MouseMovement()
 
 void MouseMovement::worker_main()
 {
-	WNDCLASSEX class_desc = { 0 };
-	class_desc.cbSize = sizeof(WNDCLASSEX);
-	class_desc.style = 0;
-	class_desc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	class_desc.lpfnWndProc = &MouseMovement::static_window_proc;
-	class_desc.lpszClassName = L"MouseMovement";
-	ATOM class_atom = RegisterClassEx(&class_desc);
-
-	DWORD ex_style = 0;
-	DWORD style = WS_POPUPWINDOW;
-	HWND window_handle = CreateWindowEx(ex_style, L"MouseMovement", L"MouseMovement", style, CW_USEDEFAULT, CW_USEDEFAULT, 320, 240, 0, 0, (HINSTANCE) GetModuleHandle(0), this);
-	if (window_handle == 0)
-		throw Exception("CreateWindowEx failed");
-
-	// See http://msdn.microsoft.com/en-us/library/ms789918.aspx
-
-	#ifndef HID_USAGE_PAGE_GENERIC
-	#define HID_USAGE_PAGE_GENERIC		((USHORT) 0x01)
-	#endif
-
-	#ifndef HID_USAGE_GENERIC_MOUSE
-	#define HID_USAGE_GENERIC_MOUSE	((USHORT) 0x02)
-	#endif
-
-	#ifndef HID_USAGE_GENERIC_JOYSTICK
-	#define HID_USAGE_GENERIC_JOYSTICK	((USHORT) 0x04)
-	#endif
-
-	#ifndef HID_USAGE_GENERIC_GAMEPAD
-	#define HID_USAGE_GENERIC_GAMEPAD	((USHORT) 0x05)
-	#endif
-
-	#ifndef RIDEV_INPUTSINK
-	#define RIDEV_INPUTSINK	(0x100)
-	#endif
-
-	RAWINPUTDEVICE rid;
-	rid.usUsagePage = HID_USAGE_PAGE_GENERIC;
-	rid.usUsage = HID_USAGE_GENERIC_MOUSE; 
-	rid.dwFlags = RIDEV_INPUTSINK;   
-	rid.hwndTarget = window_handle;
-	BOOL result = RegisterRawInputDevices(&rid, 1, sizeof(RAWINPUTDEVICE));
-	if (result == FALSE)
+	try
 	{
-		DestroyWindow(window_handle);
-		throw Exception("RegisterRawInputDevices failed");
-	}
+		WNDCLASSEX class_desc = { 0 };
+		class_desc.cbSize = sizeof(WNDCLASSEX);
+		class_desc.style = 0;
+		class_desc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+		class_desc.lpfnWndProc = &MouseMovement::static_window_proc;
+		class_desc.lpszClassName = L"MouseMovement";
+		ATOM class_atom = RegisterClassEx(&class_desc);
 
-	while (true)
-	{
-		DWORD wakeup_reason = MsgWaitForMultipleObjects(1, &stop_event, FALSE, INFINITE, QS_RAWINPUT);
-		bool event_arrived = (wakeup_reason == WAIT_OBJECT_0 + 1);
-		if (!event_arrived)
-			break;
+		DWORD ex_style = 0;
+		DWORD style = WS_POPUPWINDOW;
+		HWND window_handle = CreateWindowEx(ex_style, L"MouseMovement", L"MouseMovement", style, CW_USEDEFAULT, CW_USEDEFAULT, 320, 240, 0, 0, (HINSTANCE)GetModuleHandle(0), this);
+		if (window_handle == 0)
+			throw Exception("CreateWindowEx failed");
 
-		MSG msg;
-		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		// See http://msdn.microsoft.com/en-us/library/ms789918.aspx
+
+		#ifndef HID_USAGE_PAGE_GENERIC
+		#define HID_USAGE_PAGE_GENERIC		((USHORT) 0x01)
+		#endif
+
+		#ifndef HID_USAGE_GENERIC_MOUSE
+		#define HID_USAGE_GENERIC_MOUSE	((USHORT) 0x02)
+		#endif
+
+		#ifndef HID_USAGE_GENERIC_JOYSTICK
+		#define HID_USAGE_GENERIC_JOYSTICK	((USHORT) 0x04)
+		#endif
+
+		#ifndef HID_USAGE_GENERIC_GAMEPAD
+		#define HID_USAGE_GENERIC_GAMEPAD	((USHORT) 0x05)
+		#endif
+
+		#ifndef RIDEV_INPUTSINK
+		#define RIDEV_INPUTSINK	(0x100)
+		#endif
+
+		RAWINPUTDEVICE rid;
+		rid.usUsagePage = HID_USAGE_PAGE_GENERIC;
+		rid.usUsage = HID_USAGE_GENERIC_MOUSE;
+		rid.dwFlags = RIDEV_INPUTSINK;
+		rid.hwndTarget = window_handle;
+		BOOL result = RegisterRawInputDevices(&rid, 1, sizeof(RAWINPUTDEVICE));
+		if (result == FALSE)
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			DestroyWindow(window_handle);
+			throw Exception("RegisterRawInputDevices failed");
 		}
-	}
 
-	DestroyWindow(window_handle);
+		while (true)
+		{
+			DWORD wakeup_reason = MsgWaitForMultipleObjects(1, &stop_event, FALSE, INFINITE, QS_RAWINPUT);
+			bool event_arrived = (wakeup_reason == WAIT_OBJECT_0 + 1);
+			if (!event_arrived)
+				break;
+
+			MSG msg;
+			while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
+
+		DestroyWindow(window_handle);
+	}
+	catch (...)
+	{
+		CrashReporter::invoke();
+	}
 }
 
 LRESULT MouseMovement::window_proc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam)

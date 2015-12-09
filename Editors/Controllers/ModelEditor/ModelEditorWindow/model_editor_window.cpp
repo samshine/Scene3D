@@ -48,13 +48,13 @@ ModelEditorWindow::ModelEditorWindow()
 	header_view->add_right_button("Change Model", "Icons/Model/model-24.png", bind_member(this, &ModelEditorWindow::on_change_model));
 
 	auto options = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
-	options->add_item("Attachments", bind_member(this, &ModelEditorWindow::on_show_attachments));
 	options->add_item("Animations", bind_member(this, &ModelEditorWindow::on_show_animations));
+	options->add_item("Attachments", bind_member(this, &ModelEditorWindow::on_show_attachments));
 	options->add_item("Materials", bind_member(this, &ModelEditorWindow::on_show_materials));
 	options->add_item("Lights", bind_member(this, &ModelEditorWindow::on_show_lights));
 	options->add_item("Bones", bind_member(this, &ModelEditorWindow::on_show_bones));
 	options->add_item("Cameras", bind_member(this, &ModelEditorWindow::on_show_cameras));
-	options->add_item("Environment", bind_member(this, &ModelEditorWindow::on_show_environment));
+	//options->add_item("Environment", bind_member(this, &ModelEditorWindow::on_show_environment));
 
 	scene_controller = std::make_shared<SceneController>();
 	animations_controller = std::make_shared<AnimationsController>();
@@ -63,10 +63,10 @@ ModelEditorWindow::ModelEditorWindow()
 	lights_controller = std::make_shared<LightsController>();
 	bones_controller = std::make_shared<BonesController>();
 	cameras_controller = std::make_shared<CamerasController>();
-	environment_controller = std::make_shared<EnvironmentController>();
+	//environment_controller = std::make_shared<EnvironmentController>();
 
 	workspace_controller->set_center(scene_controller);
-	workspace_controller->set_docked(environment_controller);
+	workspace_controller->set_docked(animations_controller);
 }
 
 void ModelEditorWindow::update_window_title()
@@ -163,7 +163,9 @@ void ModelEditorWindow::on_show_cameras()
 	workspace_controller->set_docked(cameras_controller);
 }
 
+/*
 void ModelEditorWindow::on_show_environment()
 {
 	workspace_controller->set_docked(environment_controller);
 }
+*/

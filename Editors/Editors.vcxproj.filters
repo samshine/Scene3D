@@ -22,15 +22,6 @@
     <Filter Include="Model\ModelEditor\Commands">
       <UniqueIdentifier>{6c891090-10fa-4e32-b473-b1ee26f22bd3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\ModelEditor\EditorScene">
-      <UniqueIdentifier>{61dc37af-280f-4b3d-85f1-647adc042111}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ModelEditor\EditorScene\Edit">
-      <UniqueIdentifier>{6e75c48c-b9b0-4ac6-9308-92a844c3bbde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ModelEditor\EditorScene\Game">
-      <UniqueIdentifier>{f6c06aed-e647-4993-9882-b5053f388103}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\UndoSystem">
       <UniqueIdentifier>{cbe3f131-ce45-4150-bb35-49f421c106ee}</UniqueIdentifier>
     </Filter>
@@ -167,15 +158,6 @@
     </ClCompile>
     <ClCompile Include="Model\ModelEditor\Commands\update_material_command.cpp">
       <Filter>Model\ModelEditor\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelEditor\EditorScene\Edit\edit_scene.cpp">
-      <Filter>Model\ModelEditor\EditorScene\Edit</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelEditor\EditorScene\Game\character_controller.cpp">
-      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelEditor\EditorScene\Game\game_scene.cpp">
-      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
     </ClCompile>
     <ClCompile Include="Model\UndoSystem\undo_system.cpp">
       <Filter>Model\UndoSystem</Filter>
@@ -344,18 +326,6 @@
     </ClInclude>
     <ClInclude Include="Model\ModelEditor\Commands\update_material_command.h">
       <Filter>Model\ModelEditor\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelEditor\EditorScene\editor_scene.h">
-      <Filter>Model\ModelEditor\EditorScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelEditor\EditorScene\Edit\edit_scene.h">
-      <Filter>Model\ModelEditor\EditorScene\Edit</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelEditor\EditorScene\Game\character_controller.h">
-      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelEditor\EditorScene\Game\game_scene.h">
-      <Filter>Model\ModelEditor\EditorScene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Model\UndoSystem\undo_system.h">
       <Filter>Model\UndoSystem</Filter>

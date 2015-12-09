@@ -6,8 +6,6 @@
 #include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/ModelEditor/model_app_model.h"
 #include "Model/ModelEditor/Commands/set_map_model_command.h"
-#include "Model/ModelEditor/EditorScene/editor_scene.h"
-#include "Model/ModelEditor/EditorScene/Game/character_controller.h"
 
 using namespace uicore;
 
@@ -59,7 +57,7 @@ EnvironmentController::EnvironmentController()
 	slots.connect(air_resistance_property->sig_value_changed(), this, &EnvironmentController::air_resistance_property_value_changed);
 	slots.connect(air_movement_property->sig_value_changed(), this, &EnvironmentController::air_movement_property_value_changed);
 	slots.connect(bounce_property->sig_value_changed(), this, &EnvironmentController::bounce_property_value_changed);
-
+	/*
 	CharacterController *cc = ModelAppModel::instance()->editor_scene->get_character_controller();
 	if (cc)
 	{
@@ -79,7 +77,7 @@ EnvironmentController::EnvironmentController()
 	{
 		character->set_hidden(true);
 	}
-
+	*/
 	map_model_updated();
 }
 
@@ -103,66 +101,66 @@ void EnvironmentController::map_model_property_browse()
 
 void EnvironmentController::gravity_property_value_changed()
 {
-	float gravity = gravity_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_gravity(gravity);
+	//float gravity = gravity_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_gravity(gravity);
 }
 
 void EnvironmentController::height_property_value_changed()
 {
-	float height = height_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_height(height);
+	//float height = height_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_height(height);
 }
 
 void EnvironmentController::radius_property_value_changed()
 {
-	float radius = radius_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_radius(radius);
+	//float radius = radius_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_radius(radius);
 }
 
 void EnvironmentController::step_height_property_value_changed()
 {
-	float step_height = step_height_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_step_height(step_height);
+	//float step_height = step_height_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_step_height(step_height);
 }
 
 void EnvironmentController::mass_property_value_changed()
 {
-	float mass = mass_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_mass(mass);
+	//float mass = mass_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_mass(mass);
 }
 
 void EnvironmentController::acceleration_property_value_changed()
 {
-	float acceleration = acceleration_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_acceleration(acceleration);
+	//float acceleration = acceleration_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_acceleration(acceleration);
 }
 
 void EnvironmentController::run_speed_property_value_changed()
 {
-	float run_speed = run_speed_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_run_speed(run_speed);
+	//float run_speed = run_speed_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_run_speed(run_speed);
 }
 
 void EnvironmentController::friction_property_value_changed()
 {
-	float friction = friction_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_friction(friction);
+	//float friction = friction_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_friction(friction);
 }
 
 void EnvironmentController::air_resistance_property_value_changed()
 {
-	float air_resistance = air_resistance_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_resistance(air_resistance);
+	//float air_resistance = air_resistance_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_resistance(air_resistance);
 }
 
 void EnvironmentController::air_movement_property_value_changed()
 {
-	float air_movement = air_movement_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_movement(air_movement);
+	//float air_movement = air_movement_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_air_movement(air_movement);
 }
 
 void EnvironmentController::bounce_property_value_changed()
 {
-	float bounce = bounce_property->text_field->text_float();
-	ModelAppModel::instance()->editor_scene->get_character_controller()->set_bounce(bounce);
+	//float bounce = bounce_property->text_field->text_float();
+	//ModelAppModel::instance()->editor_scene->get_character_controller()->set_bounce(bounce);
 }
