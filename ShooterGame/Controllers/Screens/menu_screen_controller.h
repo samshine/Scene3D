@@ -6,15 +6,16 @@
 class MenuScreenController : public ScreenViewController
 {
 public:
-	MenuScreenController(const uicore::CanvasPtr &canvas);
+	MenuScreenController();
 
-	void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) override;
+	void update() override;
 
 private:
 	ScenePtr scene;
-	SceneViewportPtr scene_viewport;
+	SceneCameraPtr scene_camera;
 	SceneObjectPtr map_object;
 
+	uicore::FontPtr font;
+
 	float t = 0.0f;
-	uicore::GameTime game_time;
 };

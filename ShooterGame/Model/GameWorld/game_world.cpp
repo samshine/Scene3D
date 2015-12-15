@@ -217,7 +217,7 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement)
 
 		client->music_player.update();
 
-		client->audio->set_listener(client->scene_viewport->camera()->position(), client->scene_viewport->camera()->orientation());
+		client->audio->set_listener(client->scene_camera->position(), client->scene_camera->orientation());
 		client->audio->update();
 	}
 }
@@ -282,9 +282,6 @@ void GameWorld::frame(float time_elapsed, float interpolated_time)
 		if (it.first != 0)
 			it.second->frame(time_elapsed, interpolated_time);
 	}
-
-	if (client)
-		client->scene_viewport->update(client->window->gc(), time_elapsed);
 }
 
 void GameWorld::net_peer_connected(const std::string &peer_id)

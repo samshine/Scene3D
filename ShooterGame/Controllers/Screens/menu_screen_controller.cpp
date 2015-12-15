@@ -5,46 +5,17 @@
 
 using namespace uicore;
 
-MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenViewController(canvas)
+MenuScreenController::MenuScreenController()
 {
-	auto menu_box = std::make_shared<View>();
+	FontDescription font_desc;
+	font_desc.set_height(30.0f);
+	font_desc.set_line_height(40.0f);
+	font = Font::create(font_desc, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
-	menu_box->style()->set("width: 500px;");
-	menu_box->style()->set("position: absolute; bottom: 150px; right: 150px");
-	menu_box->style()->set("border-image: url('UI/window.png') 21 33 27 27 fill repeat");
-	menu_box->style()->set("border-style: solid; border-width: 21px 33px 27px 27px");
-
-	menu_box->style()->set("flex-direction: column");
-	menu_box->style()->set("padding: 20px 0");
-
-	auto title = std::make_shared<LabelView>();
-	title->style()->set("font: 50px/65px 'LuckiestGuy'; color: #ddd; margin-bottom: 15px");
-	title->set_text_alignment(TextAlignment::center);
-	title->set_text("Main Menu");
-	menu_box->add_subview(title);
-
-	for (auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit"})
-	{
-		auto item = std::make_shared<ButtonView>();
-		item->label()->style()->set("font: 30px/40px 'LuckiestGuy'; color: #ccc");
-		item->label()->set_text_alignment(TextAlignment::center);
-		item->label()->set_text(str);
-		item->func_clicked() = [this]()
-		{
-			Screen::controller() = std::make_shared<GameScreenController>(texture_view->get_canvas());
-		};
-		menu_box->add_subview(item);
-	}
-
-	texture_view->add_subview(menu_box);
-
-	GraphicContextPtr gc = canvas->gc();
-
-	scene = Scene::create(Screen::scene_engine());
-	scene_viewport = SceneViewport::create(Screen::scene_engine());
-	scene_viewport->set_camera(SceneCamera::create(scene));
-	scene_viewport->camera()->set_position(Vec3f(0.0f, 1.8f, -3.0f));
-	//scene.get_camera()->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
+	scene = Scene::create(scene_engine());
+	scene_camera = SceneCamera::create(scene);
+	scene_camera->set_position(Vec3f(0.0f, 1.8f, -3.0f));
+	//scene_camera->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
 
 	scene->show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -69,16 +40,33 @@ MenuScreenController::MenuScreenController(const CanvasPtr &canvas) : ScreenView
 	map_object = SceneObject::create(scene, model);
 }
 
-void MenuScreenController::update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta)
+void MenuScreenController::update()
 {
-	game_time.update();
-
-	t = std::fmod(t + game_time.get_time_elapsed() * 0.01f, 2.0f);
+	t = std::fmod(t + game_time().get_time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
-	scene_viewport->camera()->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
+	scene_camera->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
 
-	scene_viewport->update(canvas->gc(), game_time.get_time_elapsed());
+	scene_viewport()->set_camera(scene_camera);
+	scene_viewport()->update(gc(), game_time().get_time_elapsed());
+	scene_viewport()->render(gc());
 
-	render_scene(canvas, scene_viewport);
+	canvas()->begin();
+
+	float line_height = font->font_metrics(canvas()).line_height();
+	float y = (canvas()->size().height - 5.0f * line_height) * 0.5f;
+	bool first = true;
+	for (auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit" })
+	{
+		auto color = first ? Colorf::white : Colorf::gray50;
+		first = false;
+		float x = (canvas()->size().width - font->measure_text(canvas(), str).advance.width) * 0.5f;
+		font->draw_text(canvas(), x, y, str, color);
+		y += line_height;
+	}
+
+	canvas()->end();
+
+	if (window()->keyboard()->keycode(keycode_enter))
+		present_controller(std::make_shared<GameScreenController>());
 }

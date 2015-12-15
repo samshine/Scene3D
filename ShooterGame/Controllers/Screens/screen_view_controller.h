@@ -4,21 +4,55 @@
 class ScreenViewController
 {
 public:
-	ScreenViewController(const uicore::CanvasPtr &canvas);
+	virtual void update() { }
 
-	std::shared_ptr<uicore::TextureWindow> texture_view;
+	const uicore::DisplayWindowPtr &window() const;
+	uicore::Vec2i mouse_delta() const;
+	const uicore::GameTime game_time() const;
 
-	virtual bool cursor_hidden() { return false; }
-	virtual void update_desktop(const uicore::CanvasPtr &canvas, const uicore::DisplayWindowPtr &ic, const uicore::Vec2i &mouse_delta) { }
+	const uicore::GraphicContextPtr &gc() const;
+	const uicore::CanvasPtr &canvas() const;
 
-	void render_scene(const uicore::CanvasPtr &canvas, const SceneViewportPtr &scene_viewport);
+	const SceneEnginePtr &scene_engine() const;
+	const SceneViewportPtr &scene_viewport() const;
+
+	const std::shared_ptr<SoundCache> &sound_cache() const;
+
+	void set_cursor_hidden(bool value = true) { _cursor_hidden = value; }
+	bool cursor_hidden() const { return _cursor_hidden; }
+
+	void present_controller(std::shared_ptr<ScreenViewController> controller);
+
+private:
+	bool _cursor_hidden = false;
 };
+
+class MouseMovement;
 
 class Screen
 {
 public:
-	static std::shared_ptr<ScreenViewController> &controller();
+	static Screen *instance();
 
-	static SceneEnginePtr &scene_engine();
-	static std::shared_ptr<SoundCache> &sound_cache();
+	void run();
+
+private:
+	uicore::DisplayWindowPtr window;
+	std::shared_ptr<MouseMovement> mouse_movement;
+
+	uicore::GraphicContextPtr gc;
+	uicore::CanvasPtr canvas;
+
+	SoundOutput sound_output;
+	std::shared_ptr<SoundCache> sound_cache;
+
+	SceneEnginePtr scene_engine;
+	SceneViewportPtr scene_viewport;
+
+	std::shared_ptr<ScreenViewController> screen_controller;
+
+	uicore::GameTime game_time;
+	uicore::Vec2i delta_mouse_move;
+
+	friend class ScreenViewController;
 };

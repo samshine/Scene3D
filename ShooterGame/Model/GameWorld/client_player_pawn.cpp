@@ -24,7 +24,7 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEve
 	net_update(tick, net_event);
 
 	if (is_owner)
-		world()->client->scene_viewport->set_camera(camera);
+		world()->client->scene_camera = camera;
 }
 
 void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event)

@@ -1,51 +1,149 @@
 
 #include "precomp.h"
 #include "screen_view_controller.h"
+#include "../../mouse_movement.h"
+#include "menu_screen_controller.h"
+#include "game_screen_controller.h"
 
 using namespace uicore;
 
-ScreenViewController::ScreenViewController(const CanvasPtr &canvas)
+const uicore::DisplayWindowPtr &ScreenViewController::window() const
 {
-	texture_view = std::make_shared<uicore::TextureWindow>(canvas);
-	texture_view->set_viewport(canvas->size());
-	texture_view->set_clear_background(false);
-	texture_view->set_always_render(true);
+	return Screen::instance()->window;
 }
 
-void ScreenViewController::render_scene(const CanvasPtr &canvas, const SceneViewportPtr &scene_viewport)
+uicore::Vec2i ScreenViewController::mouse_delta() const
 {
-	using namespace uicore;
-
-	canvas->end();
-
-	GraphicContextPtr gc = canvas->gc();
-
-	Pointf viewport_pos = Vec2f(canvas->transform() * Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-	Sizef viewport_size = gc->size();
-	Size viewport_size_i = Size(viewport_size);
-
-	scene_viewport->set_viewport(viewport_size_i);
-	scene_viewport->render(gc);
-
-	canvas->begin();
+	return Screen::instance()->delta_mouse_move;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-std::shared_ptr<ScreenViewController> &Screen::controller()
+const uicore::GameTime ScreenViewController::game_time() const
 {
-	static std::shared_ptr<ScreenViewController> screen_controller;
-	return screen_controller;
+	return Screen::instance()->game_time;
 }
 
-SceneEnginePtr &Screen::scene_engine()
+const uicore::GraphicContextPtr &ScreenViewController::gc() const
 {
-	static SceneEnginePtr cache;
-	return cache;
+	return Screen::instance()->gc;
 }
 
-std::shared_ptr<SoundCache> &Screen::sound_cache()
+const uicore::CanvasPtr &ScreenViewController::canvas() const
 {
-	static std::shared_ptr<SoundCache> cache;
-	return cache;
+	return Screen::instance()->canvas;
+}
+
+const SceneEnginePtr &ScreenViewController::scene_engine() const
+{
+	return Screen::instance()->scene_engine;
+}
+
+const SceneViewportPtr &ScreenViewController::scene_viewport() const
+{
+	return Screen::instance()->scene_viewport;
+}
+
+const std::shared_ptr<SoundCache> &ScreenViewController::sound_cache() const
+{
+	return Screen::instance()->sound_cache;
+}
+
+void ScreenViewController::present_controller(std::shared_ptr<ScreenViewController> controller)
+{
+	Screen::instance()->screen_controller = controller;
+}
+
+void Screen::run()
+{
+	try
+	{
+		srand((unsigned int)System::get_time());
+
+		D3DTarget::set_current();
+
+		DisplayWindowDescription window_desc;
+		window_desc.set_title("Scene3D Shooter Game");
+		window_desc.set_size(Sizef(1920.0f, 1280.0f), true);
+		window_desc.set_allow_resize();
+		window_desc.set_visible(false);
+
+		window = DisplayWindow::create(window_desc);
+		gc = window->gc();
+		canvas = Canvas::create(window);
+
+		window->set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
+		window->set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
+
+		Slot close_slot = window->sig_window_close().connect([]() { RunLoop::exit(); });
+
+		window->maximize();
+		window->show();
+
+		mouse_movement = std::make_shared<MouseMovement>();
+
+		sound_output = SoundOutput(48000);
+
+		scene_engine = SceneEngine::create();
+		scene_viewport = SceneViewport::create(scene_engine);
+
+		sound_cache = std::make_shared<SoundCache>();
+
+		screen_controller = std::make_shared<MenuScreenController>();
+
+		Vec2i last_mouse_movement = mouse_movement->pos();
+		bool cursor_hidden = false;
+		Pointf mouse_down_pos;
+
+		while (RunLoop::process())
+		{
+			if (!screen_controller)
+				break;
+
+			bool hide_cursor = screen_controller->cursor_hidden() && window->has_focus();
+			if (cursor_hidden != hide_cursor)
+			{
+				if (hide_cursor)
+				{
+					window->hide_cursor();
+					mouse_down_pos = window->mouse()->position();
+				}
+				else
+				{
+					window->mouse()->set_position(mouse_down_pos.x, mouse_down_pos.y);
+					window->show_cursor();
+				}
+				cursor_hidden = hide_cursor;
+			}
+
+			if (cursor_hidden && window->has_focus())
+			{
+				Sizef size = canvas->size();
+				window->mouse()->set_position(size.width * 0.5f, size.height * 0.5f);
+			}
+
+			Point move = mouse_movement->pos();
+			delta_mouse_move = move - last_mouse_movement;
+			if (!window->has_focus() || !screen_controller->cursor_hidden())
+				delta_mouse_move = Vec2i();
+			last_mouse_movement = move;
+
+			scene_viewport->set_viewport(gc->size());
+
+			game_time.update();
+			screen_controller->update();
+
+			window->flip(1);
+		}
+	}
+	catch (...)
+	{
+		ExceptionDialog::show(std::current_exception());
+	}
+
+	SingletonBugfix::deinitialize();
+}
+
+Screen *Screen::instance()
+{
+	static Singleton<Screen> screen;
+	return screen.get();
 }
