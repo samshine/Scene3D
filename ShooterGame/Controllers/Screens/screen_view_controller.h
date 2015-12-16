@@ -22,6 +22,7 @@ public:
 	bool cursor_hidden() const { return _cursor_hidden; }
 
 	void present_controller(std::shared_ptr<ScreenViewController> controller);
+	void exit_game();
 
 private:
 	bool _cursor_hidden = false;

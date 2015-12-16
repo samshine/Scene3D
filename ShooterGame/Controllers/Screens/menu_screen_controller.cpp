@@ -51,22 +51,60 @@ void MenuScreenController::update()
 	scene_viewport()->update(gc(), game_time().get_time_elapsed());
 	scene_viewport()->render(gc());
 
+	bool up_pressed = window()->keyboard()->keycode(keycode_up);
+	bool down_pressed = window()->keyboard()->keycode(keycode_down);
+	bool mouse_pressed = window()->mouse()->keycode(mouse_left);
+	bool enter_pressed = window()->keyboard()->keycode(keycode_enter);
+	if (up_pressed && !up_was_pressed)
+		current_menu_index = std::max(current_menu_index - 1, 0);
+	else if (down_pressed && !down_was_pressed)
+		current_menu_index = std::min(current_menu_index + 1, 4);
+
 	canvas()->begin();
 
-	float line_height = font->font_metrics(canvas()).line_height();
+	auto font_metrics = font->font_metrics(canvas());
+	float line_height = font_metrics.line_height();
 	float y = (canvas()->size().height - 5.0f * line_height) * 0.5f;
-	bool first = true;
-	for (auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit" })
+	int i = 0;
+	for (const auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit" })
 	{
-		auto color = first ? Colorf::white : Colorf::gray50;
-		first = false;
-		float x = (canvas()->size().width - font->measure_text(canvas(), str).advance.width) * 0.5f;
-		font->draw_text(canvas(), x, y, str, color);
+		float advance_width = font->measure_text(canvas(), str).advance.width;
+		float x = (canvas()->size().width - advance_width) * 0.5f;
+		font->draw_text(canvas(), x, y, str, i == current_menu_index ? Colorf::white : Colorf::gray50);
+
+		if (Rectf::xywh(x, y - font_metrics.ascent(), advance_width, font_metrics.height()).contains(window()->mouse()->position()))
+		{
+			if (!mouse_pressed && mouse_was_pressed)
+				enter_pressed = true;
+			current_menu_index = i;
+		}
+
 		y += line_height;
+		i++;
 	}
 
 	canvas()->end();
 
-	if (window()->keyboard()->keycode(keycode_enter))
-		present_controller(std::make_shared<GameScreenController>());
+	up_was_pressed = up_pressed;
+	down_was_pressed = down_pressed;
+	mouse_was_pressed = mouse_pressed;
+
+	if (enter_pressed)
+	{
+		switch (current_menu_index)
+		{
+		case 0:
+			present_controller(std::make_shared<GameScreenController>());
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			exit_game();
+			break;
+		}
+	}
 }

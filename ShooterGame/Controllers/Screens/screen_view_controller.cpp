@@ -52,6 +52,11 @@ void ScreenViewController::present_controller(std::shared_ptr<ScreenViewControll
 	Screen::instance()->screen_controller = controller;
 }
 
+void ScreenViewController::exit_game()
+{
+	Screen::instance()->screen_controller.reset();
+}
+
 void Screen::run()
 {
 	try
