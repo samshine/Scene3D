@@ -78,10 +78,17 @@ void Screen::run()
 		window->set_large_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
 		window->set_small_icon(PNGFormat::load("Resources/Icons/App/AppIcon-128.png"));
 
+		auto cursor = LoadCursorFromFile(Text::to_utf16("Resources/Cursors/Blacknglow/normal select.cur").c_str());
+		if (cursor != 0)
+			window->set_cursor_handle(cursor);
+
 		Slot close_slot = window->sig_window_close().connect([]() { RunLoop::exit(); });
 
 		window->maximize();
 		window->show();
+
+		gc->clear();
+		window->flip();
 
 		mouse_movement = std::make_shared<MouseMovement>();
 
