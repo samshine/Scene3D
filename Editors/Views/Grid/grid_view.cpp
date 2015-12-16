@@ -11,6 +11,39 @@ GridView::GridView()
 	cells.resize(cell_width * cell_height);
 }
 
+void GridView::normalize()
+{
+	maximized_column = -1;
+	maximized_row = -1;
+	for (auto &cell : cells)
+		cell->set_hidden(false);
+	set_needs_layout();
+}
+
+void GridView::maximize(int maxi_column, int maxi_row)
+{
+	if (maxi_column == -1 || maxi_row == -1)
+	{
+		normalize();
+		return;
+	}
+
+	maximized_column = maxi_column;
+	maximized_row = maxi_row;
+
+	for (int row = 0; row < cell_height; row++)
+	{
+		for (int col = 0; col < cell_width; col++)
+		{
+			auto &cell = cells[col + row * cell_width];
+			if (cell)
+				cell->set_hidden(col != maxi_column || row != maxi_row);
+		}
+	}
+
+	set_needs_layout();
+}
+
 void GridView::set_cell(int column, int row, const std::shared_ptr<uicore::View> view)
 {
 	auto &cell = cells[column + row * cell_width];
@@ -27,23 +60,32 @@ void GridView::set_cell(int column, int row, const std::shared_ptr<uicore::View>
 
 void GridView::layout_subviews(const CanvasPtr &canvas)
 {
-	float nonsplitter_width = std::max(geometry().content_width - splitter_size * (cell_width - 1), 0.0f);
-	float nonsplitter_height = std::max(geometry().content_height - splitter_size * (cell_height - 1), 0.0f);
-
-	float y = 0.0f;
-	for (int row = 0; row < cell_height; row++)
+	if (maximized_row != -1 && maximized_column != -1)
 	{
-		float x = 0.0f;
-		for (int col = 0; col < cell_width; col++)
-		{
-			auto box = Rectf::xywh(x, y, nonsplitter_width / cell_width, nonsplitter_height / cell_height);
-			auto &cell = cells[col + row * cell_width];
-			if (cell)
-				cell->set_geometry(ViewGeometry::from_margin_box(cell->style_cascade(), box));
+		auto &cell = cells[maximized_column + maximized_row * cell_width];
+		if (cell)
+			cell->set_geometry(ViewGeometry::from_margin_box(cell->style_cascade(), geometry().content_size()));
+	}
+	else
+	{
+		float nonsplitter_width = std::max(geometry().content_width - splitter_size * (cell_width - 1), 0.0f);
+		float nonsplitter_height = std::max(geometry().content_height - splitter_size * (cell_height - 1), 0.0f);
 
-			x += nonsplitter_width / cell_width + splitter_size;
+		float y = 0.0f;
+		for (int row = 0; row < cell_height; row++)
+		{
+			float x = 0.0f;
+			for (int col = 0; col < cell_width; col++)
+			{
+				auto box = Rectf::xywh(x, y, nonsplitter_width / cell_width, nonsplitter_height / cell_height);
+				auto &cell = cells[col + row * cell_width];
+				if (cell)
+					cell->set_geometry(ViewGeometry::from_margin_box(cell->style_cascade(), box));
+
+				x += nonsplitter_width / cell_width + splitter_size;
+			}
+			y += nonsplitter_height / cell_height + splitter_size;
 		}
-		y += nonsplitter_height / cell_height + splitter_size;
 	}
 }
 

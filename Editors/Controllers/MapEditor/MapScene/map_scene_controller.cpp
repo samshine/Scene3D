@@ -71,6 +71,8 @@ MapSceneController::MapSceneController()
 	slots.connect(MapAppModel::instance()->sig_map_updated, this, &MapSceneController::map_updated);
 
 	setup_scene();
+
+	grid_view->maximize(0, 0);
 }
 
 void MapSceneController::map_updated()
