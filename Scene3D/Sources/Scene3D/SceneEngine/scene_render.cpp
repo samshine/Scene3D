@@ -11,7 +11,7 @@ SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine), shadow_maps(
 {
 }
 
-void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *scene_viewport)
+void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *new_scene_viewport)
 {
 	ScopeTimeFunction();
 
@@ -20,6 +20,8 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	draw_calls = 0;
 	triangles_drawn = 0;
 	scene_visits = 0;
+
+	scene_viewport = new_scene_viewport;
 
 	if (!scene_viewport->camera())
 		return;
@@ -114,6 +116,7 @@ void SceneRender::setup_passes()
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(gc, *this));
 	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));
+	passes.push_back(std::make_shared<SceneLinesPass>(*this));
 	passes.push_back(std::make_shared<FinalPass>(gc, *this));
 }
 

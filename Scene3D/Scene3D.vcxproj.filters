@@ -196,6 +196,9 @@
     <Filter Include="Sources\Scene3D\MapData">
       <UniqueIdentifier>{774fd6cf-7bb6-4414-a7e1-523d37cba584}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\SceneLines">
+      <UniqueIdentifier>{ac4f570e-a35b-4d0e-9dd0-6e18ef9f113f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1383,6 +1386,15 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_exposure_glsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\fragment_scene_lines_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -1984,6 +1996,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_mesh.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,8 +5,10 @@
 
 class Physics3DShape;
 class Physics3DObject;
+class SceneViewport;
 typedef std::shared_ptr<Physics3DShape> Physics3DShapePtr;
 typedef std::shared_ptr<Physics3DObject> Physics3DObjectPtr;
+typedef std::shared_ptr<SceneViewport> SceneViewportPtr;
 
 class Physics3DHit
 {
@@ -39,6 +41,8 @@ class Physics3DWorld
 {
 public:
 	static std::shared_ptr<Physics3DWorld> create();
+
+	virtual void debug_draw(const SceneViewportPtr &viewport) = 0;
 
 	virtual void set_gravity(const uicore::Vec3f &gravity) = 0;
 

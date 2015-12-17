@@ -53,6 +53,32 @@ void SceneViewportImpl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start,
 	out_ray_direction = _camera->orientation().rotate_vector(ray_direction);
 }
 
+void SceneViewportImpl::clear_lines()
+{
+	_scene_lines.points.clear();
+	_scene_lines.colors.clear();
+	_scene_lines.text_locations.clear();
+	_scene_lines.text_offsets.clear();
+	_scene_lines.text_lengths.clear();
+	_scene_lines.text.clear();
+}
+
+void SceneViewportImpl::draw_line(const uicore::Vec3f &from, const uicore::Vec3f &to, const uicore::Vec3f &color)
+{
+	_scene_lines.points.push_back(from);
+	_scene_lines.points.push_back(to);
+	_scene_lines.colors.push_back(color);
+	_scene_lines.colors.push_back(color);
+}
+
+void SceneViewportImpl::draw_3d_text(const uicore::Vec3f &location, const char *text)
+{
+	_scene_lines.text_locations.push_back(location);
+	_scene_lines.text_offsets.push_back(_scene_lines.text.length());
+	_scene_lines.text += text;
+	_scene_lines.text_lengths.push_back(_scene_lines.text.length() - _scene_lines.text_offsets.back());
+}
+
 void SceneViewportImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
 {
 	_viewport = box;

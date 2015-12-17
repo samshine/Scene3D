@@ -124,6 +124,11 @@ void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_v
 	scene_viewport->camera()->set_position(position[index]);
 	scene_viewport->camera()->set_orientation(camera_quaternion);
 
+	scene_view->viewport()->clear_lines();
+	scene_view->viewport()->draw_line(Vec3f(0.0f, 0.0f, 0.0f), Vec3f(20.0f, 20.0f, 20.0f), Vec3f(1.0f));
+
+	collision->debug_draw(scene_view->viewport());
+
 	auto model = MapAppModel::instance();
 	if (objects.empty())
 	{

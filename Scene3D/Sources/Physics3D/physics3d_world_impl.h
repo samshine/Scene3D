@@ -13,6 +13,8 @@ public:
 	Physics3DWorldImpl();
 	~Physics3DWorldImpl();
 
+	void debug_draw(const SceneViewportPtr &viewport);
+
 	void set_gravity(const uicore::Vec3f &gravity) override;
 	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step) override;
 	void step_simulation_once(float time_step) override;

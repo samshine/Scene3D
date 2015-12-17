@@ -354,6 +354,9 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass_data.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_uniforms.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\vertex_particle_emitter_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\fragment_scene_lines_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\scene_pass.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_angular_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_billboard_hlsl.h" />
@@ -582,6 +585,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass_data.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Skybox\skybox_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SSAO\ssao_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.cpp" />

@@ -18,6 +18,7 @@
 #include "Scene3D/SceneEngine/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/SceneEngine/Passes/ParticleEmitter/particle_emitter_pass.h"
 #include "Scene3D/SceneEngine/Passes/LensFlare/lens_flare_pass.h"
+#include "Scene3D/SceneEngine/Passes/SceneLines/scene_lines_pass.h"
 #include <memory>
 #include <map>
 
@@ -36,6 +37,7 @@ public:
 	SceneEngineImpl *engine = nullptr;
 	SceneImpl *scene = nullptr;
 	SceneCameraImpl *camera = nullptr;
+	SceneViewportImpl *scene_viewport = nullptr;
 	uicore::Rect viewport = uicore::Size(640, 480);
 	uicore::FrameBufferPtr fb_viewport;
 

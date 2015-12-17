@@ -16,8 +16,11 @@ public:
 	virtual const SceneCameraPtr &camera() const = 0;
 	virtual void set_camera(const SceneCameraPtr &camera) = 0;
 
-	virtual void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr) = 0;
+	virtual void clear_lines() = 0;
+	virtual void draw_line(const uicore::Vec3f &from, const uicore::Vec3f &to, const uicore::Vec3f &color) = 0;
+	virtual void draw_3d_text(const uicore::Vec3f &location, const char *text) = 0;
 
+	virtual void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb = nullptr) = 0;
 	virtual void render(const uicore::GraphicContextPtr &gc) = 0;
 	virtual void update(const uicore::GraphicContextPtr &gc, float time_elapsed) = 0;
 

@@ -3,6 +3,7 @@
 #include "Physics3D/physics3d_world.h"
 #include "physics3d_world_impl.h"
 #include "physics3d_shape_impl.h"
+#include "Scene3D/scene_viewport.h"
 
 using namespace uicore;
 
@@ -186,6 +187,53 @@ Physics3DWorldImpl::Physics3DWorldImpl()
 Physics3DWorldImpl::~Physics3DWorldImpl()
 {
 	// To do: dispose all collision user objects
+}
+
+class Physics3DDebugDraw : public btIDebugDraw
+{
+public:
+	Physics3DDebugDraw(const SceneViewportPtr &viewport) : viewport(viewport) { }
+
+	void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override
+	{
+		viewport->draw_line(Vec3f(from.x(), from.y(), from.z()), Vec3f(to.x(), to.y(), to.z()), Vec3f(color.x(), color.y(), color.z()));
+	}
+
+	void setDebugMode(int debugMode) override
+	{
+		debug_mode = debugMode;
+	}
+
+	int getDebugMode() const override
+	{
+		return debug_mode;
+	}
+
+	void reportErrorWarning(const char* warningString) override
+	{
+	}
+
+	void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
+	{
+	}
+
+	void draw3dText(const btVector3& location, const char* textString) override
+	{
+		viewport->draw_3d_text(Vec3f(location.x(), location.y(), location.z()), textString);
+	}
+
+	const SceneViewportPtr &viewport;
+
+private:
+	int debug_mode = DBG_DrawWireframe;
+};
+
+void Physics3DWorldImpl::debug_draw(const SceneViewportPtr &viewport)
+{
+	Physics3DDebugDraw debug_drawer(viewport);
+	dynamics_world->setDebugDrawer(&debug_drawer);
+	dynamics_world->debugDrawWorld();
+	dynamics_world->setDebugDrawer(nullptr);
 }
 
 int Physics3DWorldImpl::step_simulation(float time_step, int max_sub_steps, float fixed_time_step)
