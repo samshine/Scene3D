@@ -50,30 +50,22 @@ AnimationsController::AnimationsController()
 void AnimationsController::update_animations()
 {
 	animations_list->clear();
-	bool first = true;
 	for (const auto &anim : ModelAppModel::instance()->desc.animations)
 	{
-		auto item = animations_list->add_item(anim.name);
-		if (first)
-		{
-			item->set_selected(true, false);
-			first = false;
-		}
+		animations_list->add_item(anim.name);
 	}
-
-	auto item = animations_list->add_item("");
-	if (first)
-		item->set_selected(true, false);
+	animations_list->add_item("");
+	animations_list->set_selected(0);
 }
 
 void AnimationsController::update_animation_fields()
 {
-	auto selection = animations_list->selection();
-	if (selection && selection->index < ModelAppModel::instance()->desc.animations.size())
+	auto selection = animations_list->selected_item();
+	if (selection != -1 && selection < (int)ModelAppModel::instance()->desc.animations.size())
 	{
 		animation->set_hidden(false);
 
-		const auto &anim = ModelAppModel::instance()->desc.animations[selection->index];
+		const auto &anim = ModelAppModel::instance()->desc.animations[selection];
 		start_property->text_field->set_text(Text::to_string(anim.start_frame));
 		end_property->text_field->set_text(Text::to_string(anim.end_frame));
 		play_property->text_field->set_text(Text::to_string(anim.play_speed));
@@ -94,22 +86,22 @@ void AnimationsController::animations_list_selection_changed()
 
 void AnimationsController::animations_list_edit_saved()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
-		if (selection->index >= ModelAppModel::instance()->desc.animations.size())
+		if (selection >= (int)ModelAppModel::instance()->desc.animations.size())
 		{
 			ModelDescAnimation anim;
-			anim.name = selection->text();
+			anim.name = animations_list->item_text(selection);
 			ModelAppModel::instance()->undo_system.execute<AddAnimationCommand>(anim);
 
 			animations_list->add_item("");
 		}
 		else
 		{
-			ModelDescAnimation anim = ModelAppModel::instance()->desc.animations[selection->index];
-			anim.name = selection->text();
-			ModelAppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection->index, anim);
+			ModelDescAnimation anim = ModelAppModel::instance()->desc.animations[selection];
+			anim.name = animations_list->item_text(selection);
+			ModelAppModel::instance()->undo_system.execute<UpdateAnimationCommand>(selection, anim);
 		}
 
 		update_animation_fields();
@@ -118,72 +110,72 @@ void AnimationsController::animations_list_edit_saved()
 
 void AnimationsController::start_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.start_frame = start_property->text_field->text_int();
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }
 
 void AnimationsController::end_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.end_frame = end_property->text_field->text_int();
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }
 
 void AnimationsController::play_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.play_speed = play_property->text_field->text_float();
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }
 
 void AnimationsController::move_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.move_speed = move_property->text_field->text_float();
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }
 
 void AnimationsController::loop_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.loop = loop_property->text_field->text_int() == 1;
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }
 
 void AnimationsController::rarity_property_value_changed()
 {
-	auto selection = animations_list->selection();
-	if (selection)
+	auto selection = animations_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = ModelAppModel::instance();
-		auto animation = app_model->desc.animations.at(selection->index);
+		auto animation = app_model->desc.animations.at(selection);
 		animation.rarity = rarity_property->text_field->text_int();
-		app_model->undo_system.execute<UpdateAnimationCommand>(selection->index, animation);
+		app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
 	}
 }

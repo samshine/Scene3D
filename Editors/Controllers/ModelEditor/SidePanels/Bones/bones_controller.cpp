@@ -34,19 +34,11 @@ void BonesController::update_bones()
 	bones_list->clear();
 	bool first = true;
 
-	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
-
 	if (ModelAppModel::instance()->fbx)
 	{
 		for (const auto &bone_name : ModelAppModel::instance()->fbx->bone_names())
 		{
-			auto item = bones_list->add_item(bone_name);
-			if (first)
-			{
-				item->set_selected(true, false);
-				first = false;
-			}
-			items[bone_name] = item;
+			bones_list->add_item(bone_name);
 		}
 	}
 	/*
@@ -66,7 +58,7 @@ void BonesController::update_bones()
 	}
 	*/
 
-	if (!bones_list->selection())
+	if (bones_list->selected_item() == -1)
 		bone->set_hidden(true);
 }
 
@@ -110,8 +102,8 @@ void BonesController::bones_list_selection_changed()
 
 void BonesController::bones_list_selection_clicked()
 {
-	auto selection = bones_list->selection();
-	if (selection)
+	auto selection = bones_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= ModelAppModel::instance()->desc.bones.size())

@@ -10,46 +10,49 @@ class RolloutList : public ThemeScrollView
 public:
 	RolloutList();
 
-	std::shared_ptr<RolloutListItemView> selection();
-
-	uicore::Signal<void()> &sig_selection_changed() { return selection_changed; }
-	uicore::Signal<void()> &sig_edit_saved() { return edit_saved; }
-	uicore::Signal<void()> &sig_selection_clicked() { return selection_clicked; }
+	uicore::Signal<void()> &sig_selection_changed() { return _selection_changed; }
+	uicore::Signal<void()> &sig_edit_saved() { return _edit_saved; }
+	uicore::Signal<void()> &sig_selection_clicked() { return _selection_clicked; }
 
 	void clear();
-	std::shared_ptr<RolloutListItemView> add_item(const std::string &item_name);
+	int add_item(const std::string &text);
+	void remove_item(int index);
 
-	bool is_edit_allowed() const { return allow_edit; }
-	void set_allow_edit(bool enable) { allow_edit = enable; }
+	std::string item_text(int index) const;
+	void set_item_text(int index, std::string text);
+
+	int selected_item() const;
+	void clear_selection();
+	void set_selected(int index);
+
+	void set_bold(int index, bool value = true);
+
+	bool is_edit_allowed() const { return _allow_edit; }
+	void set_allow_edit(bool enable) { _allow_edit = enable; }
 
 private:
-	uicore::Signal<void()> selection_changed;
-	uicore::Signal<void()> selection_clicked;
-	uicore::Signal<void()> edit_saved;
-	bool allow_edit = true;
+	int find_index(const RolloutListItemView *item) const;
+
+	int _selected_item = -1;
+	std::vector<std::shared_ptr<RolloutListItemView>> _items;
+	uicore::Signal<void()> _selection_changed;
+	uicore::Signal<void()> _selection_clicked;
+	uicore::Signal<void()> _edit_saved;
+	bool _allow_edit = true;
+
+	friend class RolloutListItemView;
 };
 
-class RolloutListItemView : public uicore::View
+class RolloutListItemView : public uicore::ColumnView
 {
 public:
-	RolloutListItemView(RolloutList *list, size_t index);
+	RolloutListItemView(RolloutList *list);
 
-	std::string text() const;
+	RolloutList *list = nullptr;
+	std::shared_ptr<uicore::LabelView> label;
+	std::shared_ptr<uicore::TextFieldView> textfield;
 
-	bool selected() const;
-	void set_selected(bool value = true, bool animate = true);
-	void set_text(const std::string &text);
-	void set_bold(bool enable);
-
-	size_t index;
-
-private:
 	void begin_edit();
 	void save_edit();
 	void cancel_edit();
-
-	bool is_selected = false;
-	std::shared_ptr<uicore::LabelView> label;
-	std::shared_ptr<uicore::TextFieldView> textfield;
-	RolloutList *list = nullptr;
 };

@@ -118,8 +118,8 @@ void MapLightsController::lights_list_selection_changed()
 
 void MapLightsController::lights_list_selection_clicked()
 {
-	auto selection = lights_list->selection();
-	if (selection)
+	auto selection = lights_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.lights.size())
@@ -129,7 +129,7 @@ void MapLightsController::lights_list_selection_clicked()
 		}
 
 		auto &light = MapAppModel::instance()->desc.lights[selection->index];
-		light.name = selection->text();
+		light.name = lights_list->item_text(selection);
 
 		update_light_fields();
 		*/

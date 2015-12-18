@@ -116,8 +116,8 @@ void MapLightProbesController::light_probes_list_selection_changed()
 
 void MapLightProbesController::light_probes_list_selection_clicked()
 {
-	auto selection = light_probes_list->selection();
-	if (selection)
+	auto selection = light_probes_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.light_probes.size())
@@ -127,7 +127,7 @@ void MapLightProbesController::light_probes_list_selection_clicked()
 		}
 
 		auto &light_probe = MapAppModel::instance()->desc.light_probes[selection->index];
-		light_probe.name = selection->text();
+		light_probe.name = light_probes_list->item_text(selected_item);
 
 		update_light_probe_fields();
 		*/

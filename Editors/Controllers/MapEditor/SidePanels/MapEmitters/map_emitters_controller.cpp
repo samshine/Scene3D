@@ -68,7 +68,7 @@ void MapEmittersController::update_emitters()
 	}
 	*/
 
-	if (!emitters_list->selection())
+	if (emitters_list->selected_item() == -1)
 		emitter->set_hidden(true);
 }
 
@@ -112,8 +112,8 @@ void MapEmittersController::emitters_list_selection_changed()
 
 void MapEmittersController::emitters_list_selection_clicked()
 {
-	auto selection = emitters_list->selection();
-	if (selection)
+	auto selection = emitters_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.emitters.size())
@@ -123,7 +123,7 @@ void MapEmittersController::emitters_list_selection_clicked()
 		}
 
 		auto &emitter = MapAppModel::instance()->desc.emitters[selection->index];
-		emitter.name = selection->text();
+		emitter.name = emitters_list->item_text(selection);
 
 		update_emitter_fields();
 		*/

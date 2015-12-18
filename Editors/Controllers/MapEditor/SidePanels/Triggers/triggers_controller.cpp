@@ -68,7 +68,7 @@ void TriggersController::update_triggers()
 	}
 	*/
 
-	if (!triggers_list->selection())
+	if (triggers_list->selected_item() == -1)
 		trigger->set_hidden(true);
 }
 
@@ -112,8 +112,8 @@ void TriggersController::triggers_list_selection_changed()
 
 void TriggersController::triggers_list_selection_clicked()
 {
-	auto selection = triggers_list->selection();
-	if (selection)
+	auto selection = triggers_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.triggers.size())

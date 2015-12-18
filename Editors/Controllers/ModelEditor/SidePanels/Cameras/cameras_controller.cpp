@@ -34,19 +34,11 @@ void CamerasController::update_cameras()
 	cameras_list->clear();
 	bool first = true;
 
-	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
-
 	if (ModelAppModel::instance()->fbx)
 	{
 		for (const auto &camera_name : ModelAppModel::instance()->fbx->camera_names())
 		{
-			auto item = cameras_list->add_item(camera_name);
-			if (first)
-			{
-				item->set_selected(true, false);
-				first = false;
-			}
-			items[camera_name] = item;
+			cameras_list->add_item(camera_name);
 		}
 	}
 	/*
@@ -66,7 +58,7 @@ void CamerasController::update_cameras()
 	}
 	*/
 
-	if (!cameras_list->selection())
+	if (cameras_list->selected_item() == -1)
 		camera->set_hidden(true);
 }
 
@@ -110,8 +102,8 @@ void CamerasController::cameras_list_selection_changed()
 
 void CamerasController::cameras_list_selection_clicked()
 {
-	auto selection = cameras_list->selection();
-	if (selection)
+	auto selection = cameras_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= ModelAppModel::instance()->desc.cameras.size())

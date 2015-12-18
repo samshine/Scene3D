@@ -64,39 +64,28 @@ ObjectsController::ObjectsController()
 void ObjectsController::update_objects()
 {
 	objects_list->clear();
-	bool first = true;
-
-	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
 	int i = 0;
 	for (const auto &object : MapAppModel::instance()->desc.objects)
 	{
-		auto &item = items[Text::to_string(i)];
-		if (!item)
-			item = objects_list->add_item(string_format("%1 (%2)", i, object.type));
-
-		item->set_bold(true);
-
-		if (first)
-		{
-			item->set_selected(true, false);
-			first = false;
-		}
+		objects_list->add_item(string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::get_basename(object.mesh)));
 		i++;
 	}
 
-	if (!objects_list->selection())
+	if (i > 0)
+	{
+		objects_list->set_selected(0);
+		object->set_hidden(false);
+	}
+	else
+	{
 		object->set_hidden(true);
+	}
 }
 
 int ObjectsController::get_select_item_index()
 {
-	auto selection = objects_list->selection();
-	if (selection)
-	{
-		return selection->index;
-	}
-	return -1;
+	return objects_list->selected_item();
 }
 
 void ObjectsController::update_object_fields()
@@ -133,8 +122,8 @@ void ObjectsController::objects_list_selection_changed()
 
 void ObjectsController::objects_list_selection_clicked()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.objects.size())
@@ -144,7 +133,7 @@ void ObjectsController::objects_list_selection_clicked()
 		}
 
 		auto &object = MapAppModel::instance()->desc.objects[selection->index];
-		object.name = selection->text();
+		object.name = objects_list->item_text(selection);
 
 		update_object_fields();
 		*/
@@ -153,97 +142,97 @@ void ObjectsController::objects_list_selection_clicked()
 
 void ObjectsController::id_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.id = id->text_field->text();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::type_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.type = type->text_field->text();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::position_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.position.x = position->input_x->text_float();
 		object.position.y = position->input_y->text_float();
 		object.position.z = position->input_z->text_float();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::dir_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.dir = dir->text_field->text_float();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::up_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.up = up->text_field->text_float();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::tilt_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.tilt = tilt->text_field->text_float();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::scale_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.scale = scale->text_field->text_float();
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }
 
 void ObjectsController::mesh_browse()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 
 		OpenFileDialog dialog(view.get());
 		dialog.set_title("Select Mesh Model");
@@ -253,7 +242,7 @@ void ObjectsController::mesh_browse()
 		if (dialog.show())
 		{
 			object.mesh = dialog.get_filename();
-			MapAppModel::instance()->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+			MapAppModel::instance()->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 			mesh->browse_field->set_text(PathHelp::get_basename(object.mesh));
 		}
 	}
@@ -261,12 +250,12 @@ void ObjectsController::mesh_browse()
 
 void ObjectsController::field_value_changed()
 {
-	auto selection = objects_list->selection();
-	if (selection)
+	auto selection = objects_list->selected_item();
+	if (selection != -1)
 	{
 		auto app_model = MapAppModel::instance();
-		auto object = app_model->desc.objects.at(selection->index);
+		auto object = app_model->desc.objects.at(selection);
 		object.fields = JsonValue::parse(fields->text_field->text());
-		app_model->undo_system.execute<UpdateMapObjectCommand>(selection->index, object);
+		app_model->undo_system.execute<UpdateMapObjectCommand>(selection, object);
 	}
 }

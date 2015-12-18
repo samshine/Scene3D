@@ -68,25 +68,13 @@ void PathNodesController::update_path_nodes()
 	}
 	*/
 
-	if (!path_nodes_list->selection())
+	if (path_nodes_list->selected_item() == -1)
 		path_node->set_hidden(true);
 }
 
 int PathNodesController::get_select_item_index()
 {
-	/*auto selection = path_nodes_list->selection();
-	if (selection)
-	{
-		std::string name = selection->text();
-
-		const auto &path_nodes = MapAppModel::instance()->desc.path_nodes;
-		for (size_t i = 0; i < path_nodes.size(); i++)
-		{
-			if (path_nodes[i].mesh_path_node == name)
-				return (int)i;
-		}
-	}*/
-	return -1;
+	return path_nodes_list->selected_item();
 }
 
 void PathNodesController::update_path_node_fields()
@@ -112,8 +100,8 @@ void PathNodesController::path_nodes_list_selection_changed()
 
 void PathNodesController::path_nodes_list_selection_clicked()
 {
-	auto selection = path_nodes_list->selection();
-	if (selection)
+	auto selection = path_nodes_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= MapAppModel::instance()->desc.path_nodes.size())

@@ -32,21 +32,12 @@ LightsController::LightsController()
 void LightsController::update_lights()
 {
 	lights_list->clear();
-	bool first = true;
-
-	std::map<std::string, std::shared_ptr<RolloutListItemView>> items;
 
 	if (ModelAppModel::instance()->fbx)
 	{
 		for (const auto &light_name : ModelAppModel::instance()->fbx->light_names())
 		{
-			auto item = lights_list->add_item(light_name);
-			if (first)
-			{
-				item->set_selected(true, false);
-				first = false;
-			}
-			items[light_name] = item;
+			lights_list->add_item(light_name);
 		}
 	}
 	/*
@@ -66,7 +57,7 @@ void LightsController::update_lights()
 	}
 	*/
 
-	if (!lights_list->selection())
+	if (lights_list->selected_item() == -1)
 		light->set_hidden(true);
 }
 
@@ -110,8 +101,8 @@ void LightsController::lights_list_selection_changed()
 
 void LightsController::lights_list_selection_clicked()
 {
-	auto selection = lights_list->selection();
-	if (selection)
+	auto selection = lights_list->selected_item();
+	if (selection != -1)
 	{
 		/*
 		if (selection->index >= ModelAppModel::instance()->desc.lights.size())

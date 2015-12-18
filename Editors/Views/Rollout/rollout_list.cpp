@@ -15,37 +15,106 @@ RolloutList::RolloutList()
 	content_view()->style()->set("flex-direction: column");
 }
 
-std::shared_ptr<RolloutListItemView> RolloutList::selection()
-{
-	for (auto &subview : content_view()->subviews())
-	{
-		auto item = std::dynamic_pointer_cast<RolloutListItemView>(subview);
-		if (item->selected()) return item;
-	}
-	return std::shared_ptr<RolloutListItemView>();
-}
-
 void RolloutList::clear()
 {
-	auto s = content_view()->subviews();
-	for (const auto &v : s)
-		v->remove_from_super();
+	_selected_item = -1;
+	for (auto &item : _items)
+		item->remove_from_super();
+	_items.clear();
 }
 
-std::shared_ptr<RolloutListItemView> RolloutList::add_item(const std::string &item_name)
+int RolloutList::add_item(const std::string &text)
 {
-	auto item = std::make_shared<RolloutListItemView>(this, content_view()->subviews().size());
-	item->set_text(item_name);
+	auto item = content_view()->add_subview<RolloutListItemView>(this);
+	item->label->set_text(text);
+	item->textfield->set_text(text);
+	_items.push_back(item);
+	return _items.size() - 1;
+}
 
-	content_view()->add_subview(item);
-	return item;
+void RolloutList::remove_item(int index)
+{
+	if (index < 0 || index >= (int)_items.size())
+		return;
+
+	if (selected_item() == index)
+		clear_selection();
+
+	_items[index]->remove_from_super();
+	_items.erase(_items.begin() + index);
+}
+
+std::string RolloutList::item_text(int index) const
+{
+	if (index < 0 || index >= (int)_items.size())
+		return std::string();
+
+	return _items[index]->label->text();
+}
+
+void RolloutList::set_item_text(int index, std::string text)
+{
+	if (index < 0 || index >= (int)_items.size())
+		return;
+
+	_items[index]->label->text();
+	_items[index]->textfield->text();
+}
+
+int RolloutList::selected_item() const
+{
+	return _selected_item;
+}
+
+void RolloutList::clear_selection()
+{
+	if (_selected_item == -1)
+		return;
+
+	_items[_selected_item]->style()->set("background-color: none");
+	_items[_selected_item]->set_needs_render();
+	_selected_item = -1;
+}
+
+void RolloutList::set_selected(int index)
+{
+	clear_selection();
+
+	if (index < 0 || index >= (int)_items.size())
+		return;
+
+	_selected_item = index;
+	_items[_selected_item]->style()->set("background-color: rgba(255,255,255,0.3)");
+	_items[_selected_item]->set_needs_render();
+}
+
+void RolloutList::set_bold(int index, bool value)
+{
+	if (index < 0 || index >= (int)_items.size())
+		return;
+
+	if (value)
+		_items[index]->label->style()->set("font-weight: 900");
+	else
+		_items[index]->label->style()->set("font-weight: normal");
+}
+
+int RolloutList::find_index(const RolloutListItemView *search_item) const
+{
+	int i = 0;
+	for (auto &item : _items)
+	{
+		if (item.get() == search_item)
+			return i;
+		i++;
+	}
+	return -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-RolloutListItemView::RolloutListItemView(RolloutList *init_list, size_t index) : list(init_list), index(index)
+RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_list)
 {
-	style()->set("flex-direction: column");
 	style()->set("padding: 3px");
 	style()->set("border-radius: 2px");
 
@@ -63,7 +132,8 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list, size_t index) :
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
 	{
 		set_focus();
-		if (selected())
+		int index = list->find_index(this);
+		if (index == -1)
 		{
 			list->sig_selection_clicked()();
 			if (list->is_edit_allowed())
@@ -71,7 +141,8 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list, size_t index) :
 		}
 		else
 		{
-			set_selected(true);
+			list->set_selected(index);
+			list->sig_selection_changed()();
 		}
 	});
 	slots.connect(textfield->sig_focus_lost(), [this](FocusChangeEvent &e) { cancel_edit(); });
@@ -83,68 +154,6 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list, size_t index) :
 			cancel_edit();
 		}
 	});
-}
-
-std::string RolloutListItemView::text() const
-{
-	return label->text();
-}
-
-void RolloutListItemView::set_text(const std::string &text)
-{
-	label->set_text(text);
-}
-
-void RolloutListItemView::set_bold(bool enable)
-{
-	if (enable)
-		label->style()->set("font-weight: 900");
-	else
-		label->style()->set("font-weight: normal");
-}
-
-bool RolloutListItemView::selected() const
-{
-	return is_selected;
-}
-
-void RolloutListItemView::set_selected(bool value, bool animate_change)
-{
-	if (is_selected != value)
-	{
-		if (value)
-		{
-			for (auto view : list->content_view()->subviews())
-			{
-				if (view.get() != this)
-					std::dynamic_pointer_cast<RolloutListItemView>(view)->set_selected(false);
-			}
-		}
-
-		if (!value)
-			cancel_edit();
-
-		is_selected = value;
-
-		if (animate_change)
-		{
-			stop_animations();
-			if (value)
-				animate(0.0f, 0.3f, [this](float t) { style()->set(string_format("background-color: rgba(255,255,255,%1)", t)); }, 400, Easing::easeinout);
-			else
-				animate(0.3f, 0.0f, [this](float t) { style()->set(string_format("background-color: rgba(255,255,255,%1)", t)); }, 400, Easing::easeinout, [this]() { style()->set("background-color: none"); });
-		}
-		else
-		{
-			if (value)
-				style()->set("background-color: rgba(255,255,255,0.3)");
-			else
-				style()->set("background-color: none");
-		}
-
-		if (value)
-			list->sig_selection_changed()();
-	}
 }
 
 void RolloutListItemView::begin_edit()
