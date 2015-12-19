@@ -59,6 +59,7 @@ MapEditController::MapEditController()
 
 	slots.connect(MapAppModel::instance()->sig_load_finished, this, &MapEditController::update_objects);
 	slots.connect(MapAppModel::instance()->sig_map_tool_changed, this, &MapEditController::map_tool_changed);
+	slots.connect(MapAppModel::instance()->sig_object_updated, this, &MapEditController::object_updated);
 
 	update_objects();
 	map_tool_changed();
@@ -189,6 +190,15 @@ void MapEditController::create_object_field_value_changed()
 	}
 }
 
+void MapEditController::object_updated(size_t index)
+{
+	const auto &object = MapAppModel::instance()->desc.objects[index];
+	objects->objects_list->set_item_text(index, string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::get_basename(object.mesh)));
+
+	if (index == objects->objects_list->selected_item())
+		update_object_fields();
+}
+
 void MapEditController::update_objects()
 {
 	objects->objects_list->clear();
@@ -204,6 +214,7 @@ void MapEditController::update_objects()
 	{
 		objects->objects_list->set_selected(0);
 		edit_object->set_hidden(false);
+		update_object_fields();
 	}
 	else
 	{

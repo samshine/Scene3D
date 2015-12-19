@@ -34,6 +34,7 @@ private:
 	void create_object_mesh_browse();
 	void create_object_field_value_changed();
 
+	void object_updated(size_t index);
 	void update_objects();
 	void objects_list_selection_changed();
 

@@ -57,8 +57,8 @@ void RolloutList::set_item_text(int index, std::string text)
 	if (index < 0 || index >= (int)_items.size())
 		return;
 
-	_items[index]->label->text();
-	_items[index]->textfield->text();
+	_items[index]->label->set_text(text);
+	_items[index]->textfield->set_text(text);
 }
 
 int RolloutList::selected_item() const

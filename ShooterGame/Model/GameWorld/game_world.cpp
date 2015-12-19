@@ -49,7 +49,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 	for (const auto &item : map_data->objects)
 	{
-		if (item.type != "Static")
+		if (item.type != "Level")
 			continue;
 
 		Vec3f position = item.position;
@@ -66,7 +66,10 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 			it = level_shapes.find(model_name);
 		}
 
-		level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::scale_model(it->second, scale), 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+		if (item.scale == 1.0f)
+			level_collision_objects.push_back(Physics3DObject::rigid_body(collision, it->second, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+		else
+			level_collision_objects.push_back(Physics3DObject::rigid_body(collision, Physics3DShape::scale_model(it->second, scale), 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
 	}
 
 	for (auto obj : level_collision_objects)
@@ -96,7 +99,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 		for (const auto &item : map_data->objects)
 		{
-			if (item.type != "Static" || item.fields["no_render"].to_boolean())
+			if (item.type != "Static" && item.type != "Level")
 				continue;
 
 			Vec3f position = item.position;
