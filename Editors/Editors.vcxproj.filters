@@ -82,35 +82,8 @@
     <Filter Include="Controllers\MapEditor\MapScene">
       <UniqueIdentifier>{37cef7f1-21a3-4789-b945-14f360d319c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\Objects">
-      <UniqueIdentifier>{5d7ef0e7-a9f5-4dbb-b83d-85dcef3abe2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controllers\SidePanel">
       <UniqueIdentifier>{a629c759-a44d-46f8-a207-30765c59dd82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\MapLights">
-      <UniqueIdentifier>{db27ec88-9cd1-471a-b273-caccf48fa043}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\MapLightProbes">
-      <UniqueIdentifier>{c99c7606-63d2-4633-9408-080541bdadbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\MapEmitters">
-      <UniqueIdentifier>{87d5b44c-35aa-4b9f-b564-1873c674e70b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\MapMaterials">
-      <UniqueIdentifier>{965cfdfe-8cb0-46cd-9bdc-f12698249070}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\Triggers">
-      <UniqueIdentifier>{dc9dfb71-692a-44b6-8a2f-4b436ddcebe2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\PathNodes">
-      <UniqueIdentifier>{7d3b79cd-3543-4c5d-8d4c-60dc5e8eea42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\Create">
-      <UniqueIdentifier>{395d23fd-d9c9-4ebc-97a7-bb343dd23bca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\MapEditor\SidePanels\Modify">
-      <UniqueIdentifier>{08868b1e-1603-4ee6-b847-c568eaf17fb8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Views\Theme">
       <UniqueIdentifier>{bfe8c56e-819f-420e-a2bd-8085608b2217}</UniqueIdentifier>
@@ -126,6 +99,12 @@
     </Filter>
     <Filter Include="Views\Grid">
       <UniqueIdentifier>{979f5a3a-dd6d-418e-a84a-d5f0a9c8bd34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\MapEditor\SidePanels\Edit">
+      <UniqueIdentifier>{23bde2b1-0f21-472d-922e-a92354a5d6c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\MapEditor">
+      <UniqueIdentifier>{c00e0f92-a8ea-4a68-82a3-be679152088c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -226,41 +205,14 @@
     <ClCompile Include="Controllers\MapEditor\MapScene\map_scene_controller.cpp">
       <Filter>Controllers\MapEditor\MapScene</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp">
       <Filter>Controllers\SidePanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\MapLights</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\MapLightProbes</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\MapEmitters</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\MapMaterials</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\PathNodes</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\Triggers</Filter>
     </ClCompile>
     <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
     </ClCompile>
     <ClCompile Include="Model\MapEditor\Commands\update_map_material_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\Create\create_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\Create</Filter>
-    </ClCompile>
-    <ClCompile Include="Controllers\MapEditor\SidePanels\Modify\modify_controller.cpp">
-      <Filter>Controllers\MapEditor\SidePanels\Modify</Filter>
     </ClCompile>
     <ClCompile Include="Views\Rollout\rollout_button.cpp">
       <Filter>Views\Rollout</Filter>
@@ -294,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="Model\MapEditor\Commands\remove_map_object_command.cpp">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\MapEditor\SidePanels\Edit\map_edit_controller.cpp">
+      <Filter>Controllers\MapEditor\SidePanels\Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,41 +352,14 @@
     <ClInclude Include="Controllers\MapEditor\MapScene\map_scene_controller.h">
       <Filter>Controllers\MapEditor\MapScene</Filter>
     </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\Objects\objects_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h">
       <Filter>Controllers\SidePanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLights\map_lights_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\MapLights</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\MapLightProbes\map_light_probes_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\MapLightProbes</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\MapEmitters\map_emitters_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\MapEmitters</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\MapMaterials\map_materials_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\MapMaterials</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\PathNodes\path_nodes_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\PathNodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\Triggers\triggers_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\Triggers</Filter>
     </ClInclude>
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
     </ClInclude>
     <ClInclude Include="Model\MapEditor\Commands\update_map_material_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\Create\create_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\Create</Filter>
-    </ClInclude>
-    <ClInclude Include="Controllers\MapEditor\SidePanels\Modify\modify_controller.h">
-      <Filter>Controllers\MapEditor\SidePanels\Modify</Filter>
     </ClInclude>
     <ClInclude Include="Views\Rollout\rollout_button.h">
       <Filter>Views\Rollout</Filter>
@@ -468,6 +396,21 @@
     </ClInclude>
     <ClInclude Include="Model\MapEditor\Commands\remove_map_object_command.h">
       <Filter>Model\MapEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\MapEditor\SidePanels\Edit\map_edit_controller.h">
+      <Filter>Controllers\MapEditor\SidePanels\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\MapEditor\map_select_rollout.h">
+      <Filter>Views\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\MapEditor\map_create_rollout.h">
+      <Filter>Views\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\MapEditor\map_object_rollout.h">
+      <Filter>Views\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\MapEditor\map_object_list_rollout.h">
+      <Filter>Views\MapEditor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

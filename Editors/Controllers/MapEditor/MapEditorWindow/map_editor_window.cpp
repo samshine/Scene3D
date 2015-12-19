@@ -6,15 +6,7 @@
 #include "Views/Header/header_menu_view.h"
 #include "Controllers/Workspace/workspace_controller.h"
 #include "Controllers/MapEditor/MapScene/map_scene_controller.h"
-#include "Controllers/MapEditor/SidePanels/Create/create_controller.h"
-#include "Controllers/MapEditor/SidePanels/Modify/modify_controller.h"
-#include "Controllers/MapEditor/SidePanels/Objects/objects_controller.h"
-#include "Controllers/MapEditor/SidePanels/MapLights/map_lights_controller.h"
-#include "Controllers/MapEditor/SidePanels/MapLightProbes/map_light_probes_controller.h"
-#include "Controllers/MapEditor/SidePanels/MapEmitters/map_emitters_controller.h"
-#include "Controllers/MapEditor/SidePanels/MapMaterials/map_materials_controller.h"
-#include "Controllers/MapEditor/SidePanels/Triggers/triggers_controller.h"
-#include "Controllers/MapEditor/SidePanels/PathNodes/path_nodes_controller.h"
+#include "Controllers/MapEditor/SidePanels/Edit/map_edit_controller.h"
 
 using namespace uicore;
 
@@ -48,29 +40,13 @@ MapEditorWindow::MapEditorWindow()
 	header_view->add_right_button("Redo", "Icons/Redo/redo-24.png", []() {});
 
 	auto options = header_view->add_right_menu("Options", "Icons/Menu/menu-24.png", true);
-	options->add_item("Tools", bind_member(this, &MapEditorWindow::on_show_create));
-	options->add_item("Selection", bind_member(this, &MapEditorWindow::on_show_modify));
-	options->add_item("Objects", bind_member(this, &MapEditorWindow::on_show_objects));
-	options->add_item("Lights", bind_member(this, &MapEditorWindow::on_show_lights));
-	options->add_item("Light Probes", bind_member(this, &MapEditorWindow::on_show_light_probes));
-	options->add_item("Emitters", bind_member(this, &MapEditorWindow::on_show_emitters));
-	options->add_item("Materials", bind_member(this, &MapEditorWindow::on_show_materials));
-	options->add_item("Triggers", bind_member(this, &MapEditorWindow::on_show_triggers));
-	options->add_item("Path Nodes", bind_member(this, &MapEditorWindow::on_show_path_nodes));
+	options->add_item("Edit", bind_member(this, &MapEditorWindow::on_show_edit));
 
 	scene_controller = std::make_shared<MapSceneController>();
-	create_controller = std::make_shared<CreateController>();
-	modify_controller = std::make_shared<ModifyController>();
-	objects_controller = std::make_shared<ObjectsController>();
-	lights_controller = std::make_shared<MapLightsController>();
-	light_probes_controller = std::make_shared<MapLightProbesController>();
-	emitters_controller = std::make_shared<MapEmittersController>();
-	materials_controller = std::make_shared<MapMaterialsController>();
-	triggers_controller = std::make_shared<TriggersController>();
-	path_nodes_controller = std::make_shared<PathNodesController>();
+	edit_controller = std::make_shared<MapEditController>();
 
 	workspace_controller->set_center(scene_controller);
-	workspace_controller->set_docked(create_controller);
+	workspace_controller->set_docked(edit_controller);
 }
 
 void MapEditorWindow::update_window_title()
@@ -124,61 +100,7 @@ void MapEditorWindow::on_save_as()
 	}
 }
 
-/*
-void MapEditorWindow::on_change_model()
+void MapEditorWindow::on_show_edit()
 {
-	OpenFileDialog dialog(view.get());
-	dialog.set_title("Select Model");
-	dialog.add_filter("Autodesk FBX files (*.fbx)", "*.fbx", true);
-	dialog.add_filter("All files (*.*)", "*.*", false);
-	dialog.set_filename(MapAppModel::instance()->desc.fbx_filename);
-	if (dialog.show())
-	{
-		MapAppModel::instance()->undo_system.execute<SetMapFbxFilenameCommand>(dialog.get_filename());
-	}
-}
-*/
-void MapEditorWindow::on_show_create()
-{
-	workspace_controller->set_docked(create_controller);
-}
-
-void MapEditorWindow::on_show_modify()
-{
-	workspace_controller->set_docked(modify_controller);
-}
-
-void MapEditorWindow::on_show_objects()
-{
-	workspace_controller->set_docked(objects_controller);
-}
-
-void MapEditorWindow::on_show_lights()
-{
-	workspace_controller->set_docked(lights_controller);
-}
-
-void MapEditorWindow::on_show_light_probes()
-{
-	workspace_controller->set_docked(light_probes_controller);
-}
-
-void MapEditorWindow::on_show_emitters()
-{
-	workspace_controller->set_docked(emitters_controller);
-}
-
-void MapEditorWindow::on_show_materials()
-{
-	workspace_controller->set_docked(materials_controller);
-}
-
-void MapEditorWindow::on_show_triggers()
-{
-	workspace_controller->set_docked(triggers_controller);
-}
-
-void MapEditorWindow::on_show_path_nodes()
-{
-	workspace_controller->set_docked(path_nodes_controller);
+	workspace_controller->set_docked(edit_controller);
 }
