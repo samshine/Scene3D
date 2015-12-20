@@ -32,6 +32,7 @@ cbuffer Uniforms
 	uint num_tiles_x;
 	uint num_tiles_y;
 	uint padding; // 16 byte boundary alignment
+	float4 scene_ambience;
 }
 StructuredBuffer<Light> lights;
 
@@ -105,8 +106,9 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	float4 normal_and_z = normal_z.Load(texelpos);
 	float2 glossiness_and_specular_level = specular_level.Load(texelpos).xy;
 
-	float4 material_diffuse_color = diffuse.Load(texelpos);
-	float3 material_specular_color = specular.Load(texelpos).xyz;
+	float4 black_bias = float4(0.003, 0.003, 0.003, 0.0); // Bias a little as there's no perfect black
+	float4 material_diffuse_color = diffuse.Load(texelpos) + black_bias; 
+	float3 material_specular_color = specular.Load(texelpos).xyz + black_bias.xyz;
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	float3 material_self_illumination = self_illumination.Load(texelpos).xyz;
@@ -119,7 +121,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 #else
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
-	float3 color = material_self_illumination;
+	float3 color = material_self_illumination + material_diffuse_color * scene_ambience.xyz;
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;

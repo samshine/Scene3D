@@ -52,6 +52,7 @@ private:
 		unsigned int num_tiles_x;
 		unsigned int num_tiles_y;
 		unsigned int padding;
+		uicore::Vec4f scene_ambience;
 	};
 
 	uicore::UniformVector<Uniforms> compute_uniforms;

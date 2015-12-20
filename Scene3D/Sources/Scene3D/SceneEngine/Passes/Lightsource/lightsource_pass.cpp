@@ -107,6 +107,7 @@ void LightsourcePass::upload()
 	uniforms.num_lights = num_lights;
 	uniforms.num_tiles_x = num_tiles_x;
 	uniforms.num_tiles_y = num_tiles_y;
+	uniforms.scene_ambience = Vec4f(0.02f, 0.02f, 0.022f, 0.0f);
 	compute_uniforms.upload_data(inout.gc, &uniforms, 1);
 
 	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
