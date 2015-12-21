@@ -12,10 +12,15 @@ MenuScreenController::MenuScreenController()
 	font_desc.set_line_height(40.0f);
 	font = Font::create(font_desc, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
+	FontDescription font_desc_h1;
+	font_desc_h1.set_height(50.0f);
+	font_desc_h1.set_line_height(100.0f);
+	font_h1 = Font::create(font_desc_h1, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
+
 	scene = Scene::create(scene_engine());
 	scene_camera = SceneCamera::create(scene);
 	scene_camera->set_position(Vec3f(0.0f, 1.8f, -3.0f));
-	//scene_camera->set_orientation(Quaternionf(0.0f, 180.0f, 0.0f, angle_degrees, order_YXZ));
+	scene_camera->set_orientation(Quaternionf(10.0f, 22.0f, 4.0f, angle_degrees, order_YXZ));
 
 	scene->show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -36,18 +41,36 @@ MenuScreenController::MenuScreenController()
 	}
 	scene->set_skybox_gradient(gradient);
 
-	auto model = SceneModel::create(scene, "Models/Liandri/liandri.cmodel");
-	map_object = SceneObject::create(scene, model);
+	auto map_data = MapData::load("Resources/Assets/Levels/Liandri/liandri2.cmap");
+	for (const auto &item : map_data->objects)
+	{
+		if (item.type != "Static" && item.type != "Level")
+			continue;
+
+		Vec3f position = item.position;
+		Vec3f scale = Vec3f(item.scale);
+		Vec3f rotate(item.dir, item.up, item.tilt);
+		std::string model_name = item.mesh;
+		std::string animation_name = item.animation;
+		scene_objects.push_back(SceneObject::create(scene, SceneModel::create(scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		scene_objects.back()->play_animation(animation_name, true);
+	}
+
+	music_player.play("Resources/Assets/Music/menu.ogg", true);
 }
 
 void MenuScreenController::update()
 {
+	fade_time = std::min(fade_time + game_time().get_time_elapsed() * 2.0f, 1.0f);
+
 	t = std::fmod(t + game_time().get_time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
-	scene_camera->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -13.0f - 3.0f * t2));
+	scene_camera->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -12.0f - 3.0f * t2));
 
 	scene_viewport()->set_camera(scene_camera);
+	for (const auto &item : scene_objects)
+		item->update(game_time().get_time_elapsed());
 	scene_viewport()->update(gc(), game_time().get_time_elapsed());
 	scene_viewport()->render(gc());
 
@@ -62,15 +85,31 @@ void MenuScreenController::update()
 
 	canvas()->begin();
 
+	Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, 0.2f)));
+
+	auto font_metrics_h1 = font_h1->font_metrics(canvas());
 	auto font_metrics = font->font_metrics(canvas());
+	float line_height_h1 = font_metrics_h1.line_height();
 	float line_height = font_metrics.line_height();
+
+	{
+		float y = canvas()->size().height / 4.0f;
+		std::string str = "Shooter Game!";
+		float advance_width = font_h1->measure_text(canvas(), str).advance.width;
+		float x = (canvas()->size().width - advance_width) * 0.5f;
+		font_h1->draw_text(canvas(), x + 2.0f, y + 2.0f, str, Colorf::black);
+		font_h1->draw_text(canvas(), x, y, str, Colorf::palegoldenrod);
+	}
+
 	float y = (canvas()->size().height - 5.0f * line_height) * 0.5f;
+
 	int i = 0;
 	for (const auto &str : { "New Game", "Join Game", "Host Game", "Options", "Quit" })
 	{
 		float advance_width = font->measure_text(canvas(), str).advance.width;
 		float x = (canvas()->size().width - advance_width) * 0.5f;
-		font->draw_text(canvas(), x, y, str, i == current_menu_index ? Colorf::white : Colorf::gray50);
+		font->draw_text(canvas(), x + 2.0f, y + 2.0f, str, Colorf::black);
+		font->draw_text(canvas(), x, y, str, i == current_menu_index ? Colorf::floralwhite : Colorf::lightsteelblue);
 
 		if (Rectf::xywh(x, y - font_metrics.ascent(), advance_width, font_metrics.height()).contains(window()->mouse()->position()))
 		{
@@ -83,6 +122,9 @@ void MenuScreenController::update()
 		i++;
 	}
 
+	if (fade_time < 1.0f)
+		Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, clamp(1.0f - fade_time, 0.0f, 1.0f))));
+
 	canvas()->end();
 
 	up_was_pressed = up_pressed;
@@ -94,6 +136,7 @@ void MenuScreenController::update()
 		switch (current_menu_index)
 		{
 		case 0:
+			music_player.stop();
 			present_controller(std::make_shared<GameScreenController>());
 			break;
 		case 1:
