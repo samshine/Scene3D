@@ -19,8 +19,8 @@ public:
 	float get_tick_interpolation_time() const override;
 	float get_updates_per_second() const override;
 
-	int get_receive_tick_time() const override { return client_tick_time; }
-	int get_arrival_tick_time() const override { return server_arrival_tick_time; }
+	int get_receive_tick_time() const override;
+	int get_arrival_tick_time() const override;
 
 	void update() override;
 	void reset() override;
@@ -33,14 +33,11 @@ private:
 	uicore::GameTime game_time;
 	std::shared_ptr<GameNetwork> network;
 
-	int extra_ticks = 0;
-	int server_arrival_tick_time = 0;
-
 	int server_tick_time = 0;
 	int client_tick_time = 0;
-
-	int ping = 0;
-	int jitter = 0;
+	int last_client_tick_time = 0;
+	int jitter_ticks = 0;
+	int ping_ticks = 0;
 
 	int next_send_ping = 0;
 
