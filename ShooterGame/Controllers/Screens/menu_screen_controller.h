@@ -19,7 +19,7 @@ private:
 
 	uicore::FontPtr font, font_h1;
 
-	float fade_time = -4.0f;
+	float fade_time = -2.0f;
 	float t = 0.0f;
 
 	int current_menu_index = 0;
