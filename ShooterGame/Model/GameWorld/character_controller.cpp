@@ -131,7 +131,7 @@ bool CharacterController::step_move(uicore::Vec3f move_vec)
 
 		auto hits = collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd, [](const Physics3DHit &result)
 		{
-			return result.object->data<PlayerPawn>() == nullptr;
+			return (result.object->static_object() || result.object->kinematic_object()) && result.object->data<PlayerPawn>() == nullptr;
 		});
 
 		if (!hits.empty())
@@ -240,7 +240,7 @@ void CharacterController::apply_velocity(float tick_elapsed)
 		bool found = false;
 		auto hits = collision_world->sweep_test_all_sorted(collision_shape, from_pos, orientation, to_pos, orientation, allowed_ccd, [](const Physics3DHit &result)
 		{
-			return result.object->data<PlayerPawn>() == nullptr;
+			return (result.object->static_object() || result.object->kinematic_object()) && result.object->data<PlayerPawn>() == nullptr;
 		});
 		for (const auto &hit : hits)
 		{
@@ -268,22 +268,24 @@ void CharacterController::apply_velocity(float tick_elapsed)
 
 void CharacterController::apply_thrust(float tick_elapsed)
 {
+	velocity -= velocity * air_resistance * tick_elapsed;
+
 	Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
 	Vec3f move_vector = move_direction.rotate_vector(Vec3f(thrust_vec.x, 0.0f, thrust_vec.y));
 
-	velocity -= velocity * air_resistance * tick_elapsed;
-
 	if (flying)
 	{
-		move_vector *= air_movement;
+		float y = velocity.y;
+		velocity.y = 0.0f;
 
 		float fly_speed = velocity.length();
 
-		Vec3f new_velocity = velocity + move_vector * acceleration * tick_elapsed;
+		Vec3f new_velocity = velocity + move_vector * acceleration * air_movement * tick_elapsed;
 		float new_speed = new_velocity.length();
 		new_velocity.normalize();
 
 		velocity = new_velocity * std::min(std::max(fly_speed, run_speed * air_movement), new_speed);
+		velocity.y = y;
 	}
 	else
 	{
