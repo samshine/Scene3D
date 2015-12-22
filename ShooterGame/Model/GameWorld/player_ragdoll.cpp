@@ -13,39 +13,53 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	//auto model = SceneModel::create(world->client->scene, "Models/Kachujin/Kachujin.cmodel");
 	//scene_object = SceneObject::create(world->client->scene, model);
 
-	objects[part_torso] = scene_box(Vec3f(0.35f, 0.625f, 0.275f));
-	objects[part_head] = scene_box(Vec3f(0.175f, 0.2f, 0.2f));
-	objects[part_upper_arm_right] = scene_capsule(0.1f, 0.55f);
-	objects[part_upper_arm_left] = scene_capsule(0.1f, 0.55f);
-	objects[part_lower_arm_right] = scene_capsule(0.125f, 0.8f);
-	objects[part_lower_arm_left] = scene_capsule(0.125f, 0.8f);
-	objects[part_upper_leg_right] = scene_capsule(0.15f, 0.9f);
-	objects[part_upper_leg_left] = scene_capsule(0.15f, 0.9f);
-	objects[part_lower_leg_right] = scene_capsule(0.125f, 0.95f);
-	objects[part_lower_leg_left] = scene_capsule(0.125f, 0.95f);
+	float scale = 0.55f;
+	float margin = 0.1f * scale;
 
-	float margin = 0.1f;
-	shapes[part_torso] = Physics3DShape::box(Vec3f(0.35f, 0.625f, 0.275f) - margin);
-	shapes[part_head] = Physics3DShape::box(Vec3f(0.175f, 0.2f, 0.2f) - margin);
-	shapes[part_upper_arm_right] = Physics3DShape::capsule(0.1f, 0.55f - 0.1f - margin);
-	shapes[part_upper_arm_left] = Physics3DShape::capsule(0.1f, 0.55f - 0.1f - margin);
-	shapes[part_lower_arm_right] = Physics3DShape::capsule(0.125f, 0.8f - 0.125f - margin);
-	shapes[part_lower_arm_left] = Physics3DShape::capsule(0.125f, 0.8f - 0.125f - margin);
-	shapes[part_upper_leg_right] = Physics3DShape::capsule(0.15f, 0.9f - 0.15f - margin);
-	shapes[part_upper_leg_left] = Physics3DShape::capsule(0.15f, 0.9f - 0.15f - margin);
-	shapes[part_lower_leg_right] = Physics3DShape::capsule(0.125f, 0.95f - 0.125f - margin);
-	shapes[part_lower_leg_left] = Physics3DShape::capsule(0.125f, 0.95f - 0.125f - margin);
+	Vec3f sizes[total_parts];
+	sizes[part_torso] = Vec3f(0.35f, 0.625f, 0.275f) * scale;
+	sizes[part_head] = Vec3f(0.175f, 0.2f, 0.2f) * scale;
+	sizes[part_upper_arm_right] = Vec3f(0.1f, 0.55f, 0.0f) * scale;
+	sizes[part_upper_arm_left] = Vec3f(0.1f, 0.55f, 0.0f) * scale;
+	sizes[part_lower_arm_right] = Vec3f(0.125f, 0.8f, 0.0f) * scale;
+	sizes[part_lower_arm_left] = Vec3f(0.125f, 0.8f, 0.0f) * scale;
+	sizes[part_upper_leg_right] = Vec3f(0.15f, 0.9f, 0.0f) * scale;
+	sizes[part_upper_leg_left] = Vec3f(0.15f, 0.9f, 0.0f) * scale;
+	sizes[part_lower_leg_right] = Vec3f(0.125f, 0.95f, 0.0f) * scale;
+	sizes[part_lower_leg_left] = Vec3f(0.125f, 0.95f, 0.0f) * scale;
 
-	mass[part_torso] = 0.7f * 1.25f * 0.55f * 8.0f;
-	mass[part_head] = 0.35f * 0.4f * 0.4f * 8.0f;
-	mass[part_upper_arm_right] = 0.2f * 1.1f * 0.2f * 4.0f;
-	mass[part_upper_arm_left] = 0.2f * 1.1f * 0.2f * 4.0f;
-	mass[part_lower_arm_right] = 0.25f * 1.6f * 0.25f * 4.0f;
-	mass[part_lower_arm_left] = 0.25f * 1.6f * 0.25f * 4.0f;
-	mass[part_upper_leg_right] = 0.3f * 1.8f * 0.3f * 4.0f;
-	mass[part_upper_leg_left] = 0.3f * 1.8f * 0.3f * 4.0f;
-	mass[part_lower_leg_right] = 0.25f * 1.9f * 0.25f * 4.0f;
-	mass[part_lower_leg_left] = 0.25f * 1.9f * 0.25f * 4.0f;
+	objects[part_torso] = scene_box(sizes[part_torso]);
+	objects[part_head] = scene_box(sizes[part_head]);
+	objects[part_upper_arm_right] = scene_capsule(sizes[part_upper_arm_right].x, sizes[part_upper_arm_right].y);
+	objects[part_upper_arm_left] = scene_capsule(sizes[part_upper_arm_left].x, sizes[part_upper_arm_left].y);
+	objects[part_lower_arm_right] = scene_capsule(sizes[part_lower_arm_right].x, sizes[part_lower_arm_right].y);
+	objects[part_lower_arm_left] = scene_capsule(sizes[part_lower_arm_left].x, sizes[part_lower_arm_left].y);
+	objects[part_upper_leg_right] = scene_capsule(sizes[part_upper_leg_right].x, sizes[part_upper_leg_right].y);
+	objects[part_upper_leg_left] = scene_capsule(sizes[part_upper_leg_left].x, sizes[part_upper_leg_left].y);
+	objects[part_lower_leg_right] = scene_capsule(sizes[part_lower_leg_right].x, sizes[part_lower_leg_right].y);
+	objects[part_lower_leg_left] = scene_capsule(sizes[part_lower_leg_left].x, sizes[part_lower_leg_left].y);
+
+	shapes[part_torso] = Physics3DShape::box(sizes[part_torso] - margin);
+	shapes[part_head] = Physics3DShape::box(sizes[part_head] - margin);
+	shapes[part_upper_arm_right] = Physics3DShape::capsule(sizes[part_upper_arm_right].x, sizes[part_upper_arm_right].y - sizes[part_upper_arm_right].x - margin);
+	shapes[part_upper_arm_left] = Physics3DShape::capsule(sizes[part_upper_arm_left].x, sizes[part_upper_arm_left].y - sizes[part_upper_arm_left].x - margin);
+	shapes[part_lower_arm_right] = Physics3DShape::capsule(sizes[part_lower_arm_right].x, sizes[part_lower_arm_right].y - sizes[part_lower_arm_right].x - margin);
+	shapes[part_lower_arm_left] = Physics3DShape::capsule(sizes[part_lower_arm_left].x, sizes[part_lower_arm_left].y - sizes[part_lower_arm_left].x - margin);
+	shapes[part_upper_leg_right] = Physics3DShape::capsule(sizes[part_upper_leg_right].x, sizes[part_upper_leg_right].y - sizes[part_upper_leg_right].x - margin);
+	shapes[part_upper_leg_left] = Physics3DShape::capsule(sizes[part_upper_leg_left].x, sizes[part_upper_leg_left].y - sizes[part_upper_leg_left].x - margin);
+	shapes[part_lower_leg_right] = Physics3DShape::capsule(sizes[part_lower_leg_right].x, sizes[part_lower_leg_right].y - sizes[part_lower_leg_right].x - margin);
+	shapes[part_lower_leg_left] = Physics3DShape::capsule(sizes[part_lower_leg_left].x, sizes[part_lower_leg_left].y - sizes[part_lower_leg_left].x - margin);
+
+	mass[part_torso] = sizes[part_torso].x * sizes[part_torso].y * sizes[part_torso].z * 16.0f;
+	mass[part_head] = sizes[part_head].x * sizes[part_head].y * sizes[part_head].z * 16.0f;
+	mass[part_upper_arm_right] = sizes[part_upper_arm_right].x * sizes[part_upper_arm_right].y * sizes[part_upper_arm_right].x * 8.0f;
+	mass[part_upper_arm_left] = sizes[part_upper_arm_left].x * sizes[part_upper_arm_left].y * sizes[part_upper_arm_left].x * 8.0f;
+	mass[part_lower_arm_right] = sizes[part_lower_arm_right].x * sizes[part_lower_arm_right].y * sizes[part_lower_arm_right].x * 8.0f;
+	mass[part_lower_arm_left] = sizes[part_lower_arm_left].x * sizes[part_lower_arm_left].y * sizes[part_lower_arm_left].x * 8.0f;
+	mass[part_upper_leg_right] = sizes[part_upper_leg_right].x * sizes[part_upper_leg_right].y * sizes[part_upper_leg_right].x * 8.0f;
+	mass[part_upper_leg_left] = sizes[part_upper_leg_left].x * sizes[part_upper_leg_left].y * sizes[part_upper_leg_left].x * 8.0f;
+	mass[part_lower_leg_right] = sizes[part_lower_leg_right].x * sizes[part_lower_leg_right].y * sizes[part_lower_leg_right].x * 8.0f;
+	mass[part_lower_leg_left] = sizes[part_lower_leg_left].x * sizes[part_lower_leg_left].y * sizes[part_lower_leg_left].x * 8.0f;
 
 	for (int i = 0; i < total_parts; i++)
 	{
@@ -54,15 +68,15 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 		parts[i] = Physics3DObject::rigid_body(world->collision, shapes[i], mass[i], pos, orientation);
 	}
 
-	calc_constraint_location(joint_head, part_torso, Vec3f(0, 0.625f, 0), part_head, Vec3f(0, -0.2f, 0), Quaternionf(1, 0, 0, 0));
-	calc_constraint_location(joint_upper_arm_right_lower_arm_right, part_upper_arm_left, Vec3f(0, 0.275f, 0), part_lower_arm_left, Vec3f(0, -0.4f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
-	calc_constraint_location(joint_upper_arm_left_lower_arm_left, part_upper_arm_right, Vec3f(0, 0.275f, 0), part_lower_arm_right, Vec3f(0, -0.4f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
-	calc_constraint_location(joint_upper_leg_left_lower_leg_left, part_upper_leg_left, Vec3f(0, 0.45f, 0), part_lower_leg_left, Vec3f(0, -0.475f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
-	calc_constraint_location(joint_upper_leg_right_lower_leg_right, part_upper_leg_right, Vec3f(0, 0.45f, 0), part_lower_leg_right, Vec3f(0, -0.475f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
-	calc_constraint_location(joint_torso_upper_leg_left, part_torso, Vec3f(0.2f, -0.625, 0), part_upper_leg_left, Vec3f(0, -0.45f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
-	calc_constraint_location(joint_torso_upper_leg_right, part_torso, Vec3f(-0.2f, -0.625, 0), part_upper_leg_right, Vec3f(0, -0.45f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
-	calc_constraint_location(joint_torso_upper_arm_right, part_torso, Vec3f(-0.35f, 0.55f, 0), part_upper_arm_right, Vec3f(0, -0.275f, 0), Quaternionf(0, 0, 0, 1));
-	calc_constraint_location(joint_torso_upper_arm_left, part_torso, Vec3f(0.35f, 0.55f, 0), part_upper_arm_left, Vec3f(0, -0.275f, 0), Quaternionf(0, 0, 0, 1));
+	calc_constraint_location(joint_head, part_torso, Vec3f(0, sizes[part_torso].y, 0), part_head, Vec3f(0, -sizes[part_head].y, 0), Quaternionf(1, 0, 0, 0));
+	calc_constraint_location(joint_upper_arm_left_lower_arm_left, part_upper_arm_left, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
+	calc_constraint_location(joint_upper_arm_right_lower_arm_right, part_upper_arm_right, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
+	calc_constraint_location(joint_upper_leg_left_lower_leg_left, part_upper_leg_left, Vec3f(0, sizes[part_upper_leg_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_leg_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
+	calc_constraint_location(joint_upper_leg_right_lower_leg_right, part_upper_leg_right, Vec3f(0, sizes[part_upper_leg_right].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_leg_right].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
+	calc_constraint_location(joint_torso_upper_leg_left, part_torso, Vec3f(sizes[part_torso].x - sizes[part_upper_leg_left].x, -sizes[part_torso].y, 0), part_upper_leg_left, Vec3f(0, -sizes[part_upper_leg_left].y * 0.5f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
+	calc_constraint_location(joint_torso_upper_leg_right, part_torso, Vec3f(-sizes[part_torso].x + sizes[part_upper_leg_right].x, -sizes[part_torso].y, 0), part_upper_leg_right, Vec3f(0, -sizes[part_upper_leg_right].y * 0.5f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
+	calc_constraint_location(joint_torso_upper_arm_left, part_torso, Vec3f(sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_left].x, 0), part_upper_arm_left, Vec3f(0, -sizes[part_upper_arm_left].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
+	calc_constraint_location(joint_torso_upper_arm_right, part_torso, Vec3f(-sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_right].x, 0), part_upper_arm_right, Vec3f(0, -sizes[part_upper_arm_right].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
 	
 	joints[joint_head] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_head], joints_pos_a[joint_head], joints_pos_b[joint_head], joints_rotate_a[joint_head], joints_rotate_b[joint_head]);
 	//joints[joint_head]->set_cone_twist_limit(0.0f, 0.7f, 0.5f);
