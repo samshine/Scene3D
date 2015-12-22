@@ -4,18 +4,13 @@
 
 using namespace uicore;
 
-GameScreenController::GameScreenController()
+GameScreenController::GameScreenController(std::string hostname, std::string port, bool host_game)
 {
 	set_cursor_hidden();
 
-	if (!client_game)
-	{
-		std::string hostname = "localhost";
-		std::string port = "5004";
-
+	if (host_game)
 		server_game = std::make_unique<GameWorld>(hostname, port);
-		client_game = std::make_unique<GameWorld>(hostname, port, std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache()));
-	}
+	client_game = std::make_unique<GameWorld>(!hostname.empty() ? hostname : "localhost", port, std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache()));
 }
 
 void GameScreenController::update()

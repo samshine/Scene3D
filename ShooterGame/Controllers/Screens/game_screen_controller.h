@@ -7,7 +7,7 @@
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController();
+	GameScreenController(std::string hostname, std::string port, bool host_game);
 	void update() override;
 
 private:
