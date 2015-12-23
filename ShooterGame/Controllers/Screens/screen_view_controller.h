@@ -24,6 +24,9 @@ public:
 	void present_controller(std::shared_ptr<ScreenViewController> controller);
 	void exit_game();
 
+protected:
+	uicore::SlotContainer slots;
+
 private:
 	bool _cursor_hidden = false;
 };

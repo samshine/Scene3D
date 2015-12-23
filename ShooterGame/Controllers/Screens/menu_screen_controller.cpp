@@ -7,6 +7,10 @@ using namespace uicore;
 
 MenuScreenController::MenuScreenController()
 {
+	slots.connect(window()->keyboard()->sig_key_down(), this, &MenuScreenController::on_key_down);
+	slots.connect(window()->mouse()->sig_key_up(), this, &MenuScreenController::on_mouse_up);
+	slots.connect(window()->mouse()->sig_pointer_move(), this, &MenuScreenController::on_mouse_move);
+
 	FontDescription font_desc;
 	font_desc.set_height(30.0f);
 	font_desc.set_line_height(40.0f);
@@ -57,6 +61,147 @@ MenuScreenController::MenuScreenController()
 	}
 
 	music_player.play("Resources/Assets/Music/menu.ogg", true);
+
+	create_menus();
+}
+
+void MenuScreenController::create_menus()
+{
+	main_menu = {
+		{ "New Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("localhost", "5004", true)); } },
+		{ "Join Game", [this]() { push_menu(&join_menu); } },
+		{ "Host Game", [this]() { push_menu(&host_menu); } },
+		{ "Options", [this]() { push_menu(&options_menu); } },
+		{ "Quit", [this]() { exit_game(); } }
+	};
+
+	join_menu = {
+		{ "Join Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false)); } },
+		{ "Player Name:", [this]() { begin_edit(&player_name); }, [this]() { return player_name; } },
+		{ "Server:", [this]() { begin_edit(&server); }, [this]() { return server; } },
+		{ "Port:", [this]() { begin_edit(&port); }, [this]() { return port; } },
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	host_menu = {
+		{ "Create Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false)); } },
+		{ "Player Name:", [this]() { begin_edit(&player_name); }, [this]() { return player_name; } },
+		{ "Port:", [this]() { begin_edit(&port); }, [this]() { return port; } },
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	options_menu = {
+		{ "Graphics", [this]() { push_menu(&graphics_menu); } },
+		{ "Audio", [this]() { push_menu(&audio_menu); } },
+		{ "Controls", [this]() { push_menu(&controls_menu); } },
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	graphics_menu = {
+		{ "Quality:", [this]() {}, [this]() { return "High"; } },
+		{ "Gamma:", [this]() {}, [this]() { return "2.2"; } },
+		{ "V-Sync:", [this]() {}, [this]() { return "On"; } },
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	audio_menu = {
+		{ "Master Volume:", [this]() {}, [this]() { return "100"; } },
+		{ "Music Volume:", [this]() {}, [this]() { return "75"; } },
+		{ "SFX Volume:", [this]() {}, [this]() { return "100"; } },
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	controls_menu = {
+		{ "Back", [this]() { pop_menu(); } }
+	};
+
+	menu_stack.push(&main_menu);
+}
+
+void MenuScreenController::push_menu(GameMenu *menu)
+{
+	menu_stack.push(menu);
+	item_boxes.clear();
+	current_menu_index = 0;
+}
+
+void MenuScreenController::pop_menu()
+{
+	menu_stack.pop();
+	item_boxes.clear();
+	current_menu_index = 0;
+}
+
+void MenuScreenController::begin_edit(std::string *value)
+{
+	edit_mode = true;
+	edit_value = value;
+}
+
+void MenuScreenController::on_key_down(const uicore::InputEvent &e)
+{
+	if (edit_mode)
+	{
+		if (e.id == keycode_enter)
+			edit_mode = false;
+		else if (e.id == keycode_backspace && !edit_value->empty())
+			edit_value->pop_back();
+		else if (!e.str.empty())
+			edit_value->append(e.str);
+	}
+	else
+	{
+		if (e.id == keycode_up)
+		{
+			current_menu_index = std::max(current_menu_index - 1, 0);
+		}
+		else if (e.id == keycode_down)
+		{
+			current_menu_index = std::min(current_menu_index + 1, (int)menu_stack.top()->size() - 1);
+		}
+		else if (e.id == keycode_enter)
+		{
+			menu_stack.top()->at(current_menu_index).click();
+		}
+	}
+}
+
+void MenuScreenController::on_mouse_up(const uicore::InputEvent &e)
+{
+	if (edit_mode)
+		return;
+
+	if (e.id == mouse_left)
+	{
+		int i = 0;
+		for (auto &item_box : item_boxes)
+		{
+			if (item_box.contains(window()->mouse()->position()))
+			{
+				current_menu_index = i;
+				menu_stack.top()->at(current_menu_index).click();
+				break;
+			}
+			i++;
+		}
+	}
+}
+
+void MenuScreenController::on_mouse_move(const uicore::InputEvent &e)
+{
+	if (edit_mode)
+		return;
+
+	int i = 0;
+	for (auto &item_box : item_boxes)
+	{
+		if (item_box.contains(window()->mouse()->position()))
+		{
+			current_menu_index = i;
+			break;
+		}
+		i++;
+	}
 }
 
 void MenuScreenController::update()
@@ -74,31 +219,11 @@ void MenuScreenController::update()
 	scene_viewport()->update(gc(), game_time().get_time_elapsed());
 	scene_viewport()->render(gc());
 
-	std::vector<std::string> menu;
-	switch (current_menu)
-	{
-	default:
-	case Menu::main: menu = main_menu; break;
-	case Menu::join: menu = join_menu; break;
-	case Menu::host: menu = host_menu; break;
-	case Menu::options: menu = options_menu; break;
-	case Menu::graphics: menu = graphics_menu; break;
-	case Menu::audio: menu = audio_menu; break;
-	case Menu::controls: menu = controls_menu; break;
-	}
-
-	bool up_pressed = window()->keyboard()->keycode(keycode_up);
-	bool down_pressed = window()->keyboard()->keycode(keycode_down);
-	bool mouse_pressed = window()->mouse()->keycode(mouse_left);
-	bool enter_pressed = window()->keyboard()->keycode(keycode_enter);
-	if (!edit_mode && up_pressed && !up_was_pressed)
-		current_menu_index = std::max(current_menu_index - 1, 0);
-	else if (!edit_mode && down_pressed && !down_was_pressed)
-		current_menu_index = std::min(current_menu_index + 1, (int)menu.size() - 1);
-
 	canvas()->begin();
 
 	Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, 0.2f)));
+
+	const auto &menu = *menu_stack.top();
 
 	auto font_metrics_h1 = font_h1->font_metrics(canvas());
 	auto font_metrics = font->font_metrics(canvas());
@@ -114,60 +239,42 @@ void MenuScreenController::update()
 		font_h1->draw_text(canvas(), x, y, str, Colorf::palegoldenrod);
 	}
 
+	blink = std::fmod(blink + game_time().get_time_elapsed() * 2.0f, 2.0f);
+
 	float y = (canvas()->size().height - 5.0f * line_height) * 0.5f;
 
 	int i = 0;
-	for (const auto &str : menu)
+	item_boxes.clear();
+	for (const auto &item : menu)
 	{
 		std::string edit_text;
 
-		float advance_width = font->measure_text(canvas(), str).advance.width;
+		float advance_width = font->measure_text(canvas(), item.name).advance.width;
 		float edit_advance_width = 0.0f;
-		if (str.back() == ':')
+		if (item.value)
 		{
-			if ((current_menu == Menu::join || current_menu == Menu::host) && i == 1)
-				edit_text = player_name;
-			else if (current_menu == Menu::join && i == 2)
-				edit_text = server;
-			else if (current_menu == Menu::join && i == 3)
-				edit_text = port;
-			else if (current_menu == Menu::host && i == 2)
-				edit_text = port;
-			else if (current_menu == Menu::graphics && i == 0)
-				edit_text = "High";
-			else if (current_menu == Menu::graphics && i == 1)
-				edit_text = "2.2";
-			else if (current_menu == Menu::graphics && i == 2)
-				edit_text = "On";
-			else if (current_menu == Menu::audio && i == 0)
-				edit_text = "100";
-			else if (current_menu == Menu::audio && i == 1)
-				edit_text = "75";
-			else if (current_menu == Menu::audio && i == 2)
-				edit_text = "100";
+			edit_text = item.value();
+
+			if (i == current_menu_index && edit_mode)
+				edit_text += "_";
 
 			edit_advance_width = font->measure_text(canvas(), edit_text).advance.width;
 			advance_width = std::max(400.0f, advance_width + edit_advance_width + 30.0f);
+
+			if (i == current_menu_index && edit_mode && blink >= 1.0f)
+				edit_text.pop_back();
 		}
 
 		float x0 = (canvas()->size().width - advance_width) * 0.5f;
 		float x1 = (canvas()->size().width + advance_width) * 0.5f - edit_advance_width;
 
-		font->draw_text(canvas(), x0 + 2.0f, y + 2.0f, str, Colorf::black);
-		font->draw_text(canvas(), x0, y, str, i == current_menu_index && !edit_mode ? Colorf::floralwhite : Colorf::lightsteelblue);
+		font->draw_text(canvas(), x0 + 2.0f, y + 2.0f, item.name, Colorf::black);
+		font->draw_text(canvas(), x0, y, item.name, i == current_menu_index && !edit_mode ? Colorf::floralwhite : Colorf::lightsteelblue);
 
 		font->draw_text(canvas(), x1 + 2.0f, y + 2.0f, edit_text, Colorf::black);
 		font->draw_text(canvas(), x1, y, edit_text, i == current_menu_index && edit_mode ? Colorf::floralwhite : Colorf::lightsteelblue);
 
-		if (!edit_mode &&  Rectf::xywh(x0, y - font_metrics.ascent(), advance_width, font_metrics.height()).contains(window()->mouse()->position()))
-		{
-			if (!mouse_pressed && mouse_was_pressed)
-			{
-				enter_was_pressed = false;
-				enter_pressed = true;
-			}
-			current_menu_index = i;
-		}
+		item_boxes.push_back(Rectf::xywh(x0, y - font_metrics.ascent(), advance_width, font_metrics.height()));
 
 		y += line_height;
 		i++;
@@ -177,133 +284,4 @@ void MenuScreenController::update()
 		Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, clamp(1.0f - fade_time, 0.0f, 1.0f))));
 
 	canvas()->end();
-
-	if (enter_pressed && !enter_was_pressed)
-	{
-		if (current_menu == Menu::main)
-		{
-			switch (current_menu_index)
-			{
-			case 0:
-				music_player.stop();
-				present_controller(std::make_shared<GameScreenController>("localhost", "5004", true));
-				break;
-			case 1:
-				current_menu = Menu::join;
-				current_menu_index = 0;
-				break;
-			case 2:
-				current_menu = Menu::host;
-				current_menu_index = 0;
-				break;
-			case 3:
-				current_menu = Menu::options;
-				current_menu_index = 0;
-				break;
-			case 4:
-				exit_game();
-				break;
-			}
-		}
-		else if (current_menu == Menu::join)
-		{
-			switch (current_menu_index)
-			{
-			case 0:
-				music_player.stop();
-				present_controller(std::make_shared<GameScreenController>(server, port, false));
-				break;
-			case 1:
-				edit_mode = !edit_mode;
-				break;
-			case 2:
-				edit_mode = !edit_mode;
-				break;
-			case 3:
-				edit_mode = !edit_mode;
-				break;
-			case 4:
-				current_menu = Menu::main;
-				current_menu_index = 0;
-				break;
-			}
-		}
-		else if (current_menu == Menu::host)
-		{
-			switch (current_menu_index)
-			{
-			case 0:
-				music_player.stop();
-				present_controller(std::make_shared<GameScreenController>("", port, true));
-				break;
-			case 1:
-				edit_mode = !edit_mode;
-				break;
-			case 2:
-				edit_mode = !edit_mode;
-				break;
-			case 3:
-				current_menu = Menu::main;
-				current_menu_index = 0;
-				break;
-			}
-		}
-		else if (current_menu == Menu::options)
-		{
-			switch (current_menu_index)
-			{
-			case 0:
-				current_menu = Menu::graphics;
-				current_menu_index = 0;
-				break;
-			case 1:
-				current_menu = Menu::audio;
-				current_menu_index = 0;
-				break;
-			case 2:
-				current_menu = Menu::controls;
-				current_menu_index = 0;
-				break;
-			case 3:
-				current_menu = Menu::main;
-				current_menu_index = 0;
-				break;
-			}
-		}
-		else if (current_menu == Menu::graphics)
-		{
-			switch (current_menu_index)
-			{
-			case 3:
-				current_menu = Menu::options;
-				current_menu_index = 0;
-				break;
-			}
-		}
-		else if (current_menu == Menu::audio)
-		{
-			switch (current_menu_index)
-			{
-			case 3:
-				current_menu = Menu::options;
-				current_menu_index = 0;
-				break;
-			}
-		}
-		else if (current_menu == Menu::controls)
-		{
-			switch (current_menu_index)
-			{
-			case 0:
-				current_menu = Menu::options;
-				current_menu_index = 0;
-				break;
-			}
-		}
-	}
-
-	up_was_pressed = up_pressed;
-	down_was_pressed = down_pressed;
-	mouse_was_pressed = mouse_pressed;
-	enter_was_pressed = enter_pressed;
 }
