@@ -11,6 +11,11 @@ public:
 	void update() override;
 
 private:
+	void on_log_event(const std::string &type, const std::string &text);
+
 	std::unique_ptr<GameWorld> client_game;
 	std::unique_ptr<GameWorld> server_game;
+	uicore::FontPtr font, font2, font3;
+
+	std::vector<std::string> log_messages;
 };

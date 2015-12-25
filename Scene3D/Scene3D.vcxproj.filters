@@ -1395,6 +1395,9 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
     </ClInclude>
+    <ClInclude Include="Include\log_event.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -1999,6 +2002,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\log_event.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
