@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "game_screen_controller.h"
+#include "Model/GameWorld/client_player_pawn.h"
 
 using namespace uicore;
 
@@ -55,12 +56,15 @@ void GameScreenController::update()
 	Path::rect(Rectf::xywh(611.0f, offset + 11.0f, 1.0f, 180.0f))->fill(canvas(), Brush::solid_rgba8(200, 200, 255, 50));
 
 	auto font_metrics = font->font_metrics(canvas());
+	auto font_metrics2 = font2->font_metrics(canvas());
+	auto font_metrics3 = font3->font_metrics(canvas());
+
 	float y = offset + 180.0f - font_metrics.line_height() + font_metrics.baseline_offset();
 	for (size_t i = log_messages.size(); i > 0; i--)
 	{
 		const auto &msg = log_messages[i - 1];
 
-		if (y - font_metrics.baseline_offset() < 11.0f)
+		if (y - font_metrics.baseline_offset() < offset)
 		{
 			log_messages.erase(log_messages.begin(), log_messages.begin() + i);
 			break;
@@ -71,30 +75,41 @@ void GameScreenController::update()
 		y -= font_metrics.line_height();
 	}
 
-	std::string health_text = "Health: 100%";
-	std::string armor_text = "Armor: 0%";
-	std::string weapon1_text = "Ice Launcher";
-	std::string weapon2_text = "Ammo: 100";
+	std::shared_ptr<ClientPlayerPawn> player;
+	for (auto it : client_game->client_player_pawns)
+	{
+		if (it.second->get_is_owner())
+		{
+			player = it.second;
+			break;
+		}
+	}
+
+	if (player)
+	{
+		std::string health_text = string_format("Health: %1%%", (int)std::ceil(player->get_health()));
+		std::string armor_text = string_format("Armor: %1%%", (int)std::ceil(player->get_armor()));
+		std::string weapon1_text = "Ice Launcher";
+		std::string weapon2_text = "Ammo: 100";
+
+		font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset(), health_text, Colorf::black);
+		font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset(), health_text, Colorf::springgreen);
+		font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::black);
+		font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::orangered);
+
+		font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::black);
+		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::springgreen);
+		font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::black);
+		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
+	}
+
 	std::string score_text = "Score: 0";
-	std::string announcement_text1 = "You killed Player1!";
-	std::string announcement_text2 = "Easy Kill!";
-
-	auto font_metrics2 = font2->font_metrics(canvas());
-
-	font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset(), health_text, Colorf::black);
-	font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset(), health_text, Colorf::springgreen);
-	font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::black);
-	font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::orangered);
 
 	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
 
-	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::black);
-	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::springgreen);
-	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::black);
-	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
-
-	auto font_metrics3 = font3->font_metrics(canvas());
+	std::string announcement_text1 = "";// "You killed Player1!";
+	std::string announcement_text2 = "";// "Easy Kill!";
 
 	font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, Colorf::black);
 	font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, Colorf::lightgoldenrodyellow);

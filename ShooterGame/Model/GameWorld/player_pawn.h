@@ -67,6 +67,8 @@ public:
 
 	uicore::Vec3f get_position() { return character_controller.get_position(); }
 	uicore::Quaternionf get_orientation() { return uicore::Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, uicore::angle_degrees, uicore::order_YXZ); }
+	float get_health() const { return health; }
+	float get_armor() const { return armor_body + armor_shoulder; }
 
 	const uicore::Vec3f eye_offset = uicore::Vec3f(0.0f, 1.8f, 0.0f);
 
@@ -81,6 +83,8 @@ protected:
 	CharacterController character_controller;
 
 	float health = 100.0f;
+	float armor_body = 0.0f;
+	float armor_shoulder = 0.0f;
 
 	std::string anim = "default";
 	float animation_move_speed = 0.0f;
