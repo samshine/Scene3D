@@ -9,11 +9,8 @@ using namespace uicore;
 
 PlayerPawn::PlayerPawn(GameWorld *world) : CollisionGameObject(world), character_controller(world->collision)
 {
-	//controller.reset(new OldCharacterController(world->collision, 0.5f, 1.8f*0.5f, 0.25f, 58.0f));
-	//controller->get_object().set_data(std::make_shared<GameObjectCollision>(this));
-
 	auto collision_obj = Physics3DObject::collision_body(world->collision, Physics3DShape::capsule(character_controller.get_radius(), character_controller.get_height() * 0.5f));
-	collision_obj->set_kinematic_object();
+	//collision_obj->set_kinematic_object();
 	collision_obj->set_character_object();
 	set_collision_object(collision_obj);
 
@@ -147,5 +144,5 @@ void PlayerPawn::update_character_controller(float time_elapsed)
 	Vec3f new_pos = character_controller.get_position();
 	animation_move_speed = (Vec2f(new_pos.x, new_pos.z) - Vec2f(old_pos.x, old_pos.z)).length();
 
-	set_collision_position(new_pos);
+	set_collision_position(new_pos + Vec3f(0.0f, character_controller.get_height() * 0.5f, 0.0f));
 }

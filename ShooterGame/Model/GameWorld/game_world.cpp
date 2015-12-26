@@ -171,12 +171,6 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		add(pawn);
 		server_player_pawns["server"] = pawn;
 	}
-	else
-	{
-		float random = rand() / (float)RAND_MAX;
-		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
-		add(std::make_shared<PlayerRagdoll>(this, spawn_points[spawn_index]->pos + Vec3f(0.0f, 1.0f, 0.0f), Quaternionf()));
-	}
 }
 
 GameWorld::~GameWorld()
@@ -364,6 +358,8 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 				auto pawn = it->second;
 				client_player_pawns.erase(it);
 				remove(pawn.get());
+
+				add(std::make_shared<PlayerRagdoll>(this, pawn->get_position() + Vec3f(0.0f, 1.0f, 0.0f), pawn->get_orientation()));
 			}
 		}
 		else if (net_event.get_name() == "elevator-update")
@@ -393,13 +389,22 @@ void GameWorld::player_killed(const GameTick &tick, std::shared_ptr<PlayerPawn> 
 		}
 		remove(server_player.get());
 
-
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-		auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
-		add(pawn);
-		server_player_pawns[peer_id] = pawn;
-		pawn->send_net_create(tick, "all");
+		if (peer_id == "server")
+		{
+			auto pawn = std::make_shared<RobotPlayerPawn>(this, "server", spawn_points[spawn_index]);
+			add(pawn);
+			server_player_pawns[peer_id] = pawn;
+			pawn->send_net_create(tick, "all");
+		}
+		else
+		{
+			auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
+			add(pawn);
+			server_player_pawns[peer_id] = pawn;
+			pawn->send_net_create(tick, "all");
+		}
 	}
 }

@@ -90,7 +90,9 @@ void Bullet::tick(const GameTick &tick)
 		PlayerPawn *pawn = ray_hit.object->data<PlayerPawn>();
 
 		if (pawn)
+		{
 			pawn->apply_damage(tick, damage);
+		}
 
 		if (bounce)
 		{

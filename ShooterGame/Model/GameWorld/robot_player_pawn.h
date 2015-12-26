@@ -24,5 +24,8 @@ private:
 	float move_cooldown = 20.0f;
 	float weapon_change_cooldown = 15.0f;
 
+	float aim_angle_error = 0.0f;
+	float aim_angle_cooldown = 0.0f;
+
 	RobotPlayerMode mode = RobotPlayerMode::follow;
 };

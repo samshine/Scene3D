@@ -49,10 +49,21 @@ void RobotPlayerPawn::tick_follow(const GameTick &tick)
 
 	if (target)
 	{
+		aim_angle_cooldown = std::max(aim_angle_cooldown - tick.time_elapsed, 0.0f);
+		if (aim_angle_cooldown == 0.0f)
+		{
+			float random = rand() / (float)RAND_MAX;
+			aim_angle_error = (random - 0.5f) * 40.0f; // To do: difficulty level should affect this
+			aim_angle_cooldown = 0.3f;
+		}
+
 		auto eye_pos = get_position() + eye_offset;
 		auto target_eye_pos = target->get_position() + eye_offset;
 
-		bool line_of_sight = !world()->collision->ray_test_any(eye_pos, target_eye_pos);
+		bool line_of_sight = !world()->collision->ray_test_any(eye_pos, target_eye_pos, [&](const Physics3DHit &result)
+		{
+			return result.object->data_object() == nullptr;
+		});
 
 		if (line_of_sight)
 			last_seen_target_pos = target_eye_pos;
@@ -64,6 +75,8 @@ void RobotPlayerPawn::tick_follow(const GameTick &tick)
 		float wanted_angle = std::acos(target_dir.y) * 180.0f / PI;
 		if (target_dir.x < 0.0f)
 			wanted_angle = 360.0f - wanted_angle;
+
+		wanted_angle += std::fmod(aim_angle_error, 360.0f); 
 
 		float delta = wanted_angle - cur_movement.dir;
 		if (delta < -180.0f)
@@ -82,7 +95,7 @@ void RobotPlayerPawn::tick_follow(const GameTick &tick)
 
 		cur_movement.up = -std::asin(Vec3f::normalize(last_seen_target_pos - eye_pos).y) * 180.0f / PI;
 
-		float shoot_fov = 10.0f;
+		float shoot_fov = 30.0f;
 		if (std::abs(cur_movement.dir - wanted_angle) < shoot_fov && line_of_sight)
 		{
 			cur_movement.key_fire_primary.next_pressed = true;
