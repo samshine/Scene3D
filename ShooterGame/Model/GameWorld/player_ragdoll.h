@@ -50,6 +50,7 @@ private:
 	std::shared_ptr<ModelData> create_box(const uicore::Vec3f &box_size);
 
 	bool first_tick = true;
+	float physics_timeout = 10.0f;
 
 	SceneObjectPtr scene_object;
 	SceneObjectPtr objects[total_parts];

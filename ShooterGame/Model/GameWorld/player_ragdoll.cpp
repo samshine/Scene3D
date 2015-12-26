@@ -112,13 +112,17 @@ PlayerRagdoll::~PlayerRagdoll()
 
 SceneObjectPtr PlayerRagdoll::scene_box(const uicore::Vec3f &box_size)
 {
-	auto model = SceneModel::create(world()->client->scene, create_box(box_size));
+	auto &model = world()->box_models[box_size];
+	if (!model)
+		model = SceneModel::create(world()->client->scene, create_box(box_size));
 	return SceneObject::create(world()->client->scene, model);
 }
 
 SceneObjectPtr PlayerRagdoll::scene_capsule(float radius, float height)
 {
-	auto model = SceneModel::create(world()->client->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
+	auto &model = world()->capsule_models[Vec2f(radius, height)];
+	if (!model)
+		model = SceneModel::create(world()->client->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
 	return SceneObject::create(world()->client->scene, model);
 }
 
@@ -144,12 +148,24 @@ void PlayerRagdoll::calc_constraint_location(JointName joint, PartName part_a, V
 
 void PlayerRagdoll::tick(const GameTick &tick)
 {
+	physics_timeout = std::max(physics_timeout - tick.time_elapsed, 0.0f);
+	if (physics_timeout == 0.0f && parts[0])
+	{
+		for (int i = 0; i < total_joints; i++)
+			joints[i].reset();
+		for (int i = 0; i < total_parts; i++)
+			parts[i].reset();
+	}
+
 	for (int i = 0; i < total_parts; i++)
 	{
 		prev_pos[i] = next_pos[i];
 		prev_orientation[i] = next_orientation[i];
-		next_pos[i] = parts[i]->position();
-		next_orientation[i] = parts[i]->orientation();
+		if (parts[i])
+		{
+			next_pos[i] = parts[i]->position();
+			next_orientation[i] = parts[i]->orientation();
+		}
 	}
 
 	if (first_tick)

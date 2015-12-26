@@ -75,6 +75,9 @@ public:
 	std::map<std::string, std::shared_ptr<ServerPlayerPawn>> server_player_pawns;
 	std::vector<std::shared_ptr<SpawnPoint>> spawn_points;
 
+	std::map<uicore::Vec3f, std::shared_ptr<SceneModel>> box_models;
+	std::map<uicore::Vec2f, std::shared_ptr<SceneModel>> capsule_models;
+
 	uicore::Point mouse_movement;
 
 	GameTick net_tick;
