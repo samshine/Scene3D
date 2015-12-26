@@ -64,7 +64,7 @@ void GameScreenController::update()
 	{
 		const auto &msg = log_messages[i - 1];
 
-		if (y - font_metrics.baseline_offset() < offset)
+		if (y - font_metrics.baseline_offset() < offset + 11.0f)
 		{
 			log_messages.erase(log_messages.begin(), log_messages.begin() + i);
 			break;
