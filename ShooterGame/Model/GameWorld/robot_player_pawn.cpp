@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "robot_player_pawn.h"
 #include "game_world.h"
+#include "game_master.h"
 
 using namespace uicore;
 
@@ -183,7 +184,7 @@ void RobotPlayerPawn::tick_follow(const GameTick &tick)
 {
 	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
-	for (auto it : world()->server_player_pawns)
+	for (auto it : world()->game_master->server_players)
 	{
 		auto other_pawn = it.second;
 		if (other_pawn.get() != this)

@@ -13,12 +13,10 @@ public:
 	~ServerPlayerPawn();
 
 	void tick(const GameTick &tick) override;
-
-	void net_input(const GameTick &tick, const uicore::NetGameEvent &net_event);
+	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
 
 	void send_net_create(const GameTick &tick, const std::string &target);
 	void send_net_update(const GameTick &tick);
-	void send_net_destroy(const GameTick &tick);
 
 	std::string owner;
 

@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "game_screen_controller.h"
+#include "Model/GameWorld/game_master.h"
 #include "Model/GameWorld/client_player_pawn.h"
 
 using namespace uicore;
@@ -75,16 +76,7 @@ void GameScreenController::update()
 		y -= font_metrics.line_height();
 	}
 
-	std::shared_ptr<ClientPlayerPawn> player;
-	for (auto it : client_game->client_player_pawns)
-	{
-		if (it.second->get_is_owner())
-		{
-			player = it.second;
-			break;
-		}
-	}
-
+	auto player = client_game->game_master->client_player;
 	if (player)
 	{
 		std::string health_text = string_format("Health: %1%%", (int)std::ceil(player->get_health()));
@@ -103,18 +95,20 @@ void GameScreenController::update()
 		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
 	}
 
-	std::string score_text = "Score: 0";
+	std::string score_text = string_format("Score: %1", client_game->game_master->score);
 
 	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
 
-	std::string announcement_text1 = "";// "You killed Player1!";
-	std::string announcement_text2 = "";// "Easy Kill!";
-
-	font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, Colorf::black);
-	font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, Colorf::lightgoldenrodyellow);
-	font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + font_metrics3.line_height() + 2.0f, announcement_text2, Colorf::black);
-	font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f, canvas()->height() * 0.3f + font_metrics3.line_height(), announcement_text2, Colorf::whitesmoke);
+	if (client_game->game_master->announcement_timeout > 0.0f)
+	{
+		auto announcement_text1 = client_game->game_master->announcement_text1;
+		auto announcement_text2 = client_game->game_master->announcement_text2;
+		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, Colorf::black);
+		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, Colorf::lightgoldenrodyellow);
+		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + font_metrics3.line_height() + 2.0f, announcement_text2, Colorf::black);
+		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f, canvas()->height() * 0.3f + font_metrics3.line_height(), announcement_text2, Colorf::whitesmoke);
+	}
 
 	canvas()->end();
 }

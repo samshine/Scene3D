@@ -3,8 +3,6 @@
 
 #include <string>
 #include <map>
-#include "player_list.h"
-#include "team_list.h"
 #include "game_tick.h"
 #include "Model/Network/NetGame/event.h"
 #include "Model/Network/game_network.h"
@@ -15,10 +13,7 @@
 class Game;
 class GameTick;
 class GameObject;
-class PlayerPawn;
-class ServerPlayerPawn;
-class ClientPlayerPawn;
-class Elevator;
+class GameMaster;
 class SpawnPoint;
 
 class GameWorldClient
@@ -66,17 +61,14 @@ public:
 	std::shared_ptr<MapData> map_data;
 	uicore::JsonValue weapon_data;
 
-	std::shared_ptr<PlayerList> player_list = std::make_shared<PlayerList>();
-	std::shared_ptr<TeamList> team_list = std::make_shared<TeamList>();
+	std::map<int, std::shared_ptr<GameObject>> static_objects;
 
-	std::map<int, std::shared_ptr<Elevator>> elevators;
-
-	std::map<int, std::shared_ptr<ClientPlayerPawn>> client_player_pawns;
-	std::map<std::string, std::shared_ptr<ServerPlayerPawn>> server_player_pawns;
 	std::vector<std::shared_ptr<SpawnPoint>> spawn_points;
 
 	std::map<uicore::Vec3f, std::shared_ptr<SceneModel>> box_models;
 	std::map<uicore::Vec2f, std::shared_ptr<SceneModel>> capsule_models;
+
+	std::shared_ptr<GameMaster> game_master;
 
 	uicore::Point mouse_movement;
 
@@ -92,16 +84,15 @@ public:
 	void add(std::shared_ptr<GameObject> obj);
 	void remove(GameObject *obj);
 
-	void player_killed(const GameTick &tick, std::shared_ptr<PlayerPawn> player);
-
 private:
 	std::map<int, std::shared_ptr<GameObject>> objects;
 	std::map<int, std::shared_ptr<GameObject>> added_objects;
 	std::vector<int> delete_list;
 	int next_id = 1;
 
+	std::map<int, std::shared_ptr<GameObject>> remote_objects;
+
 	uicore::GameTime elapsed_timer;
-	std::string map_cmodel_filename;
 	uicore::SlotContainer slots;
 
 	friend class GameObject;

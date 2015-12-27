@@ -33,9 +33,9 @@ Elevator::~Elevator()
 {
 }
 
-void Elevator::net_update(const GameTick &net_tick, const uicore::NetGameEvent &net_event)
+void Elevator::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
-	if (world()->client)
+	if (world()->client && net_event.get_name() == "elevator-update")
 	{
 		state = (State)net_event.get_argument(1).get_integer();
 		time = net_event.get_argument(2).get_number();
@@ -46,7 +46,7 @@ void Elevator::send_net_update(const GameTick &tick, const std::string &target)
 {
 	NetGameEvent net_event("elevator-update");
 
-	net_event.add_argument(level_obj_id);
+	net_event.add_argument(-level_obj_id);
 	net_event.add_argument((int)state);
 	net_event.add_argument(time);
 

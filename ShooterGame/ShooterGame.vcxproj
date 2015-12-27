@@ -162,6 +162,7 @@
     <ClInclude Include="Model\GameWorld\elevator.h" />
     <ClInclude Include="Model\GameWorld\explosion.h" />
     <ClInclude Include="Model\GameWorld\flag.h" />
+    <ClInclude Include="Model\GameWorld\game_master.h" />
     <ClInclude Include="Model\GameWorld\game_object.h" />
     <ClInclude Include="Model\GameWorld\game_tick.h" />
     <ClInclude Include="Model\GameWorld\game_world.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Model\GameWorld\elevator.cpp" />
     <ClCompile Include="Model\GameWorld\explosion.cpp" />
     <ClCompile Include="Model\GameWorld\flag.cpp" />
+    <ClCompile Include="Model\GameWorld\game_master.cpp" />
     <ClCompile Include="Model\GameWorld\game_object.cpp" />
     <ClCompile Include="Model\GameWorld\game_world.cpp" />
     <ClCompile Include="Model\GameWorld\player_pawn.cpp" />

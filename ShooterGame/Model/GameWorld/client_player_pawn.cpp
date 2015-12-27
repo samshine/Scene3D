@@ -4,6 +4,7 @@
 #include "game_world.h"
 #include "game_tick.h"
 #include "collision_game_object.h"
+#include "game_master.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -16,21 +17,39 @@ ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 
 ClientPlayerPawn::~ClientPlayerPawn()
 {
+}
 
+void ClientPlayerPawn::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
+{
+	if (net_event.get_name() == "create")
+	{
+		net_create(world()->net_tick, net_event);
+	}
+	else if (net_event.get_name() == "player-pawn-update")
+	{
+		net_update(world()->net_tick, net_event);
+	}
+	else if (net_event.get_name() == "player-pawn-hit")
+	{
+		net_hit(world()->net_tick, net_event);
+	}
 }
 
 void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEvent &net_event)
 {
-	net_update(tick, net_event);
+	net_update(tick, net_event, 1);
 
 	if (is_owner)
+	{
 		world()->client->scene_camera = camera;
+		world()->game_master->client_player = to_type<ClientPlayerPawn>();
+	}
 }
 
-void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event)
+void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event, int skip)
 {
-	is_owner = net_event.get_argument(1).get_boolean();
-	health = net_event.get_argument(19).get_number();
+	is_owner = net_event.get_argument(skip + 1).get_boolean();
+	health = net_event.get_argument(skip + 19).get_number();
 
 	if (is_owner)
 	{
@@ -52,26 +71,26 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 		sent_movements.erase(sent_movements.begin());
 
 		// Grab input from server
-		cur_movement.key_forward.next_pressed = net_event.get_argument(2).get_boolean();
-		cur_movement.key_back.next_pressed = net_event.get_argument(3).get_boolean();
-		cur_movement.key_left.next_pressed = net_event.get_argument(4).get_boolean();
-		cur_movement.key_right.next_pressed = net_event.get_argument(5).get_boolean();
-		cur_movement.key_jump.next_pressed = net_event.get_argument(6).get_boolean();
-		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(7).get_boolean();
-		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(8).get_boolean();
-		cur_movement.key_weapon = net_event.get_argument(9).get_integer();
-		cur_movement.dir = net_event.get_argument(10).get_number();
-		cur_movement.up = net_event.get_argument(11).get_number();
+		cur_movement.key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
+		cur_movement.key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
+		cur_movement.key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
+		cur_movement.key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
+		cur_movement.key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
+		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
+		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
+		cur_movement.key_weapon = net_event.get_argument(skip + 9).get_integer();
+		cur_movement.dir = net_event.get_argument(skip + 10).get_number();
+		cur_movement.up = net_event.get_argument(skip + 11).get_number();
 
 		// Grab server position and velocity received by server
 		Vec3f pos, velocity;
-		pos.x = net_event.get_argument(12).get_number();
-		pos.y = net_event.get_argument(13).get_number();
-		pos.z = net_event.get_argument(14).get_number();
-		velocity.x = net_event.get_argument(15).get_number();
-		velocity.y = net_event.get_argument(16).get_number();
-		velocity.z = net_event.get_argument(17).get_number();
-		bool is_flying = net_event.get_argument(18).get_boolean();
+		pos.x = net_event.get_argument(skip + 12).get_number();
+		pos.y = net_event.get_argument(skip + 13).get_number();
+		pos.z = net_event.get_argument(skip + 14).get_number();
+		velocity.x = net_event.get_argument(skip + 15).get_number();
+		velocity.y = net_event.get_argument(skip + 16).get_number();
+		velocity.z = net_event.get_argument(skip + 17).get_number();
+		bool is_flying = net_event.get_argument(skip + 18).get_boolean();
 		character_controller.warp(pos, velocity, is_flying);
 
 		// Replay movement
@@ -106,25 +125,25 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 	else
 	{
 		cur_movement.tick_time = tick.receive_tick_time;
-		cur_movement.key_forward.next_pressed = net_event.get_argument(2).get_boolean();
-		cur_movement.key_back.next_pressed = net_event.get_argument(3).get_boolean();
-		cur_movement.key_left.next_pressed = net_event.get_argument(4).get_boolean();
-		cur_movement.key_right.next_pressed = net_event.get_argument(5).get_boolean();
-		cur_movement.key_jump.next_pressed = net_event.get_argument(6).get_boolean();
-		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(7).get_boolean();
-		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(8).get_boolean();
-		cur_movement.key_weapon = net_event.get_argument(9).get_integer();
-		cur_movement.dir = net_event.get_argument(10).get_number();
-		cur_movement.up = net_event.get_argument(11).get_number();
+		cur_movement.key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
+		cur_movement.key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
+		cur_movement.key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
+		cur_movement.key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
+		cur_movement.key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
+		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
+		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
+		cur_movement.key_weapon = net_event.get_argument(skip + 9).get_integer();
+		cur_movement.dir = net_event.get_argument(skip + 10).get_number();
+		cur_movement.up = net_event.get_argument(skip + 11).get_number();
 
 		Vec3f pos, velocity;
-		pos.x = net_event.get_argument(12).get_number();
-		pos.y = net_event.get_argument(13).get_number();
-		pos.z = net_event.get_argument(14).get_number();
-		velocity.x = net_event.get_argument(15).get_number();
-		velocity.y = net_event.get_argument(16).get_number();
-		velocity.z = net_event.get_argument(17).get_number();
-		bool is_flying = net_event.get_argument(18).get_boolean();
+		pos.x = net_event.get_argument(skip + 12).get_number();
+		pos.y = net_event.get_argument(skip + 13).get_number();
+		pos.z = net_event.get_argument(skip + 14).get_number();
+		velocity.x = net_event.get_argument(skip + 15).get_number();
+		velocity.y = net_event.get_argument(skip + 16).get_number();
+		velocity.z = net_event.get_argument(skip + 17).get_number();
+		bool is_flying = net_event.get_argument(skip + 18).get_boolean();
 		character_controller.warp(pos, velocity, is_flying);
 	}
 }
@@ -169,6 +188,7 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 		else if (world()->client->buttons.buttons["switch-to-tractorbeam"].down) cur_movement.key_weapon = 5;
 
 		NetGameEvent netevent("player-pawn-input");
+		netevent.add_argument(remote_id());
 		netevent.add_argument(NetGameEventValue(cur_movement.key_forward.next_pressed));
 		netevent.add_argument(NetGameEventValue(cur_movement.key_back.next_pressed));
 		netevent.add_argument(NetGameEventValue(cur_movement.key_left.next_pressed));
@@ -179,9 +199,6 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 		netevent.add_argument(cur_movement.key_weapon);
 		netevent.add_argument(cur_movement.dir);
 		netevent.add_argument(cur_movement.up);
-
-		//Console::write_line("Sent dir %1 to tick %2", cur_movement.dir, tick.arrival_tick_time);
-
 		world()->network->queue_event("server", netevent, tick.arrival_tick_time);
 
 		PlayerPawnMovement past = cur_movement;

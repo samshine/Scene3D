@@ -10,10 +10,7 @@ public:
 	~Elevator();
 
 	void tick(const GameTick &tick) override;
-
-	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event);
-
-	void send_net_update(const GameTick &tick, const std::string &target);
+	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
 
 	int level_obj_id;
 
@@ -25,6 +22,8 @@ protected:
 	void tick_moving_down(const GameTick &tick);
 
 	bool test_start_trigger();
+
+	void send_net_update(const GameTick &tick, const std::string &target);
 
 	uicore::Vec3f pos1, pos2;
 	uicore::Quaternionf orientation;

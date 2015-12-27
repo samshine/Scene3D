@@ -3,6 +3,7 @@
 #include "game_world.h"
 #include "game_object.h"
 #include "game_tick.h"
+#include "game_master.h"
 #include "alarm_lights.h"
 #include "client_player_pawn.h"
 #include "server_player_pawn.h"
@@ -10,7 +11,6 @@
 #include "powerup.h"
 #include "flag.h"
 #include "spawn_point.h"
-#include "player_ragdoll.h"
 #include "robot_player_pawn.h"
 #include "Model/Network/game_network_client.h"
 #include "Model/Network/game_network_server.h"
@@ -118,7 +118,11 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		add(lights);
 	}
 
-	int level_obj_id = 0;
+	int level_obj_id = 1;
+
+	game_master = std::make_shared<GameMaster>(this);
+	add(game_master);
+	static_objects[level_obj_id++] = game_master;
 
 	for (const auto &objdesc : map_data->objects)
 	{
@@ -133,7 +137,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 			auto elevator = std::make_shared<Elevator>(this, level_obj_id++, objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale);
 			add(elevator);
 
-			elevators[elevator->level_obj_id] = elevator;
+			static_objects[elevator->level_obj_id] = elevator;
 		}
 		else if (objdesc.type == "Powerup")
 		{
@@ -162,15 +166,7 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 		}
 	}
 
-	if (!client)
-	{
-		float random = rand() / (float)RAND_MAX;
-		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
-
-		auto pawn = std::make_shared<RobotPlayerPawn>(this, "server", spawn_points[spawn_index]);
-		add(pawn);
-		server_player_pawns["server"] = pawn;
-	}
+	game_master->game_start();
 }
 
 GameWorld::~GameWorld()
@@ -229,6 +225,13 @@ void GameWorld::remove(GameObject *obj)
 {
 	if (obj->_id != 0)
 	{
+		if (!client)
+		{
+			NetGameEvent net_event("destroy");
+			net_event.add_argument(obj->id());
+			network->queue_event("all", net_event, net_tick.arrival_tick_time);
+		}
+
 		delete_list.push_back(obj->_id);
 		obj->_id = 0;
 	}
@@ -249,11 +252,6 @@ std::shared_ptr<GameObject> GameWorld::get(int id)
 
 void GameWorld::tick(float time_elapsed, int receive_tick_time, int arrival_tick_time)
 {
-//	stupid_counter++;
-//	if (!is_server && stupid_counter == 20 * 60)
-//		add(new PlayerRagdoll(this, client_player_pawns.begin()->second->get_position() + client_player_pawns.begin()->second->get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, 20.0f)), client_player_pawns.begin()->second->get_orientation()));
-
-
 	for (auto it : objects)
 	{
 		if (it.first != 0)
@@ -283,128 +281,67 @@ void GameWorld::frame(float time_elapsed, float interpolated_time)
 
 void GameWorld::net_peer_connected(const std::string &peer_id)
 {
-	float random = rand() / (float)RAND_MAX;
-	int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
-
-	auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
-	add(pawn);
-	server_player_pawns[peer_id] = pawn;
-	pawn->send_net_create(net_tick, "all");
-
-	for (auto it : server_player_pawns)
-	{
-		if (it.first != peer_id)
-			it.second->send_net_create(net_tick, peer_id);
-	}
+	if (game_master)
+		game_master->net_peer_connected(peer_id);
 }
 
 void GameWorld::net_peer_disconnected(const std::string &peer_id)
 {
-	auto it = server_player_pawns.find(peer_id);
-	if (it != server_player_pawns.end())
-	{
-		it->second->send_net_destroy(net_tick);
-		remove(it->second.get());
-		server_player_pawns.erase(it);
-	}
+	if (game_master)
+		game_master->net_peer_disconnected(peer_id);
 }
 
 void GameWorld::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
 {
+	if (net_event.get_name() == "LockStepPing" || net_event.get_name() == "LockStepPong")
+		return;
+
 	if (!client)
 	{
-		if (net_event.get_name() == "player-pawn-input")
-		{
-			auto pawn = server_player_pawns[sender];
-			if (pawn)
-				pawn->net_input(net_tick, net_event);
-		}
+		int obj_id = net_event.get_argument(0);
+		auto it = objects.find(obj_id);
+		if (it != objects.end())
+			it->second->net_event_received(sender, net_event);
 	}
 	else
 	{
-		if (net_event.get_name() == "player-pawn-create")
+		int obj_id = net_event.get_argument(0);
+		if (obj_id > 0) // Dynamic objects
 		{
-			int server_obj_id = net_event.get_argument(0);
-
-			auto pawn = std::make_shared<ClientPlayerPawn>(this);
-			add(pawn);
-			client_player_pawns[server_obj_id] = pawn;
-
-			pawn->net_create(net_tick, net_event);
-		}
-		else if (net_event.get_name() == "player-pawn-update")
-		{
-			int server_obj_id = net_event.get_argument(0);
-
-			auto it = client_player_pawns.find(server_obj_id);
-			if (it != client_player_pawns.end())
-				it->second->net_update(net_tick, net_event);
-		}
-		else if (net_event.get_name() == "player-pawn-hit")
-		{
-			int server_obj_id = net_event.get_argument(0);
-
-			auto it = client_player_pawns.find(server_obj_id);
-			if (it != client_player_pawns.end())
-				it->second->net_hit(net_tick, net_event);
-		}
-		else if (net_event.get_name() == "player-pawn-destroy")
-		{
-			int server_obj_id = net_event.get_argument(0);
-
-			auto it = client_player_pawns.find(server_obj_id);
-			if (it != client_player_pawns.end())
+			auto it = remote_objects.find(obj_id);
+			if (it != remote_objects.end())
 			{
-				auto pawn = it->second;
-				client_player_pawns.erase(it);
-				remove(pawn.get());
+				it->second->net_event_received(sender, net_event);
 
-				add(std::make_shared<PlayerRagdoll>(this, pawn->get_position() + Vec3f(0.0f, 1.0f, 0.0f), pawn->get_orientation()));
+				if (net_event.get_name() == "destroy")
+				{
+					remote_objects.erase(it);
+					remove(it->second.get());
+				}
+			}
+			else if (net_event.get_name() == "create")
+			{
+				std::shared_ptr<GameObject> instance;
+				std::string type = net_event.get_argument(1);
+
+				if (type == "player-pawn")
+					instance = std::make_shared<ClientPlayerPawn>(this);
+
+				if (instance)
+				{
+					add(instance);
+					instance->set_remote_id(obj_id);
+					remote_objects[obj_id] = instance;
+					instance->net_event_received(sender, net_event);
+				}
 			}
 		}
-		else if (net_event.get_name() == "elevator-update")
+		else if (obj_id < 0) // Static objects
 		{
-			int level_obj_id = net_event.get_argument(0);
-			elevators[level_obj_id]->net_update(net_tick, net_event);
-		}
-	}
-}
-
-void GameWorld::player_killed(const GameTick &tick, std::shared_ptr<PlayerPawn> player)
-{
-	if (!client)
-	{
-		auto server_player = std::dynamic_pointer_cast<ServerPlayerPawn>(player);
-		std::string peer_id = server_player->owner;
-
-		server_player->send_net_destroy(tick);
-
-		for (auto it = server_player_pawns.begin(); it != server_player_pawns.end(); ++it)
-		{
-			if (it->second == server_player)
-			{
-				server_player_pawns.erase(it);
-				break;
-			}
-		}
-		remove(server_player.get());
-
-		float random = rand() / (float)RAND_MAX;
-		int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
-
-		if (peer_id == "server")
-		{
-			auto pawn = std::make_shared<RobotPlayerPawn>(this, "server", spawn_points[spawn_index]);
-			add(pawn);
-			server_player_pawns[peer_id] = pawn;
-			pawn->send_net_create(tick, "all");
-		}
-		else
-		{
-			auto pawn = std::make_shared<ServerPlayerPawn>(this, peer_id, spawn_points[spawn_index]);
-			add(pawn);
-			server_player_pawns[peer_id] = pawn;
-			pawn->send_net_create(tick, "all");
+			int level_obj_id = -obj_id;
+			auto it = static_objects.find(level_obj_id);
+			if (it != static_objects.end())
+				it->second->net_event_received(sender, net_event);
 		}
 	}
 }

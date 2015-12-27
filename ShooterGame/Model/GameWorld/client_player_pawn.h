@@ -13,8 +13,10 @@ public:
 	void tick(const GameTick &tick) override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
+	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
+
 	void net_create(const GameTick &tick, const uicore::NetGameEvent &net_event);
-	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event);
+	void net_update(const GameTick &tick, const uicore::NetGameEvent &net_event, int skip = 0);
 	void net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event);
 
 	SceneCameraPtr camera;
