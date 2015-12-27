@@ -65,7 +65,7 @@ void GameMaster::net_event_received(const std::string &sender, const uicore::Net
 		Quaternionf orientation(net_event.get_argument(7), net_event.get_argument(4), net_event.get_argument(5), net_event.get_argument(6));
 		world()->add(std::make_shared<PlayerRagdoll>(world(), position + Vec3f(0.0f, 1.0f, 0.0f), orientation));
 
-		announcement_timeout = 1.0f;
+		announcement_timeout = 2.0f;
 		announcement_text1 = "You killed ~qsr*Robot!";
 		announcement_text2 = "Easy Kill!";
 		score++;

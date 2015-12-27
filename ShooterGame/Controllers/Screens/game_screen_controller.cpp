@@ -13,16 +13,19 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	FontDescription font_desc;
 	font_desc.set_height(13.0f);
 	font_desc.set_line_height(18.0f);
+	font_desc.set_subpixel(false);
 	font = Font::create(font_desc, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
 	FontDescription font_desc2;
 	font_desc2.set_height(26.0f);
 	font_desc2.set_line_height(38.0f);
+	font_desc2.set_subpixel(false);
 	font2 = Font::create(font_desc2, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
 	FontDescription font_desc3;
 	font_desc3.set_height(44.0f);
 	font_desc3.set_line_height(48.0f);
+	font_desc3.set_subpixel(false);
 	font3 = Font::create(font_desc3, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
 	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
@@ -104,10 +107,18 @@ void GameScreenController::update()
 	{
 		auto announcement_text1 = client_game->game_master->announcement_text1;
 		auto announcement_text2 = client_game->game_master->announcement_text2;
-		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, Colorf::black);
-		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, Colorf::lightgoldenrodyellow);
-		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + font_metrics3.line_height() + 2.0f, announcement_text2, Colorf::black);
-		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f, canvas()->height() * 0.3f + font_metrics3.line_height(), announcement_text2, Colorf::whitesmoke);
+		float alpha = clamp(client_game->game_master->announcement_timeout, 0.0f, 1.0f);
+		Colorf black = Colorf::black;
+		Colorf color1 = Colorf::lightgoldenrodyellow;
+		Colorf color2 = Colorf::whitesmoke;
+		black.a = alpha * alpha;
+		color1.a = alpha;
+		color2.a = alpha;
+
+		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, black);
+		font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, color1);
+		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + font_metrics3.line_height() + 2.0f, announcement_text2, black);
+		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f, canvas()->height() * 0.3f + font_metrics3.line_height(), announcement_text2, color2);
 	}
 
 	canvas()->end();
