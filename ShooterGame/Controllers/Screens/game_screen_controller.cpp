@@ -28,6 +28,8 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	font_desc3.set_subpixel(false);
 	font3 = Font::create(font_desc3, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
+	crosshair = Image::create(canvas(), "Resources/UI/HUD/crosshair3_red.png");
+
 	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
 
 	if (host_game)
@@ -120,6 +122,8 @@ void GameScreenController::update()
 		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + font_metrics3.line_height() + 2.0f, announcement_text2, black);
 		font2->draw_text(canvas(), (canvas()->width() - font2->measure_text(canvas(), announcement_text2).advance.width) * 0.5f, canvas()->height() * 0.3f + font_metrics3.line_height(), announcement_text2, color2);
 	}
+
+	crosshair->draw(canvas(), std::round((canvas()->width() - crosshair->width()) * 0.5f), std::round((canvas()->height() - crosshair->height()) * 0.5f));
 
 	canvas()->end();
 }
