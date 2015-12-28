@@ -5,6 +5,40 @@
 
 class PlayerPawn;
 
+enum class WeaponFireType
+{
+	automatic,
+	semi,
+	zoom
+};
+
+class WeaponFireMode
+{
+public:
+	WeaponFireMode() { }
+	WeaponFireMode(WeaponFireType type, float cooldown, std::string bullet) : type(type), cooldown(cooldown), bullet(bullet) { }
+
+	WeaponFireType type;
+	float cooldown = 0.5f;
+	std::string bullet;
+};
+
+class WeaponDescription
+{
+public:
+	WeaponDescription() { }
+	WeaponDescription(uicore::Vec3f position, uicore::Vec3f rotation, std::string mesh, float scale, WeaponFireMode primary, WeaponFireMode secondary) : position(position), rotation(rotation), mesh(mesh), scale(scale), primary(primary), secondary(secondary) { }
+
+	uicore::Vec3f position;
+	uicore::Vec3f rotation;
+	std::string mesh;
+	float scale = 1.0f;
+	float show_time = 0.5f;
+	float hide_time = 0.5f;
+	WeaponFireMode primary;
+	WeaponFireMode secondary;
+};
+
 class Weapon
 {
 public:
@@ -19,6 +53,8 @@ public:
 	void try_switch_to_weapon(const std::string &weapon);
 
 	const std::string &get_weapon_type() const { return weapon_type; }
+
+	static std::map<std::string, WeaponDescription> &weapons();
 
 private:
 	void tick_ready(const GameTick &tick);

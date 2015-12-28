@@ -32,6 +32,9 @@ void GameMaster::tick(const GameTick &tick)
 
 void GameMaster::net_peer_connected(const std::string &peer_id)
 {
+	if (world()->client)
+		return;
+
 	float random = rand() / (float)RAND_MAX;
 	int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
 
@@ -49,6 +52,9 @@ void GameMaster::net_peer_connected(const std::string &peer_id)
 
 void GameMaster::net_peer_disconnected(const std::string &peer_id)
 {
+	if (world()->client)
+		return;
+
 	auto it = server_players.find(peer_id);
 	if (it != server_players.end())
 	{
