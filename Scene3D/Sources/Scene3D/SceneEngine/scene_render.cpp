@@ -60,7 +60,7 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 		OpenGL::check_error();
 }
 
-void SceneRender::update(const GraphicContextPtr &render_gc, SceneViewportImpl *viewport, float time_elapsed)
+void SceneRender::update(const GraphicContextPtr &render_gc, SceneViewportImpl *viewport, float new_time_elapsed)
 {
 	if (!viewport->camera())
 		return;
@@ -68,7 +68,7 @@ void SceneRender::update(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	scene = viewport->scene();
 	camera = static_cast<SceneCameraImpl*>(viewport->camera().get());
 	gc = render_gc;
-	time_elapsed = time_elapsed;
+	time_elapsed = new_time_elapsed;
 
 	for (const auto &pass : passes)
 		pass->update();

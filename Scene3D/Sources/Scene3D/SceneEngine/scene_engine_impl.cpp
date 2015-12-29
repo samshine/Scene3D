@@ -3,6 +3,7 @@
 #include "scene_engine_impl.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/SceneEngine/Model/model.h"
+#include "log_event.h"
 
 using namespace uicore;
 
@@ -244,44 +245,51 @@ bool CacheLoadTexture::is_power_of_two(int width, int height)
 
 void CacheLoadTexture::load_ctexture(const std::string &material_name)
 {
-	/*try
+	try
 	{
-		DomDocument xml(File(material_name), false);
 		std::string base_path = PathHelp::get_fullpath(material_name);
-		if (!xml.select_nodes("/ctexture/video").empty())
+		auto xml = XmlDocument::load(File::open_existing(material_name), false);
+		auto frames = xml->document_element()->named_item("frames");
+		auto video = xml->document_element()->named_item("video");
+		if (video)
 		{
-			video_file = PathHelp::combine(base_path, xml.select_string("/ctexture/video/text()"));
+			video_file = video->text();
 		}
-		else
+		else if (frames)
 		{
 			linear = true; // 3D textures can't use sRGB textures apparently!
 
-			std::string basepath = PathHelp::get_fullpath(material_name);
-			std::vector<DomNode> frames = xml.select_nodes("/ctexture/frames/frame");
 			std::vector<PixelBufferPtr> images;
-			for (size_t i = 0; i < frames.size(); i++)
+			for (auto frame = frames->first_child(); frame != nullptr; frame = frame->next_sibling())
 			{
-				std::string filename = frames[i].select_string("filename/text()");
-				PixelBufferPtr image = ImageProviderFactory::load(PathHelp::combine(basepath, filename), std::string(), !linear);
-				image.flip_vertical();
-				image.premultiply_alpha();
-				if (image.get_format() == tf_rgba16 && !linear)
-					image.premultiply_gamma(2.2f);
-				image = image.to_format(linear ? tf_rgba8 : tf_srgb8_alpha8);
+				if (frame->name() != "frame")
+					continue;
+
+				auto filename_node = frame->named_item("filename");
+				if (!filename_node)
+					continue;
+
+				std::string filename = filename_node->text();
+				PixelBufferPtr image = ImageFile::load(PathHelp::combine(base_path, filename), std::string(), !linear);
+				image->flip_vertical();
+				image->premultiply_alpha();
+				if (image->format() == tf_rgba16 && !linear)
+					image->premultiply_gamma(2.2f);
+				image = image->to_format(linear ? tf_rgba8 : tf_srgb8_alpha8);
 				images.push_back(image);
 			}
 
-			pixelbuffer_set = PixelBufferSetPtr(texture_3d, linear ? tf_rgba8 : tf_srgb8_alpha8, images.front().get_width(), images.front().get_height(), (int)frames.size());
+			pixelbuffer_set = PixelBufferSet::create(texture_3d, linear ? tf_rgba8 : tf_srgb8_alpha8, images.front()->width(), images.front()->height(), (int)images.size());
 			for (size_t i = 0; i < images.size(); i++)
 			{
-				pixelbuffer_set.set_image((int)i, 0, images[i]);
+				pixelbuffer_set->set_image((int)i, 0, images[i]);
 			}
 		}
 	}
-	catch (const Exception &e)
+	catch (const Exception &)
 	{
-		log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
-	}*/
+		//log_event("Debug", "Unable to load texture %1: %2", material_name, e.message);
+	}
 }
 
 void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)

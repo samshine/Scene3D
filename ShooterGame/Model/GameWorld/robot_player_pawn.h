@@ -34,5 +34,5 @@ private:
 	float aim_angle_error = 0.0f;
 	float aim_angle_cooldown = 0.0f;
 
-	RobotPlayerMode mode = RobotPlayerMode::path;
+	RobotPlayerMode mode = RobotPlayerMode::idle;
 };

@@ -4,13 +4,15 @@
 #include "client_player_pawn.h"
 #include "game_world.h"
 #include "bullet.h"
+#include "rocket.h"
 #include <algorithm>
 
 using namespace uicore;
 
 Weapon::Weapon(PlayerPawn *player) : player(player)
 {
-	try_switch_to_weapon("IceLauncher");
+	//try_switch_to_weapon("IceLauncher");
+	try_switch_to_weapon("RocketLauncher");
 }
 
 Weapon::~Weapon()
@@ -78,7 +80,9 @@ void Weapon::fire_bullet()
 	Vec3f offset(0.2f, -0.2f, 0.0f);
 	Vec3f bullet_pos = player->get_position() + player->eye_offset + player->get_orientation().rotate_vector(offset);
 
-	player->world()->add(std::make_shared<Bullet>(player, subtype.bullet, bullet_pos, player->get_orientation()));
+	if (subtype.bullet == "Rocket")
+		player->world()->add(std::make_shared<Rocket>(player, bullet_pos, player->get_orientation()));
+	//player->world()->add(std::make_shared<Bullet>(player, subtype.bullet, bullet_pos, player->get_orientation()));
 }
 
 void Weapon::tick_ready(const GameTick &tick)

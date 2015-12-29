@@ -142,6 +142,9 @@
     <ClInclude Include="Model\GameWorld\game_master.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Model\GameWorld\rocket.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -247,6 +250,9 @@
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
     <ClCompile Include="Model\GameWorld\game_master.cpp">
+      <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\rocket.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
   </ItemGroup>

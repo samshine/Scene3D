@@ -8,6 +8,10 @@ using namespace uicore;
 
 RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
 {
+	if (rand() > RAND_MAX / 2)
+		mode = RobotPlayerMode::follow;
+	else
+		mode = RobotPlayerMode::path;
 }
 
 void RobotPlayerPawn::tick(const GameTick &tick)
@@ -103,7 +107,7 @@ void RobotPlayerPawn::tick_path(const GameTick &tick)
 	auto dist2 = Vec2f::dot(v, v);
 	if (dist2 < 4.0f)
 	{
-		log_event("debug", "Reached path goal %1 (point %2: x = %3, z = %4)", current_path_index, current_path[current_path_index], path_point.x, path_point.z);
+		//log_event("debug", "Reached path goal %1 (point %2: x = %3, z = %4)", current_path_index, current_path[current_path_index], path_point.x, path_point.z);
 		current_path_index++;
 		//if (current_path_index == current_path.size())
 		//	mode = RobotPlayerMode::idle;
