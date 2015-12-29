@@ -9,6 +9,9 @@ class Rocket : public GameObject
 {
 public:
 	Rocket(PlayerPawn *owner, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
+	Rocket(GameWorld *world, const uicore::NetGameEvent &net_event);
+
+	void send_create();
 
 	void tick(const GameTick &tick) override;
 	void frame(float time_elapsed, float interpolated_time) override;

@@ -12,6 +12,7 @@
 #include "flag.h"
 #include "spawn_point.h"
 #include "robot_player_pawn.h"
+#include "rocket.h"
 #include "Model/Network/game_network_client.h"
 #include "Model/Network/game_network_server.h"
 #include "Model/Network/lock_step_client_time.h"
@@ -326,6 +327,8 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 
 				if (type == "player-pawn")
 					instance = std::make_shared<ClientPlayerPawn>(this);
+				else if (type == "rocket")
+					instance = std::make_shared<Rocket>(this, net_event);
 
 				if (instance)
 				{

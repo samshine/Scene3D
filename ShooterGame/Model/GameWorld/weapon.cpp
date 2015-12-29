@@ -80,9 +80,12 @@ void Weapon::fire_bullet()
 	Vec3f offset(0.2f, -0.2f, 0.0f);
 	Vec3f bullet_pos = player->get_position() + player->eye_offset + player->get_orientation().rotate_vector(offset);
 
-	if (subtype.bullet == "Rocket")
-		player->world()->add(std::make_shared<Rocket>(player, bullet_pos, player->get_orientation()));
-	//player->world()->add(std::make_shared<Bullet>(player, subtype.bullet, bullet_pos, player->get_orientation()));
+	if (subtype.bullet == "Rocket" && !player->world()->client)
+	{
+		auto rocket = std::make_shared<Rocket>(player, bullet_pos, player->get_orientation());
+		player->world()->add(rocket);
+		rocket->send_create();
+	}
 }
 
 void Weapon::tick_ready(const GameTick &tick)

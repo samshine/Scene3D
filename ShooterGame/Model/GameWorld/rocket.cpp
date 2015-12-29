@@ -12,6 +12,15 @@ Rocket::Rocket(PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Q
 {
 	last_pos = pos;
 	last_orientation = orientation;
+}
+
+Rocket::Rocket(GameWorld *init_world, const uicore::NetGameEvent &net_event) : GameObject(init_world)
+{
+	pos = Vec3f(net_event.get_argument(2), net_event.get_argument(3), net_event.get_argument(4));
+	orientation = Quaternionf(net_event.get_argument(8), net_event.get_argument(5), net_event.get_argument(6), net_event.get_argument(7));
+
+	last_pos = pos;
+	last_orientation = orientation;
 
 	if (world()->client)
 	{
@@ -40,6 +49,24 @@ Rocket::Rocket(PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Q
 	}
 }
 
+void Rocket::send_create()
+{
+	NetGameEvent net_event("create");
+
+	net_event.add_argument(id());
+	net_event.add_argument("rocket");
+
+	net_event.add_argument(pos.x);
+	net_event.add_argument(pos.y);
+	net_event.add_argument(pos.z);
+	net_event.add_argument(orientation.x);
+	net_event.add_argument(orientation.y);
+	net_event.add_argument(orientation.z);
+	net_event.add_argument(orientation.w);
+
+	world()->network->queue_event("all", net_event, world()->net_tick.arrival_tick_time);
+}
+
 void Rocket::tick(const GameTick &tick)
 {
 	last_pos = pos;
@@ -56,6 +83,9 @@ void Rocket::tick(const GameTick &tick)
 	auto velocity = orientation.rotate_vector(Vec3f(0.0f, 0.0f, speed));
 
 	pos += velocity * tick.time_elapsed;
+
+	if (world()->client)
+		return;
 
 	auto ray_hit = world()->collision->ray_test_nearest(last_pos, pos, [&](const Physics3DHit &result)
 	{
