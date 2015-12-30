@@ -183,6 +183,13 @@ void CharacterController::end_step_up()
 	if (step_move(Vec3f(0.0f, -step_height, 0.0f)))
 	{
 		land_impact = std::max(land_impact, -velocity.y);
+		if (flying)
+		{
+			// Absorb some of the speed if we land in a direction different than forward/back (for better impulse based landings)
+			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+			Vec3f move_vector = move_direction.rotate_vector(Vec3f(0.0f, 0.0f, 1.0f));
+			velocity = mix(move_vector * Vec3f::dot(move_vector, velocity), velocity, 0.25f);
+		}
 		velocity.y = 0.0f;
 		end_flying();
 	}

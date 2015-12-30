@@ -20,7 +20,8 @@ public:
 
 	std::string owner;
 
-	void apply_damage(const GameTick &tick, float damage) override;
+	void apply_damage(float damage) override;
+	void apply_impulse(const uicore::Vec3f &force) override;
 
 private:
 	void add_update_args(uicore::NetGameEvent &net_event, const GameTick &tick, bool is_owner);

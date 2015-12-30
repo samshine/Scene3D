@@ -72,7 +72,8 @@ public:
 
 	const uicore::Vec3f eye_offset = uicore::Vec3f(0.0f, 1.8f, 0.0f);
 
-	virtual void apply_damage(const GameTick &tick, float damage) { }
+	virtual void apply_damage(float damage) { }
+	virtual void apply_impulse(const uicore::Vec3f &force) { }
 
 	Weapon *get_weapon() { return weapon.get(); }
 

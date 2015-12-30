@@ -72,7 +72,7 @@ Explosion::Explosion(GameWorld *world, const std::string &type, const uicore::Ve
 			float normalized_distance = std::min(pos.distance(pawn->get_position()) / radius, 1.0f);
 			float player_damage = damage * (1.0f - normalized_distance);
 
-			pawn->apply_damage(world->net_tick, player_damage);
+			pawn->apply_damage(player_damage);
 
 			//Console::write_line("normalized_distance = %1, player_damage = %2", normalized_distance, player_damage);
 		}

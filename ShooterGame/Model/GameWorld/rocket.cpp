@@ -80,9 +80,9 @@ void Rocket::tick(const GameTick &tick)
 	}
 
 	float speed = 40.0f;
-	auto velocity = orientation.rotate_vector(Vec3f(0.0f, 0.0f, speed));
+	auto direction = orientation.rotate_vector(Vec3f(0.0f, 0.0f, 1.0f));
 
-	pos += velocity * tick.time_elapsed;
+	pos += direction * (speed * tick.time_elapsed);
 
 	if (world()->client)
 		return;
@@ -94,10 +94,30 @@ void Rocket::tick(const GameTick &tick)
 
 	if (ray_hit)
 	{
-		PlayerPawn *pawn = ray_hit.object->data<PlayerPawn>();
-		if (pawn)
+		Vec3f explosion_center = ray_hit.position - direction * 0.1f;
+
+		float radius = 4.0f;
+		float max_damage = 100.0f;
+		float force = 1250.0f;
+		for (const auto &contact : world()->collision->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
 		{
-			pawn->apply_damage(tick, 100.0f);
+			PlayerPawn *pawn = contact.object->data<PlayerPawn>();
+			if (pawn)
+			{
+				auto pawn_center = pawn->get_position() + pawn->eye_offset;
+				auto impulse_dir = pawn_center - explosion_center;
+				auto dist = impulse_dir.length();
+
+				if (dist < radius)
+				{
+					if (dist != 0.0f)
+						impulse_dir *= 1.0f / dist;
+					float impact = 1.0f - dist / radius;
+
+					pawn->apply_damage(max_damage * impact);
+					pawn->apply_impulse(impulse_dir * (impact * force));
+				}
+			}
 		}
 		world()->remove(this);
 	}

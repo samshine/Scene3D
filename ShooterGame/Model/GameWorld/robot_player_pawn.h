@@ -5,8 +5,8 @@
 
 enum class RobotPlayerMode
 {
-	idle,
-	follow,
+	stationary,
+	chase,
 	path
 };
 
@@ -16,11 +16,14 @@ public:
 	RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
 
 	void tick(const GameTick &tick) override;
+	void apply_impulse(const uicore::Vec3f &force) override;
 
 private:
-	void tick_idle(const GameTick &tick);
-	void tick_follow(const GameTick &tick);
+	void tick_stationary(const GameTick &tick);
+	void tick_chase(const GameTick &tick);
 	void tick_path(const GameTick &tick);
+
+	void track_target(const GameTick &tick);
 
 	std::vector<int> create_path_steps(int start_segment, int end_segment, int max_depth, int avoid_segment);
 
@@ -28,11 +31,11 @@ private:
 	size_t current_path_index = 0;
 
 	uicore::Vec3f last_seen_target_pos;
-	float move_cooldown = 20.0f;
+	float mode_change_cooldown = 0.0f;
 	float weapon_change_cooldown = 15.0f;
 
 	float aim_angle_error = 0.0f;
 	float aim_angle_cooldown = 0.0f;
 
-	RobotPlayerMode mode = RobotPlayerMode::idle;
+	RobotPlayerMode mode = RobotPlayerMode::stationary;
 };

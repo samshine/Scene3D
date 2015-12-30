@@ -16,12 +16,15 @@ void GameMaster::game_start()
 {
 	if (!world()->client)
 	{
-		float random = rand() / (float)RAND_MAX;
-		int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
+		for (int i = 0; i < 5; i++)
+		{
+			float random = rand() / (float)RAND_MAX;
+			int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
 
-		auto pawn = std::make_shared<RobotPlayerPawn>(world(), "server", world()->spawn_points[spawn_index]);
-		world()->add(pawn);
-		server_players["server"] = pawn;
+			auto pawn = std::make_shared<RobotPlayerPawn>(world(), "server", world()->spawn_points[spawn_index]);
+			world()->add(pawn);
+			bots.push_back(pawn);
+		}
 	}
 }
 
@@ -47,6 +50,11 @@ void GameMaster::net_peer_connected(const std::string &peer_id)
 	{
 		if (it.first != peer_id)
 			it.second->send_net_create(world()->net_tick, peer_id);
+	}
+
+	for (const auto &robot : bots)
+	{
+		robot->send_net_create(world()->net_tick, peer_id);
 	}
 }
 
@@ -102,9 +110,13 @@ void GameMaster::player_killed(const GameTick &tick, std::shared_ptr<ServerPlaye
 
 		if (peer_id == "server")
 		{
+			auto it = std::find(bots.begin(), bots.end(), server_player);
+			if (it != bots.end())
+				bots.erase(it);
+
 			auto pawn = std::make_shared<RobotPlayerPawn>(world(), "server", world()->spawn_points[spawn_index]);
 			world()->add(pawn);
-			server_players[peer_id] = pawn;
+			bots.push_back(pawn);
 			pawn->send_net_create(tick, "all");
 		}
 		else

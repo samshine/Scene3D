@@ -7,6 +7,7 @@
 
 class ClientPlayerPawn;
 class ServerPlayerPawn;
+class RobotPlayerPawn;
 
 class GameMaster : public GameObject
 {
@@ -23,6 +24,7 @@ public:
 
 	std::shared_ptr<ClientPlayerPawn> client_player;
 	std::map<std::string, std::shared_ptr<ServerPlayerPawn>> server_players;
+	std::vector<std::shared_ptr<RobotPlayerPawn>> bots;
 
 	std::string announcement_text1;
 	std::string announcement_text2;

@@ -8,10 +8,16 @@ using namespace uicore;
 
 RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
 {
-	if (rand() > RAND_MAX / 2)
-		mode = RobotPlayerMode::follow;
-	else
-		mode = RobotPlayerMode::path;
+}
+
+void RobotPlayerPawn::apply_impulse(const uicore::Vec3f &force)
+{
+	ServerPlayerPawn::apply_impulse(force);
+	if (mode != RobotPlayerMode::chase)
+	{
+		mode = RobotPlayerMode::chase;
+		weapon_change_cooldown = 15.0f;
+	}
 }
 
 void RobotPlayerPawn::tick(const GameTick &tick)
@@ -27,18 +33,32 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 	cur_movement.key_fire_secondary.next_pressed = false;
 	cur_movement.key_weapon = 0;
 
-	move_cooldown = std::max(move_cooldown - tick.time_elapsed, 0.0f);
+	mode_change_cooldown = std::max(mode_change_cooldown - tick.time_elapsed, 0.0f);
 	weapon_change_cooldown = std::max(weapon_change_cooldown - tick.time_elapsed, 0.0f);
+
+	if (mode_change_cooldown == 0.0f)
+	{
+		switch ((rand() * 3 + RAND_MAX / 2) / RAND_MAX)
+		{
+		default:
+		case 0: mode = RobotPlayerMode::stationary; break;
+		case 1: mode = RobotPlayerMode::chase; break;
+		case 2: mode = RobotPlayerMode::path; current_path.clear(); current_path_index = 0; break;
+		}
+		mode_change_cooldown = 20.0f;
+	}
 
 	switch (mode)
 	{
-	case RobotPlayerMode::idle: tick_idle(tick); break;
-	case RobotPlayerMode::follow: tick_follow(tick); break;
+	case RobotPlayerMode::stationary: tick_stationary(tick); break;
+	case RobotPlayerMode::chase: tick_chase(tick); break;
 	case RobotPlayerMode::path: tick_path(tick); break;
 	}
+
+	track_target(tick);
 }
 
-void RobotPlayerPawn::tick_idle(const GameTick &tick)
+void RobotPlayerPawn::tick_stationary(const GameTick &tick)
 {
 }
 
@@ -65,7 +85,7 @@ void RobotPlayerPawn::tick_path(const GameTick &tick)
 		if (nearest_segment == -1)
 			return;
 
-		current_path = create_path_steps(nearest_segment, nearest_segment == 0 ? world()->map_data->path_nodes.size() - 1 : 0, 100, -1);
+		current_path = create_path_steps(nearest_segment, rand() % world()->map_data->path_nodes.size(), 100, -1);
 		current_path_index = 0;
 	}
 
@@ -184,7 +204,19 @@ std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_s
 	return path_points;
 }
 
-void RobotPlayerPawn::tick_follow(const GameTick &tick)
+void RobotPlayerPawn::tick_chase(const GameTick &tick)
+{
+	if (weapon_change_cooldown == 0.0f)
+	{
+		weapon_change_cooldown = 15.0f;
+
+		float random = rand() / (float)RAND_MAX;
+		int weapon_index = (int)std::round(5 * random);
+		cur_movement.key_weapon = weapon_index;
+	}
+}
+
+void RobotPlayerPawn::track_target(const GameTick &tick)
 {
 	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
@@ -226,38 +258,32 @@ void RobotPlayerPawn::tick_follow(const GameTick &tick)
 
 		wanted_angle += std::fmod(aim_angle_error, 360.0f); 
 
-		float delta = wanted_angle - cur_movement.dir;
-		if (delta < -180.0f)
-			delta += 360.0f;
-		else if (delta > 180.0f)
-			delta -= 360.0f;
+		if (mode != RobotPlayerMode::path) // To do: this also needs to be active for path, and then path movement shouldn't use view vector
+		{
+			float delta = wanted_angle - cur_movement.dir;
+			if (delta < -180.0f)
+				delta += 360.0f;
+			else if (delta > 180.0f)
+				delta -= 360.0f;
 
-		float turn_speed = 120.0f * tick.time_elapsed;
+			float turn_speed = 120.0f * tick.time_elapsed;
 
-		if (std::abs(delta) < turn_speed)
-			cur_movement.dir = wanted_angle;
-		else if (delta >= 0.0f)
-			cur_movement.dir += turn_speed;
-		else
-			cur_movement.dir -= turn_speed;
+			if (std::abs(delta) < turn_speed)
+				cur_movement.dir = wanted_angle;
+			else if (delta >= 0.0f)
+				cur_movement.dir += turn_speed;
+			else
+				cur_movement.dir -= turn_speed;
 
-		cur_movement.up = -std::asin(Vec3f::normalize(last_seen_target_pos - eye_pos).y) * 180.0f / PI;
+			cur_movement.up = -std::asin(Vec3f::normalize(last_seen_target_pos - eye_pos).y) * 180.0f / PI;
+		}
 
 		float shoot_fov = 30.0f;
 		if (std::abs(cur_movement.dir - wanted_angle) < shoot_fov && line_of_sight)
 		{
 			cur_movement.key_fire_primary.next_pressed = true;
-			if (move_cooldown == 0.0f)
+			if (mode == RobotPlayerMode::chase)
 				cur_movement.key_forward.next_pressed = true;
 		}
-	}
-
-	if (weapon_change_cooldown == 0.0f)
-	{
-		weapon_change_cooldown = 15.0f;
-
-		float random = rand() / (float)RAND_MAX;
-		int weapon_index = (int)std::round(5 * random);
-		cur_movement.key_weapon = weapon_index;
 	}
 }

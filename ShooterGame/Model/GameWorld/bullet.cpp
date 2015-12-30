@@ -91,7 +91,7 @@ void Bullet::tick(const GameTick &tick)
 
 		if (pawn)
 		{
-			pawn->apply_damage(tick, damage);
+			pawn->apply_damage(damage);
 		}
 
 		if (bounce)

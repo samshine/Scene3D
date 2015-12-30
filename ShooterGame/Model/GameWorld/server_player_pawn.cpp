@@ -44,7 +44,7 @@ void ServerPlayerPawn::net_event_received(const std::string &sender, const uicor
 	}
 }
 
-void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
+void ServerPlayerPawn::apply_damage(float damage)
 {
 	float last_health = health;
 
@@ -53,13 +53,18 @@ void ServerPlayerPawn::apply_damage(const GameTick &tick, float damage)
 	NetGameEvent net_event("player-pawn-hit");
 	net_event.add_argument(id());
 
-	world()->network->queue_event("all", net_event, tick.arrival_tick_time);
+	world()->network->queue_event("all", net_event, world()->net_tick.arrival_tick_time);
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
 		if (world()->game_master)
-			world()->game_master->player_killed(tick, to_type<ServerPlayerPawn>());
+			world()->game_master->player_killed(world()->net_tick, to_type<ServerPlayerPawn>());
 	}
+}
+
+void ServerPlayerPawn::apply_impulse(const uicore::Vec3f &force)
+{
+	character_controller.apply_impulse(force);
 }
 
 void ServerPlayerPawn::send_net_create(const GameTick &tick, const std::string &target)
