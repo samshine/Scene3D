@@ -28,6 +28,11 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	font_desc3.set_subpixel(false);
 	font3 = Font::create(font_desc3, "Resources/Fonts/LuckiestGuy/LuckiestGuy.ttf");
 
+	FontDescription font_small_desc;
+	font_small_desc.set_height(18.0f);
+	font_small_desc.set_line_height(18.0f);
+	font_small = Font::create("Consolas", font_small_desc);
+
 	crosshair = Image::create(canvas(), "Resources/UI/HUD/crosshair3_red.png");
 
 	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
@@ -61,6 +66,7 @@ void GameScreenController::update()
 	Path::rect(Rectf::xywh(11.0f, offset + 191.0f, 600.0f, 1.0f))->fill(canvas(), Brush::solid_rgba8(200, 200, 255, 50));
 	Path::rect(Rectf::xywh(611.0f, offset + 11.0f, 1.0f, 180.0f))->fill(canvas(), Brush::solid_rgba8(200, 200, 255, 50));
 
+	auto font_small_metrics = font_small->font_metrics(canvas());
 	auto font_metrics = font->font_metrics(canvas());
 	auto font_metrics2 = font2->font_metrics(canvas());
 	auto font_metrics3 = font3->font_metrics(canvas());
@@ -104,6 +110,32 @@ void GameScreenController::update()
 
 	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
+
+	update_stats_cooldown = std::max(update_stats_cooldown - game_time().get_time_elapsed(), 0.0f);
+	if (update_stats_cooldown == 0.0f)
+	{
+		fps = string_format("%1 fps", fps_counter);
+		fps_counter = 0;
+
+		update_stats.clear();
+		for (const auto &result : client_game->client->scene_engine->gpu_results())
+			update_stats.push_back(string_format("%1: %2 ms", result.name, (int)std::round(result.time_elapsed * 1000.0f)));
+
+		update_stats_cooldown = 1.0f;
+	}
+
+	fps_counter++;
+
+	y = 200.0f + font_small_metrics.baseline_offset();
+	for (const auto &text : update_stats)
+	{
+		font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
+		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, Colorf::whitesmoke);
+		y += font_small_metrics.line_height();
+	}
+	font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, Colorf::black);
+	font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), fps).advance.width, y, fps, Colorf::whitesmoke);
+	y += font_small_metrics.line_height();
 
 	if (client_game->game_master->announcement_timeout > 0.0f)
 	{

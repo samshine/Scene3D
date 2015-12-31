@@ -16,7 +16,7 @@ private:
 	std::vector<std::string> playlist;
 	size_t current_song_index;
 	bool loop;
-	float volume = 1.0f;
+	float volume = 0.5f;
 
 	SoundBuffer current_song;
 	SoundBuffer_Session current_session;

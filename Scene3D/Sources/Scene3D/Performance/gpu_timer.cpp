@@ -5,6 +5,8 @@
 #include <d3d11.h>
 #endif
 
+#define ENABLE_GPU_TIMER
+
 using namespace uicore;
 
 class GPUTimerImpl

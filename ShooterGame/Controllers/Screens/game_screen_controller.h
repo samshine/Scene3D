@@ -15,8 +15,13 @@ private:
 
 	std::unique_ptr<GameWorld> client_game;
 	std::unique_ptr<GameWorld> server_game;
-	uicore::FontPtr font, font2, font3;
+	uicore::FontPtr font, font2, font3, font_small;
 	uicore::ImagePtr crosshair;
+
+	float update_stats_cooldown = 0.0f;
+	std::vector<std::string> update_stats;
+	int fps_counter = 0;
+	std::string fps;
 
 	std::vector<std::string> log_messages;
 };
