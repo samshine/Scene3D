@@ -84,7 +84,7 @@ void MenuScreenController::create_menus()
 	};
 
 	host_menu = {
-		{ "Create Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false, Text::parse_float(mouse_speed_x), Text::parse_float(mouse_speed_y))); } },
+		{ "Create Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("", port, true, Text::parse_float(mouse_speed_x), Text::parse_float(mouse_speed_y))); } },
 		{ "Player Name:", [this]() { begin_edit(&player_name); }, [this]() { return player_name; } },
 		{ "Port:", [this]() { begin_edit(&port); }, [this]() { return port; } },
 		{ "Back", [this]() { pop_menu(); } }
