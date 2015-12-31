@@ -8,15 +8,18 @@
 
 using namespace uicore;
 
+#define NO_BOTS
+
 GameMaster::GameMaster(GameWorld *world) : GameObject(world)
 {
 }
 
 void GameMaster::game_start()
 {
+#ifndef NO_BOTS
 	if (!world()->client)
 	{
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			float random = rand() / (float)RAND_MAX;
 			int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
@@ -26,6 +29,7 @@ void GameMaster::game_start()
 			bots.push_back(pawn);
 		}
 	}
+#endif
 }
 
 void GameMaster::tick(const GameTick &tick)

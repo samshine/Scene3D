@@ -174,13 +174,16 @@ GameWorld::~GameWorld()
 {
 }
 
-void GameWorld::update(uicore::Vec2i new_mouse_movement)
+void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 {
 	ScopeTimeFunction();
 
-	mouse_movement = new_mouse_movement;
-	if (client)
-		client->buttons.update(client->window);
+	if (has_focus)
+	{
+		mouse_movement = new_mouse_movement;
+		if (client)
+			client->buttons.update(client->window);
+	}
 
 	network->update();
 

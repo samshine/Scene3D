@@ -7,10 +7,13 @@
 class GameScreenController : public ScreenViewController
 {
 public:
-	GameScreenController(std::string hostname, std::string port, bool host_game);
+	GameScreenController(std::string hostname, std::string port, bool host_game, float mouse_speed_x, float mouse_speed_y);
+	~GameScreenController();
+
 	void update() override;
 
 private:
+	void server_thread_main();
 	void on_log_event(const std::string &type, const std::string &text);
 
 	std::unique_ptr<GameWorld> client_game;
@@ -25,4 +28,9 @@ private:
 	std::string ping;
 
 	std::vector<std::string> log_messages;
+
+	std::thread server_thread;
+	std::mutex server_mutex;
+	bool stop_server = false;
+	std::exception_ptr server_exception;
 };

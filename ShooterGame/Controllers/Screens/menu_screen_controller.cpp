@@ -68,7 +68,7 @@ MenuScreenController::MenuScreenController()
 void MenuScreenController::create_menus()
 {
 	main_menu = {
-		{ "New Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("localhost", "5004", true)); } },
+		{ "New Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("localhost", "5004", true, Text::parse_float(mouse_speed_x), Text::parse_float(mouse_speed_y))); } },
 		{ "Join Game", [this]() { push_menu(&join_menu); } },
 		{ "Host Game", [this]() { push_menu(&host_menu); } },
 		{ "Options", [this]() { push_menu(&options_menu); } },
@@ -76,7 +76,7 @@ void MenuScreenController::create_menus()
 	};
 
 	join_menu = {
-		{ "Join Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false)); } },
+		{ "Join Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false, Text::parse_float(mouse_speed_x), Text::parse_float(mouse_speed_y))); } },
 		{ "Player Name:", [this]() { begin_edit(&player_name); }, [this]() { return player_name; } },
 		{ "Server:", [this]() { begin_edit(&server); }, [this]() { return server; } },
 		{ "Port:", [this]() { begin_edit(&port); }, [this]() { return port; } },
@@ -84,7 +84,7 @@ void MenuScreenController::create_menus()
 	};
 
 	host_menu = {
-		{ "Create Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false)); } },
+		{ "Create Game", [this]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server, port, false, Text::parse_float(mouse_speed_x), Text::parse_float(mouse_speed_y))); } },
 		{ "Player Name:", [this]() { begin_edit(&player_name); }, [this]() { return player_name; } },
 		{ "Port:", [this]() { begin_edit(&port); }, [this]() { return port; } },
 		{ "Back", [this]() { pop_menu(); } }
@@ -112,6 +112,8 @@ void MenuScreenController::create_menus()
 	};
 
 	controls_menu = {
+		{ "Mouse speed X:", [this]() { begin_edit(&mouse_speed_x); }, [this]() { return mouse_speed_x; } },
+		{ "Mouse speed Y:", [this]() { begin_edit(&mouse_speed_y); }, [this]() { return mouse_speed_y; } },
 		{ "Back", [this]() { pop_menu(); } }
 	};
 

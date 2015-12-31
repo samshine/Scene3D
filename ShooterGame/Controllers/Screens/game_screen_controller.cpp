@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-GameScreenController::GameScreenController(std::string hostname, std::string port, bool host_game)
+GameScreenController::GameScreenController(std::string hostname, std::string port, bool host_game, float mouse_speed_x, float mouse_speed_y)
 {
 	set_cursor_hidden();
 
@@ -39,8 +39,48 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
 
 	if (host_game)
+	{
 		server_game = std::make_unique<GameWorld>(hostname, port);
+		server_thread = std::thread(&GameScreenController::server_thread_main, this);
+	}
 	client_game = std::make_unique<GameWorld>(!hostname.empty() ? hostname : "localhost", port, std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache()));
+	client_game->client->mouse_speed_x = mouse_speed_x;
+	client_game->client->mouse_speed_y = mouse_speed_y;
+}
+
+GameScreenController::~GameScreenController()
+{
+	if (server_game)
+	{
+		server_mutex.lock();
+		stop_server = true;
+		server_mutex.unlock();
+		server_thread.join();
+	}
+}
+
+void GameScreenController::server_thread_main()
+{
+	try
+	{
+		while (true)
+		{
+			server_mutex.lock();
+			if (stop_server)
+			{
+				server_mutex.unlock();
+				break;
+			}
+			server_mutex.unlock();
+
+			server_game->update(Vec2i(), false);
+			System::sleep(5);
+		}
+	}
+	catch (...)
+	{
+		server_exception = std::current_exception();
+	}
 }
 
 void GameScreenController::on_log_event(const std::string &type, const std::string &text)
@@ -50,8 +90,14 @@ void GameScreenController::on_log_event(const std::string &type, const std::stri
 
 void GameScreenController::update()
 {
-	server_game->update(Vec2i());
-	client_game->update(mouse_delta());
+	if (server_exception)
+	{
+		auto except = server_exception;
+		server_exception = std::exception_ptr();
+		std::rethrow_exception(except);
+	}
+
+	client_game->update(mouse_delta(), cursor_hidden());
 
 	scene_viewport()->set_camera(client_game->client->scene_camera);
 	scene_viewport()->update(gc(), game_time().time_elapsed());

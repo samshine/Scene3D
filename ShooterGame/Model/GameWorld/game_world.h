@@ -37,6 +37,8 @@ public:
 	MusicPlayer music_player;
 
 	InputButtons buttons;
+	float mouse_speed_x = 5.0f;
+	float mouse_speed_y = 5.0f;
 };
 
 class GameWorld
@@ -45,7 +47,7 @@ public:
 	GameWorld(const std::string &hostname, const std::string &port, const std::shared_ptr<GameWorldClient> &client = nullptr);
 	~GameWorld();
 
-	void update(uicore::Vec2i mouse_movement);
+	void update(uicore::Vec2i mouse_movement, bool has_focus);
 
 	std::shared_ptr<GameObject> get(int id);
 
