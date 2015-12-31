@@ -25,22 +25,22 @@ int LockStepClientTime::get_ticks_elapsed() const
 
 float LockStepClientTime::get_tick_time_elapsed() const
 {
-	return game_time.get_tick_time_elapsed();
+	return game_time.tick_time_elapsed();
 }
 
 int LockStepClientTime::get_tick_time_elapsed_ms() const
 {
-	return game_time.get_tick_time_elapsed_ms();
+	return game_time.tick_time_elapsed_ms();
 }
 
 float LockStepClientTime::get_tick_interpolation_time() const
 {
-	return game_time.get_tick_interpolation_time();
+	return game_time.tick_interpolation_time();
 }
 
 float LockStepClientTime::get_updates_per_second() const
 {
-	return game_time.get_updates_per_second();
+	return game_time.updates_per_second();
 }
 
 int LockStepClientTime::get_receive_tick_time() const
@@ -59,7 +59,7 @@ void LockStepClientTime::update()
 
 	last_client_tick_time = client_tick_time;
 
-	for (int i = 0; i < game_time.get_ticks_elapsed(); i++)
+	for (int i = 0; i < game_time.ticks_elapsed(); i++)
 	{
 		client_tick_time++;
 		server_tick_time++;
@@ -75,16 +75,20 @@ void LockStepClientTime::update()
 		}
 		else if (tick_delta > -jitter_ticks) // Slow time if client is too close to server
 		{
-			client_tick_time--;
+			game_time.set_tick_time_adjustment(5000);
 		}
 		else if (tick_delta < -jitter_ticks) // Speed up time if client is too far away from server
 		{
-			client_tick_time++;
+			game_time.set_tick_time_adjustment(-5000);
+		}
+		else
+		{
+			game_time.set_tick_time_adjustment(0);
 		}
 	}
 
 	// Send a ping packet once a second:
-	next_send_ping = std::max(next_send_ping - game_time.get_ticks_elapsed(), 0);
+	next_send_ping = std::max(next_send_ping - game_time.ticks_elapsed(), 0);
 	if (next_send_ping == 0)
 	{
 		network->queue_event("server", NetGameEvent("LockStepPing", { (unsigned int)System::get_time() }));

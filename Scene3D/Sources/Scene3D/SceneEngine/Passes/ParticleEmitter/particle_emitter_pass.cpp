@@ -201,7 +201,8 @@ void ParticleEmitterPass::setup()
 
 		BlendStateDescription blend_desc;
 		blend_desc.enable_blending(true);
-		blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
+		//blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
+		blend_desc.set_blend_function(blend_one, blend_one, blend_zero, blend_one);
 		blend_state = inout.gc->create_blend_state(blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;

@@ -53,7 +53,7 @@ void GameScreenController::update()
 	client_game->update(mouse_delta());
 
 	scene_viewport()->set_camera(client_game->client->scene_camera);
-	scene_viewport()->update(gc(), game_time().get_time_elapsed());
+	scene_viewport()->update(gc(), game_time().time_elapsed());
 	scene_viewport()->render(gc());
 
 	canvas()->begin();
@@ -111,7 +111,7 @@ void GameScreenController::update()
 	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
 
-	update_stats_cooldown = std::max(update_stats_cooldown - game_time().get_time_elapsed(), 0.0f);
+	update_stats_cooldown = std::max(update_stats_cooldown - game_time().time_elapsed(), 0.0f);
 	if (update_stats_cooldown == 0.0f)
 	{
 		fps = string_format("%1 fps", fps_counter);

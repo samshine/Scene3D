@@ -170,5 +170,5 @@ void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_v
 		}
 	}
 
-	scene_viewport->update(gc, gametime.get_time_elapsed());
+	scene_viewport->update(gc, gametime.time_elapsed());
 }

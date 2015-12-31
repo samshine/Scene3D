@@ -17,27 +17,27 @@ LockStepServerTime::~LockStepServerTime()
 
 int LockStepServerTime::get_ticks_elapsed() const
 {
-	return game_time.get_ticks_elapsed();
+	return game_time.ticks_elapsed();
 }
 
 float LockStepServerTime::get_tick_time_elapsed() const
 {
-	return game_time.get_tick_time_elapsed();
+	return game_time.tick_time_elapsed();
 }
 
 int LockStepServerTime::get_tick_time_elapsed_ms() const
 {
-	return game_time.get_tick_time_elapsed_ms();
+	return game_time.tick_time_elapsed_ms();
 }
 
 float LockStepServerTime::get_tick_interpolation_time() const
 {
-	return game_time.get_tick_interpolation_time();
+	return game_time.tick_interpolation_time();
 }
 
 float LockStepServerTime::get_updates_per_second() const
 {
-	return game_time.get_updates_per_second();
+	return game_time.updates_per_second();
 }
 
 void LockStepServerTime::update()

@@ -187,7 +187,7 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement)
 	lock_step_time->update();
 	elapsed_timer.update();
 
-	float time_elapsed = elapsed_timer.get_time_elapsed();
+	float time_elapsed = elapsed_timer.time_elapsed();
 
 	int ticks = lock_step_time->get_ticks_elapsed();
 	for (int i = 0; i < ticks; i++)

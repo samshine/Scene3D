@@ -114,11 +114,11 @@ void SceneController::update_scene(const SceneViewportPtr &scene_viewport, const
 	scene_viewport->camera()->set_position(position);
 	scene_viewport->camera()->set_orientation(camera_quaternion);
 
-	scene_viewport->update(gc, gametime.get_time_elapsed());
+	scene_viewport->update(gc, gametime.time_elapsed());
 	if (object1)
-		object1->update(gametime.get_time_elapsed());
+		object1->update(gametime.time_elapsed());
 	for (auto &attachment : attachments)
-		attachment->update(gametime.get_time_elapsed());
+		attachment->update(gametime.time_elapsed());
 }
 
 void SceneController::model_data_updated()

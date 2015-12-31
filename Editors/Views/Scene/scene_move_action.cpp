@@ -10,7 +10,7 @@ SceneMoveAction::SceneMoveAction()
 	timer->func_expired() = [this]()
 	{
 		gametime.update();
-		func_key_repeat(keys, gametime.get_time_elapsed());
+		func_key_repeat(keys, gametime.time_elapsed());
 	};
 }
 

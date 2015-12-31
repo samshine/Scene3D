@@ -206,17 +206,17 @@ void MenuScreenController::on_mouse_move(const uicore::InputEvent &e)
 
 void MenuScreenController::update()
 {
-	fade_time = std::min(fade_time + game_time().get_time_elapsed() * 2.0f, 1.0f);
+	fade_time = std::min(fade_time + game_time().time_elapsed() * 2.0f, 1.0f);
 
-	t = std::fmod(t + game_time().get_time_elapsed() * 0.01f, 2.0f);
+	t = std::fmod(t + game_time().time_elapsed() * 0.01f, 2.0f);
 
 	float t2 = t > 1.0f ? 2.0f - t : t;
 	scene_camera->set_position(Vec3f(-12.0f, 2.5f + 1.8f, -12.0f - 3.0f * t2));
 
 	scene_viewport()->set_camera(scene_camera);
 	for (const auto &item : scene_objects)
-		item->update(game_time().get_time_elapsed());
-	scene_viewport()->update(gc(), game_time().get_time_elapsed());
+		item->update(game_time().time_elapsed());
+	scene_viewport()->update(gc(), game_time().time_elapsed());
 	scene_viewport()->render(gc());
 
 	canvas()->begin();
@@ -239,7 +239,7 @@ void MenuScreenController::update()
 		font_h1->draw_text(canvas(), x, y, str, Colorf::palegoldenrod);
 	}
 
-	blink = std::fmod(blink + game_time().get_time_elapsed() * 2.0f, 2.0f);
+	blink = std::fmod(blink + game_time().time_elapsed() * 2.0f, 2.0f);
 
 	float y = (canvas()->size().height - 5.0f * line_height) * 0.5f;
 
