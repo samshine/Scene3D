@@ -22,6 +22,7 @@ private:
 	std::vector<std::string> update_stats;
 	int fps_counter = 0;
 	std::string fps;
+	std::string ping;
 
 	std::vector<std::string> log_messages;
 };

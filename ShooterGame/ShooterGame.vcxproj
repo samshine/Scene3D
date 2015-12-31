@@ -184,7 +184,6 @@
     <ClInclude Include="Model\Network\lock_step_client_time.h" />
     <ClInclude Include="Model\Network\lock_step_server_time.h" />
     <ClInclude Include="Model\Network\lock_step_time.h" />
-    <ClInclude Include="Model\Network\netevents.h" />
     <ClInclude Include="Model\Network\NetGame\client.h" />
     <ClInclude Include="Model\Network\NetGame\client_impl.h" />
     <ClInclude Include="Model\Network\NetGame\connection.h" />
@@ -197,7 +196,6 @@
     <ClInclude Include="Model\Network\NetGame\network_event.h" />
     <ClInclude Include="Model\Network\NetGame\server.h" />
     <ClInclude Include="Model\Network\NetGame\server_impl.h" />
-    <ClInclude Include="Model\Network\net_tick_timer.h" />
     <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
@@ -238,7 +236,6 @@
     <ClCompile Include="Model\Network\NetGame\event_value.cpp" />
     <ClCompile Include="Model\Network\NetGame\network_data.cpp" />
     <ClCompile Include="Model\Network\NetGame\server.cpp" />
-    <ClCompile Include="Model\Network\net_tick_timer.cpp" />
     <ClCompile Include="mouse_movement.cpp" />
     <ClCompile Include="precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

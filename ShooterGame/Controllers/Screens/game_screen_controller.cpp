@@ -3,6 +3,7 @@
 #include "game_screen_controller.h"
 #include "Model/GameWorld/game_master.h"
 #include "Model/GameWorld/client_player_pawn.h"
+#include "Model/Network/lock_step_client_time.h"
 
 using namespace uicore;
 
@@ -122,6 +123,8 @@ void GameScreenController::update()
 			update_stats.push_back(string_format("%1: %2 ms", result.name, (int)std::round(result.time_elapsed * 1000.0f)));
 
 		update_stats_cooldown = 1.0f;
+
+		ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
 	}
 
 	fps_counter++;
@@ -135,6 +138,9 @@ void GameScreenController::update()
 	}
 	font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, Colorf::black);
 	font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), fps).advance.width, y, fps, Colorf::whitesmoke);
+	y += font_small_metrics.line_height();
+	font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), ping).advance.width, y + 2.0f, ping, Colorf::black);
+	font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), ping).advance.width, y, ping, Colorf::whitesmoke);
 	y += font_small_metrics.line_height();
 
 	if (client_game->game_master->announcement_timeout > 0.0f)

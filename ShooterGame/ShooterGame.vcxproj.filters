@@ -82,12 +82,6 @@
     <ClInclude Include="Model\Network\lock_step_time.h">
       <Filter>Model\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Network\net_tick_timer.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\netevents.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Audio\music_player.h">
       <Filter>Model\Audio</Filter>
     </ClInclude>
@@ -211,9 +205,6 @@
       <Filter>Model\Network</Filter>
     </ClCompile>
     <ClCompile Include="Model\Network\lock_step_server_time.cpp">
-      <Filter>Model\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\net_tick_timer.cpp">
       <Filter>Model\Network</Filter>
     </ClCompile>
     <ClCompile Include="Model\Audio\music_player.cpp">

@@ -75,11 +75,11 @@ void LockStepClientTime::update()
 		}
 		else if (tick_delta > -jitter_ticks) // Slow time if client is too close to server
 		{
-			game_time.set_tick_time_adjustment(5000);
+			game_time.set_tick_time_adjustment(2500);
 		}
 		else if (tick_delta < -jitter_ticks) // Speed up time if client is too far away from server
 		{
-			game_time.set_tick_time_adjustment(-5000);
+			game_time.set_tick_time_adjustment(-2500);
 		}
 		else
 		{
