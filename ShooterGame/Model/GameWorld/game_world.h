@@ -37,8 +37,8 @@ public:
 	MusicPlayer music_player;
 
 	InputButtons buttons;
-	float mouse_speed_x = 5.0f;
-	float mouse_speed_y = 5.0f;
+	float mouse_speed_x = 8.0f;
+	float mouse_speed_y = 8.0f;
 };
 
 class GameWorld
@@ -94,7 +94,6 @@ private:
 
 	std::map<int, std::shared_ptr<GameObject>> remote_objects;
 
-	uicore::GameTime elapsed_timer;
 	uicore::SlotContainer slots;
 
 	friend class GameObject;

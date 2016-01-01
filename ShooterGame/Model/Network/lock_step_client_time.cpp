@@ -57,6 +57,11 @@ void LockStepClientTime::update()
 {
 	game_time.update();
 
+	/*static FilePtr file = File::create_always("c:\\development\\debug.txt");
+	static uint64_t start_time = System::get_microseconds();
+	auto str = string_format("Time: %1 ms, Ticks %2, Tick interpolate %3\r\n", (System::get_microseconds() - start_time) / 1000.0, game_time.ticks_elapsed(), game_time.tick_interpolation_time());
+	file->write(str.data(), str.length());*/
+
 	last_client_tick_time = client_tick_time;
 
 	for (int i = 0; i < game_time.ticks_elapsed(); i++)

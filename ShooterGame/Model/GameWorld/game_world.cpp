@@ -188,9 +188,8 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 	network->update();
 
 	lock_step_time->update();
-	elapsed_timer.update();
 
-	float time_elapsed = elapsed_timer.time_elapsed();
+	float time_elapsed = lock_step_time->get_tick_interpolation_time() * lock_step_time->get_tick_time_elapsed();
 
 	int ticks = lock_step_time->get_ticks_elapsed();
 	for (int i = 0; i < ticks; i++)

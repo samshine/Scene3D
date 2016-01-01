@@ -331,8 +331,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	cur_movement.dir = std::remainder(cur_movement.dir + world()->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * time_elapsed, 360.0f);
-	cur_movement.up = clamp(cur_movement.up + world()->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * time_elapsed, -90.0f, 90.0f);
+	cur_movement.dir = std::remainder(cur_movement.dir + world()->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
+	cur_movement.up = clamp(cur_movement.up + world()->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 

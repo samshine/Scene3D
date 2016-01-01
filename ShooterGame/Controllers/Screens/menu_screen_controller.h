@@ -59,6 +59,6 @@ private:
 	std::string server = "localhost";
 	std::string port = "5004";
 
-	std::string mouse_speed_x = "5.0";
-	std::string mouse_speed_y = "5.0";
+	std::string mouse_speed_x = "8.0";
+	std::string mouse_speed_y = "8.0";
 };
