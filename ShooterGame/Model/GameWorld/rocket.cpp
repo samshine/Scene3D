@@ -36,14 +36,15 @@ Rocket::Rocket(GameWorld *init_world, const uicore::NetGameEvent &net_event) : G
 		sound->play();
 
 		emitter = SceneParticleEmitter::create(world()->client->scene);
-		emitter->set_type(SceneParticleEmitter::type_omni);
+		emitter->set_type(SceneParticleEmitter::type_spot);
 		emitter->set_position(pos);
-		emitter->set_orientation(orientation);
-		emitter->set_particles_per_second(75.0f);
-		emitter->set_life_span(0.75f);
+		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+		emitter->set_falloff(30.0f);
+		emitter->set_particles_per_second(25.0f);
+		emitter->set_life_span(1.0f);
 		emitter->set_start_size(0.03f);
-		emitter->set_end_size(2.0f);
-		emitter->set_speed(1.0f);
+		emitter->set_end_size(4.0f);
+		emitter->set_speed(4.0f);
 		emitter->set_particle_texture("ParticleTextures/Smoke3/Smoke3.ctexture");
 		emitter->set_gradient_texture("ParticleTextures/Smoke3/gradient.png");
 	}
@@ -135,7 +136,7 @@ void Rocket::frame(float time_elapsed, float interpolated_time)
 	if (emitter)
 	{
 		emitter->set_position(mix(last_pos, pos, interpolated_time));
-		emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
+		//emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
 	}
 
 	if (sound)
