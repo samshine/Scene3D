@@ -9,7 +9,7 @@ public:
 	Explosion(GameWorld *world, const std::string &type, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~Explosion();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
 protected:

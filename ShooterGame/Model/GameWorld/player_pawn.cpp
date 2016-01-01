@@ -21,11 +21,11 @@ PlayerPawn::~PlayerPawn()
 {
 }
 
-void PlayerPawn::tick(const GameTick &tick)
+void PlayerPawn::tick()
 {
 	bool was_moving = animation_move_speed > 0.0f;
 
-	update_character_controller(tick.time_elapsed);
+	update_character_controller();
 
 	switch (cur_movement.key_weapon)
 	{
@@ -46,7 +46,7 @@ void PlayerPawn::tick(const GameTick &tick)
 	else
 		weapon->stop_fire("secondary");
 
-	weapon->tick(tick);
+	weapon->tick(game_tick());
 }
 
 void PlayerPawn::ground_moved(const Vec3f &offset)
@@ -54,15 +54,15 @@ void PlayerPawn::ground_moved(const Vec3f &offset)
 	//controller->set_position(controller->get_position() + offset);
 }
 
-void PlayerPawn::update_character_controller(float time_elapsed)
+void PlayerPawn::update_character_controller()
 {
-	cur_movement.key_forward.update(time_elapsed);
-	cur_movement.key_back.update(time_elapsed);
-	cur_movement.key_left.update(time_elapsed);
-	cur_movement.key_right.update(time_elapsed);
-	cur_movement.key_jump.update(time_elapsed);
-	cur_movement.key_fire_primary.update(time_elapsed);
-	cur_movement.key_fire_secondary.update(time_elapsed);
+	cur_movement.key_forward.update(time_elapsed());
+	cur_movement.key_back.update(time_elapsed());
+	cur_movement.key_left.update(time_elapsed());
+	cur_movement.key_right.update(time_elapsed());
+	cur_movement.key_jump.update(time_elapsed());
+	cur_movement.key_fire_primary.update(time_elapsed());
+	cur_movement.key_fire_secondary.update(time_elapsed());
 
 	EulerRotation rotation = character_controller.get_rotation();
 
@@ -87,7 +87,7 @@ void PlayerPawn::update_character_controller(float time_elapsed)
 	else if (thrust.y < -0.1f)
 		anim = "backward";
 
-	cur_movement.dodge_cooldown = std::max(cur_movement.dodge_cooldown - time_elapsed, 0.0f);
+	cur_movement.dodge_cooldown = std::max(cur_movement.dodge_cooldown - time_elapsed(), 0.0f);
 
 	if (cur_movement.key_jump.clicked && !character_controller.is_flying())
 	{
@@ -139,7 +139,7 @@ void PlayerPawn::update_character_controller(float time_elapsed)
 
 	Vec3f old_pos = character_controller.get_position();
 
-	character_controller.update(time_elapsed);
+	character_controller.update(time_elapsed());
 
 	Vec3f new_pos = character_controller.get_position();
 	animation_move_speed = (Vec2f(new_pos.x, new_pos.z) - Vec2f(old_pos.x, old_pos.z)).length();

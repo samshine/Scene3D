@@ -9,7 +9,7 @@ public:
 	PlayerRagdoll(GameWorld *world, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~PlayerRagdoll();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
 private:

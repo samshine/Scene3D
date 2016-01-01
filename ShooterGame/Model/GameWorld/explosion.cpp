@@ -83,9 +83,9 @@ Explosion::~Explosion()
 {
 }
 
-void Explosion::tick(const GameTick &tick)
+void Explosion::tick()
 {
-	time_left = std::max(time_left - tick.time_elapsed, 0.0f);
+	time_left = std::max(time_left - time_elapsed(), 0.0f);
 	if (time_left == 0.0f)
 	{
 		world()->remove(this);

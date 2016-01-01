@@ -7,7 +7,7 @@ SpawnPoint::SpawnPoint(GameWorld *world, const uicore::Vec3f &pos, float dir, fl
 {
 }
 
-void SpawnPoint::tick(const GameTick &tick)
+void SpawnPoint::tick()
 {
 }
 

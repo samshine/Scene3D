@@ -64,21 +64,21 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::tick(const GameTick &tick)
+void Bullet::tick()
 {
 	last_pos = pos;
 	last_orientation = orientation;
 
-	time_left = std::max(time_left - tick.time_elapsed, 0.0f);
+	time_left = std::max(time_left - time_elapsed(), 0.0f);
 	if (time_left == 0.0f)
 	{
 		world()->remove(this);
 		return;
 	}
 
-	pos += velocity * tick.time_elapsed;
+	pos += velocity * time_elapsed();
 
-	velocity.y -= tick.time_elapsed * gravity;
+	velocity.y -= time_elapsed() * gravity;
 
 	auto ray_hit = world()->collision->ray_test_nearest(last_pos, pos, [&](const Physics3DHit &result)
 	{

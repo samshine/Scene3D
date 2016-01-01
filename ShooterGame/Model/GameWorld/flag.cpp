@@ -22,7 +22,7 @@ Flag::~Flag()
 {
 }
 
-void Flag::tick(const GameTick &tick)
+void Flag::tick()
 {
 }
 

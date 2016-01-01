@@ -178,38 +178,37 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 {
 	ScopeTimeFunction();
 
-	if (has_focus)
+	if (client && has_focus)
 	{
-		mouse_movement = new_mouse_movement;
-		if (client)
-			client->buttons.update(client->window);
+		client->mouse_movement = new_mouse_movement;
+		client->buttons.update(client->window);
 	}
 
 	network->update();
 
 	lock_step_time->update();
 
-	float time_elapsed = lock_step_time->get_tick_interpolation_time() * lock_step_time->get_tick_time_elapsed();
-
-	int ticks = lock_step_time->get_ticks_elapsed();
+	int ticks = lock_step_time->ticks_elapsed();
 	for (int i = 0; i < ticks; i++)
 	{
-		int receive_tick_time = lock_step_time->get_receive_tick_time() + i;
-		int arrival_tick_time = lock_step_time->get_arrival_tick_time() + i;
-		float tick_time_elapsed = lock_step_time->get_tick_time_elapsed();
+		int receive_tick_time = lock_step_time->receive_tick_time() + i;
+		int arrival_tick_time = lock_step_time->arrival_tick_time() + i;
+		float tick_time_elapsed = lock_step_time->tick_time_elapsed();
 
 		collision->step_simulation_once(tick_time_elapsed);
 		net_tick = GameTick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
 		network->receive_events(receive_tick_time);
-		tick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
+		tick();
 	}
 
 	if (client)
 	{
+		float time_elapsed = lock_step_time->tick_interpolation_time() * lock_step_time->tick_time_elapsed();
+
 		for (auto &object : client->objects)
 			object->update(time_elapsed);
 
-		frame(time_elapsed, lock_step_time->get_tick_interpolation_time());
+		frame(time_elapsed, lock_step_time->tick_interpolation_time());
 
 		client->music_player.update();
 
@@ -253,12 +252,12 @@ std::shared_ptr<GameObject> GameWorld::get(int id)
 	return nullptr;
 }
 
-void GameWorld::tick(float time_elapsed, int receive_tick_time, int arrival_tick_time)
+void GameWorld::tick()
 {
 	for (auto it : objects)
 	{
 		if (it.first != 0)
-			it.second->tick(GameTick(time_elapsed, receive_tick_time, arrival_tick_time));
+			it.second->tick();
 	}
 
 	objects.insert(added_objects.begin(), added_objects.end());

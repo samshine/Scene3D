@@ -146,9 +146,9 @@ void PlayerRagdoll::calc_constraint_location(JointName joint, PartName part_a, V
 	joints_rotate_b[joint] = rotation;
 }
 
-void PlayerRagdoll::tick(const GameTick &tick)
+void PlayerRagdoll::tick()
 {
-	physics_timeout = std::max(physics_timeout - tick.time_elapsed, 0.0f);
+	physics_timeout = std::max(physics_timeout - time_elapsed(), 0.0f);
 	if (physics_timeout == 0.0f && parts[0])
 	{
 		for (int i = 0; i < total_joints; i++)

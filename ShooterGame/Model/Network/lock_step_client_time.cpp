@@ -18,37 +18,32 @@ LockStepClientTime::~LockStepClientTime()
 {
 }
 
-int LockStepClientTime::get_ticks_elapsed() const
+int LockStepClientTime::ticks_elapsed() const
 {
 	return client_tick_time - last_client_tick_time;
 }
 
-float LockStepClientTime::get_tick_time_elapsed() const
+float LockStepClientTime::tick_time_elapsed() const
 {
 	return game_time.tick_time_elapsed();
 }
 
-int LockStepClientTime::get_tick_time_elapsed_ms() const
+int LockStepClientTime::tick_time_elapsed_ms() const
 {
 	return game_time.tick_time_elapsed_ms();
 }
 
-float LockStepClientTime::get_tick_interpolation_time() const
+float LockStepClientTime::tick_interpolation_time() const
 {
 	return game_time.tick_interpolation_time();
 }
 
-float LockStepClientTime::get_updates_per_second() const
-{
-	return game_time.updates_per_second();
-}
-
-int LockStepClientTime::get_receive_tick_time() const
+int LockStepClientTime::receive_tick_time() const
 {
 	return last_client_tick_time;
 }
 
-int LockStepClientTime::get_arrival_tick_time() const
+int LockStepClientTime::arrival_tick_time() const
 {
 	return client_tick_time + ping_ticks + jitter_ticks;
 }

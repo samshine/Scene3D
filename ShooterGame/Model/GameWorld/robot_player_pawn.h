@@ -15,15 +15,15 @@ class RobotPlayerPawn : public ServerPlayerPawn
 public:
 	RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void apply_impulse(const uicore::Vec3f &force) override;
 
 private:
-	void tick_stationary(const GameTick &tick);
-	void tick_chase(const GameTick &tick);
-	void tick_path(const GameTick &tick);
+	void tick_stationary();
+	void tick_chase();
+	void tick_path();
 
-	void track_target(const GameTick &tick);
+	void track_target();
 
 	std::vector<int> create_path_steps(int start_segment, int end_segment, int max_depth, int avoid_segment);
 

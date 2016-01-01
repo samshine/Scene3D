@@ -37,6 +37,8 @@ public:
 	MusicPlayer music_player;
 
 	InputButtons buttons;
+	uicore::Point mouse_movement;
+
 	float mouse_speed_x = 8.0f;
 	float mouse_speed_y = 8.0f;
 };
@@ -72,21 +74,19 @@ public:
 
 	std::shared_ptr<GameMaster> game_master;
 
-	uicore::Point mouse_movement;
+	void add(std::shared_ptr<GameObject> obj);
+	void remove(GameObject *obj);
 
-	GameTick net_tick;
-
-	void tick(float time_elapsed, int time_step, int server_arrive_time_step);
+private:
+	void tick();
 	void frame(float time_elapsed, float interpolated_time);
 
 	void net_peer_connected(const std::string &peer_id);
 	void net_peer_disconnected(const std::string &peer_id);
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
-	void add(std::shared_ptr<GameObject> obj);
-	void remove(GameObject *obj);
+	GameTick net_tick;
 
-private:
 	std::map<int, std::shared_ptr<GameObject>> objects;
 	std::map<int, std::shared_ptr<GameObject>> added_objects;
 	std::vector<int> delete_list;

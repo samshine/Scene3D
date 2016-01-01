@@ -20,11 +20,11 @@ ServerPlayerPawn::~ServerPlayerPawn()
 {
 }
 
-void ServerPlayerPawn::tick(const GameTick &tick)
+void ServerPlayerPawn::tick()
 {
-	send_net_update(tick);
+	send_net_update();
 
-	PlayerPawn::tick(tick);
+	PlayerPawn::tick();
 }
 
 void ServerPlayerPawn::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
@@ -53,12 +53,12 @@ void ServerPlayerPawn::apply_damage(float damage)
 	NetGameEvent net_event("player-pawn-hit");
 	net_event.add_argument(id());
 
-	world()->network->queue_event("all", net_event, world()->net_tick.arrival_tick_time);
+	world()->network->queue_event("all", net_event, arrival_tick_time());
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
 		if (world()->game_master)
-			world()->game_master->player_killed(world()->net_tick, to_type<ServerPlayerPawn>());
+			world()->game_master->player_killed(to_type<ServerPlayerPawn>());
 	}
 }
 
@@ -67,7 +67,7 @@ void ServerPlayerPawn::apply_impulse(const uicore::Vec3f &force)
 	character_controller.apply_impulse(force);
 }
 
-void ServerPlayerPawn::send_net_create(const GameTick &tick, const std::string &target)
+void ServerPlayerPawn::send_net_create(const std::string &target)
 {
 	NetGameEvent net_event("create");
 	NetGameEvent net_event_owner("create");
@@ -77,21 +77,21 @@ void ServerPlayerPawn::send_net_create(const GameTick &tick, const std::string &
 	net_event_owner.add_argument(id());
 	net_event_owner.add_argument("player-pawn");
 
-	add_update_args(net_event, tick, false);
-	add_update_args(net_event_owner, tick, true);
+	add_update_args(net_event, false);
+	add_update_args(net_event_owner, true);
 
 	if (target == "all" && owner != "server")
 	{
-		world()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
-		world()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
+		world()->network->queue_event("!" + owner, net_event, arrival_tick_time());
+		world()->network->queue_event(owner, net_event_owner, arrival_tick_time());
 	}
 	else
 	{
-		world()->network->queue_event(target, target == owner ? net_event_owner : net_event, tick.arrival_tick_time);
+		world()->network->queue_event(target, target == owner ? net_event_owner : net_event, arrival_tick_time());
 	}
 }
 
-void ServerPlayerPawn::send_net_update(const GameTick &tick)
+void ServerPlayerPawn::send_net_update()
 {
 	NetGameEvent net_event("player-pawn-update");
 	NetGameEvent net_event_owner("player-pawn-update");
@@ -99,21 +99,21 @@ void ServerPlayerPawn::send_net_update(const GameTick &tick)
 	net_event.add_argument(id());
 	net_event_owner.add_argument(id());
 
-	add_update_args(net_event, tick, false);
-	add_update_args(net_event_owner, tick, true);
+	add_update_args(net_event, false);
+	add_update_args(net_event_owner, true);
 
 	if (owner != "server")
 	{
-		world()->network->queue_event("!" + owner, net_event, tick.arrival_tick_time);
-		world()->network->queue_event(owner, net_event_owner, tick.arrival_tick_time);
+		world()->network->queue_event("!" + owner, net_event, arrival_tick_time());
+		world()->network->queue_event(owner, net_event_owner, arrival_tick_time());
 	}
 	else
 	{
-		world()->network->queue_event("all", net_event, tick.arrival_tick_time);
+		world()->network->queue_event("all", net_event, arrival_tick_time());
 	}
 }
 
-void ServerPlayerPawn::add_update_args(uicore::NetGameEvent &net_event, const GameTick &tick, bool is_owner)
+void ServerPlayerPawn::add_update_args(uicore::NetGameEvent &net_event, bool is_owner)
 {
 	Vec3f pos = character_controller.get_position();
 	Vec3f velocity = character_controller.get_velocity();

@@ -15,10 +15,15 @@ public:
 	GameObject(GameWorld *world);
 	virtual ~GameObject();
 
-	virtual void tick(const GameTick &tick) { }
+	virtual void tick() { }
 	virtual void frame(float time_elapsed, float interpolated_time) { }
 
 	virtual void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) { }
+
+	const GameTick &game_tick() const;
+	float time_elapsed() const;
+	int receive_tick_time() const;
+	int arrival_tick_time() const;
 
 	GameWorld *world() const { return _world; }
 	int id() const { return _id; }

@@ -9,21 +9,21 @@ public:
 	Elevator(GameWorld *world, int level_obj_id, const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale);
 	~Elevator();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
 
 	int level_obj_id;
 
 protected:
-	void tick_down(const GameTick &tick);
-	void tick_start_triggered(const GameTick &tick);
-	void tick_moving_up(const GameTick &tick);
-	void tick_up(const GameTick &tick);
-	void tick_moving_down(const GameTick &tick);
+	void tick_down();
+	void tick_start_triggered();
+	void tick_moving_up();
+	void tick_up();
+	void tick_moving_down();
 
 	bool test_start_trigger();
 
-	void send_net_update(const GameTick &tick, const std::string &target);
+	void send_net_update(const std::string &target);
 
 	uicore::Vec3f pos1, pos2;
 	uicore::Quaternionf orientation;

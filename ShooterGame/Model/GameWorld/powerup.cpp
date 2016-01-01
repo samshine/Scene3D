@@ -22,7 +22,7 @@ Powerup::~Powerup()
 {
 }
 
-void Powerup::tick(const GameTick &tick)
+void Powerup::tick()
 {
 }
 

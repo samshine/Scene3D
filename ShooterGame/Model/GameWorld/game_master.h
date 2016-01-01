@@ -16,7 +16,7 @@ public:
 
 	void game_start();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
 
 	std::shared_ptr<PlayerList> player_list = std::make_shared<PlayerList>();
@@ -34,7 +34,7 @@ public:
 	void net_peer_connected(const std::string &peer_id);
 	void net_peer_disconnected(const std::string &peer_id);
 
-	void player_killed(const GameTick &tick, std::shared_ptr<ServerPlayerPawn> player);
+	void player_killed(std::shared_ptr<ServerPlayerPawn> player);
 
 	const int static_id = -1;
 };

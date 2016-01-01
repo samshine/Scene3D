@@ -61,7 +61,7 @@ public:
 	PlayerPawn(GameWorld *world);
 	~PlayerPawn();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 
 	void ground_moved(const uicore::Vec3f &offset);
 
@@ -78,7 +78,7 @@ public:
 	Weapon *get_weapon() { return weapon.get(); }
 
 protected:
-	void update_character_controller(float time_elapsed);
+	void update_character_controller();
 
 	PlayerPawnMovement cur_movement;
 	CharacterController character_controller;

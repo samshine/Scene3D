@@ -23,21 +23,21 @@ void ClientPlayerPawn::net_event_received(const std::string &sender, const uicor
 {
 	if (net_event.get_name() == "create")
 	{
-		net_create(world()->net_tick, net_event);
+		net_create(net_event);
 	}
 	else if (net_event.get_name() == "player-pawn-update")
 	{
-		net_update(world()->net_tick, net_event);
+		net_update(net_event);
 	}
 	else if (net_event.get_name() == "player-pawn-hit")
 	{
-		net_hit(world()->net_tick, net_event);
+		net_hit(net_event);
 	}
 }
 
-void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEvent &net_event)
+void ClientPlayerPawn::net_create(const uicore::NetGameEvent &net_event)
 {
-	net_update(tick, net_event, 1);
+	net_update(net_event, 1);
 
 	if (is_owner)
 	{
@@ -46,7 +46,7 @@ void ClientPlayerPawn::net_create(const GameTick &tick, const uicore::NetGameEve
 	}
 }
 
-void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEvent &net_event, int skip)
+void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int skip)
 {
 	is_owner = net_event.get_argument(skip + 1).get_boolean();
 	health = net_event.get_argument(skip + 19).get_number();
@@ -57,11 +57,11 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 		PlayerPawnMovement present_movement = cur_movement;
 
 		// Remove obsolete entries
-		while (!sent_movements.empty() && sent_movements.front().tick_time < tick.receive_tick_time)
+		while (!sent_movements.empty() && sent_movements.front().tick_time < receive_tick_time())
 			sent_movements.erase(sent_movements.begin());
 
 		// Do nothing if this packet is older than anything we have in our move buffer
-		if (sent_movements.empty() || sent_movements.front().tick_time != tick.receive_tick_time)
+		if (sent_movements.empty() || sent_movements.front().tick_time != receive_tick_time())
 		{
 			return;
 		}
@@ -94,7 +94,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 		character_controller.warp(pos, velocity, is_flying);
 
 		// Replay movement
-		update_character_controller(tick.time_elapsed);
+		update_character_controller();
 
 		//Console::write_line("Received dir %1 in tick %2", cur_movement.dir, tick.receive_tick_time);
 
@@ -115,7 +115,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 			movement = cur_movement;
 			movement.tick_time = tick_time;
 
-			update_character_controller(tick.time_elapsed);
+			update_character_controller();
 		}
 
 		// Restore current view dir
@@ -124,7 +124,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 	}
 	else
 	{
-		cur_movement.tick_time = tick.receive_tick_time;
+		cur_movement.tick_time = receive_tick_time();
 		cur_movement.key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
 		cur_movement.key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
 		cur_movement.key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
@@ -148,7 +148,7 @@ void ClientPlayerPawn::net_update(const GameTick &tick, const uicore::NetGameEve
 	}
 }
 
-void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent &net_event)
+void ClientPlayerPawn::net_hit(const uicore::NetGameEvent &net_event)
 {
 	if (!sound || !sound->playing())
 	{
@@ -169,7 +169,7 @@ void ClientPlayerPawn::net_hit(const GameTick &tick, const uicore::NetGameEvent 
 	}
 }
 
-void ClientPlayerPawn::tick(const GameTick &tick)
+void ClientPlayerPawn::tick()
 {
 	if (is_owner)
 	{
@@ -199,16 +199,16 @@ void ClientPlayerPawn::tick(const GameTick &tick)
 		netevent.add_argument(cur_movement.key_weapon);
 		netevent.add_argument(cur_movement.dir);
 		netevent.add_argument(cur_movement.up);
-		world()->network->queue_event("server", netevent, tick.arrival_tick_time);
+		world()->network->queue_event("server", netevent, arrival_tick_time());
 
 		PlayerPawnMovement past = cur_movement;
-		past.tick_time = tick.arrival_tick_time;
+		past.tick_time = arrival_tick_time();
 		sent_movements.push_back(past);
 	}
 
 	bool was_moving = animation_move_speed > 0.0f;
 
-	PlayerPawn::tick(tick);
+	PlayerPawn::tick();
 
 	bool is_moving = animation_move_speed > 0.0f;
 
@@ -331,8 +331,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	cur_movement.dir = std::remainder(cur_movement.dir + world()->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
-	cur_movement.up = clamp(cur_movement.up + world()->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
+	cur_movement.dir = std::remainder(cur_movement.dir + world()->client->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
+	cur_movement.up = clamp(cur_movement.up + world()->client->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 
@@ -419,15 +419,3 @@ void ClientPlayerPawn::shake_camera(float magnitude, float duration)
 		shake_speed = 1.0f / duration;
 	}
 }
-
-/*
-
-    // Find final mouse speed
-    var speed = this.mouseSpeed * this.mouseSpeedMultiplier;
-
-    this.setZoomMoveSpeed = function (fov, speed) {
-        this.camera.setFieldOfView(fov);
-        this.mouseSpeedMultiplier = speed;
-    }
-
-*/

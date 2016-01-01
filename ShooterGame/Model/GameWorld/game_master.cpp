@@ -32,9 +32,9 @@ void GameMaster::game_start()
 #endif
 }
 
-void GameMaster::tick(const GameTick &tick)
+void GameMaster::tick()
 {
-	announcement_timeout = std::max(announcement_timeout - tick.time_elapsed, 0.0f);
+	announcement_timeout = std::max(announcement_timeout - time_elapsed(), 0.0f);
 }
 
 void GameMaster::net_peer_connected(const std::string &peer_id)
@@ -48,17 +48,17 @@ void GameMaster::net_peer_connected(const std::string &peer_id)
 	auto pawn = std::make_shared<ServerPlayerPawn>(world(), peer_id, world()->spawn_points[spawn_index]);
 	world()->add(pawn);
 	server_players[peer_id] = pawn;
-	pawn->send_net_create(world()->net_tick, "all");
+	pawn->send_net_create("all");
 
 	for (auto it : server_players)
 	{
 		if (it.first != peer_id)
-			it.second->send_net_create(world()->net_tick, peer_id);
+			it.second->send_net_create(peer_id);
 	}
 
 	for (const auto &robot : bots)
 	{
-		robot->send_net_create(world()->net_tick, peer_id);
+		robot->send_net_create(peer_id);
 	}
 }
 
@@ -90,7 +90,7 @@ void GameMaster::net_event_received(const std::string &sender, const uicore::Net
 	}
 }
 
-void GameMaster::player_killed(const GameTick &tick, std::shared_ptr<ServerPlayerPawn> server_player)
+void GameMaster::player_killed(std::shared_ptr<ServerPlayerPawn> server_player)
 {
 	if (!world()->client)
 	{
@@ -107,7 +107,7 @@ void GameMaster::player_killed(const GameTick &tick, std::shared_ptr<ServerPlaye
 		netevent.add_argument(server_player->get_orientation().w);
 
 		world()->remove(server_player.get());
-		world()->network->queue_event("all", netevent, tick.arrival_tick_time);
+		world()->network->queue_event("all", netevent, arrival_tick_time());
 
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
@@ -121,14 +121,14 @@ void GameMaster::player_killed(const GameTick &tick, std::shared_ptr<ServerPlaye
 			auto pawn = std::make_shared<RobotPlayerPawn>(world(), "server", world()->spawn_points[spawn_index]);
 			world()->add(pawn);
 			bots.push_back(pawn);
-			pawn->send_net_create(tick, "all");
+			pawn->send_net_create("all");
 		}
 		else
 		{
 			auto pawn = std::make_shared<ServerPlayerPawn>(world(), peer_id, world()->spawn_points[spawn_index]);
 			world()->add(pawn);
 			server_players[peer_id] = pawn;
-			pawn->send_net_create(tick, "all");
+			pawn->send_net_create("all");
 		}
 	}
 }

@@ -64,15 +64,15 @@ void Rocket::send_create()
 	net_event.add_argument(orientation.z);
 	net_event.add_argument(orientation.w);
 
-	world()->network->queue_event("all", net_event, world()->net_tick.arrival_tick_time);
+	world()->network->queue_event("all", net_event, arrival_tick_time());
 }
 
-void Rocket::tick(const GameTick &tick)
+void Rocket::tick()
 {
 	last_pos = pos;
 	last_orientation = orientation;
 
-	time_left = std::max(time_left - tick.time_elapsed, 0.0f);
+	time_left = std::max(time_left - time_elapsed(), 0.0f);
 	if (time_left == 0.0f)
 	{
 		world()->remove(this);
@@ -82,7 +82,7 @@ void Rocket::tick(const GameTick &tick)
 	float speed = 40.0f;
 	auto direction = orientation.rotate_vector(Vec3f(0.0f, 0.0f, 1.0f));
 
-	pos += direction * (speed * tick.time_elapsed);
+	pos += direction * (speed * time_elapsed());
 
 	if (world()->client)
 		return;

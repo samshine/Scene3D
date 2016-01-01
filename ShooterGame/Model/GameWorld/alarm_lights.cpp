@@ -28,7 +28,7 @@ AlarmLights::~AlarmLights()
 {
 }
 
-void AlarmLights::tick(const GameTick &tick)
+void AlarmLights::tick()
 {
 }
 

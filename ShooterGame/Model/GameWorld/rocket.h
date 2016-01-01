@@ -13,7 +13,7 @@ public:
 
 	void send_create();
 
-	void tick(const GameTick &tick) override;
+	void tick() override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
 private:

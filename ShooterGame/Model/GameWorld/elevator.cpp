@@ -42,7 +42,7 @@ void Elevator::net_event_received(const std::string &sender, const uicore::NetGa
 	}
 }
 
-void Elevator::send_net_update(const GameTick &tick, const std::string &target)
+void Elevator::send_net_update(const std::string &target)
 {
 	NetGameEvent net_event("elevator-update");
 
@@ -50,22 +50,22 @@ void Elevator::send_net_update(const GameTick &tick, const std::string &target)
 	net_event.add_argument((int)state);
 	net_event.add_argument(time);
 
-	world()->network->queue_event(target, net_event, tick.arrival_tick_time);
+	world()->network->queue_event(target, net_event, arrival_tick_time());
 }
 
-void Elevator::tick(const GameTick &tick)
+void Elevator::tick()
 {
 	switch (state)
 	{
-	case state_down: tick_down(tick); break;
-	case state_start_triggered: tick_start_triggered(tick); break;
-	case state_moving_up: tick_moving_up(tick); break;
-	case state_up: tick_up(tick); break;
-	case state_moving_down: tick_moving_down(tick); break;
+	case state_down: tick_down(); break;
+	case state_start_triggered: tick_start_triggered(); break;
+	case state_moving_up: tick_moving_up(); break;
+	case state_up: tick_up(); break;
+	case state_moving_down: tick_moving_down(); break;
 	}
 }
 
-void Elevator::tick_down(const GameTick &tick)
+void Elevator::tick_down()
 {
 	if (test_start_trigger())
 	{
@@ -73,13 +73,13 @@ void Elevator::tick_down(const GameTick &tick)
 		time = 0.250f;
 
 		if (!world()->client)
-			send_net_update(tick, "all");
+			send_net_update("all");
 	}
 }
 
-void Elevator::tick_start_triggered(const GameTick &tick)
+void Elevator::tick_start_triggered()
 {
-	time = std::max(time - tick.time_elapsed, 0.0f);
+	time = std::max(time - time_elapsed(), 0.0f);
 	if (time == 0.0f)
 	{
 		state = state_moving_up;
@@ -88,13 +88,13 @@ void Elevator::tick_start_triggered(const GameTick &tick)
 			scene_object->play_animation("up", true);
 
 		if (!world()->client)
-			send_net_update(tick, "all");
+			send_net_update("all");
 	}
 }
 
-void Elevator::tick_moving_up(const GameTick &tick)
+void Elevator::tick_moving_up()
 {
-	float new_time = std::min(time + tick.time_elapsed * speed, 1.0f);
+	float new_time = std::min(time + time_elapsed() * speed, 1.0f);
 
 	if (scene_object)
 	{
@@ -130,13 +130,13 @@ void Elevator::tick_moving_up(const GameTick &tick)
 			scene_object->play_animation("default", true);
 
 		if (!world()->client)
-			send_net_update(tick, "all");
+			send_net_update("all");
 	}
 }
 
-void Elevator::tick_up(const GameTick &tick)
+void Elevator::tick_up()
 {
-	time = std::max(time - tick.time_elapsed, 0.0f);
+	time = std::max(time - time_elapsed(), 0.0f);
 
 	if (time == 0.0f)
 	{
@@ -147,13 +147,13 @@ void Elevator::tick_up(const GameTick &tick)
 			scene_object->play_animation("down", true);
 
 		if (!world()->client)
-			send_net_update(tick, "all");
+			send_net_update("all");
 	}
 }
 
-void Elevator::tick_moving_down(const GameTick &tick)
+void Elevator::tick_moving_down()
 {
-	float new_time = std::max(time - tick.time_elapsed * speed, 0.0f);
+	float new_time = std::max(time - time_elapsed() * speed, 0.0f);
 
 	if (scene_object)
 	{
@@ -176,7 +176,7 @@ void Elevator::tick_moving_down(const GameTick &tick)
 			scene_object->play_animation("default", true);
 
 		if (!world()->client)
-			send_net_update(tick, "all");
+			send_net_update("all");
 	}
 }
 

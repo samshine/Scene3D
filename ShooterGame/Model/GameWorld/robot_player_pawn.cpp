@@ -20,9 +20,9 @@ void RobotPlayerPawn::apply_impulse(const uicore::Vec3f &force)
 	}
 }
 
-void RobotPlayerPawn::tick(const GameTick &tick)
+void RobotPlayerPawn::tick()
 {
-	ServerPlayerPawn::tick(tick);
+	ServerPlayerPawn::tick();
 
 	cur_movement.key_forward.next_pressed = false;
 	cur_movement.key_back.next_pressed = false;
@@ -33,8 +33,8 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 	cur_movement.key_fire_secondary.next_pressed = false;
 	cur_movement.key_weapon = 0;
 
-	mode_change_cooldown = std::max(mode_change_cooldown - tick.time_elapsed, 0.0f);
-	weapon_change_cooldown = std::max(weapon_change_cooldown - tick.time_elapsed, 0.0f);
+	mode_change_cooldown = std::max(mode_change_cooldown - time_elapsed(), 0.0f);
+	weapon_change_cooldown = std::max(weapon_change_cooldown - time_elapsed(), 0.0f);
 
 	if (mode_change_cooldown == 0.0f)
 	{
@@ -50,19 +50,19 @@ void RobotPlayerPawn::tick(const GameTick &tick)
 
 	switch (mode)
 	{
-	case RobotPlayerMode::stationary: tick_stationary(tick); break;
-	case RobotPlayerMode::chase: tick_chase(tick); break;
-	case RobotPlayerMode::path: tick_path(tick); break;
+	case RobotPlayerMode::stationary: tick_stationary(); break;
+	case RobotPlayerMode::chase: tick_chase(); break;
+	case RobotPlayerMode::path: tick_path(); break;
 	}
 
-	track_target(tick);
+	track_target();
 }
 
-void RobotPlayerPawn::tick_stationary(const GameTick &tick)
+void RobotPlayerPawn::tick_stationary()
 {
 }
 
-void RobotPlayerPawn::tick_path(const GameTick &tick)
+void RobotPlayerPawn::tick_path()
 {
 	if (current_path_index == current_path.size())
 	{
@@ -108,7 +108,7 @@ void RobotPlayerPawn::tick_path(const GameTick &tick)
 	else if (delta > 180.0f)
 		delta -= 360.0f;
 
-	float turn_speed = 120.0f * tick.time_elapsed;
+	float turn_speed = 120.0f * time_elapsed();
 
 	if (std::abs(delta) < turn_speed)
 		cur_movement.dir = wanted_angle;
@@ -204,7 +204,7 @@ std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_s
 	return path_points;
 }
 
-void RobotPlayerPawn::tick_chase(const GameTick &tick)
+void RobotPlayerPawn::tick_chase()
 {
 	if (weapon_change_cooldown == 0.0f)
 	{
@@ -216,7 +216,7 @@ void RobotPlayerPawn::tick_chase(const GameTick &tick)
 	}
 }
 
-void RobotPlayerPawn::track_target(const GameTick &tick)
+void RobotPlayerPawn::track_target()
 {
 	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
@@ -229,7 +229,7 @@ void RobotPlayerPawn::track_target(const GameTick &tick)
 
 	if (target)
 	{
-		aim_angle_cooldown = std::max(aim_angle_cooldown - tick.time_elapsed, 0.0f);
+		aim_angle_cooldown = std::max(aim_angle_cooldown - time_elapsed(), 0.0f);
 		if (aim_angle_cooldown == 0.0f)
 		{
 			float random = rand() / (float)RAND_MAX;
@@ -266,7 +266,7 @@ void RobotPlayerPawn::track_target(const GameTick &tick)
 			else if (delta > 180.0f)
 				delta -= 360.0f;
 
-			float turn_speed = 120.0f * tick.time_elapsed;
+			float turn_speed = 120.0f * time_elapsed();
 
 			if (std::abs(delta) < turn_speed)
 				cur_movement.dir = wanted_angle;
