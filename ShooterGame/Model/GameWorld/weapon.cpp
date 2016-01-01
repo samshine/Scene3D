@@ -76,7 +76,7 @@ void Weapon::fire_bullet()
 	if (subtype.type == WeaponFireType::zoom)
 		return;
 
-	Vec3f offset(0.2f, -0.2f, 0.0f);
+	Vec3f offset(0.1f, -0.1f, 0.0f);
 	Vec3f bullet_pos = player->get_position() + player->eye_offset + player->get_orientation().rotate_vector(offset);
 
 	if (subtype.bullet == "Rocket" && !player->world()->client)
