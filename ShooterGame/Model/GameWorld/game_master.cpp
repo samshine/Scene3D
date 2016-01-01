@@ -107,7 +107,7 @@ void GameMaster::player_killed(std::shared_ptr<ServerPlayerPawn> server_player)
 		netevent.add_argument(server_player->get_orientation().w);
 
 		world()->remove(server_player.get());
-		world()->network->queue_event("all", netevent, arrival_tick_time());
+		send_net_event("all", netevent);
 
 		float random = rand() / (float)RAND_MAX;
 		int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);

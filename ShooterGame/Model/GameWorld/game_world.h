@@ -33,6 +33,9 @@ public:
 	ScenePtr scene;
 	std::vector<SceneObjectPtr> objects;
 
+	std::map<uicore::Vec3f, std::shared_ptr<SceneModel>> box_models;
+	std::map<uicore::Vec2f, std::shared_ptr<SceneModel>> capsule_models;
+
 	AudioWorldPtr audio;
 	MusicPlayer music_player;
 
@@ -55,23 +58,14 @@ public:
 
 	std::shared_ptr<GameWorldClient> client;
 
-	std::shared_ptr<GameNetwork> network;
-	std::shared_ptr<LockStepTime> lock_step_time;
-
 	Physics3DWorldPtr collision = Physics3DWorld::create();
 	std::vector<Physics3DObjectPtr> level_collision_objects;
 
-	uicore::JsonValue game_data;
 	std::shared_ptr<MapData> map_data;
-	uicore::JsonValue weapon_data;
 
 	std::map<int, std::shared_ptr<GameObject>> static_objects;
 
 	std::vector<std::shared_ptr<SpawnPoint>> spawn_points;
-
-	std::map<uicore::Vec3f, std::shared_ptr<SceneModel>> box_models;
-	std::map<uicore::Vec2f, std::shared_ptr<SceneModel>> capsule_models;
-
 	std::shared_ptr<GameMaster> game_master;
 
 	void add(std::shared_ptr<GameObject> obj);
@@ -85,6 +79,9 @@ private:
 	void net_peer_disconnected(const std::string &peer_id);
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
+	std::shared_ptr<GameNetwork> network;
+
+	std::shared_ptr<LockStepTime> lock_step_time;
 	GameTick net_tick;
 
 	std::map<int, std::shared_ptr<GameObject>> objects;

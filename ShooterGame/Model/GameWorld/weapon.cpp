@@ -3,7 +3,6 @@
 #include "weapon.h"
 #include "client_player_pawn.h"
 #include "game_world.h"
-#include "bullet.h"
 #include "rocket.h"
 #include <algorithm>
 

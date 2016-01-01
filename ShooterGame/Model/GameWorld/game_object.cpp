@@ -30,3 +30,8 @@ int GameObject::arrival_tick_time() const
 {
 	return game_tick().arrival_tick_time;
 }
+
+void GameObject::send_net_event(const std::string &target, const uicore::NetGameEvent &netevent)
+{
+	world()->network->queue_event(target, netevent, arrival_tick_time());
+}

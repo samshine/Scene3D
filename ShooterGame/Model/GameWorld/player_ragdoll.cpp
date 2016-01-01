@@ -112,7 +112,7 @@ PlayerRagdoll::~PlayerRagdoll()
 
 SceneObjectPtr PlayerRagdoll::scene_box(const uicore::Vec3f &box_size)
 {
-	auto &model = world()->box_models[box_size];
+	auto &model = world()->client->box_models[box_size];
 	if (!model)
 		model = SceneModel::create(world()->client->scene, create_box(box_size));
 	return SceneObject::create(world()->client->scene, model);
@@ -120,7 +120,7 @@ SceneObjectPtr PlayerRagdoll::scene_box(const uicore::Vec3f &box_size)
 
 SceneObjectPtr PlayerRagdoll::scene_capsule(float radius, float height)
 {
-	auto &model = world()->capsule_models[Vec2f(radius, height)];
+	auto &model = world()->client->capsule_models[Vec2f(radius, height)];
 	if (!model)
 		model = SceneModel::create(world()->client->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
 	return SceneObject::create(world()->client->scene, model);

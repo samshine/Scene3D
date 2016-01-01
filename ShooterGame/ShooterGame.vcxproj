@@ -155,12 +155,9 @@
     <ClInclude Include="Controllers\Screens\menu_screen_controller.h" />
     <ClInclude Include="Controllers\Screens\screen_view_controller.h" />
     <ClInclude Include="Model\Audio\music_player.h" />
-    <ClInclude Include="Model\GameWorld\alarm_lights.h" />
-    <ClInclude Include="Model\GameWorld\bullet.h" />
     <ClInclude Include="Model\GameWorld\character_controller.h" />
     <ClInclude Include="Model\GameWorld\client_player_pawn.h" />
     <ClInclude Include="Model\GameWorld\elevator.h" />
-    <ClInclude Include="Model\GameWorld\explosion.h" />
     <ClInclude Include="Model\GameWorld\flag.h" />
     <ClInclude Include="Model\GameWorld\game_master.h" />
     <ClInclude Include="Model\GameWorld\game_object.h" />
@@ -206,12 +203,9 @@
     <ClCompile Include="Controllers\Screens\screen_view_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Audio\music_player.cpp" />
-    <ClCompile Include="Model\GameWorld\alarm_lights.cpp" />
-    <ClCompile Include="Model\GameWorld\bullet.cpp" />
     <ClCompile Include="Model\GameWorld\character_controller.cpp" />
     <ClCompile Include="Model\GameWorld\client_player_pawn.cpp" />
     <ClCompile Include="Model\GameWorld\elevator.cpp" />
-    <ClCompile Include="Model\GameWorld\explosion.cpp" />
     <ClCompile Include="Model\GameWorld\flag.cpp" />
     <ClCompile Include="Model\GameWorld\game_master.cpp" />
     <ClCompile Include="Model\GameWorld\game_object.cpp" />

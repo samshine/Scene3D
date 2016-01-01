@@ -4,7 +4,6 @@
 #include "game_object.h"
 #include "game_tick.h"
 #include "game_master.h"
-#include "alarm_lights.h"
 #include "client_player_pawn.h"
 #include "server_player_pawn.h"
 #include "elevator.h"
@@ -39,12 +38,9 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 	network->start(hostname, port);
 
-	weapon_data = JsonValue::parse(File::read_all_text("Resources/Config/weapon_data.json"));
-	game_data = JsonValue::parse(File::read_all_text("Resources/Config/game.json"));
+	std::string map_name = "Levels/Liandri/liandri2.cmap";
 
-	std::string map_name = game_data["map"].to_string();
-
-	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name + ".cmap"));
+	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name));
 
 	std::unordered_map<std::string, Physics3DShapePtr> level_shapes;
 
@@ -80,15 +76,12 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 	if (client)
 	{
-		if (game_data["music"].to_boolean())
+		client->music_player.play(
 		{
-			client->music_player.play(
-			{
-				"Resources/Assets/Music/game1.ogg",
-				"Resources/Assets/Music/game2.ogg",
-				"Resources/Assets/Music/game3.ogg"
-			}, true);
-		}
+			"Resources/Assets/Music/game1.ogg",
+			"Resources/Assets/Music/game2.ogg",
+			"Resources/Assets/Music/game3.ogg"
+		}, true);
 
 		std::vector<Colorf> colors;
 		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
@@ -114,9 +107,6 @@ GameWorld::GameWorld(const std::string &hostname, const std::string &port, const
 
 		auto json = JsonValue::parse(File::read_all_text("Resources/Config/input.json"));
 		client->buttons.load(client->window, json["buttons"]);
-
-		auto lights = std::make_shared<AlarmLights>(this);
-		add(lights);
 	}
 
 	int level_obj_id = 1;

@@ -50,7 +50,7 @@ void Elevator::send_net_update(const std::string &target)
 	net_event.add_argument((int)state);
 	net_event.add_argument(time);
 
-	world()->network->queue_event(target, net_event, arrival_tick_time());
+	send_net_event(target, net_event);
 }
 
 void Elevator::tick()

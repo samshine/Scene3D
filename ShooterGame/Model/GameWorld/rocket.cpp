@@ -64,7 +64,7 @@ void Rocket::send_create()
 	net_event.add_argument(orientation.z);
 	net_event.add_argument(orientation.w);
 
-	world()->network->queue_event("all", net_event, arrival_tick_time());
+	send_net_event("all", net_event);
 }
 
 void Rocket::tick()

@@ -199,7 +199,7 @@ void ClientPlayerPawn::tick()
 		netevent.add_argument(cur_movement.key_weapon);
 		netevent.add_argument(cur_movement.dir);
 		netevent.add_argument(cur_movement.up);
-		world()->network->queue_event("server", netevent, arrival_tick_time());
+		send_net_event("server", netevent);
 
 		PlayerPawnMovement past = cur_movement;
 		past.tick_time = arrival_tick_time();

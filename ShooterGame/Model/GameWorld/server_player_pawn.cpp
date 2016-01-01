@@ -53,7 +53,7 @@ void ServerPlayerPawn::apply_damage(float damage)
 	NetGameEvent net_event("player-pawn-hit");
 	net_event.add_argument(id());
 
-	world()->network->queue_event("all", net_event, arrival_tick_time());
+	send_net_event("all", net_event);
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
@@ -82,12 +82,12 @@ void ServerPlayerPawn::send_net_create(const std::string &target)
 
 	if (target == "all" && owner != "server")
 	{
-		world()->network->queue_event("!" + owner, net_event, arrival_tick_time());
-		world()->network->queue_event(owner, net_event_owner, arrival_tick_time());
+		send_net_event("!" + owner, net_event);
+		send_net_event(owner, net_event_owner);
 	}
 	else
 	{
-		world()->network->queue_event(target, target == owner ? net_event_owner : net_event, arrival_tick_time());
+		send_net_event(target, target == owner ? net_event_owner : net_event);
 	}
 }
 
@@ -104,12 +104,12 @@ void ServerPlayerPawn::send_net_update()
 
 	if (owner != "server")
 	{
-		world()->network->queue_event("!" + owner, net_event, arrival_tick_time());
-		world()->network->queue_event(owner, net_event_owner, arrival_tick_time());
+		send_net_event("!" + owner, net_event);
+		send_net_event(owner, net_event_owner);
 	}
 	else
 	{
-		world()->network->queue_event("all", net_event, arrival_tick_time());
+		send_net_event("all", net_event);
 	}
 }
 
