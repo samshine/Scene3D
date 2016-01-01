@@ -7,6 +7,7 @@
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/SceneEngine/Model/model.h"
 #include "Scene3D/SceneEngine/Model/model_mesh.h"
+#include "log_event.h"
 
 using namespace uicore;
 

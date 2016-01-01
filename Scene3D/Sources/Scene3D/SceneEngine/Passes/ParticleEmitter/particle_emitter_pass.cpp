@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "vertex_particle_emitter_hlsl.h"
 #include "fragment_particle_emitter_hlsl.h"
+#include "log_event.h"
 
 using namespace uicore;
 
@@ -96,12 +97,18 @@ void ParticleEmitterPass::run()
 
 	if (!instance_texture || instance_texture->width() < (int)total_particle_count * vectors_per_particle)
 	{
+		instance_texture = nullptr;
+		for (int i = 0; i < num_instance_transfer; i++)
+			instance_transfer[i] = nullptr;
+
 		instance_texture = Texture2D::create(inout.gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
-		instance_transfer = StagingTexture::create(inout.gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
+		for (int i = 0; i < num_instance_transfer; i++)
+			instance_transfer[i] = StagingTexture::create(inout.gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 	}
 
-	instance_transfer->lock(inout.gc, access_write_discard);
-	MappedBuffer<Vec4f> vectors(instance_transfer->data<Vec4f>(), instance_transfer->width() * instance_transfer->height());
+	instance_transfer[current_instance_transfer]->lock(inout.gc, access_write_discard);
+
+	MappedBuffer<Vec4f> vectors(instance_transfer[current_instance_transfer]->data<Vec4f>(), instance_transfer[current_instance_transfer]->width() * instance_transfer[current_instance_transfer]->height());
 	size_t vector_offset = 0;
 	for (int slot : active_emitters)
 	{
@@ -129,8 +136,9 @@ void ParticleEmitterPass::run()
 
 		vector_offset += pass_data->cpu_particles.size() * vectors_per_particle;
 	}
-	instance_transfer->unlock();
-	instance_texture->set_image(inout.gc, instance_transfer);
+	instance_transfer[current_instance_transfer]->unlock();
+	instance_texture->set_image(inout.gc, instance_transfer[current_instance_transfer]);
+	current_instance_transfer = (current_instance_transfer + 1) % num_instance_transfer;
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
 

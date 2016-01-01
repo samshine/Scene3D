@@ -6,6 +6,7 @@
 #include "Scene3D/Scene/scene_light_impl.h"
 #include "vertex_lens_flare_hlsl.h"
 #include "fragment_lens_flare_hlsl.h"
+#include "log_event.h"
 
 using namespace uicore;
 
@@ -33,16 +34,22 @@ void LensFlarePass::run()
 
 	if (!instance_texture || instance_texture->width() < (int)lights.size())
 	{
+		instance_texture = nullptr;
+		for (int i = 0; i < num_instance_transfer; i++)
+			instance_transfer[i] = nullptr;
+
 		instance_texture = Texture2D::create(inout.gc, (int)lights.size(), 1, tf_rgba32f);
-		instance_transfer = StagingTexture::create(inout.gc, (int)lights.size(), 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
+		for (int i = 0; i < num_instance_transfer; i++)
+			instance_transfer[i] = StagingTexture::create(inout.gc, (int)lights.size(), 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 	}
 
-	instance_transfer->lock(inout.gc, access_write_discard);
-	auto instance_data = instance_transfer->data<Vec4f>();
+	instance_transfer[current_instance_transfer]->lock(inout.gc, access_write_discard);
+	auto instance_data = instance_transfer[current_instance_transfer]->data<Vec4f>();
 	for (size_t i = 0; i < lights.size(); i++)
 		instance_data[i] = Vec4f(lights[i]->position(), lights[i]->attenuation_end()/7.0f);
-	instance_transfer->unlock();
-	instance_texture->set_image(inout.gc, instance_transfer);
+	instance_transfer[current_instance_transfer]->unlock();
+	instance_texture->set_image(inout.gc, instance_transfer[current_instance_transfer]);
+	current_instance_transfer = (current_instance_transfer + 1) % num_instance_transfer;
 
 	UniformBlock uniforms;
 	uniforms.eye_to_projection = eye_to_projection;

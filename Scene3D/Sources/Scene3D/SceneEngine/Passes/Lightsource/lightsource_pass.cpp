@@ -13,6 +13,7 @@
 #include "cull_tiles_hlsl.h"
 #include "render_tiles_glsl.h"
 #include "render_tiles_hlsl.h"
+#include "log_event.h"
 
 using namespace uicore;
 
@@ -31,7 +32,8 @@ LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, SceneRender &inout
 
 	compute_uniforms = UniformVector<Uniforms>(gc, 1);
 	compute_lights = StorageVector<GPULight>(gc, max_lights);
-	transfer_lights = StagingVector<GPULight>(gc, max_lights);
+	for (int i = 0; i < num_transfer_lights; i++)
+		transfer_lights[i] = StagingVector<GPULight>(gc, max_lights);
 }
 
 LightsourcePass::~LightsourcePass()
@@ -113,8 +115,9 @@ void LightsourcePass::upload()
 	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
 	Mat4f eye_to_world = Mat4f::inverse(inout.world_to_eye);
 
-	transfer_lights.lock(inout.gc, access_write_only);
-	MappedBuffer<GPULight> data(transfer_lights.data(), max_lights);
+	transfer_lights[current_transfer_lights].lock(inout.gc, access_write_only);
+
+	MappedBuffer<GPULight> data(transfer_lights[current_transfer_lights].data(), max_lights);
 	for (int i = 0; i < num_lights; i++)
 	{
 		float radius = lights[i]->attenuation_end();
@@ -156,8 +159,9 @@ void LightsourcePass::upload()
 	data[num_lights].position = Vec4f(0.0f);
 	data[num_lights].color = Vec4f(0.0f);
 	data[num_lights].range = Vec4f(0.0f);
-	transfer_lights.unlock();
-	compute_lights.copy_from(inout.gc, transfer_lights, 0, 0, num_lights + 1);
+	transfer_lights[current_transfer_lights].unlock();
+	compute_lights.copy_from(inout.gc, transfer_lights[current_transfer_lights], 0, 0, num_lights + 1);
+	current_transfer_lights = (current_transfer_lights + 1) % num_transfer_lights;
 }
 
 void LightsourcePass::render()

@@ -55,9 +55,12 @@ private:
 		uicore::Vec4f scene_ambience;
 	};
 
+	enum { num_transfer_lights = 4 };
+
 	uicore::UniformVector<Uniforms> compute_uniforms;
 	uicore::StorageVector<GPULight> compute_lights;
-	uicore::StagingVector<GPULight> transfer_lights;
+	uicore::StagingVector<GPULight> transfer_lights[num_transfer_lights];
+	int current_transfer_lights = 0;
 	uicore::StorageVector<unsigned int> compute_visible_lights;
 
 	uicore::ProgramObjectPtr cull_tiles_program;

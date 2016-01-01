@@ -33,7 +33,9 @@ private:
 	uicore::UniformVector<UniformBlock> gpu_uniforms;
 
 	uicore::Texture2DPtr instance_texture;
-	uicore::StagingTexturePtr instance_transfer;
+	enum { num_instance_transfer = 4 };
+	uicore::StagingTexturePtr instance_transfer[num_instance_transfer];
+	int current_instance_transfer = 0;
 
 	Resource<uicore::TexturePtr> flare_texture; // To do: should be part of Light
 };
