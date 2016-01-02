@@ -33,15 +33,14 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	fb_viewport = scene_viewport->_fb_viewport;
 
 	field_of_view = camera->field_of_view();
+	Quaternionf inv_orientation = Quaternionf::inverse(scene_viewport->camera()->orientation());
+	world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene_viewport->camera()->position());
 
 	gc = render_gc;
 	gpu_timer.begin_frame(gc);
 
 	setup_passes();
 	setup_pass_buffers();
-
-	Quaternionf inv_orientation = Quaternionf::inverse(scene_viewport->camera()->orientation());
-	world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-scene_viewport->camera()->position());
 
 	for (const auto &pass : passes)
 	{

@@ -17,6 +17,7 @@ public:
 	float tick_time_elapsed() const override;
 	int tick_time_elapsed_ms() const override;
 	float tick_interpolation_time() const override;
+	float frame_time_elapsed() const override;
 
 	int receive_tick_time() const override { return server_tick_time; }
 	int arrival_tick_time() const override { return server_tick_time; }

@@ -38,6 +38,11 @@ float LockStepClientTime::tick_interpolation_time() const
 	return game_time.tick_interpolation_time();
 }
 
+float LockStepClientTime::frame_time_elapsed() const
+{
+	return game_time.time_elapsed();
+}
+
 int LockStepClientTime::receive_tick_time() const
 {
 	return last_client_tick_time;
@@ -52,9 +57,9 @@ void LockStepClientTime::update()
 {
 	game_time.update();
 
-	/*static FilePtr file = File::create_always("c:\\development\\debug.txt");
+	/*static FilePtr file = File::create_always("c:\\development\\debug.csv");
 	static uint64_t start_time = System::get_microseconds();
-	auto str = string_format("Time: %1 ms, Ticks %2, Tick interpolate %3\r\n", (System::get_microseconds() - start_time) / 1000.0, game_time.ticks_elapsed(), game_time.tick_interpolation_time());
+	auto str = string_format("%1;%2;%3\r\n", (System::get_microseconds() - start_time) / 1000.0, game_time.ticks_elapsed(), game_time.tick_interpolation_time());
 	file->write(str.data(), str.length());*/
 
 	last_client_tick_time = client_tick_time;

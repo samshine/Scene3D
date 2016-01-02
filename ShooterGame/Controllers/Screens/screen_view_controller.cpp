@@ -143,7 +143,7 @@ void Screen::run()
 			game_time.update();
 			screen_controller->update();
 
-			window->flip(0);
+			window->flip();
 		}
 	}
 	catch (...)

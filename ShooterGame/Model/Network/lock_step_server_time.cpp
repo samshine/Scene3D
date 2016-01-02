@@ -35,6 +35,11 @@ float LockStepServerTime::tick_interpolation_time() const
 	return game_time.tick_interpolation_time();
 }
 
+float LockStepServerTime::frame_time_elapsed() const
+{
+	return game_time.time_elapsed();
+}
+
 void LockStepServerTime::update()
 {
 	server_tick_time += ticks_elapsed();

@@ -18,6 +18,8 @@ public:
 	int tick_time_elapsed_ms() const override;
 	float tick_interpolation_time() const override;
 
+	float frame_time_elapsed() const override;
+
 	int receive_tick_time() const override;
 	int arrival_tick_time() const override;
 

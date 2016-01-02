@@ -193,7 +193,7 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 
 	if (client)
 	{
-		float time_elapsed = lock_step_time->tick_interpolation_time() * lock_step_time->tick_time_elapsed();
+		float time_elapsed = lock_step_time->frame_time_elapsed();
 
 		for (auto &object : client->objects)
 			object->update(time_elapsed);
