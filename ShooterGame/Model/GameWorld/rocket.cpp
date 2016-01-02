@@ -98,7 +98,7 @@ void Rocket::tick()
 		Vec3f explosion_center = ray_hit.position - direction * 0.1f;
 
 		float radius = 4.0f;
-		float max_damage = 100.0f;
+		float max_damage = 150.0f;
 		float force = 1250.0f;
 		for (const auto &contact : world()->collision->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
 		{
