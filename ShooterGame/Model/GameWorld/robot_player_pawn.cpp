@@ -24,14 +24,14 @@ void RobotPlayerPawn::tick()
 {
 	ServerPlayerPawn::tick();
 
-	cur_movement.key_forward.next_pressed = false;
-	cur_movement.key_back.next_pressed = false;
-	cur_movement.key_left.next_pressed = false;
-	cur_movement.key_right.next_pressed = false;
-	cur_movement.key_jump.next_pressed = false;
-	cur_movement.key_fire_primary.next_pressed = false;
-	cur_movement.key_fire_secondary.next_pressed = false;
-	cur_movement.key_weapon = 0;
+	key_forward.next_pressed = false;
+	key_back.next_pressed = false;
+	key_left.next_pressed = false;
+	key_right.next_pressed = false;
+	key_jump.next_pressed = false;
+	key_fire_primary.next_pressed = false;
+	key_fire_secondary.next_pressed = false;
+	key_weapon = 0;
 
 	mode_change_cooldown = std::max(mode_change_cooldown - time_elapsed(), 0.0f);
 	weapon_change_cooldown = std::max(weapon_change_cooldown - time_elapsed(), 0.0f);
@@ -102,7 +102,7 @@ void RobotPlayerPawn::tick_path()
 	if (path_dir.x < 0.0f)
 		wanted_angle = 360.0f - wanted_angle;
 
-	float delta = wanted_angle - cur_movement.dir;
+	float delta = wanted_angle - dir;
 	if (delta < -180.0f)
 		delta += 360.0f;
 	else if (delta > 180.0f)
@@ -111,17 +111,17 @@ void RobotPlayerPawn::tick_path()
 	float turn_speed = 120.0f * time_elapsed();
 
 	if (std::abs(delta) < turn_speed)
-		cur_movement.dir = wanted_angle;
+		dir = wanted_angle;
 	else if (delta >= 0.0f)
-		cur_movement.dir += turn_speed;
+		dir += turn_speed;
 	else
-		cur_movement.dir -= turn_speed;
+		dir -= turn_speed;
 
-	cur_movement.up = 0.0f;
+	up = 0.0f;
 
 	float move_fov = 30.0f;
-	if (std::abs(cur_movement.dir - wanted_angle) < move_fov)
-		cur_movement.key_forward.next_pressed = true;
+	if (std::abs(dir - wanted_angle) < move_fov)
+		key_forward.next_pressed = true;
 
 	auto v = path_pos - robot_pos;
 	auto dist2 = Vec2f::dot(v, v);
@@ -212,7 +212,7 @@ void RobotPlayerPawn::tick_chase()
 
 		float random = rand() / (float)RAND_MAX;
 		int weapon_index = (int)std::round(5 * random);
-		cur_movement.key_weapon = weapon_index;
+		key_weapon = weapon_index;
 	}
 }
 
@@ -260,7 +260,7 @@ void RobotPlayerPawn::track_target()
 
 		if (mode != RobotPlayerMode::path) // To do: this also needs to be active for path, and then path movement shouldn't use view vector
 		{
-			float delta = wanted_angle - cur_movement.dir;
+			float delta = wanted_angle - dir;
 			if (delta < -180.0f)
 				delta += 360.0f;
 			else if (delta > 180.0f)
@@ -269,21 +269,21 @@ void RobotPlayerPawn::track_target()
 			float turn_speed = 120.0f * time_elapsed();
 
 			if (std::abs(delta) < turn_speed)
-				cur_movement.dir = wanted_angle;
+				dir = wanted_angle;
 			else if (delta >= 0.0f)
-				cur_movement.dir += turn_speed;
+				dir += turn_speed;
 			else
-				cur_movement.dir -= turn_speed;
+				dir -= turn_speed;
 
-			cur_movement.up = -std::asin(Vec3f::normalize(last_seen_target_pos - eye_pos).y) * 180.0f / PI;
+			up = -std::asin(Vec3f::normalize(last_seen_target_pos - eye_pos).y) * 180.0f / PI;
 		}
 
 		float shoot_fov = 30.0f;
-		if (std::abs(cur_movement.dir - wanted_angle) < shoot_fov && line_of_sight)
+		if (std::abs(dir - wanted_angle) < shoot_fov && line_of_sight)
 		{
-			cur_movement.key_fire_primary.next_pressed = true;
+			key_fire_primary.next_pressed = true;
 			if (mode == RobotPlayerMode::chase)
-				cur_movement.key_forward.next_pressed = true;
+				key_forward.next_pressed = true;
 		}
 	}
 }

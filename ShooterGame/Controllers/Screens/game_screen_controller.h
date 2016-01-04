@@ -23,6 +23,7 @@ private:
 
 	float update_stats_cooldown = 0.0f;
 	std::vector<std::string> update_stats;
+	std::vector<std::string> update_stats2;
 	int fps_counter = 0;
 	std::string fps;
 	std::string ping;

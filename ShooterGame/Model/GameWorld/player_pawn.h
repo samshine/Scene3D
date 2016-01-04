@@ -35,24 +35,24 @@ public:
 	}
 };
 
+enum class PlayerPawnAction
+{
+	none,
+	jump,
+	dodge_forward,
+	dodge_backward,
+	dodge_left,
+	dodge_right
+};
+
 class PlayerPawnMovement
 {
 public:
 	int tick_time = 0;
-
-	// Input state before move
-	PlayerPawnButtonState key_forward;
-	PlayerPawnButtonState key_back;
-	PlayerPawnButtonState key_left;
-	PlayerPawnButtonState key_right;
-	PlayerPawnButtonState key_jump;
-	PlayerPawnButtonState key_fire_primary;
-	PlayerPawnButtonState key_fire_secondary;
-	int key_weapon = 0;
+	uicore::Vec2f thrust;
 	float dir = 0.0f;
 	float up = 0.0f;
-
-	float dodge_cooldown = 0.0f;
+	PlayerPawnAction action = PlayerPawnAction::none;
 };
 
 class PlayerPawn : public CollisionGameObject
@@ -66,7 +66,7 @@ public:
 	void ground_moved(const uicore::Vec3f &offset);
 
 	uicore::Vec3f get_position() { return character_controller.get_position(); }
-	uicore::Quaternionf get_orientation() { return uicore::Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, uicore::angle_degrees, uicore::order_YXZ); }
+	uicore::Quaternionf get_orientation() { return uicore::Quaternionf(up, dir, 0.0f, uicore::angle_degrees, uicore::order_YXZ); }
 	float get_health() const { return health; }
 	float get_armor() const { return armor_body + armor_shoulder; }
 
@@ -78,10 +78,24 @@ public:
 	Weapon *get_weapon() { return weapon.get(); }
 
 protected:
-	void update_character_controller();
+	void update_input();
+	void update_character_controller(const PlayerPawnMovement &movement);
 
-	PlayerPawnMovement cur_movement;
 	CharacterController character_controller;
+
+	PlayerPawnMovement last_movement;
+	PlayerPawnButtonState key_forward;
+	PlayerPawnButtonState key_back;
+	PlayerPawnButtonState key_left;
+	PlayerPawnButtonState key_right;
+	PlayerPawnButtonState key_jump;
+	PlayerPawnButtonState key_fire_primary;
+	PlayerPawnButtonState key_fire_secondary;
+	int key_weapon = 0;
+	float dir = 0.0f;
+	float up = 0.0f;
+
+	float dodge_cooldown = 0.0f;
 
 	float health = 100.0f;
 	float armor_body = 0.0f;

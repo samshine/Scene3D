@@ -3,6 +3,7 @@
 #include "transparency_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Scene/scene_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -12,6 +13,8 @@ TransparencyPass::TransparencyPass(SceneRender &inout) : inout(inout)
 
 void TransparencyPass::run()
 {
+	ScopeTimeFunction();
+
 	setup();
 
 	inout.gc->set_frame_buffer(inout.fb_final_color);

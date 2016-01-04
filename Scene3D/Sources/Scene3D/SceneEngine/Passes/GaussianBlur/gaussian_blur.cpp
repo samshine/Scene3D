@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "gaussian_blur.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -10,6 +11,8 @@ GaussianBlur::GaussianBlur()
 
 void GaussianBlur::vertical(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output)
 {
+	ScopeTimeFunction();
+
 	setup(gc, blur_amount, sample_count);
 
 	input.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
@@ -33,6 +36,8 @@ void GaussianBlur::vertical(const uicore::GraphicContextPtr &gc, float blur_amou
 
 void GaussianBlur::horizontal(const uicore::GraphicContextPtr &gc, float blur_amount, int sample_count, uicore::Texture2DPtr input, uicore::FrameBufferPtr output)
 {
+	ScopeTimeFunction();
+
 	setup(gc, blur_amount, sample_count);
 
 	input.get()->set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);

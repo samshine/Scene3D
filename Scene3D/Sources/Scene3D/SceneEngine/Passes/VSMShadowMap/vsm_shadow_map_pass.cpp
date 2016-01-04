@@ -4,6 +4,7 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_light_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -22,6 +23,8 @@ VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, SceneRender &ino
 
 void VSMShadowMapPass::run()
 {
+	ScopeTimeFunction();
+
 	inout.shadow_maps.setup(1024, 8, tf_rg32f);
 
 	Size viewport_size = inout.viewport.size();

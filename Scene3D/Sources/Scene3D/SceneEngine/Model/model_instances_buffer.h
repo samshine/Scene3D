@@ -21,7 +21,7 @@ public:
 	uicore::Texture2DPtr &get_vectors() { return vectors[current_buffer]; }
 
 private:
-	enum { num_buffers = 4 };
+	enum { num_buffers = 16 };
 	uicore::StagingTexturePtr indexes_transfer[num_buffers];
 	uicore::StagingTexturePtr vectors_transfer[num_buffers];
 

@@ -185,7 +185,11 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 		int arrival_tick_time = lock_step_time->arrival_tick_time() + i;
 		float tick_time_elapsed = lock_step_time->tick_time_elapsed();
 
-		collision->step_simulation_once(tick_time_elapsed);
+		{
+			ScopeTimer scope_timer("Bullet.step_simulation");
+			collision->step_simulation_once(tick_time_elapsed);
+		}
+
 		net_tick = GameTick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
 		network->receive_events(receive_tick_time);
 		tick();
@@ -244,6 +248,8 @@ std::shared_ptr<GameObject> GameWorld::get(int id)
 
 void GameWorld::tick()
 {
+	ScopeTimeFunction();
+
 	for (auto it : objects)
 	{
 		if (it.first != 0)
@@ -264,6 +270,8 @@ void GameWorld::tick()
 
 void GameWorld::frame(float time_elapsed, float interpolated_time)
 {
+	ScopeTimeFunction();
+
 	for (auto it : objects)
 	{
 		if (it.first != 0)

@@ -3,6 +3,7 @@
 #include "particle_emitter_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/SceneEngine/mapped_buffer.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Scene/scene_camera_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
@@ -63,6 +64,8 @@ void ParticleEmitterPass::select_active_emitters(const FrustumPlanes &frustum)
 
 void ParticleEmitterPass::run()
 {
+	ScopeTimeFunction();
+
 	setup();
 
 	Size viewport_size = inout.engine->render.viewport.size();

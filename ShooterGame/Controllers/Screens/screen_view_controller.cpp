@@ -63,6 +63,8 @@ void Screen::run()
 	{
 		srand((unsigned int)System::get_time());
 
+		ScopeTimerResults scope_timer_results;
+
 		D3DTarget::set_current();
 
 		DisplayWindowDescription window_desc;
@@ -110,6 +112,8 @@ void Screen::run()
 			if (!screen_controller)
 				break;
 
+			ScopeTimerResults::start();
+
 			bool hide_cursor = screen_controller->cursor_hidden() && window->has_focus();
 			if (cursor_hidden != hide_cursor)
 			{
@@ -141,9 +145,18 @@ void Screen::run()
 			scene_viewport->set_viewport(gc->size());
 
 			game_time.update();
-			screen_controller->update();
 
-			window->flip();
+			{
+				ScopeTimer scope_timer("ScreenController::update");
+				screen_controller->update();
+			}
+
+			{
+				ScopeTimer scope_timer("DisplayWindow::flip");
+				window->flip(0);
+			}
+
+			ScopeTimerResults::end();
 		}
 	}
 	catch (...)

@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "scene_lines_pass.h"
 #include "Scene3D/SceneEngine/scene_viewport_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_light_impl.h"
 #include "vertex_scene_lines_hlsl.h"
@@ -15,6 +16,8 @@ SceneLinesPass::SceneLinesPass(SceneRender &inout) : inout(inout)
 
 void SceneLinesPass::run()
 {
+	ScopeTimeFunction();
+
 	setup();
 
 	Size viewport_size = inout.viewport.size();

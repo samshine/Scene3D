@@ -7,6 +7,7 @@
 #include "vertex_lens_flare_hlsl.h"
 #include "fragment_lens_flare_hlsl.h"
 #include "log_event.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -16,6 +17,8 @@ LensFlarePass::LensFlarePass(SceneRender &inout) : inout(inout)
 
 void LensFlarePass::run()
 {
+	ScopeTimeFunction();
+
 	setup();
 
 	if (!flare_texture.get())

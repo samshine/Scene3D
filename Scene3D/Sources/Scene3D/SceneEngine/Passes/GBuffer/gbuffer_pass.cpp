@@ -4,6 +4,7 @@
 #include "Scene3D/scene.h"
 #include "Scene3D/SceneEngine/scene_viewport_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -13,6 +14,8 @@ GBufferPass::GBufferPass(SceneRender &inout) : inout(inout)
 
 void GBufferPass::run()
 {
+	ScopeTimeFunction();
+
 	setup_gbuffer();
 
 	inout.gc->set_frame_buffer(inout.fb_gbuffer);

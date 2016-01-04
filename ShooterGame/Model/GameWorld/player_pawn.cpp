@@ -25,9 +25,10 @@ void PlayerPawn::tick()
 {
 	bool was_moving = animation_move_speed > 0.0f;
 
-	update_character_controller();
+	update_input();
+	update_character_controller(last_movement);
 
-	switch (cur_movement.key_weapon)
+	switch (key_weapon)
 	{
 	case 1: weapon->try_switch_to_weapon("IceLauncher"); break;
 	case 2: weapon->try_switch_to_weapon("RocketLauncher"); break;
@@ -36,12 +37,12 @@ void PlayerPawn::tick()
 	case 5: weapon->try_switch_to_weapon("TractorBeam"); break;
 	}
 
-	if (cur_movement.key_fire_primary.pressed)
+	if (key_fire_primary.pressed)
 		weapon->start_fire("primary");
 	else
 		weapon->stop_fire("primary");
 
-	if (cur_movement.key_fire_secondary.pressed)
+	if (key_fire_secondary.pressed)
 		weapon->start_fire("secondary");
 	else
 		weapon->stop_fire("secondary");
@@ -54,79 +55,108 @@ void PlayerPawn::ground_moved(const Vec3f &offset)
 	//controller->set_position(controller->get_position() + offset);
 }
 
-void PlayerPawn::update_character_controller()
+void PlayerPawn::update_input()
 {
-	cur_movement.key_forward.update(time_elapsed());
-	cur_movement.key_back.update(time_elapsed());
-	cur_movement.key_left.update(time_elapsed());
-	cur_movement.key_right.update(time_elapsed());
-	cur_movement.key_jump.update(time_elapsed());
-	cur_movement.key_fire_primary.update(time_elapsed());
-	cur_movement.key_fire_secondary.update(time_elapsed());
+	PlayerPawnMovement movement;
 
-	EulerRotation rotation = character_controller.get_rotation();
+	movement.tick_time = arrival_tick_time();
 
-	Vec2f thrust;
-	if (cur_movement.key_left.pressed)
-		thrust.x -= 1.0f;
-	if (cur_movement.key_right.pressed)
-		thrust.x += 1.0f;
-	if (cur_movement.key_forward.pressed)
-		thrust.y += 1.0f;
-	if (cur_movement.key_back.pressed)
-		thrust.y -= 1.0f;
-	thrust.normalize();
+	key_forward.update(time_elapsed());
+	key_back.update(time_elapsed());
+	key_left.update(time_elapsed());
+	key_right.update(time_elapsed());
+	key_jump.update(time_elapsed());
+	key_fire_primary.update(time_elapsed());
+	key_fire_secondary.update(time_elapsed());
 
+	if (key_left.pressed)
+		movement.thrust.x -= 1.0f;
+	if (key_right.pressed)
+		movement.thrust.x += 1.0f;
+	if (key_forward.pressed)
+		movement.thrust.y += 1.0f;
+	if (key_back.pressed)
+		movement.thrust.y -= 1.0f;
+	movement.thrust.normalize();
+
+	dodge_cooldown = std::max(dodge_cooldown - time_elapsed(), 0.0f);
+
+	if (key_jump.clicked)
+	{
+		movement.action = PlayerPawnAction::jump;
+	}
+	else if (dodge_cooldown == 0.0f)
+	{
+		if (key_forward.double_clicked)
+		{
+			movement.action = PlayerPawnAction::dodge_forward;
+			dodge_cooldown = 0.75f;
+		}
+		else if (key_back.double_clicked)
+		{
+			movement.action = PlayerPawnAction::dodge_backward;
+			dodge_cooldown = 0.75f;
+		}
+		else if (key_left.double_clicked)
+		{
+			movement.action = PlayerPawnAction::dodge_left;
+			dodge_cooldown = 0.75f;
+		}
+		else if (key_right.double_clicked)
+		{
+			movement.action = PlayerPawnAction::dodge_right;
+			dodge_cooldown = 0.75f;
+		}
+	}
+
+	movement.dir = dir;
+	movement.up = up;
+
+	last_movement = movement;
+}
+
+void PlayerPawn::update_character_controller(const PlayerPawnMovement &movement)
+{
 	anim = "default";
-	if (thrust.x < -0.1f)
+	if (movement.thrust.x < -0.1f)
 		anim = "strafe-left";
-	else if (thrust.x > 0.1f)
+	else if (movement.thrust.x > 0.1f)
 		anim = "strafe-right";
-	else if (thrust.y > 0.1f)
+	else if (movement.thrust.y > 0.1f)
 		anim = "forward";
-	else if (thrust.y < -0.1f)
+	else if (movement.thrust.y < -0.1f)
 		anim = "backward";
 
-	cur_movement.dodge_cooldown = std::max(cur_movement.dodge_cooldown - time_elapsed(), 0.0f);
+	if (!character_controller.is_flying())
+	{
+		Quaternionf move_direction(0.0f, movement.dir, 0.0f, angle_degrees, order_YXZ);
 
-	if (cur_movement.key_jump.clicked && !character_controller.is_flying())
-	{
-		character_controller.apply_impulse(Vec3f(0.0f, 500.0f, 0.0f));
-		anim = "jump";
-	}
-	else if (cur_movement.dodge_cooldown == 0.0f && !character_controller.is_flying())
-	{
-		if (cur_movement.key_forward.double_clicked)
+		switch (movement.action)
 		{
-			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+		case PlayerPawnAction::jump:
+			character_controller.apply_impulse(Vec3f(0.0f, 500.0f, 0.0f));
+			anim = "jump";
+			break;
 
+		case PlayerPawnAction::dodge_forward:
 			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 25.0f, 94.0f) * 8.0f));
-			cur_movement.dodge_cooldown = 0.75f;
 			anim = "dodge-forward";
-		}
-		else if (cur_movement.key_back.double_clicked)
-		{
-			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+			break;
 
+		case PlayerPawnAction::dodge_backward:
 			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(0.0f, 25.0f, -94.0f) * 8.0f));
-			cur_movement.dodge_cooldown = 0.75f;
 			anim = "dodge-backward";
-		}
-		else if (cur_movement.key_left.double_clicked)
-		{
-			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+			break;
 
+		case PlayerPawnAction::dodge_left:
 			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(-94.0f, 25.0f, 0.0f) * 8.0f));
-			cur_movement.dodge_cooldown = 0.75f;
 			anim = "dodge-left";
-		}
-		else if (cur_movement.key_right.double_clicked)
-		{
-			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+			break;
 
+		case PlayerPawnAction::dodge_right:
 			character_controller.apply_impulse(move_direction.rotate_vector(Vec3f(94.0f, 25.0f, 0.0f) * 8.0f));
-			cur_movement.dodge_cooldown = 0.75f;
 			anim = "dodge-right";
+			break;
 		}
 	}
 	else if (character_controller.is_flying())
@@ -134,8 +164,8 @@ void PlayerPawn::update_character_controller()
 		anim = "jump";
 	}
 
-	character_controller.look(EulerRotation(cur_movement.dir, cur_movement.up));
-	character_controller.thrust(thrust);
+	character_controller.look(EulerRotation(movement.dir, movement.up));
+	character_controller.thrust(movement.thrust);
 
 	Vec3f old_pos = character_controller.get_position();
 

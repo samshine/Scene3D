@@ -147,15 +147,15 @@ void GameScreenController::update()
 		font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::black);
 		font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::orangered);
 
-		font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::black);
+		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::black);
 		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::springgreen);
-		font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 12.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::black);
+		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::black);
 		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
 	}
 
 	std::string score_text = string_format("Score: %1", client_game->game_master->score);
 
-	font2->draw_text(canvas(), canvas()->width() - 12.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
+	font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 	font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
 
 	update_stats_cooldown = std::max(update_stats_cooldown - game_time().time_elapsed(), 0.0f);
@@ -165,10 +165,19 @@ void GameScreenController::update()
 		fps_counter = 0;
 
 		update_stats.clear();
+		update_stats.push_back(string_format("Models drawn: %1", scene_engine()->models_drawn()));
+		update_stats.push_back(string_format("Instances drawn: %1", scene_engine()->instances_drawn()));
+		update_stats.push_back(string_format("Draw calls: %1", scene_engine()->draw_calls()));
+		update_stats.push_back(string_format("Triangles drawn: %1", scene_engine()->triangles_drawn()));
+		update_stats.push_back(string_format("Scene visits: %1", scene_engine()->scene_visits()));
+		update_stats.push_back("");
+
 		for (const auto &result : client_game->client->scene_engine->gpu_results())
-			update_stats.push_back(string_format("%1: %2 ms", result.name, (int)std::round(result.time_elapsed * 1000.0f)));
+			update_stats.push_back(string_format("%1: %2 ms", result.name, Text::to_string(result.time_elapsed * 1000.0f, 2, false)));
 
 		update_stats_cooldown = 1.0f;
+
+		update_stats2 = ScopeTimerResults::timer_results();
 
 		ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
 	}
@@ -178,16 +187,25 @@ void GameScreenController::update()
 	y = 200.0f + font_small_metrics.baseline_offset();
 	for (const auto &text : update_stats)
 	{
-		font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
+		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
 		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, Colorf::whitesmoke);
 		y += font_small_metrics.line_height();
 	}
-	font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, Colorf::black);
+	font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, Colorf::black);
 	font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), fps).advance.width, y, fps, Colorf::whitesmoke);
 	y += font_small_metrics.line_height();
-	font_small->draw_text(canvas(), canvas()->width() - 12.0f - font_small->measure_text(canvas(), ping).advance.width, y + 2.0f, ping, Colorf::black);
+	font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), ping).advance.width, y + 2.0f, ping, Colorf::black);
 	font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), ping).advance.width, y, ping, Colorf::whitesmoke);
 	y += font_small_metrics.line_height();
+
+	y += font_small_metrics.line_height();
+
+	for (const auto &text : update_stats2)
+	{
+		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
+		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, Colorf::whitesmoke);
+		y += font_small_metrics.line_height();
+	}
 
 	if (client_game->game_master->announcement_timeout > 0.0f)
 	{

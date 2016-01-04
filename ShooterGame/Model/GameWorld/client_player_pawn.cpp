@@ -53,9 +53,6 @@ void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int ski
 
 	if (is_owner)
 	{
-		// Save current view dir
-		PlayerPawnMovement present_movement = cur_movement;
-
 		// Remove obsolete entries
 		while (!sent_movements.empty() && sent_movements.front().tick_time < receive_tick_time())
 			sent_movements.erase(sent_movements.begin());
@@ -66,21 +63,8 @@ void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int ski
 			return;
 		}
 
-		// Grab movement from the past
-		cur_movement = sent_movements.front();
+		// Erase movement from the past
 		sent_movements.erase(sent_movements.begin());
-
-		// Grab input from server
-		cur_movement.key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
-		cur_movement.key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
-		cur_movement.key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
-		cur_movement.key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
-		cur_movement.key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
-		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
-		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
-		cur_movement.key_weapon = net_event.get_argument(skip + 9).get_integer();
-		cur_movement.dir = net_event.get_argument(skip + 10).get_number();
-		cur_movement.up = net_event.get_argument(skip + 11).get_number();
 
 		// Grab server position and velocity received by server
 		Vec3f pos, velocity;
@@ -93,48 +77,22 @@ void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int ski
 		bool is_flying = net_event.get_argument(skip + 18).get_boolean();
 		character_controller.warp(pos, velocity, is_flying);
 
-		// Replay movement
-		update_character_controller();
-
-		//Console::write_line("Received dir %1 in tick %2", cur_movement.dir, tick.receive_tick_time);
-
 		// Replay movements until now to get new predicted client position
-		for (auto &movement : sent_movements)
-		{
-			cur_movement.key_forward.next_pressed = movement.key_forward.next_pressed;
-			cur_movement.key_back.next_pressed = movement.key_back.next_pressed;
-			cur_movement.key_left.next_pressed = movement.key_left.next_pressed;
-			cur_movement.key_right.next_pressed = movement.key_right.next_pressed;
-			cur_movement.key_jump.next_pressed = movement.key_jump.next_pressed;
-			cur_movement.key_fire_primary.next_pressed = movement.key_fire_primary.next_pressed;
-			cur_movement.key_fire_secondary.next_pressed = movement.key_fire_secondary.next_pressed;
-			cur_movement.key_weapon = movement.key_weapon;
-			cur_movement.dir = movement.dir;
-			cur_movement.up = movement.up;
-			int tick_time = movement.tick_time;
-			movement = cur_movement;
-			movement.tick_time = tick_time;
-
-			update_character_controller();
-		}
-
-		// Restore current view dir
-		cur_movement.dir = present_movement.dir;
-		cur_movement.up = present_movement.up;
+		for (const auto &movement : sent_movements)
+			update_character_controller(movement);
 	}
 	else
 	{
-		cur_movement.tick_time = receive_tick_time();
-		cur_movement.key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
-		cur_movement.key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
-		cur_movement.key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
-		cur_movement.key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
-		cur_movement.key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
-		cur_movement.key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
-		cur_movement.key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
-		cur_movement.key_weapon = net_event.get_argument(skip + 9).get_integer();
-		cur_movement.dir = net_event.get_argument(skip + 10).get_number();
-		cur_movement.up = net_event.get_argument(skip + 11).get_number();
+		key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
+		key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
+		key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
+		key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
+		key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
+		key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
+		key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
+		key_weapon = net_event.get_argument(skip + 9).get_integer();
+		dir = net_event.get_argument(skip + 10).get_number();
+		up = net_event.get_argument(skip + 11).get_number();
 
 		Vec3f pos, velocity;
 		pos.x = net_event.get_argument(skip + 12).get_number();
@@ -173,42 +131,50 @@ void ClientPlayerPawn::tick()
 {
 	if (is_owner)
 	{
-		cur_movement.key_forward.next_pressed = world()->client->buttons.buttons["move-forward"].down;
-		cur_movement.key_back.next_pressed = world()->client->buttons.buttons["move-back"].down;
-		cur_movement.key_left.next_pressed = world()->client->buttons.buttons["move-left"].down;
-		cur_movement.key_right.next_pressed = world()->client->buttons.buttons["move-right"].down;
-		cur_movement.key_jump.next_pressed = world()->client->buttons.buttons["jump"].down;
-		cur_movement.key_fire_primary.next_pressed = world()->client->buttons.buttons["fire-primary"].down;
-		cur_movement.key_fire_secondary.next_pressed = world()->client->buttons.buttons["fire-secondary"].down;
-		cur_movement.key_weapon = 0;
-		if (world()->client->buttons.buttons["switch-to-icelauncher"].down) cur_movement.key_weapon = 1;
-		else if (world()->client->buttons.buttons["switch-to-rocketlauncher"].down) cur_movement.key_weapon = 2;
-		else if (world()->client->buttons.buttons["switch-to-dualguns"].down) cur_movement.key_weapon = 3;
-		else if (world()->client->buttons.buttons["switch-to-sniperrifle"].down) cur_movement.key_weapon = 4;
-		else if (world()->client->buttons.buttons["switch-to-tractorbeam"].down) cur_movement.key_weapon = 5;
+		key_forward.next_pressed = world()->client->buttons.buttons["move-forward"].down;
+		key_back.next_pressed = world()->client->buttons.buttons["move-back"].down;
+		key_left.next_pressed = world()->client->buttons.buttons["move-left"].down;
+		key_right.next_pressed = world()->client->buttons.buttons["move-right"].down;
+		key_jump.next_pressed = world()->client->buttons.buttons["jump"].down;
+		key_fire_primary.next_pressed = world()->client->buttons.buttons["fire-primary"].down;
+		key_fire_secondary.next_pressed = world()->client->buttons.buttons["fire-secondary"].down;
+		key_weapon = 0;
+		if (world()->client->buttons.buttons["switch-to-icelauncher"].down) key_weapon = 1;
+		else if (world()->client->buttons.buttons["switch-to-rocketlauncher"].down) key_weapon = 2;
+		else if (world()->client->buttons.buttons["switch-to-dualguns"].down) key_weapon = 3;
+		else if (world()->client->buttons.buttons["switch-to-sniperrifle"].down) key_weapon = 4;
+		else if (world()->client->buttons.buttons["switch-to-tractorbeam"].down) key_weapon = 5;
 
 		NetGameEvent netevent("player-pawn-input");
 		netevent.add_argument(remote_id());
-		netevent.add_argument(NetGameEventValue(cur_movement.key_forward.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_back.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_left.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_right.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_jump.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_fire_primary.next_pressed));
-		netevent.add_argument(NetGameEventValue(cur_movement.key_fire_secondary.next_pressed));
-		netevent.add_argument(cur_movement.key_weapon);
-		netevent.add_argument(cur_movement.dir);
-		netevent.add_argument(cur_movement.up);
+		netevent.add_argument(NetGameEventValue(key_forward.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_back.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_left.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_right.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_jump.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_fire_primary.next_pressed));
+		netevent.add_argument(NetGameEventValue(key_fire_secondary.next_pressed));
+		netevent.add_argument(key_weapon);
+		netevent.add_argument(dir);
+		netevent.add_argument(up);
 		send_net_event("server", netevent);
-
-		PlayerPawnMovement past = cur_movement;
-		past.tick_time = arrival_tick_time();
-		sent_movements.push_back(past);
 	}
 
 	bool was_moving = animation_move_speed > 0.0f;
 
 	PlayerPawn::tick();
+
+	if (is_owner)
+	{
+		sent_movements.push_back(last_movement);
+	}
+
+	/*
+	static FilePtr file = File::create_always("c:\\development\\debug_client_player.csv");
+	auto str = string_format("%1;%2;%3;%4;%5;", receive_tick_time(), arrival_tick_time(), character_controller.get_position().x, character_controller.get_position().y, character_controller.get_position().z);
+	str += string_format("%1;%2;%3;%4\r\n", character_controller.get_velocity().x, character_controller.get_velocity().y, character_controller.get_velocity().z, character_controller.is_flying());
+	file->write(str.data(), str.length());
+	*/
 
 	bool is_moving = animation_move_speed > 0.0f;
 
@@ -331,13 +297,22 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	cur_movement.dir = std::remainder(cur_movement.dir + world()->client->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
-	cur_movement.up = clamp(cur_movement.up + world()->client->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
+	dir = std::remainder(dir + world()->client->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
+	up = clamp(up + world()->client->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 
-	Quaternionf look_dir = Quaternionf(cur_movement.up, cur_movement.dir, 0.0f, angle_degrees, order_YXZ);
+	Quaternionf look_dir = Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ);
 	Vec3f look_pos = mix(last_position, next_position, interpolated_time) + eye_offset;
+
+	/*
+	static FilePtr file = File::create_always("c:\\development\\debug_frame_pos.csv");
+	static float total_elapsed = 0.0f;
+	total_elapsed += time_elapsed;
+	auto str = string_format("%1;%2;%3;%4;%5;", total_elapsed, interpolated_time, last_position.x, last_position.y, last_position.z);
+	str += string_format("%1;%2;%3;%4;%5;%6\r\n", next_position.x, next_position.y, next_position.z, look_pos.x, look_pos.y, look_pos.z);
+	file->write(str.data(), str.length());
+	*/
 
 	shake_timer = std::max(shake_timer - time_elapsed * shake_speed, 0.0f);
 	if (shake_timer > 0.0f)
@@ -396,7 +371,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		}
 
 		scene_object->set_position(mix(last_position, next_position, interpolated_time));
-		scene_object->set_orientation(Quaternionf(clamp(-cur_movement.up * 0.5f, -15.0f, 15.0f), 180.0f + cur_movement.dir, 0.0f, angle_degrees, order_YXZ));
+		scene_object->set_orientation(Quaternionf(clamp(-up * 0.5f, -15.0f, 15.0f), 180.0f + dir, 0.0f, angle_degrees, order_YXZ));
 		scene_object->update(time_elapsed);
 	}
 	else

@@ -39,6 +39,7 @@ void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 
 	if (num_vectors > max_vectors)
 	{
+		ScopeTimer scope_time_lock("ModelInstancesBuffer.lock(allocate)");
 		max_vectors = num_vectors * 2;
 		int pixels_width = min(max_vectors, 8192);
 		int pixels_height = (max_vectors + 8191) / 8192;
@@ -51,6 +52,7 @@ void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 
 	if (next_offset_index > max_offset_indexes)
 	{
+		ScopeTimer scope_time_lock("ModelInstancesBuffer.lock(allocate)");
 		max_offset_indexes = next_offset_index * 2;
 		int pixels_width = min(max_offset_indexes, 1024);
 		int pixels_height = (max_offset_indexes + 1024) / 1024;
@@ -61,6 +63,7 @@ void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 		}
 	}
 
+	ScopeTimer scope_time_lock("ModelInstancesBuffer.lock(buffers)");
 	indexes_transfer[current_buffer]->lock(gc, access_write_discard);
 	vectors_transfer[current_buffer]->lock(gc, access_write_discard);
 

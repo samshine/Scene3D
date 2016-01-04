@@ -113,6 +113,7 @@ void LightsourceSimplePass::setup()
 
 void LightsourceSimplePass::run()
 {
+	ScopeTimeFunction();
 	setup();
 	find_lights();
 	upload();

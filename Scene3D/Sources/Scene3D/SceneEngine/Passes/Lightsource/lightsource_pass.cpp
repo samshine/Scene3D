@@ -42,6 +42,7 @@ LightsourcePass::~LightsourcePass()
 
 void LightsourcePass::run()
 {
+	ScopeTimeFunction();
 	find_lights();
 	upload();
 	render();

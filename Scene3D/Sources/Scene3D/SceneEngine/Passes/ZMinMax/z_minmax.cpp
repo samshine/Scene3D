@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "z_minmax.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 using namespace uicore;
 
@@ -12,6 +13,8 @@ ZMinMax::ZMinMax(int tile_size)
 
 void ZMinMax::minmax(const GraphicContextPtr &gc)
 {
+	ScopeTimeFunction();
+
 	update_buffers(gc);
 
 	normal_z->set_min_filter(filter_nearest);

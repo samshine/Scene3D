@@ -63,18 +63,25 @@ SceneLightProbeImpl *ModelRender::find_nearest_probe(SceneImpl *scene, const Vec
 
 void ModelRender::upload(const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection)
 {
+	ScopeTimeFunction();
+
 	instances_buffer.clear();
 	for (auto mesh : model_meshes)
 		instances_buffer.add(mesh->get_instance_vectors_count());
 
 	instances_buffer.lock(scene->engine()->render.gc);
-	for (auto mesh : model_meshes)
-		mesh->upload(instances_buffer, world_to_eye, eye_to_projection);
+	{
+		ScopeTimer scope_timer_upload("ModelRender::upload(copy)");
+		for (auto mesh : model_meshes)
+			mesh->upload(instances_buffer, world_to_eye, eye_to_projection);
+	}
 	instances_buffer.unlock(scene->engine()->render.gc);
 }
 
 void ModelRender::render_gbuffer()
 {
+	ScopeTimeFunction();
+
 	auto &gc = scene->engine()->render.gc;
 
 	gc->set_texture(0, instances_buffer.get_indexes());
@@ -89,6 +96,8 @@ void ModelRender::render_gbuffer()
 
 void ModelRender::render_transparency()
 {
+	ScopeTimeFunction();
+
 	auto &gc = scene->engine()->render.gc;
 
 	gc->set_texture(0, instances_buffer.get_indexes());
@@ -103,6 +112,8 @@ void ModelRender::render_transparency()
 
 void ModelRender::render_shadow()
 {
+	ScopeTimeFunction();
+
 	auto &gc = scene->engine()->render.gc;
 
 	gc->set_texture(0, instances_buffer.get_indexes());
@@ -117,6 +128,8 @@ void ModelRender::render_shadow()
 
 void ModelRender::render_early_z()
 {
+	ScopeTimeFunction();
+
 	auto &gc = scene->engine()->render.gc;
 
 	gc->set_texture(0, instances_buffer.get_indexes());

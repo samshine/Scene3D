@@ -55,20 +55,25 @@ public:
 	static void add_result(const ScopeTimerResult &result);
 	static void end();
 	static int percentage(const char *name);
-	static std::string timer_results();
+	static float milliseconds(const char *name);
+	static std::vector<std::string> timer_results();
+
+	ScopeTimerResults();
+	~ScopeTimerResults();
+
+	ScopeTimerResults(const ScopeTimerResults &) = delete;
+	ScopeTimerResults &operator=(const ScopeTimerResults &) = delete;
 
 private:
-	ScopeTimerResults();
-
-	unsigned long long start_time;
+	uint64_t start_time = 0;
 	std::vector<ScopeTimerResult> results;
-	unsigned long long end_time;
+	uint64_t end_time = 0;
+	uint64_t elapsed_microseconds = 0;
 
-	unsigned long long current_start_time;
+	uint64_t current_start_microseconds = 0;
+	uint64_t current_start_time = 0;
 	std::vector<ScopeTimerResult> current_results;
-	unsigned long long current_end_time;
-
-	static ScopeTimerResults instance;
+	uint64_t current_end_time = 0;
 };
 
 class ScopeTimer

@@ -6,6 +6,7 @@
 #include "noise_3d.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_camera_impl.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "vertex_billboard_hlsl.h"
 #include "vertex_cube_hlsl.h"
 #include "fragment_angular_hlsl.h"
@@ -21,6 +22,8 @@ SkyboxPass::SkyboxPass(SceneRender &inout) : inout(inout)
 
 void SkyboxPass::run()
 {
+	ScopeTimeFunction();
+
 	setup();
 
 	if (!inout.skybox_texture && !inout.scene->skybox_gradient.empty())

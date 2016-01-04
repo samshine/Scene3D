@@ -2,6 +2,7 @@
 #include "precomp.h"
 #include "ssao_pass.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
+#include "Scene3D/Performance/scope_timer.h"
 #include "vertex_ssao_extract_glsl.h"
 #include "vertex_ssao_extract_hlsl.h"
 #include "fragment_ssao_extract_glsl.h"
@@ -50,6 +51,8 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inou
 
 void SSAOPass::run()
 {
+	ScopeTimeFunction();
+
 	if (!uniforms.buffer()) // To do: also do this if viewport size changes
 	{
 		UniformBuffer uniform_buffer;
