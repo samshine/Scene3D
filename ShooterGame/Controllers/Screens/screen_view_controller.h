@@ -59,4 +59,5 @@ private:
 	uicore::Vec2i delta_mouse_move;
 
 	friend class ScreenViewController;
+	friend class ScreenView;
 };

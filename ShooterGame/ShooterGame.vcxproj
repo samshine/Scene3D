@@ -193,9 +193,12 @@
     <ClInclude Include="Model\Network\NetGame\network_event.h" />
     <ClInclude Include="Model\Network\NetGame\server.h" />
     <ClInclude Include="Model\Network\NetGame\server_impl.h" />
+    <ClInclude Include="Model\Settings\settings.h" />
     <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Views\GameMenuView\game_menu_view.h" />
+    <ClInclude Include="Views\ScreenView\screen_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\Screens\game_screen_controller.cpp" />
@@ -230,6 +233,7 @@
     <ClCompile Include="Model\Network\NetGame\event_value.cpp" />
     <ClCompile Include="Model\Network\NetGame\network_data.cpp" />
     <ClCompile Include="Model\Network\NetGame\server.cpp" />
+    <ClCompile Include="Model\Settings\settings.cpp" />
     <ClCompile Include="mouse_movement.cpp" />
     <ClCompile Include="precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -237,6 +241,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Views\GameMenuView\game_menu_view.cpp" />
+    <ClCompile Include="Views\ScreenView\screen_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scene3D\Scene3D.vcxproj">

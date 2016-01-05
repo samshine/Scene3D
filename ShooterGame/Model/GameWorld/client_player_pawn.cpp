@@ -5,6 +5,7 @@
 #include "game_tick.h"
 #include "collision_game_object.h"
 #include "game_master.h"
+#include "Model/Settings/settings.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -297,8 +298,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	dir = std::remainder(dir + world()->client->mouse_movement.x * world()->client->mouse_speed_x * mouse_speed_multiplier * 0.01f, 360.0f);
-	up = clamp(up + world()->client->mouse_movement.y * world()->client->mouse_speed_y * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
+	dir = std::remainder(dir + world()->client->mouse_movement.x * Settings::mouse_speed_x() * mouse_speed_multiplier * 0.01f, 360.0f);
+	up = clamp(up + world()->client->mouse_movement.y * Settings::mouse_speed_y() * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 

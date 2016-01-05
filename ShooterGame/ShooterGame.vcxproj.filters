@@ -130,6 +130,15 @@
     <ClInclude Include="Model\GameWorld\rocket.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Views\GameMenuView\game_menu_view.h">
+      <Filter>Views\GameMenuView</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ScreenView\screen_view.h">
+      <Filter>Views\ScreenView</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Settings\settings.h">
+      <Filter>Model\Settings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -228,6 +237,15 @@
     <ClCompile Include="Model\GameWorld\rocket.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
+    <ClCompile Include="Views\ScreenView\screen_view.cpp">
+      <Filter>Views\ScreenView</Filter>
+    </ClCompile>
+    <ClCompile Include="Views\GameMenuView\game_menu_view.cpp">
+      <Filter>Views\GameMenuView</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Settings\settings.cpp">
+      <Filter>Model\Settings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -256,6 +274,18 @@
     </Filter>
     <Filter Include="Model\Network\NetGame">
       <UniqueIdentifier>{a5a60a89-a3e9-4b2d-a630-30dd97273a18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views">
+      <UniqueIdentifier>{b589df7e-339c-47a1-a225-47690cbf3e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\GameMenuView">
+      <UniqueIdentifier>{df92617f-bb93-4ca9-8b64-9281caeb1341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views\ScreenView">
+      <UniqueIdentifier>{4f56cf33-9069-4484-96aa-726726ad6849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Settings">
+      <UniqueIdentifier>{b7a05c00-d3bd-44e0-b807-8e62f97ed9f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -41,9 +41,6 @@ public:
 
 	InputButtons buttons;
 	uicore::Point mouse_movement;
-
-	float mouse_speed_x = 8.0f;
-	float mouse_speed_y = 8.0f;
 };
 
 class GameWorld

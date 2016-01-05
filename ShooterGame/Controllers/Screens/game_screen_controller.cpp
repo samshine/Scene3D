@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-GameScreenController::GameScreenController(std::string hostname, std::string port, bool host_game, float mouse_speed_x, float mouse_speed_y)
+GameScreenController::GameScreenController(std::string hostname, std::string port, bool host_game)
 {
 	set_cursor_hidden();
 
@@ -44,8 +44,6 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 		server_thread = std::thread(&GameScreenController::server_thread_main, this);
 	}
 	client_game = std::make_unique<GameWorld>(!hostname.empty() ? hostname : "localhost", port, std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache()));
-	client_game->client->mouse_speed_x = mouse_speed_x;
-	client_game->client->mouse_speed_y = mouse_speed_y;
 }
 
 GameScreenController::~GameScreenController()
