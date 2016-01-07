@@ -67,34 +67,34 @@ struct BonesResult
 
 BonesResult ApplyBones(int instanceBonesOffset);
 mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset);
-mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, int boneIndex, int instanceBonesOffset);
+mat4x2 GetBoneDualQuaternion(mat4x2 currentDual, int boneIndex, int instanceBonesOffset);
 ivec2 GetTexelPosition(int index);
 int GetVectorsOffset(int instanceId);
 
 mat3 loadMat3(int offset)
 {
-	return mat3(
+	return transpose(mat3(
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0).xyz,
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0).xyz,
-		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0).xyz);
+		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0).xyz));
 }
 
 mat4 loadMat4(int offset)
 {
-	return mat4(
+	return transpose(mat4(
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0),
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0),
-		texelFetch(InstanceVectors, GetTexelPosition(offset + 3), 0));
+		texelFetch(InstanceVectors, GetTexelPosition(offset + 3), 0)));
 }
 
 mat4x3 loadMat4x3(int offset)
 {
 	return 
-		mat4x3(
+		transpose(mat3x4(
 			texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
 			texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0),
-			texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0));
+			texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0)));
 }
 
 void main()
@@ -149,7 +149,7 @@ BonesResult ApplyBones(int instanceBonesOffset)
 		vec4 BoneWeights = AttrBoneWeights * weightMultiplier;
 
 		// For details, read the paper "Geometric Skinning with Dual Skinning" by L. Kavan et al.
-		mat2x4 dual = (mat2x4)0;
+		mat4x2 dual = (mat4x2)0;
 		dual  = BoneWeights.x * GetBoneDualQuaternion(dual, AttrBoneSelectors.x, instanceBonesOffset);
 		dual += BoneWeights.y * GetBoneDualQuaternion(dual, AttrBoneSelectors.y, instanceBonesOffset);
 		dual += BoneWeights.z * GetBoneDualQuaternion(dual, AttrBoneSelectors.z, instanceBonesOffset);
@@ -259,14 +259,14 @@ mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset)
 	vec4 row1 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 3 + 1), 0);
 	vec4 row2 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 3 + 2), 0);
 	vec4 row3 = vec4(0,0,0,1);
-	return mat4(row0, row1, row2, row3);
+	return transpose(mat4(row0, row1, row2, row3));
 }
 #else
-mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, int boneIndex, int instanceBonesOffset)
+mat4x2 GetBoneDualQuaternion(mat4x2 currentDual, int boneIndex, int instanceBonesOffset)
 {
 	vec4 row0 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 0), 0);
 	vec4 row1 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 1), 0);
-	mat2x4 newDual = mat2x4(row0, row1);
+	mat4x2 newDual = transpose(mat4x2(row0, row1));
 	if (dot(currentDual[0], newDual[0]) < 0)
 		return -newDual;
 	else

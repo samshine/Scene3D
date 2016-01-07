@@ -96,7 +96,7 @@ void SceneRender::setup_passes()
 	if (!passes.empty())
 		return;
 
-	bool use_compute_shader_pass = false;
+	bool use_compute_shader_pass = true;
 
 	if (gc->shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
 	{

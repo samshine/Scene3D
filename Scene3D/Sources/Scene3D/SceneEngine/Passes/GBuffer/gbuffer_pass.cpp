@@ -24,8 +24,8 @@ void GBufferPass::run()
 	{
 		// To do: support this in clanlib
 		OpenGL::set_active(inout.gc);
-		uicore::GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(4, buffers);
+		uicore::GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+		glDrawBuffers(5, buffers);
 	}
 
 	Size viewport_size = inout.viewport.size();
@@ -62,6 +62,7 @@ void GBufferPass::run()
 		glDisablei(GL_BLEND, 1);
 		glDisablei(GL_BLEND, 2);
 		glDisablei(GL_BLEND, 3);
+		glDisablei(GL_BLEND, 4);
 	}
 
 	inout.gc->reset_rasterizer_state();

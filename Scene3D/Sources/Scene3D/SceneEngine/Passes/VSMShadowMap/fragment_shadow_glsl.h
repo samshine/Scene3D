@@ -1,10 +1,12 @@
 namespace { const char *fragment_shadow_glsl() { return R"shaderend(
 
-out vec2 FragMoment;
+in vec4 PositionInEye;
+out vec4 FragMoment;
 
 void main()
 {
-	FragMoment = vec2(0.0);
+	float distanceToLight = length(PositionInEye);
+	FragMoment = vec4(distanceToLight, distanceToLight * distanceToLight, 0.0f, 0.0f);
 }
 
 )shaderend"; } }
