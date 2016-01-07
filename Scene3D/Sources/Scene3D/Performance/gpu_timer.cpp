@@ -39,6 +39,9 @@ GPUTimer::GPUTimer()
 void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
+	if (gc->shader_language() != shader_hlsl)
+		return;
+
 	if (impl->unused_disjoint_queries.empty())
 	{
 		ID3D11Device *device = D3DTarget::get_device_handle(gc);
@@ -67,6 +70,9 @@ void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 void GPUTimer::begin_time(const GraphicContextPtr &gc, const std::string &name)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
+	if (gc->shader_language() != shader_hlsl)
+		return;
+
 	impl->frames.back()->names.push_back(name);
 	impl->timestamp(gc);
 #endif
@@ -75,6 +81,9 @@ void GPUTimer::begin_time(const GraphicContextPtr &gc, const std::string &name)
 void GPUTimer::end_time(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
+	if (gc->shader_language() != shader_hlsl)
+		return;
+
 	impl->timestamp(gc);
 #endif
 }
@@ -82,6 +91,9 @@ void GPUTimer::end_time(const GraphicContextPtr &gc)
 void GPUTimer::end_frame(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
+	if (gc->shader_language() != shader_hlsl)
+		return;
+
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 	context->End(impl->frames.back()->disjoint_query.get());
 #endif
@@ -90,6 +102,9 @@ void GPUTimer::end_frame(const GraphicContextPtr &gc)
 std::vector<GPUTimer::Result> GPUTimer::get_results(const GraphicContextPtr &gc)
 {
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
+	if (gc->shader_language() != shader_hlsl)
+		return std::vector<GPUTimer::Result>();
+
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjoint_data;
@@ -125,6 +140,9 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(const GraphicContextPtr &gc)
 #if defined(WIN32) && defined(ENABLE_GPU_TIMER)
 void GPUTimerImpl::timestamp(const GraphicContextPtr &gc)
 {
+	if (gc->shader_language() != shader_hlsl)
+		return;
+
 	if (unused_queries.empty())
 	{
 		ID3D11Device *device = D3DTarget::get_device_handle(gc);

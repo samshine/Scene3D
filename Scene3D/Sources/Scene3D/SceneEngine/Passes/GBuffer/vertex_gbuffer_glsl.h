@@ -7,9 +7,9 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
-	uint VectorsPerInstance;
-	uint MaterialOffset;
+	int ModelIndex;
+	int VectorsPerInstance;
+	int MaterialOffset;
 };
 
 in vec4 AttrPositionInObject;
@@ -18,7 +18,7 @@ in vec3 AttrBitangent;
 in vec3 AttrTangent;
 #if defined(USE_BONES)
 in vec4 AttrBoneWeights;
-in uvec4 AttrBoneSelectors;
+in ivec4 AttrBoneSelectors;
 #endif
 #if defined(USE_COLORS)
 in vec4 AttrColor;
@@ -72,13 +72,13 @@ struct BonesResult
 	vec4 PositionInObject;
 };
 
-BonesResult ApplyBones(uint instanceBonesOffset);
-mat4 GetBoneTransform(uint boneIndex, uint instanceBonesOffset);
-mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, uint boneIndex, uint instanceBonesOffset);
-ivec2 GetTexelPosition(uint index);
-uint GetVectorsOffset(uint instanceId);
+BonesResult ApplyBones(int instanceBonesOffset);
+mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset);
+mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, int boneIndex, int instanceBonesOffset);
+ivec2 GetTexelPosition(int index);
+int GetVectorsOffset(int instanceId);
 
-mat3 loadMat3(uint offset)
+mat3 loadMat3(int offset)
 {
 	return mat3(
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
@@ -86,7 +86,7 @@ mat3 loadMat3(uint offset)
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0));
 }
 
-mat4 loadMat4(uint offset)
+mat4 loadMat4(int offset)
 {
 	return mat4(
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
@@ -95,10 +95,10 @@ mat4 loadMat4(uint offset)
 		texelFetch(InstanceVectors, GetTexelPosition(offset + 3), 0));
 }
 
-mat3x4 loadMat3x4(uint offset)
+mat4x3 loadMat4x3(int offset)
 {
 	return 
-		mat3x4(
+		mat4x3(
 			texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
 			texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0),
 			texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0));
@@ -106,7 +106,7 @@ mat3x4 loadMat3x4(uint offset)
 
 void main()
 {
-	uint vectorsOffset = GetVectorsOffset(gl_InstanceID);
+	int vectorsOffset = GetVectorsOffset(gl_InstanceID);
 
 	mat3 ObjectNormalToEye = loadMat3(vectorsOffset);
 	mat4 ObjectToWorld = loadMat4(vectorsOffset + 3);
@@ -116,26 +116,26 @@ void main()
 	vec4 MaterialInstanceData = texelFetch(InstanceVectors, GetTexelPosition(vectorsOffset + MaterialOffset + 1), 0);
 	vec4 LightProbeColorData = texelFetch(InstanceVectors, GetTexelPosition(vectorsOffset + 15), 0);
 
-	BonesResult bonesResult = ApplyBones(input, vectorsOffset + 16);
+	BonesResult bonesResult = ApplyBones(vectorsOffset + 16);
 	mat3 TangentObjectToEye = mat3(WorldToEye * ObjectToWorld);
 	NormalInEye = normalize(ObjectNormalToEye * bonesResult.Normal);
 	TangentInEye = normalize(TangentObjectToEye * bonesResult.Tangent);
 	BitangentInEye = normalize(TangentObjectToEye * bonesResult.Bitangent);
 	//BitangentInEye = normalize(cross(output.NormalInEye, output.TangentInEye));
 #if defined(DIFFUSE_UV)
-	mat3x4 UVTextureMatrix0 = loadMat3x4(vectorsOffset + MaterialOffset + 2);
+	mat4x3 UVTextureMatrix0 = loadMat4x3(vectorsOffset + MaterialOffset + 2);
 	UVMap0 = (UVTextureMatrix0 * vec4(AttrUVMapA, 0, 1)).xy;
 #endif
 #if defined(BUMPMAP_UV)
-	mat3x4 UVTextureMatrix1 = loadMat3x4(vectorsOffset + MaterialOffset + 5);
+	mat4x3 UVTextureMatrix1 = loadMat4x3(vectorsOffset + MaterialOffset + 5);
 	UVMap1 = (UVTextureMatrix1 * vec4(AttrUVMapB, 0, 1)).xy;
 #endif
 #if defined(SI_UV)
-	mat3x4 UVTextureMatrix2 = loadMat3x4(vectorsOffset + MaterialOffset + 8);
+	mat4x3 UVTextureMatrix2 = loadMat4x3(vectorsOffset + MaterialOffset + 8);
 	UVMap2 = (UVTextureMatrix2 * vec4(AttrUVMapC, 0, 1)).xy;
 #endif
 #if defined(SPECULAR_UV)
-	mat3x4 UVTextureMatrix3 = loadMat3x4(vectorsOffset + MaterialOffset + 11);
+	mat4x3 UVTextureMatrix3 = loadMat4x3(vectorsOffset + MaterialOffset + 11);
 	UVMap3 = (UVTextureMatrix3 * vec4(AttrUVMapD, 0, 1)).xy;
 #endif
 	PositionInWorld = ObjectToWorld * bonesResult.PositionInObject;
@@ -150,7 +150,7 @@ void main()
 }
 
 #if defined(USE_BONES) && defined(USE_DUALQUATERNION)
-BonesResult ApplyBones(uint instanceBonesOffset)
+BonesResult ApplyBones(int instanceBonesOffset)
 {
 	BonesResult result;
 	if (AttrBoneWeights.x != 0.0 || AttrBoneWeights.y != 0.0 || AttrBoneWeights.z != 0.0 || AttrBoneWeights.w != 0.0)
@@ -158,14 +158,14 @@ BonesResult ApplyBones(uint instanceBonesOffset)
 		// We use low precision input for our bone weights. Rescale so the sum still is 1.0
 		float totalWeight = AttrBoneWeights.x + AttrBoneWeights.y + AttrBoneWeights.z + AttrBoneWeights.w;
 		float weightMultiplier = 1 / totalWeight;
-		AttrBoneWeights *= weightMultiplier;
+		vec4 BoneWeights = AttrBoneWeights * weightMultiplier;
 
 		// For details, read the paper "Geometric Skinning with Dual Skinning" by L. Kavan et al.
 		mat2x4 dual = mat2x4(0);
-		dual  = AttrBoneWeights.x * GetBoneDualQuaternion(dual, AttrBoneSelectors.x, instanceBonesOffset);
-		dual += AttrBoneWeights.y * GetBoneDualQuaternion(dual, AttrBoneSelectors.y, instanceBonesOffset);
-		dual += AttrBoneWeights.z * GetBoneDualQuaternion(dual, AttrBoneSelectors.z, instanceBonesOffset);
-		dual += AttrBoneWeights.w * GetBoneDualQuaternion(dual, AttrBoneSelectors.w, instanceBonesOffset);
+		dual  = BoneWeights.x * GetBoneDualQuaternion(dual, AttrBoneSelectors.x, instanceBonesOffset);
+		dual += BoneWeights.y * GetBoneDualQuaternion(dual, AttrBoneSelectors.y, instanceBonesOffset);
+		dual += BoneWeights.z * GetBoneDualQuaternion(dual, AttrBoneSelectors.z, instanceBonesOffset);
+		dual += BoneWeights.w * GetBoneDualQuaternion(dual, AttrBoneSelectors.w, instanceBonesOffset);
 		dual /= length(dual[0]);
 
 		result.PositionInObject.xyz = AttrPositionInObject.xyz + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrPositionInObject.xyz) + dual[0].w * AttrPositionInObject.xyz);
@@ -186,59 +186,59 @@ BonesResult ApplyBones(uint instanceBonesOffset)
 	return result;
 }
 #elif defined(USE_BONES)
-BonesResult ApplyBones(uint instanceBonesOffset)
+BonesResult ApplyBones(int instanceBonesOffset)
 {
 	BonesResult result;
 	if (AttrBoneWeights.x != 0.0 || AttrBoneWeights.y != 0.0 || AttrBoneWeights.z != 0.0 || AttrBoneWeights.w != 0.0)
 	{
-		result.PositionInObject = float4(0,0,0,0);
-		result.Normal = float3(0,0,0);
-		result.Tangent = float3(0,0,0);
-		result.Bitangent = float3(0,0,0);
+		result.PositionInObject = vec4(0,0,0,0);
+		result.Normal = vec3(0,0,0);
+		result.Tangent = vec3(0,0,0);
+		result.Bitangent = vec3(0,0,0);
 
 		// We use low precision input for our bone weights. Rescale so the sum still is 1.0
 		float totalWeight = AttrBoneWeights.x + AttrBoneWeights.y + AttrBoneWeights.z + AttrBoneWeights.w;
 		float weightMultiplier = 1 / totalWeight;
-		AttrBoneWeights *= weightMultiplier;
+		vec4 BoneWeights = AttrBoneWeights * weightMultiplier;
 
-		if (AttrBoneWeights.x != 0.0)
+		if (BoneWeights.x != 0.0)
 		{
 			mat4 transform = GetBoneTransform(AttrBoneSelectors.x, instanceBonesOffset);
 			mat3 rotation = mat3(transform);
-			result.PositionInObject += (transform * AttrPositionInObject) * AttrBoneWeights.x;
-			result.Normal += (rotation * AttrNormal) * AttrBoneWeights.x;
-			result.Tangent += rotation * AttrTangent) * AttrBoneWeights.x;
-			result.Bitangent += (rotation * AttrBitangent) * input.AttrBoneWeights.x;
+			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.x;
+			result.Normal += (rotation * AttrNormal) * BoneWeights.x;
+			result.Tangent += (rotation * AttrTangent) * BoneWeights.x;
+			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.x;
 		}
 
-		if (AttrBoneWeights.y != 0.0)
+		if (BoneWeights.y != 0.0)
 		{
 			mat4 transform = GetBoneTransform(AttrBoneSelectors.y, instanceBonesOffset);
 			mat3 rotation = mat3(transform);
-			result.PositionInObject += (transform * AttrPositionInObject) * AttrBoneWeights.y;
-			result.Normal += (rotation * AttrNormal) * AttrBoneWeights.y;
-			result.Tangent += (rotation * AttrTangent) * AttrBoneWeights.y;
-			result.Bitangent += (rotation * AttrBitangent) * AttrBoneWeights.y;
+			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.y;
+			result.Normal += (rotation * AttrNormal) * BoneWeights.y;
+			result.Tangent += (rotation * AttrTangent) * BoneWeights.y;
+			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.y;
 		}
 
-		if (AttrBoneWeights.z != 0.0)
+		if (BoneWeights.z != 0.0)
 		{
 			mat4 transform = GetBoneTransform(AttrBoneSelectors.z, instanceBonesOffset);
 			mat3 rotation = mat3(transform);
-			result.PositionInObject += (transform * AttrPositionInObject) * AttrBoneWeights.z;
-			result.Normal += (rotation * AttrNormal) * AttrBoneWeights.z;
-			result.Tangent += (rotation * AttrTangent) * AttrBoneWeights.z;
-			result.Bitangent += (rotation * AttrBitangent) * AttrBoneWeights.z;
+			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.z;
+			result.Normal += (rotation * AttrNormal) * BoneWeights.z;
+			result.Tangent += (rotation * AttrTangent) * BoneWeights.z;
+			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.z;
 		}
 
-		if (AttrBoneWeights.w != 0.0)
+		if (BoneWeights.w != 0.0)
 		{
 			mat4 transform = GetBoneTransform(AttrBoneSelectors.w, instanceBonesOffset);
 			mat3 rotation = mat3(transform);
-			result.PositionInObject += (transform * AttrPositionInObject) * AttrBoneWeights.w;
-			result.Normal += (rotation * AttrNormal) * AttrBoneWeights.w;
-			result.Tangent += (rotation * AttrTangent) * AttrBoneWeights.w;
-			result.Bitangent += (rotation * AttrBitangent) * AttrBoneWeights.w;
+			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.w;
+			result.Normal += (rotation * AttrNormal) * BoneWeights.w;
+			result.Tangent += (rotation * AttrTangent) * BoneWeights.w;
+			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.w;
 		}
 
 		result.PositionInObject.w = 1.0; // For numerical stability
@@ -253,7 +253,7 @@ BonesResult ApplyBones(uint instanceBonesOffset)
 	return result;
 }
 #else
-BonesResult ApplyBones(uint instanceBonesOffset)
+BonesResult ApplyBones(int instanceBonesOffset)
 {
 	BonesResult result;
 	result.PositionInObject = AttrPositionInObject;
@@ -265,7 +265,7 @@ BonesResult ApplyBones(uint instanceBonesOffset)
 #endif
 
 #if !defined(USE_DUALQUATERNION)
-mat4 GetBoneTransform(uint boneIndex, uint instanceBonesOffset)
+mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset)
 {
 	vec4 row0 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 3 + 0), 0);
 	vec4 row1 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 3 + 1), 0);
@@ -274,7 +274,7 @@ mat4 GetBoneTransform(uint boneIndex, uint instanceBonesOffset)
 	return mat4(row0, row1, row2, row3);
 }
 #else
-mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, uint boneIndex, uint instanceBonesOffset)
+mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, int boneIndex, int instanceBonesOffset)
 {
 	vec4 row0 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 0), 0);
 	vec4 row1 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 1), 0);
@@ -286,16 +286,16 @@ mat2x4 GetBoneDualQuaternion(mat2x4 currentDual, uint boneIndex, uint instanceBo
 }
 #endif
 
-ivec3 GetTexelPosition(uint index)
+ivec2 GetTexelPosition(int index)
 {
 	int width = textureSize(InstanceVectors, 0).x;
-	return ivec3(index % width, index / width, 0);
+	return ivec2(index % width, index / width);
 }
 
-uint GetVectorsOffset(uint instanceId)
+int GetVectorsOffset(int instanceId)
 {
 	int width = textureSize(InstanceVectors, 0).x;
-	uint modelOffset = (uint)InstanceOffsets.Load(int3(ModelIndex % width, ModelIndex / width, 0)).x;
+	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
 	return modelOffset + instanceId * VectorsPerInstance;
 }
 

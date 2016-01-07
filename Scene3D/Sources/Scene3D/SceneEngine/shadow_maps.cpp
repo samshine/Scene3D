@@ -28,7 +28,7 @@ void ShadowMaps::setup(int shadow_map_size, int max_active_maps, TextureFormat f
 		light.framebuffer = FrameBuffer::create(render.gc);
 		light.framebuffer->attach_color(0, shadow_maps, i);
 		light.framebuffer->attach_depth(depth_texture);
-		light.view = shadow_maps->create_2d_view(i, tf_rg32f, 0, 1);
+		light.view = shadow_maps->create_2d_view(i, format, 0, 1);
 		lights.push_back(light);
 	}
 }

@@ -6,7 +6,9 @@
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_light_impl.h"
 #include "vertex_scene_lines_hlsl.h"
+#include "vertex_scene_lines_glsl.h"
 #include "fragment_scene_lines_hlsl.h"
+#include "fragment_scene_lines_glsl.h"
 
 using namespace uicore;
 
@@ -75,10 +77,10 @@ void SceneLinesPass::setup()
 {
 	if (!program)
 	{
-		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_scene_lines_hlsl());
+		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, inout.gc->shader_language() == shader_hlsl ? vertex_scene_lines_hlsl() : vertex_scene_lines_glsl());
 		vertex_shader->compile();
 
-		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_scene_lines_hlsl());
+		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, inout.gc->shader_language() == shader_hlsl ? fragment_scene_lines_hlsl() : fragment_scene_lines_glsl());
 		fragment_shader->compile();
 
 		program = ProgramObject::create(inout.gc);

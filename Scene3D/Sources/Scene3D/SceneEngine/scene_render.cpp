@@ -47,6 +47,18 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 		gpu_timer.begin_time(gc, pass->name());
 		pass->run();
 		gpu_timer.end_time(gc);
+
+		if (render_gc->shader_language() == shader_glsl)
+		{
+			try
+			{
+				OpenGL::check_error();
+			}
+			catch (const Exception &e)
+			{
+				throw Exception(string_format("%1: %2", pass->name(), e.message));
+			}
+		}
 	}
 
 	gpu_timer.end_frame(gc);
@@ -84,7 +96,7 @@ void SceneRender::setup_passes()
 	if (!passes.empty())
 		return;
 
-	bool use_compute_shader_pass = true;
+	bool use_compute_shader_pass = false;
 
 	if (gc->shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
 	{

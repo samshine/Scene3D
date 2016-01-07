@@ -1398,6 +1398,39 @@
     <ClInclude Include="Include\log_event.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_billboard_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_cube_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_billboard_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_sphere_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\vertex_particle_emitter_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\fragment_particle_emitter_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\fragment_scene_lines_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\vertex_rect_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\vertex_icosahedron_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\fragment_light_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">

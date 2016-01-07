@@ -18,16 +18,30 @@ ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, const std::st
 
 	if (!vertex_code.empty())
 	{
-		auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, prefix + vertex_code);
-		vertex_shader->compile();
-		program->attach(vertex_shader);
+		try
+		{
+			auto vertex_shader = ShaderObject::create(gc, ShaderType::vertex, prefix + vertex_code);
+			vertex_shader->compile();
+			program->attach(vertex_shader);
+		}
+		catch (const Exception &e)
+		{
+			throw Exception(string_format("%1 vertex shader: %2", program_name, e.message));
+		}
 	}
 
 	if (!fragment_code.empty())
 	{
-		auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + fragment_code);
-		fragment_shader->compile();
-		program->attach(fragment_shader);
+		try
+		{
+			auto fragment_shader = ShaderObject::create(gc, ShaderType::fragment, prefix + fragment_code);
+			fragment_shader->compile();
+			program->attach(fragment_shader);
+		}
+		catch (const Exception &e)
+		{
+			throw Exception(string_format("%1 fragment shader: %2", program_name, e.message));
+		}
 	}
 
 	return program;

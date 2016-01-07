@@ -8,11 +8,13 @@
 #include "Scene3D/Scene/scene_camera_impl.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "vertex_billboard_hlsl.h"
+#include "vertex_billboard_glsl.h"
 #include "vertex_cube_hlsl.h"
-#include "fragment_angular_hlsl.h"
+#include "vertex_cube_glsl.h"
 #include "fragment_billboard_hlsl.h"
-#include "fragment_cube_hlsl.h"
+#include "fragment_billboard_glsl.h"
 #include "fragment_sphere_hlsl.h"
+#include "fragment_sphere_glsl.h"
 
 using namespace uicore;
 
@@ -211,10 +213,10 @@ void SkyboxPass::create_billboard_program()
 {
 	billboard_positions = VertexArrayVector<Vec3f>(inout.gc, cpu_billboard_positions, 6);
 
-	auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_billboard_hlsl());
+	auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, inout.gc->shader_language() == shader_hlsl ? vertex_billboard_hlsl() : vertex_billboard_glsl());
 	vertex_shader->compile();
 
-	auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_billboard_hlsl());
+	auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, inout.gc->shader_language() == shader_hlsl ? fragment_billboard_hlsl() : fragment_billboard_glsl());
 	fragment_shader->compile();
 
 	billboard_program = ProgramObject::create(inout.gc);
@@ -234,10 +236,10 @@ void SkyboxPass::create_cube_program()
 {
 	cube_positions = VertexArrayVector<Vec3f>(inout.gc, cpu_cube_positions, 36);
 
-	auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_cube_hlsl());
+	auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, inout.gc->shader_language() == shader_hlsl ? vertex_cube_hlsl() : vertex_cube_glsl());
 	vertex_shader->compile();
 
-	auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_sphere_hlsl());
+	auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, inout.gc->shader_language() == shader_hlsl ? fragment_sphere_hlsl() : fragment_sphere_glsl());
 	fragment_shader->compile();
 
 	cube_program = ProgramObject::create(inout.gc);

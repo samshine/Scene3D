@@ -12,9 +12,9 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
-	uint VectorsPerInstance;
-	uint MaterialOffset;
+	int ModelIndex;
+	int VectorsPerInstance;
+	int MaterialOffset;
 };
 
 in vec3 NormalInEye;
@@ -40,13 +40,13 @@ in vec4 SelfIllumination;
 out vec4 FragColor;
 
 #if defined(DIFFUSE_ARRAY)
-sampler2DArray DiffuseTexture;
+uniform sampler2DArray DiffuseTexture;
 #else
-sampler2D DiffuseTexture;
+uniform sampler2D DiffuseTexture;
 #endif
-sampler2D BumpMapTexture;
-sampler2D SelfIlluminationTexture;
-sampler2D SpecularTexture;
+uniform sampler2D BumpMapTexture;
+uniform sampler2D SelfIlluminationTexture;
+uniform sampler2D SpecularTexture;
 
 vec3 ApplyNormalMap(bool frontFacing);
 vec3 DiffuseColor();
@@ -71,7 +71,7 @@ void main()
 		color += apply_light(lights[i], position_in_eye, diffuse.rgb, specular, MaterialSpecularLevel, MaterialGlossiness);
 	}
 */
-	output.FragColor = vec4(color * opacity, opacity);
+	FragColor = vec4(color * opacity, opacity);
 }
 
 #if defined(BUMPMAP_UV)
@@ -94,7 +94,7 @@ vec3 ApplyNormalMap(bool frontFacing)
 
 	// Mix between the original normal vector and the bumped normal vector according to the material properties
 	float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now
-	return normalize(lerp(frontNormal, bumpedNormal, bumpAmount));
+	return normalize(mix(frontNormal, bumpedNormal, bumpAmount));
 }
 
 #else
@@ -148,7 +148,7 @@ vec3 SpecularColor()
 vec4 SelfIlluminationColor()
 {
 	vec4 texel = texture(SelfIlluminationTexture, SelfIlluminationUV);
-	return vec4(lerp(SelfIllumination.rgb, texel.rgb, SelfIllumination.w), texel.a);
+	return vec4(mix(SelfIllumination.rgb, texel.rgb, SelfIllumination.w), texel.a);
 }
 
 #else

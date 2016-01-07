@@ -12,9 +12,9 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
-	uint VectorsPerInstance;
-	uint MaterialOffset;
+	int ModelIndex;
+	int VectorsPerInstance;
+	int MaterialOffset;
 };
 
 in vec3 NormalInEye;
@@ -67,7 +67,7 @@ void main()
 	FragDiffuseColor = vec4(DiffuseColor(), 1);
 	FragSpecularColor = vec4(SpecularColor(), 1);
 	FragSpecularLevel = vec2(MaterialGlossiness, MaterialSpecularLevel);
-	FragSelfIllumination = vec4(FragDiffuseColor.rgb * LightProbeColor.rgb + SelfIlluminationColor(output.FragDiffuseColor), 1);
+	FragSelfIllumination = vec4(FragDiffuseColor.rgb * LightProbeColor.rgb + SelfIlluminationColor(FragDiffuseColor), 1);
 	FragNormal = vec4(normalInEyeNormalized, PositionInEye.z);
 }
 

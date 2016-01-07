@@ -8,7 +8,9 @@
 #include "Scene3D/Scene/scene_impl.h"
 #include <algorithm>
 #include "vertex_particle_emitter_hlsl.h"
+#include "vertex_particle_emitter_glsl.h"
 #include "fragment_particle_emitter_hlsl.h"
+#include "fragment_particle_emitter_glsl.h"
 #include "log_event.h"
 
 using namespace uicore;
@@ -187,10 +189,10 @@ void ParticleEmitterPass::setup()
 {
 	if (!program)
 	{
-		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_particle_emitter_hlsl());
+		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, inout.gc->shader_language() == shader_hlsl ? vertex_particle_emitter_hlsl() : vertex_particle_emitter_glsl());
 		vertex_shader->compile();
 
-		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_particle_emitter_hlsl());
+		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, inout.gc->shader_language() == shader_hlsl ? fragment_particle_emitter_hlsl() : fragment_particle_emitter_glsl());
 		fragment_shader->compile();
 
 		program = ProgramObject::create(inout.gc);

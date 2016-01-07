@@ -10,8 +10,11 @@
 #include "Scene3D/Performance/gpu_timer.h"
 #include <algorithm>
 #include "vertex_icosahedron_hlsl.h"
+#include "vertex_icosahedron_glsl.h"
 #include "vertex_rect_hlsl.h"
+#include "vertex_rect_glsl.h"
 #include "fragment_light_hlsl.h"
+#include "fragment_light_glsl.h"
 
 using namespace uicore;
 
@@ -19,8 +22,8 @@ LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, SceneR
 {
 	if (gc->shader_language() == shader_glsl)
 	{
-		//icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_glsl(), fragment_light_glsl());
-		//rect_light_program = compile_and_link(gc, vertex_rect_glsl(), fragment_light_glsl(), "RECT_PASS");
+		icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_glsl(), fragment_light_glsl());
+		rect_light_program = compile_and_link(gc, vertex_rect_glsl(), fragment_light_glsl(), "RECT_PASS");
 	}
 	else
 	{
@@ -45,7 +48,7 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 	program->bind_frag_data_location(0, "FragColor");
 
 	if (!program->try_link())
-		throw Exception("Shader linking failed!");
+		throw Exception(string_format("Light source simple shader linking failed: %1", program->get_info_log()));
 
 	program->bind_attribute_location(0, "AttrPositionInObject");
 	program->set_uniform_buffer_index("Uniforms", 0);
