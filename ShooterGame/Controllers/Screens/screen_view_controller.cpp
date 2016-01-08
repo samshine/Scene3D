@@ -65,8 +65,8 @@ void Screen::run()
 
 		ScopeTimerResults scope_timer_results;
 
-		//D3DTarget::set_current();
-		OpenGLTarget::set_current();
+		D3DTarget::set_current();
+		//OpenGLTarget::set_current();
 
 		DisplayWindowDescription window_desc;
 		window_desc.set_title("Scene3D Shooter Game");

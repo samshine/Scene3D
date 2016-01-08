@@ -112,7 +112,7 @@ void SceneRender::setup_passes()
 	passes.push_back(std::make_shared<GBufferPass>(*this));
 	passes.push_back(std::make_shared<SkyboxPass>(*this));
 	passes.push_back(std::make_shared<VSMShadowMapPass>(gc, *this));
-
+	
 	if (use_compute_shader_pass)
 	{
 		passes.push_back(std::make_shared<LightsourcePass>(gc, *this));
@@ -121,7 +121,7 @@ void SceneRender::setup_passes()
 	{
 		passes.push_back(std::make_shared<LightsourceSimplePass>(gc, *this));
 	}
-
+	
 	passes.push_back(std::make_shared<TransparencyPass>(*this));
 	passes.push_back(std::make_shared<ParticleEmitterPass>(*this));
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));

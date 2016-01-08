@@ -1,7 +1,5 @@
 namespace { const char *render_tiles_glsl() { return R"shaderend(
 
-#version 430
-
 #define MAX_LOCAL_LIGHTS 128
 #define TILE_SIZE 16
 //#define DEBUG_LIGHT_COUNT
@@ -34,7 +32,8 @@ layout(std140) uniform Uniforms
 	uint num_tiles_x;
 	uint num_tiles_y;
 	uint padding; // 16 byte boundary alignment
-}
+	vec4 scene_ambience;
+};
 
 readonly buffer lights
 {
@@ -75,8 +74,8 @@ float vsm_reduce_light_bleeding(float p_max, float amount);
 float vsm_attenuation(vec2 moments, float t);
 
 float lambertian_diffuse_contribution(vec3 light_direction_in_eye, vec3 normal_in_eye);
-float phong_specular_contribution(vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level);
-float blinn_specular_contribution(vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level);
+float phong_specular_contribution(float lambertian, vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level);
+float blinn_specular_contribution(float lambertian, vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level);
 
 layout (local_size_x = TILE_SIZE, local_size_y = TILE_SIZE) in;
 
@@ -95,14 +94,14 @@ void main()
 
 	groupMemoryBarrier();
 
-	if (gl_GlobalInvocationID.x >= textureSize(out_final).x || gl_GlobalInvocationID.y >= textureSize(out_final).y)
+	if (gl_GlobalInvocationID.x >= imageSize(out_final).x || gl_GlobalInvocationID.y >= imageSize(out_final).y)
 		return;
 
 #if defined(DEBUG_BLACK_OUTPUT)
 	vec4 color = vec4((gl_GlobalInvocationID.x % 2560) / 2560.0f, (gl_GlobalInvocationID.y % 1600) / 1600.0f, 1.0f, 1.0f);
 	imageStore(out_final, gl_GlobalInvocationID.xy, color);
 #else
-	render_lights(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y, gl_LocalInvocationID.x, gl_LocalInvocationID.y, num_visible_lights);
+	render_lights(int(gl_GlobalInvocationID.x), int(gl_GlobalInvocationID.y), int(gl_LocalInvocationID.x), int(gl_LocalInvocationID.y), num_visible_lights);
 #endif
 }
 
@@ -113,8 +112,9 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	vec4 normal_and_z = texelFetch(normal_z, pos, 0);
 	vec2 glossiness_and_specular_level = texelFetch(specular_level, pos, 0).xy;
 
-	vec4 material_diffuse_color = texelFetch(diffuse, pos, 0);
-	vec3 material_specular_color = texelFetch(specular, pos, 0).xyz;
+	vec4 black_bias = vec4(0.003, 0.003, 0.003, 0.0); // Bias a little as there's no perfect black
+	vec4 material_diffuse_color = texelFetch(diffuse, pos, 0) + black_bias;
+	vec3 material_specular_color = texelFetch(specular, pos, 0).xyz + black_bias.xyz;
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	vec3 material_self_illumination = texelFetch(self_illumination, pos, 0).xyz;
@@ -127,7 +127,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 #else
 	vec3 position_in_eye = unproject(vec2(x, y) + 0.5f, z_in_eye);
 
-	vec3 color = material_self_illumination * 4;
+	vec3 color = material_self_illumination + material_diffuse_color.xyz * scene_ambience.xyz;
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;
@@ -135,7 +135,9 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		color = vec3(1.0f, 1.0f, 1.0f);
 #else
 
-	for (uint i = 0; i < num_visible_lights; i++)
+	uint i;
+	// Type 0 (omni) lights with no shadows:
+	for (i = 0; i < num_visible_lights && local_lights[i].spot_x.w == 0 && local_lights[i].position.w < 0; i++)
 	{
 		Light light = local_lights[i];
 
@@ -143,44 +145,60 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 
 		vec3 light_direction_in_eye = normalize(fragment_to_light);
 		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
-		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		vec3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
+		vec3 specular_color = material_specular_color * light.color.xyz;
+		vec3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
+
+		float attenuation = distance_attenuation(light, fragment_to_light);
+
+		color += attenuation * (lit_color + light.color.a * diffuse_color);
+	}
+
+	// Type 1 and 2 (spot circle, spot rect) lights with no shadows:
+	for (; i < num_visible_lights && local_lights[i].position.w < 0; i++)
+	{
+		Light light = local_lights[i];
+
+		vec3 fragment_to_light = light.position.xyz - position_in_eye;
+
+		vec3 light_direction_in_eye = normalize(fragment_to_light);
+		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
 		vec3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
 		vec3 specular_color = material_specular_color * light.color.xyz;
 		vec3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
 
 		float light_type = light.spot_x.w;
-#if defined(ONLY_OMNI_LIGHTS)
-		if (light_type == 0)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			color += attenuation * lit_color;
-		}
-#elif defined(ONLY_SPOT_LIGHTS)
-		if (light_type != 0 && light.position.w < 0.0f)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			vec3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
-			attenuation *= step(0, shadow_projection.z);
-			if (light_type == 1)
-				attenuation *= circle_falloff_attenuation(light, shadow_projection);
-			else if (light_type == 2)
-				attenuation *= rect_falloff_attenuation(light, shadow_projection);
-			color += attenuation * lit_color;
-		}
-#elif defined(ONLY_SHADOW_SPOT_LIGHTS)
-		if (light_type != 0 && light.position.w >= 0.0f)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			vec3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
-			attenuation *= step(0, shadow_projection.z);
-			if (light_type == 1)
-				attenuation *= circle_falloff_attenuation(light, shadow_projection);
-			else if (light_type == 2)
-				attenuation *= rect_falloff_attenuation(light, shadow_projection);
-			attenuation *= shadow_attenuation(light, fragment_to_light, shadow_projection);
-			color += attenuation * lit_color;
-		}
-#else
+
+		float attenuation = distance_attenuation(light, fragment_to_light);
+		vec3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
+		attenuation *= step(0, shadow_projection.z);
+
+		if (light_type == 1)
+			attenuation *= circle_falloff_attenuation(light, shadow_projection);
+		else if (light_type == 2)
+			attenuation *= rect_falloff_attenuation(light, shadow_projection);
+
+		color += attenuation * (lit_color + light.color.a * diffuse_color);
+	}
+
+	// Shadow casting lights:
+	for (; i < num_visible_lights; i++)
+	{
+		Light light = local_lights[i];
+
+		vec3 fragment_to_light = light.position.xyz - position_in_eye;
+
+		vec3 light_direction_in_eye = normalize(fragment_to_light);
+		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
+		float specular_contribution = blinn_specular_contribution(diffuse_contribution, light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		vec3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
+		vec3 specular_color = material_specular_color * light.color.xyz;
+		vec3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
+
+		float light_type = light.spot_x.w;
+
 		float attenuation = distance_attenuation(light, fragment_to_light);
 		vec3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
 		if (light_type != 0)
@@ -190,12 +208,9 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		else if (light_type == 2)
 			attenuation *= rect_falloff_attenuation(light, shadow_projection);
 
-		float shadow_att = 1.0f;
-		if (light.position.w >= 0.0f)
-			shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
+		float shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
 
 		color += attenuation * (shadow_att * lit_color + light.color.a * diffuse_color);
-#endif
 	}
 #endif
 #if defined(DEBUG_BLOOM)
@@ -242,7 +257,7 @@ float shadow_attenuation(Light light, vec3 fragment_to_light, vec3 shadow_projec
 	shadow_projection = shadow_projection * 0.5f + 0.5f;
 
 	float shadow_index = light.position.w;
-	vec2 moments = shadow_maps.SampleLevel(shadow_maps_sampler, vec3(shadow_projection.xy, shadow_index), 0).xy;
+	vec2 moments = texture(shadow_maps, vec3(shadow_projection.xy, shadow_index), 0).xy;
 	return vsm_attenuation(moments, length(fragment_to_light));
 }
 
@@ -307,21 +322,36 @@ float lambertian_diffuse_contribution(vec3 light_direction_in_eye, vec3 normal_i
 	return max(dot(normal_in_eye, light_direction_in_eye), 0.0f);
 }
 
-float phong_specular_contribution(vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level)
+float phong_specular_contribution(float lambertian, vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level)
 {
-	vec3 E = normalize(-position_in_eye);
-	vec3 R = normalize(-reflect(light_direction_in_eye, normal_in_eye));
-	float x = max(dot(R, E), 0.0f);
-	float ph_exp = pow(2.0f, glossiness * 10.0f);
-	return specular_level * pow(x, ph_exp);
+	if (lambertian > 0.0f)
+	{
+		vec3 view_dir = normalize(-position_in_eye);
+		vec3 reflection_dir = normalize(-reflect(light_direction_in_eye, normal_in_eye));
+		float spec_angle = max(dot(reflection_dir, normal_in_eye), 0.0f);
+		float ph_exp = glossiness;
+		return specular_level * pow(spec_angle, ph_exp);
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
-float blinn_specular_contribution(vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level)
+float blinn_specular_contribution(float lambertian, vec3 light_direction_in_eye, vec3 position_in_eye, vec3 normal_in_eye, float glossiness, float specular_level)
 {
-	vec3 half_vector = normalize(light_direction_in_eye - position_in_eye);
-	float x = max(dot(normal_in_eye, half_vector), 0.0f);
-	float ph_exp = pow(2.0f, glossiness * 10.0f) * 4.0f;
-	return specular_level * pow(x, ph_exp);
+	if (lambertian > 0.0f)
+	{
+		vec3 view_dir = normalize(-position_in_eye);
+		vec3 half_dir = normalize(light_direction_in_eye + view_dir);
+		float spec_angle = max(dot(half_dir, normal_in_eye), 0.0f);
+		float ph_exp = glossiness * 4.0f;
+		return specular_level * pow(spec_angle, ph_exp);
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
 )shaderend"; } }

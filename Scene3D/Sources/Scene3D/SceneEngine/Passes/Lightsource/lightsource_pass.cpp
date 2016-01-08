@@ -233,6 +233,8 @@ ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, 
 {
 	std::string prefix;
 	std::vector<std::string> define_list = Text::split(defines, " ");
+	if (gc->shader_language() == shader_glsl)
+		prefix += "#version 430\r\n";
 	for (size_t i = 0; i < define_list.size(); i++)
 		prefix += string_format("#define %1\r\n", define_list[i]);
 	prefix += "#line 0\r\n";
@@ -250,7 +252,7 @@ ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, 
 	program->set_uniform_buffer_index("Uniforms", 0);
 
 	// Storage buffers
-	program->set_storage_buffer_index("Lights", 0);
+	program->set_storage_buffer_index("lights", 0);
 	program->set_storage_buffer_index("VisibleLightIndices", 1);
 
 	// Textures

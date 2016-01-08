@@ -173,11 +173,11 @@ ivec2 GetTexelPosition(int index)
 	return ivec2(index % width, index / width);
 }
 
-int GetVectorsOffset(int gl_InstanceID)
+int GetVectorsOffset(int instanceId)
 {
-	int width = textureSize(InstanceVectors, 0).x;
+	int width = textureSize(InstanceOffsets, 0).x;
 	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
-	return modelOffset + gl_InstanceID * VectorsPerInstance;
+	return modelOffset + instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

@@ -22,6 +22,7 @@ public:
 
 private:
 	enum { num_buffers = 16 };
+	std::vector<float> index_table;
 	uicore::StagingTexturePtr indexes_transfer[num_buffers];
 	uicore::StagingTexturePtr vectors_transfer[num_buffers];
 

@@ -81,9 +81,9 @@ int GetVectorsOffset(int instanceId);
 mat3 loadMat3(int offset)
 {
 	return transpose(mat3(
-		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0),
-		texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0),
-		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0)));
+		texelFetch(InstanceVectors, GetTexelPosition(offset + 0), 0).xyz,
+		texelFetch(InstanceVectors, GetTexelPosition(offset + 1), 0).xyz,
+		texelFetch(InstanceVectors, GetTexelPosition(offset + 2), 0).xyz));
 }
 
 mat4 loadMat4(int offset)
@@ -294,7 +294,7 @@ ivec2 GetTexelPosition(int index)
 
 int GetVectorsOffset(int instanceId)
 {
-	int width = textureSize(InstanceVectors, 0).x;
+	int width = textureSize(InstanceOffsets, 0).x;
 	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
 	return modelOffset + instanceId * VectorsPerInstance;
 }

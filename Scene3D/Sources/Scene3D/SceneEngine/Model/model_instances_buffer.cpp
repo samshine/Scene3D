@@ -61,6 +61,7 @@ void ModelInstancesBuffer::lock(const GraphicContextPtr &gc)
 			indexes[i] = Texture2D::create(gc, pixels_width, pixels_height, tf_r32f);
 			indexes_transfer[i] = StagingTexture::create(gc, pixels_width, pixels_height, StagingDirection::to_gpu, tf_r32f, 0, usage_stream_draw);
 		}
+		index_table.resize(max_offset_indexes);
 	}
 
 	ScopeTimer scope_time_lock("ModelInstancesBuffer.lock(buffers)");
@@ -78,7 +79,8 @@ MappedBuffer<Vec4f> ModelInstancesBuffer::upload(int offset_index, int vectors)
 	if (num_vectors + vectors > vectors_transfer[current_buffer]->width() * vectors_transfer[current_buffer]->height())
 		CrashReporter::invoke();
 
-	indexes_transfer[current_buffer]->data<float>()[offset_index] = (float)num_vectors;
+	index_table[offset_index] = (float)num_vectors;
+
 	Vec4f *v = vectors_transfer[current_buffer]->data<Vec4f>() + num_vectors;
 	num_vectors += vectors;
 	return MappedBuffer<Vec4f>(v, vectors);
@@ -88,6 +90,10 @@ void ModelInstancesBuffer::unlock(const GraphicContextPtr &gc)
 {
 	if (num_vectors == 0)
 		return;
+
+	auto ptr = indexes_transfer[current_buffer]->data<float>();
+	for (size_t i = 0; i < index_table.size(); i++)
+		ptr[i] = index_table[i];
 
 	indexes_transfer[current_buffer]->unlock();
 	vectors_transfer[current_buffer]->unlock();

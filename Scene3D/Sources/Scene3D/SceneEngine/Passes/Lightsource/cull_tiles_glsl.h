@@ -1,7 +1,5 @@
 namespace { const char *cull_tiles_glsl() { return R"shaderend(
 
-#version 430
-
 #define MAX_LIGHTS 1023
 #define MAX_LOCAL_LIGHTS 128
 #define TILE_SIZE 16
@@ -40,7 +38,7 @@ layout(std140) uniform Uniforms
 	uint num_tiles_x;
 	uint num_tiles_y;
 	uint padding; // 16 byte boundary alignment
-}
+};
 
 readonly buffer lights
 {

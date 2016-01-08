@@ -248,6 +248,7 @@ void LightsourceSimplePass::render()
 	// To do: use icosahedron for smaller lights and when the camera is not inside the light influence sphere
 	// To do: combine multiple lights into the same rect pass to reduce overdraw penalty
 
+#if !RENDER_WITH_ICOSAHEDRON
 	inout.gc->set_depth_stencil_state(rect_depth_stencil_state);
 	inout.gc->set_rasterizer_state(rect_rasterizer_state);
 	inout.gc->set_program_object(rect_light_program);
@@ -255,17 +256,7 @@ void LightsourceSimplePass::render()
 	inout.gc->set_primitives_array(rect_prim_array);
 	inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6, std::max(lights.size(), (size_t)1));
 	inout.gc->reset_primitives_array();
-
-/*
-	inout.gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
-	inout.gc->set_rasterizer_state(icosahedron_rasterizer_state);
-	inout.gc->set_program_object(icosahedron_light_program);
-
-	inout.gc->set_primitives_array(icosahedron_prim_array);
-	inout.gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
-	inout.gc->reset_primitives_array();
-*/
-
+#else
 	inout.gc->set_depth_stencil_state(icosahedron_depth_stencil_state);
 	inout.gc->set_rasterizer_state(icosahedron_rasterizer_state);
 	inout.gc->set_program_object(icosahedron_light_program);
@@ -273,6 +264,7 @@ void LightsourceSimplePass::render()
 	inout.gc->set_primitives_array(icosahedron_prim_array);
 	inout.gc->draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, type_unsigned_int, 0, lights.size());
 	inout.gc->reset_primitives_array();
+#endif
 
 	//inout.timer.end_time(inout.gc);
 	//inout.timer.begin_time(inout.gc, "light(simple)");
