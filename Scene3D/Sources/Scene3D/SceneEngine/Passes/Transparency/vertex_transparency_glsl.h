@@ -7,7 +7,6 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	int ModelIndex;
 	int VectorsPerInstance;
 	int MaterialOffset;
 };
@@ -282,9 +281,7 @@ ivec2 GetTexelPosition(int index)
 
 int GetVectorsOffset(int instanceId)
 {
-	int width = int(textureSize(InstanceOffsets, 0).x);
-	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
-	return modelOffset + instanceId * VectorsPerInstance;
+	return instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

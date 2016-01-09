@@ -13,7 +13,6 @@ cbuffer ModelMaterialUniforms
 	float4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
 	uint VectorsPerInstance;
 	uint MaterialOffset;
 };

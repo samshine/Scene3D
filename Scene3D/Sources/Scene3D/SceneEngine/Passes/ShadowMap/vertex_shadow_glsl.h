@@ -7,7 +7,6 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	int ModelIndex;
 	int VectorsPerInstance;
 	int MaterialOffset;
 };
@@ -20,7 +19,6 @@ in ivec4 AttrBoneSelectors;
 
 out vec4 PositionInEye;
 
-uniform sampler2D InstanceOffsets;
 uniform sampler2D InstanceVectors;
 
 
@@ -28,7 +26,6 @@ vec4 ApplyBones(int instanceBonesOffset);
 mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset);
 mat4x2 GetBoneDualQuaternion(mat4x2 currentDual, int boneIndex, int instanceBonesOffset);
 ivec2 GetTexelPosition(int index);
-int GetVectorsOffset(int index);
 
 mat3 loadMat3(int offset)
 {
@@ -49,13 +46,13 @@ mat4 loadMat4(int offset)
 
 void main()
 {
-	int vectorsOffset = GetVectorsOffset(ModelIndex);
+	int vectorsOffset = gl_InstanceID * VectorsPerInstance;
 
-	mat4 ObjectToWorld = loadMat4(vectorsOffset + gl_InstanceID * VectorsPerInstance + 3);
-	mat4 WorldToEye = loadMat4(vectorsOffset + gl_InstanceID * VectorsPerInstance + 7);
-	mat4 EyeToProjection = loadMat4(vectorsOffset + gl_InstanceID * VectorsPerInstance + 11);
+	mat4 ObjectToWorld = loadMat4(vectorsOffset + 3);
+	mat4 WorldToEye = loadMat4(vectorsOffset + 7);
+	mat4 EyeToProjection = loadMat4(vectorsOffset + 11);
 
-	vec4 positionInObject = ApplyBones(vectorsOffset + gl_InstanceID * VectorsPerInstance + 16);
+	vec4 positionInObject = ApplyBones(vectorsOffset + 16);
 	PositionInEye = WorldToEye * ObjectToWorld * positionInObject;
 	gl_Position = EyeToProjection * PositionInEye;
 }
@@ -171,13 +168,6 @@ ivec2 GetTexelPosition(int index)
 {
 	int width = textureSize(InstanceVectors, 0).x;
 	return ivec2(index % width, index / width);
-}
-
-int GetVectorsOffset(int instanceId)
-{
-	int width = textureSize(InstanceOffsets, 0).x;
-	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
-	return modelOffset + instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

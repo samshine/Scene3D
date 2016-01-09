@@ -7,7 +7,6 @@ cbuffer ModelMaterialUniforms
 	float4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
 	uint VectorsPerInstance;
 	uint MaterialOffset;
 };
@@ -27,7 +26,6 @@ struct VertexOut
 	float4 PositionInEye : PositionInEye;
 };
 
-Texture2D InstanceOffsets;
 Texture2D InstanceVectors;
 
 
@@ -35,7 +33,6 @@ float4 ApplyBones(VertexIn input, uint instanceBonesOffset);
 float4x4 GetBoneTransform(uint boneIndex, uint instanceBonesOffset);
 float2x4 GetBoneDualQuaternion(float2x4 currentDual, uint boneIndex, uint instanceBonesOffset);
 int3 GetTexelPosition(uint index);
-uint GetVectorsOffset(uint index);
 
 float3x3 loadMat3(uint offset)
 {
@@ -56,14 +53,14 @@ float4x4 loadMat4(uint offset)
 
 VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 {
-	uint vectorsOffset = GetVectorsOffset(ModelIndex);
+	uint vectorsOffset = instanceId * VectorsPerInstance;
 
-	float4x4 ObjectToWorld = loadMat4(vectorsOffset + instanceId * VectorsPerInstance + 3);
-	float4x4 WorldToEye = loadMat4(vectorsOffset + instanceId * VectorsPerInstance + 7);
-	float4x4 EyeToProjection = loadMat4(vectorsOffset + instanceId * VectorsPerInstance + 11);
+	float4x4 ObjectToWorld = loadMat4(vectorsOffset + 3);
+	float4x4 WorldToEye = loadMat4(vectorsOffset + 7);
+	float4x4 EyeToProjection = loadMat4(vectorsOffset + 11);
 
 	VertexOut output;
-	float4 positionInObject = ApplyBones(input, vectorsOffset + instanceId * VectorsPerInstance + 16);
+	float4 positionInObject = ApplyBones(input, vectorsOffset + 16);
 	output.PositionInEye = mul(WorldToEye, mul(ObjectToWorld, positionInObject));
 	output.PositionInProjection = mul(EyeToProjection, output.PositionInEye);
 	return output;
@@ -176,13 +173,6 @@ int3 GetTexelPosition(uint index)
 	int width, height, num_levels;
 	InstanceVectors.GetDimensions(0, width, height, num_levels);
 	return int3(index % width, index / width, 0);
-}
-
-uint GetVectorsOffset(uint index)
-{
-	int width, height, num_levels;
-	InstanceOffsets.GetDimensions(0, width, height, num_levels);
-	return (uint)InstanceOffsets.Load(int3(index % width, index / width, 0)).x;
 }
 
 )shaderend"; } }

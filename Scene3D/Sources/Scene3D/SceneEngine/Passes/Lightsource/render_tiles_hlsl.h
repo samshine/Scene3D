@@ -125,7 +125,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;
-	if (item_index < VisibleLightIndices[visible_light_indices_start])
+	if (item_index < num_visible_lights)
 		color = float3(1.0f, 1.0f, 1.0f);
 #else
 

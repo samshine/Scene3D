@@ -64,13 +64,12 @@ void ShadowMapPass::render_map(ShadowMapLight &slot)
 
 	FrustumPlanes frustum(eye_to_cull_projection * slot.light->world_to_shadow());
 
-	inout.model_render.clear(inout.scene);
+	inout.model_render.begin(inout.scene, slot.light->world_to_shadow(), slot.light->shadow_to_projection(inout.gc->clip_z_range()), ModelRenderMode::shadow);
 	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object)
 	{
-		inout.model_render.add_instance(object);
+		inout.model_render.render(object);
 	});
-	inout.model_render.upload(slot.light->world_to_shadow(), slot.light->shadow_to_projection(inout.gc->clip_z_range()));
-	inout.model_render.render_shadow();
+	inout.model_render.end();
 
 	inout.gc->reset_rasterizer_state();
 	inout.gc->reset_depth_stencil_state();

@@ -1083,27 +1083,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Level\level_instance.h">
       <Filter>Sources\Scene3D\SceneEngine\Level</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\dual_quaternion.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render_command.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClInclude>
@@ -1338,15 +1317,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\scene_viewport_impl.h">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh.h">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_glsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClInclude>
@@ -1430,6 +1400,27 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\vertex_shadow_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_instance.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_mesh_buffers.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_render.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1937,15 +1928,6 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Level\level.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClCompile>
@@ -2021,15 +2003,6 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_viewport.cpp">
       <Filter>Sources\Scene3D\SceneEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instances_buffer.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_mesh.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
     </ClCompile>
@@ -2038,6 +2011,21 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\shadow_map_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_instance.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_mesh.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,7 +7,6 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	int ModelIndex;
 	int VectorsPerInstance;
 	int MaterialOffset;
 };
@@ -61,7 +60,6 @@ out vec4 VertexColor;
 #endif
 out vec4 LightProbeColor;
 
-uniform sampler2D InstanceOffsets;
 uniform sampler2D InstanceVectors;
 
 struct BonesResult
@@ -74,7 +72,6 @@ struct BonesResult
 
 BonesResult ApplyBones(int instanceBonesOffset);
 mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset);
-mat4x2 GetBoneDualQuaternion(mat4x2 currentDual, int boneIndex, int instanceBonesOffset);
 ivec2 GetTexelPosition(int index);
 int GetVectorsOffset(int instanceId);
 
@@ -149,43 +146,7 @@ void main()
 	LightProbeColor = LightProbeColorData;
 }
 
-#if defined(USE_BONES) && defined(USE_DUALQUATERNION)
-BonesResult ApplyBones(int instanceBonesOffset)
-{
-	BonesResult result;
-	if (AttrBoneWeights.x != 0.0 || AttrBoneWeights.y != 0.0 || AttrBoneWeights.z != 0.0 || AttrBoneWeights.w != 0.0)
-	{
-		// We use low precision input for our bone weights. Rescale so the sum still is 1.0
-		float totalWeight = AttrBoneWeights.x + AttrBoneWeights.y + AttrBoneWeights.z + AttrBoneWeights.w;
-		float weightMultiplier = 1 / totalWeight;
-		vec4 BoneWeights = AttrBoneWeights * weightMultiplier;
-
-		// For details, read the paper "Geometric Skinning with Dual Skinning" by L. Kavan et al.
-		mat4x2 dual = mat4x2(0);
-		dual  = BoneWeights.x * GetBoneDualQuaternion(dual, AttrBoneSelectors.x, instanceBonesOffset);
-		dual += BoneWeights.y * GetBoneDualQuaternion(dual, AttrBoneSelectors.y, instanceBonesOffset);
-		dual += BoneWeights.z * GetBoneDualQuaternion(dual, AttrBoneSelectors.z, instanceBonesOffset);
-		dual += BoneWeights.w * GetBoneDualQuaternion(dual, AttrBoneSelectors.w, instanceBonesOffset);
-		dual /= length(dual[0]);
-
-		result.PositionInObject.xyz = AttrPositionInObject.xyz + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrPositionInObject.xyz) + dual[0].w * AttrPositionInObject.xyz);
-		result.PositionInObject.xyz += 2.0 * (dual[0].w * dual[1].xyz - dual[1].w * dual[0].xyz + cross(dual[0].xyz, dual[1].xyz));
-		result.PositionInObject.w = 1;
-
-		result.Normal = AttrNormal + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrNormal) + dual[0].w * AttrNormal);
-		result.Tangent = AttrTangent + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrTangent) + dual[0].w * AttrTangent);
-		result.Bitangent = AttrBitangent + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrBitangent) + dual[0].w * AttrBitangent);
-	}
-	else
-	{
-		result.PositionInObject = AttrPositionInObject;
-		result.Normal = AttrNormal;
-		result.Tangent = AttrTangent;
-		result.Bitangent = AttrBitangent;
-	}
-	return result;
-}
-#elif defined(USE_BONES)
+#if defined(USE_BONES)
 BonesResult ApplyBones(int instanceBonesOffset)
 {
 	BonesResult result;
@@ -264,7 +225,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 }
 #endif
 
-#if !defined(USE_DUALQUATERNION)
 mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset)
 {
 	vec4 row0 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 3 + 0), 0);
@@ -273,18 +233,6 @@ mat4 GetBoneTransform(int boneIndex, int instanceBonesOffset)
 	vec4 row3 = vec4(0,0,0,1);
 	return transpose(mat4(row0, row1, row2, row3));
 }
-#else
-mat4x2 GetBoneDualQuaternion(mat4x2 currentDual, int boneIndex, int instanceBonesOffset)
-{
-	vec4 row0 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 0), 0);
-	vec4 row1 = texelFetch(InstanceVectors, GetTexelPosition(instanceBonesOffset + boneIndex * 2 + 1), 0);
-	mat4x2 newDual = transpose(mat4x2(row0, row1));
-	if (dot(currentDual[0], newDual[0]) < 0)
-		return -newDual;
-	else
-		return newDual;
-}
-#endif
 
 ivec2 GetTexelPosition(int index)
 {
@@ -294,9 +242,7 @@ ivec2 GetTexelPosition(int index)
 
 int GetVectorsOffset(int instanceId)
 {
-	int width = textureSize(InstanceOffsets, 0).x;
-	int modelOffset = int(texelFetch(InstanceOffsets, ivec2(ModelIndex % width, ModelIndex / width), 0).x);
-	return modelOffset + instanceId * VectorsPerInstance;
+	return instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

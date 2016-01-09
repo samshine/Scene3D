@@ -1,37 +1,63 @@
 
 #pragma once
 
-#include "model_instances_buffer.h"
+#include "Scene3D/ModelData/model_data.h"
+#include "Scene3D/SceneEngine/resource.h"
+#include "model_mesh.h"
 #include "model_shader_cache.h"
+#include <unordered_map>
+#include <deque>
 
 class SceneImpl;
 class SceneObjectImpl;
 class SceneLightProbeImpl;
 class ModelMesh;
 
+enum class ModelRenderMode
+{
+	early_z,
+	shadow,
+	gbuffer,
+	transparency
+};
+
 class ModelRender
 {
 public:
-	void clear(SceneImpl *scene);
-	void add_instance(SceneObjectImpl *object);
-	void upload(const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection);
-	void render_gbuffer();
-	void render_transparency();
-	void render_shadow();
-	void render_early_z();
+	ModelRender();
 
-	int new_model_index();
+	void begin(SceneImpl *scene, const uicore::Mat4f &world_to_eye, const uicore::Mat4f &eye_to_projection, ModelRenderMode render_mode);
+	void render(SceneObjectImpl *object);
+	void end();
+
+private:
+	void render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
+	SceneLightProbeImpl *find_nearest_probe(const uicore::Vec3f &position);
+
+	void render_early_z(ModelMesh *mesh, int instance_count);
+	void render_shadow(ModelMesh *mesh, int instance_count);
+	void render_gbuffer(ModelMesh *mesh, int instance_count);
+	void render_transparency(ModelMesh *mesh, int instance_count);
+
+	void bind_texture(int bind_index, Resource<uicore::TexturePtr> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v);
+	void draw_elements(int start_element, int num_elements, uicore::UniformVector<ModelMaterialUniforms> uniforms, int num_instances);
+
+	static uicore::TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
+
+	uicore::Texture2DPtr get_instance_buffer(int size);
+	uicore::StagingTexturePtr get_staging_buffer(int size);
+
+	SceneImpl *scene = nullptr;
+	uicore::Mat4f world_to_eye;
+	uicore::Mat4f eye_to_projection;
+	ModelRenderMode render_mode = ModelRenderMode::early_z;
+	std::unordered_map<ModelMesh *, std::vector<SceneObjectImpl *>> render_lists;
 
 	ModelShaderCache shader_cache;
 
-private:
-	SceneLightProbeImpl *find_nearest_probe(SceneImpl *scene, const uicore::Vec3f &position);
+	const int batch_size = 100;
+	const int buffer_count = 200;
 
-	ModelInstancesBuffer instances_buffer;
-
-	SceneImpl *scene = nullptr;
-	std::function<void()> execute_commands;
-
-	int frame = 0;
-	std::vector<ModelMesh *> model_meshes;
+	std::deque<uicore::Texture2DPtr> instance_buffers;
+	std::deque<uicore::StagingTexturePtr> staging_buffers;
 };

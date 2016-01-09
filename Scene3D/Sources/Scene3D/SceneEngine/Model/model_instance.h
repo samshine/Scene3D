@@ -72,5 +72,5 @@ private:
 
 	// To do: add selection id
 
-	friend class ModelMesh;
+	friend class ModelRender;
 };

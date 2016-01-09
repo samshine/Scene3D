@@ -3,9 +3,6 @@
 #include "model_shader_cache.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
-#include "model_render_command.h"
-#include "model.h"
-#include "model_mesh.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_glsl.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/vertex_gbuffer_hlsl.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/fragment_gbuffer_glsl.h"
@@ -90,8 +87,7 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(const GraphicContextPt
 
 	ShaderSetup::link(gbuffer, "gbuffer program");
 
-	gbuffer->set_uniform1i("InstanceOffsets", 0);
-	gbuffer->set_uniform1i("InstanceVectors", 1);
+	gbuffer->set_uniform1i("InstanceVectors", 0);
 	gbuffer->set_uniform1i("DiffuseTexture", 2);
 	gbuffer->set_uniform1i("DiffuseSampler", 2);
 	gbuffer->set_uniform1i("BumpMapTexture", 3);
@@ -161,8 +157,7 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(const GraphicCont
 
 	ShaderSetup::link(transparency, "transparency program");
 
-	transparency->set_uniform1i("InstanceOffsets", 0);
-	transparency->set_uniform1i("InstanceVectors", 1);
+	transparency->set_uniform1i("InstanceVectors", 0);
 	transparency->set_uniform1i("DiffuseTexture", 2);
 	transparency->set_uniform1i("DiffuseSampler", 2);
 	transparency->set_uniform1i("BumpMapTexture", 3);
@@ -204,8 +199,7 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(const GraphicContextPtr &g
 
 	ShaderSetup::link(program, "shadow program");
 
-	program->set_uniform1i("InstanceOffsets", 0);
-	program->set_uniform1i("InstanceVectors", 1);
+	program->set_uniform1i("InstanceVectors", 0);
 	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	if (!uses_bones)
@@ -244,8 +238,7 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(const GraphicContextPtr &
 
 	ShaderSetup::link(program, "early_z program");
 
-	program->set_uniform1i("InstanceOffsets", 0);
-	program->set_uniform1i("InstanceVectors", 1);
+	program->set_uniform1i("InstanceVectors", 0);
 	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
 
 	if (!uses_bones)

@@ -4,6 +4,7 @@
 #include "Scene3D/scene_model.h"
 #include "Scene3D/scene.h"
 #include <algorithm>
+#include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/Scene/scene_object_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_model_impl.h"

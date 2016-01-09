@@ -4,18 +4,14 @@
 class ModelMaterialUniforms
 {
 public:
-	ModelMaterialUniforms() : material_glossiness(), material_specular_level(), model_index(), vectors_per_instance(), material_offset() { }
+	ModelMaterialUniforms() : material_glossiness(), material_specular_level(), vectors_per_instance(), material_offset() { }
 	uicore::Vec4f material_ambient;
 	uicore::Vec4f material_diffuse;
 	uicore::Vec4f material_specular;
 	float material_glossiness;
 	float material_specular_level;
-	unsigned int model_index;
 	unsigned int vectors_per_instance;
 	unsigned int material_offset;
-	unsigned int padding0;
-	unsigned int padding1;
-	unsigned int padding2;
 };
 
 class ModelMeshBuffers

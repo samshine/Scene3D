@@ -7,7 +7,6 @@ cbuffer ModelMaterialUniforms
 	float4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	uint ModelIndex;
 	uint VectorsPerInstance;
 	uint MaterialOffset;
 };
@@ -292,10 +291,7 @@ int3 GetTexelPosition(uint index)
 
 uint GetVectorsOffset(uint instanceId)
 {
-	int width, height, num_levels;
-	InstanceOffsets.GetDimensions(0, width, height, num_levels);
-	uint modelOffset = (uint)InstanceOffsets.Load(int3(ModelIndex % width, ModelIndex / width, 0)).x;
-	return modelOffset + instanceId * VectorsPerInstance;
+	return instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

@@ -12,7 +12,6 @@ layout(std140) uniform ModelMaterialUniforms
 	vec4 MaterialSpecular;
 	float MaterialGlossiness;
 	float MaterialSpecularLevel;
-	int ModelIndex;
 	int VectorsPerInstance;
 	int MaterialOffset;
 };

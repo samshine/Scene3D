@@ -5,6 +5,7 @@
 #include "Scene3D/SceneEngine/scene_viewport_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Performance/scope_timer.h"
+#include "Scene3D/SceneEngine/Model/model_mesh.h"
 
 using namespace uicore;
 
@@ -41,19 +42,16 @@ void GBufferPass::run()
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	inout.model_render.clear(inout.scene);
-	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object)
-	{
-		inout.model_render.add_instance(object);
-	});
-	inout.model_render.upload(inout.world_to_eye, eye_to_projection);
-
 	inout.gc->set_blend_state(early_z_blend_state);
-	inout.model_render.render_early_z();
+	inout.model_render.begin(inout.scene, inout.world_to_eye, eye_to_projection, ModelRenderMode::early_z);
+	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object) { inout.model_render.render(object); });
+	inout.model_render.end();
 
 	inout.gc->set_blend_state(blend_state);
-	inout.model_render.render_gbuffer();
-
+	inout.model_render.begin(inout.scene, inout.world_to_eye, eye_to_projection, ModelRenderMode::gbuffer);
+	inout.scene->foreach_object(frustum, [&](SceneObjectImpl *object) { inout.model_render.render(object); });
+	inout.model_render.end();
+	
 	if (inout.gc->shader_language() == shader_glsl)
 	{
 		// To do: support this in ClanLib

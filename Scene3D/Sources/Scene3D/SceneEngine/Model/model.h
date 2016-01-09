@@ -1,14 +1,10 @@
 
 #pragma once
 
-#include "Scene3D/ModelData/model_data.h"
 #include "model_instance.h"
 
-class ModelDataLight;
-class ModelLightInstance;
-class ModelMeshVisitor;
+class ModelData;
 class ModelMesh;
-class ModelInstancesBuffer;
 class SceneEngineImpl;
 
 class Model
