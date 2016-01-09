@@ -77,8 +77,6 @@ void ModelRender::render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl
 				light_probe_color = probe->color();
 		}
 
-		// add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
-
 		const auto &object_to_world = object->get_object_to_world();
 
 		Mat3f object_normal_to_eye = Mat3f(world_to_eye * object_to_world).inverse().transpose();
@@ -175,14 +173,12 @@ void ModelRender::render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl
 
 	shader_cache.create_states(inout.gc);
 
-	inout.gc->set_texture(0, instance_buffer);
-
 	switch (render_mode)
 	{
-	case ModelRenderMode::early_z: render_early_z(mesh, instances.size()); break;
-	case ModelRenderMode::shadow: render_shadow(mesh, instances.size()); break;
-	case ModelRenderMode::gbuffer: render_gbuffer(mesh,instances.size()); break;
-	case ModelRenderMode::transparency: render_transparency(mesh, instances.size()); break;
+	case ModelRenderMode::early_z: render_early_z(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::shadow: render_shadow(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::gbuffer: render_gbuffer(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::transparency: render_transparency(mesh, instance_buffer, instances.size()); break;
 	}
 
 	inout.gc->reset_texture(0);
@@ -229,7 +225,7 @@ StagingTexturePtr ModelRender::get_staging_buffer(int size)
 	return buffer;
 }
 
-void ModelRender::render_early_z(ModelMesh *mesh, int instance_count)
+void ModelRender::render_early_z(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count)
 {
 	auto &inout = scene->engine()->render;
 
@@ -258,6 +254,7 @@ void ModelRender::render_early_z(ModelMesh *mesh, int instance_count)
 
 		if (compatible_ranges_count == mesh_data.draw_ranges.size())
 		{
+			inout.gc->set_texture(0, instance_buffer);
 			draw_elements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh->mesh_buffers[i].uniforms[0], instance_count);
 		}
 		else
@@ -266,6 +263,7 @@ void ModelRender::render_early_z(ModelMesh *mesh, int instance_count)
 			{
 				if (!mesh_data.draw_ranges[j].transparent && !mesh_data.draw_ranges[j].two_sided && !mesh_data.draw_ranges[j].alpha_test)
 				{
+					inout.gc->set_texture(0, instance_buffer);
 					draw_elements(mesh_data.draw_ranges[j].start_element, mesh_data.draw_ranges[j].num_elements, mesh->mesh_buffers[i].uniforms[j], instance_count);
 				}
 			}
@@ -273,7 +271,7 @@ void ModelRender::render_early_z(ModelMesh *mesh, int instance_count)
 	}
 }
 
-void ModelRender::render_shadow(ModelMesh *mesh, int instance_count)
+void ModelRender::render_shadow(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count)
 {
 	auto &inout = scene->engine()->render;
 
@@ -289,11 +287,12 @@ void ModelRender::render_shadow(ModelMesh *mesh, int instance_count)
 		inout.gc->set_primitives_elements(mesh->mesh_buffers[i].elements);
 
 		ModelDataMesh &mesh_data = mesh->model_data->meshes[i];
+		inout.gc->set_texture(0, instance_buffer);
 		draw_elements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh->mesh_buffers[i].uniforms[0], instance_count);
 	}
 }
 
-void ModelRender::render_gbuffer(ModelMesh *mesh, int instance_count)
+void ModelRender::render_gbuffer(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count)
 {
 	auto &inout = scene->engine()->render;
 
@@ -365,12 +364,13 @@ void ModelRender::render_gbuffer(ModelMesh *mesh, int instance_count)
 				inout.gc->set_program_object(shader_cache.get_shader(inout.gc, shader_desc).gbuffer);
 			}
 
+			inout.gc->set_texture(0, instance_buffer);
 			draw_elements(material_range.start_element, material_range.num_elements, mesh->mesh_buffers[i].uniforms[j], instance_count);
 		}
 	}
 }
 
-void ModelRender::render_transparency(ModelMesh *mesh, int instance_count)
+void ModelRender::render_transparency(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count)
 {
 	auto &inout = scene->engine()->render;
 
@@ -453,6 +453,7 @@ void ModelRender::render_transparency(ModelMesh *mesh, int instance_count)
 				inout.gc->set_program_object(shader_cache.get_shader(inout.gc, shader_desc).transparency);
 			}
 
+			inout.gc->set_texture(0, instance_buffer);
 			draw_elements(material_range.start_element, material_range.num_elements, mesh->mesh_buffers[i].uniforms[j], instance_count);
 		}
 	}

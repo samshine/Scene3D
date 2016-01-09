@@ -34,10 +34,10 @@ private:
 	void render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
 	SceneLightProbeImpl *find_nearest_probe(const uicore::Vec3f &position);
 
-	void render_early_z(ModelMesh *mesh, int instance_count);
-	void render_shadow(ModelMesh *mesh, int instance_count);
-	void render_gbuffer(ModelMesh *mesh, int instance_count);
-	void render_transparency(ModelMesh *mesh, int instance_count);
+	void render_early_z(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
+	void render_shadow(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
+	void render_gbuffer(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
+	void render_transparency(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
 
 	void bind_texture(int bind_index, Resource<uicore::TexturePtr> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v);
 	void draw_elements(int start_element, int num_elements, uicore::UniformVector<ModelMaterialUniforms> uniforms, int num_instances);
