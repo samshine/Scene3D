@@ -14,10 +14,10 @@
 #include "Scene3D/SceneEngine/Passes/Transparency/vertex_transparency_hlsl.h"
 #include "Scene3D/SceneEngine/Passes/Transparency/fragment_transparency_glsl.h"
 #include "Scene3D/SceneEngine/Passes/Transparency/fragment_transparency_hlsl.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vertex_shadow_glsl.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vertex_shadow_hlsl.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/fragment_shadow_glsl.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/fragment_shadow_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/vertex_shadow_glsl.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/vertex_shadow_hlsl.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/fragment_shadow_glsl.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/fragment_shadow_hlsl.h"
 
 using namespace uicore;
 

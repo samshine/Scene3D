@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "lightsource_simple_pass.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/shadow_map_pass.h"
 #include "Scene3D/Scene/scene_camera_impl.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/scene.h"

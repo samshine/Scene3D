@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "vsm_shadow_map_pass.h"
+#include "shadow_map_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Scene/scene_impl.h"
 #include "Scene3D/Scene/scene_light_impl.h"
@@ -8,7 +8,7 @@
 
 using namespace uicore;
 
-VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+ShadowMapPass::ShadowMapPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
 {
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
@@ -21,7 +21,7 @@ VSMShadowMapPass::VSMShadowMapPass(const GraphicContextPtr &gc, SceneRender &ino
 	depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
 }
 
-void VSMShadowMapPass::run()
+void ShadowMapPass::run()
 {
 	ScopeTimeFunction();
 
@@ -50,7 +50,7 @@ void VSMShadowMapPass::run()
 	}
 }
 
-void VSMShadowMapPass::render_map(ShadowMapLight &slot)
+void ShadowMapPass::render_map(ShadowMapLight &slot)
 {
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
 	inout.gc->set_blend_state(blend_state);

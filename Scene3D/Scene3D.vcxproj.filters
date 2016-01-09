@@ -181,9 +181,6 @@
     <Filter Include="Sources\Scene3D\SceneEngine\Passes\Transparency">
       <UniqueIdentifier>{aea227b8-9dd0-4786-9ea4-b86f28193833}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap">
-      <UniqueIdentifier>{50e19e1f-9f3d-4460-acb9-3463ea2c5ba4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax">
       <UniqueIdentifier>{ad754cc9-2290-4ef7-a4f9-d1e041c3fac4}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="Sources\Scene3D\SceneEngine\Passes\SceneLines">
       <UniqueIdentifier>{ac4f570e-a35b-4d0e-9dd0-6e18ef9f113f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap">
+      <UniqueIdentifier>{cfb88e07-c6d6-431f-bf50-44407ad8acab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1161,9 +1161,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ZMinMax</Filter>
     </ClInclude>
@@ -1329,18 +1326,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
     </ClInclude>
@@ -1430,6 +1415,21 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\fragment_light_glsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\fragment_shadow_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\fragment_shadow_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\shadow_map_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\vertex_shadow_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\vertex_shadow_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1988,9 +1988,6 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\VSMShadowMap</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ZMinMax</Filter>
     </ClCompile>
@@ -2038,6 +2035,9 @@
     </ClCompile>
     <ClCompile Include="Sources\log_event.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\shadow_map_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\ShadowMap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -111,7 +111,7 @@ void SceneRender::setup_passes()
 
 	passes.push_back(std::make_shared<GBufferPass>(*this));
 	passes.push_back(std::make_shared<SkyboxPass>(*this));
-	passes.push_back(std::make_shared<VSMShadowMapPass>(gc, *this));
+	passes.push_back(std::make_shared<ShadowMapPass>(gc, *this));
 	
 	if (use_compute_shader_pass)
 	{

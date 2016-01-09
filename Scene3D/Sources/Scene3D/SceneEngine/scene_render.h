@@ -7,7 +7,7 @@
 #include "Scene3D/SceneEngine/resource.h"
 #include "Scene3D/SceneEngine/Model/model_render.h"
 #include "Scene3D/SceneEngine/Passes/GaussianBlur/gaussian_blur.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/shadow_map_pass.h"
 #include "Scene3D/SceneEngine/Passes/Lightsource/lightsource_pass.h"
 #include "Scene3D/SceneEngine/Passes/LightsourceSimple/lightsource_simple_pass.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/gbuffer_pass.h"

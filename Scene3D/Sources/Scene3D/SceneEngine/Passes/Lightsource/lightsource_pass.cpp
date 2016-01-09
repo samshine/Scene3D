@@ -3,7 +3,7 @@
 #include "lightsource_pass.h"
 #include "Scene3D/SceneEngine/shader_setup.h"
 #include "Scene3D/SceneEngine/mapped_buffer.h"
-#include "Scene3D/SceneEngine/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
+#include "Scene3D/SceneEngine/Passes/ShadowMap/shadow_map_pass.h"
 #include "Scene3D/scene.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Performance/gpu_timer.h"

@@ -366,6 +366,11 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\vertex_scene_lines_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\scene_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\fragment_shadow_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\fragment_shadow_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\shadow_map_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\vertex_shadow_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\vertex_shadow_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_angular_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_billboard_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\fragment_billboard_hlsl.h" />
@@ -389,11 +394,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_hlsl.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_glsl.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\fragment_shadow_hlsl.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_glsl.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vertex_shadow_hlsl.h" />
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\resource.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\scene_engine_impl.h" />
@@ -599,10 +599,10 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass_data.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\scene_lines_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap\shadow_map_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Skybox\skybox_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\SSAO\ssao_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Transparency\transparency_pass.cpp" />
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\VSMShadowMap\vsm_shadow_map_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ZMinMax\z_minmax.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\scene_engine_impl.cpp" />

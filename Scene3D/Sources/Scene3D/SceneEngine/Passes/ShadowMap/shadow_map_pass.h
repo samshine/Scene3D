@@ -11,10 +11,10 @@
 class SceneImpl;
 class SceneRender;
 
-class VSMShadowMapPass : public ScenePass
+class ShadowMapPass : public ScenePass
 {
 public:
-	VSMShadowMapPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
+	ShadowMapPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
 	std::string name() const override { return "shadow"; }
 	void run() override;
 
