@@ -88,7 +88,10 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	canvas->begin();
 
 	auto image = Image::create(scene_texture, scene_texture->size(), gc->pixel_ratio());
-	image->draw(canvas, geometry().content_size());
+	if (gc->texture_image_y_axis() == y_axis_top_down)
+		image->draw(canvas, geometry().content_size());
+	else
+		image->draw(canvas, Quadf(Vec2f(0.0f, geometry().content_height), Vec2f(geometry().content_width, geometry().content_height), Vec2f(geometry().content_width, 0.0f), Vec2f(0.0f, 0.0f)));
 }
 
 void SceneView::set_animate(bool value)
