@@ -43,7 +43,7 @@ void ModelRender::render(SceneObjectImpl *object)
 		list.clear();
 	}
 
-	scene->engine()->render.models_drawn++;
+	scene->engine()->render.instances_drawn++;
 }
 
 void ModelRender::end()
@@ -59,6 +59,28 @@ void ModelRender::render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl
 {
 	ScopeTimeFunction();
 
+	scene->engine()->render.models_drawn++;
+
+	auto instance_buffer = upload_instances(mesh, instances);
+
+	auto &inout = scene->engine()->render;
+	shader_cache.create_states(inout.gc);
+
+	switch (render_mode)
+	{
+	case ModelRenderMode::early_z: render_early_z(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::shadow: render_shadow(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::gbuffer: render_gbuffer(mesh, instance_buffer, instances.size()); break;
+	case ModelRenderMode::transparency: render_transparency(mesh, instance_buffer, instances.size()); break;
+	}
+
+	inout.gc->reset_texture(0);
+}
+
+uicore::Texture2DPtr ModelRender::upload_instances(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances)
+{
+	ScopeTimeFunction();
+
 	auto &inout = scene->engine()->render;
 
 	auto vectors_per_instance = mesh->vectors_per_instance();
@@ -66,7 +88,7 @@ void ModelRender::render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl
 	auto staging_buffer = get_staging_buffer(instances.size() * vectors_per_instance);
 	staging_buffer->lock(inout.gc, access_write_discard);
 	auto vectors = staging_buffer->data<Vec4f>();
-	
+
 	for (const auto &object : instances)
 	{
 		Vec3f light_probe_color;
@@ -170,18 +192,7 @@ void ModelRender::render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl
 
 	auto instance_buffer = get_instance_buffer(instances.size() * vectors_per_instance);
 	instance_buffer->set_subimage(inout.gc, 0, 0, staging_buffer, staging_buffer->size());
-
-	shader_cache.create_states(inout.gc);
-
-	switch (render_mode)
-	{
-	case ModelRenderMode::early_z: render_early_z(mesh, instance_buffer, instances.size()); break;
-	case ModelRenderMode::shadow: render_shadow(mesh, instance_buffer, instances.size()); break;
-	case ModelRenderMode::gbuffer: render_gbuffer(mesh, instance_buffer, instances.size()); break;
-	case ModelRenderMode::transparency: render_transparency(mesh, instance_buffer, instances.size()); break;
-	}
-
-	inout.gc->reset_texture(0);
+	return instance_buffer;
 }
 
 SceneLightProbeImpl *ModelRender::find_nearest_probe(const Vec3f &position)

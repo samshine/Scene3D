@@ -32,6 +32,7 @@ public:
 
 private:
 	void render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
+	uicore::Texture2DPtr upload_instances(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
 	SceneLightProbeImpl *find_nearest_probe(const uicore::Vec3f &position);
 
 	void render_early_z(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
@@ -55,8 +56,8 @@ private:
 
 	ModelShaderCache shader_cache;
 
-	const int batch_size = 100;
-	const int buffer_count = 200;
+	const int batch_size = 1024;
+	const int buffer_count = 300;
 
 	std::deque<uicore::Texture2DPtr> instance_buffers;
 	std::deque<uicore::StagingTexturePtr> staging_buffers;
