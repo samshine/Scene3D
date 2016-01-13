@@ -26,5 +26,5 @@ private:
 	MusicPlayer music_player;
 
 	GameMenu main_menu, join_menu, host_menu, options_menu;
-	GameMenuView game_menu_view;
+	std::shared_ptr<GameMenuView> game_menu_view = std::make_shared<GameMenuView>();
 };

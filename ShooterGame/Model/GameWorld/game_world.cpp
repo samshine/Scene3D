@@ -168,10 +168,18 @@ void GameWorld::update(uicore::Vec2i new_mouse_movement, bool has_focus)
 {
 	ScopeTimeFunction();
 
-	if (client && has_focus)
+	if (client)
 	{
-		client->mouse_movement = new_mouse_movement;
-		client->buttons.update(client->window);
+		if (has_focus)
+		{
+			client->mouse_movement = new_mouse_movement;
+			client->buttons.update(client->window);
+		}
+		else
+		{
+			client->mouse_movement = Point();
+			client->buttons.input_disabled();
+		}
 	}
 
 	network->update();

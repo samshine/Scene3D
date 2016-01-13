@@ -65,34 +65,37 @@ void MenuScreenController::create_menus()
 
 	main_menu = {
 		{ "New Game", [=]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("localhost", "5004", true)); } },
-		{ "Join Game", [=]() { game_menu_view.push_menu(&join_menu); } },
-		{ "Host Game", [=]() { game_menu_view.push_menu(&host_menu); } },
-		{ "Options", [=]() { game_menu_view.push_menu(&options_menu); } },
+		{ "Join Game", [=]() { game_menu_view->push_menu(&join_menu); } },
+		{ "Host Game", [=]() { game_menu_view->push_menu(&host_menu); } },
+		{ "Options", [=]() { game_menu_view->push_menu(&options_menu); } },
 		{ "Quit", [=]() { exit_game(); } }
 	};
 
 	join_menu = {
 		{ "Join Game", [=]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>(server(), port(), false)); } },
-		{ "Player Name:", [=]() { game_menu_view.begin_edit(player_name(), set_player_name); }, player_name },
-		{ "Server:", [=]() { game_menu_view.begin_edit(server(), set_server); }, server },
-		{ "Port:", [=]() { game_menu_view.begin_edit(port(), set_port); }, port },
-		{ "Back", [=]() { game_menu_view.pop_menu(); } }
+		{ "Player Name:", [=]() { game_menu_view->begin_edit(player_name(), set_player_name); }, player_name },
+		{ "Server:", [=]() { game_menu_view->begin_edit(server(), set_server); }, server },
+		{ "Port:", [=]() { game_menu_view->begin_edit(port(), set_port); }, port },
+		{ "Back", [=]() { game_menu_view->pop_menu(); } }
 	};
 
 	host_menu = {
 		{ "Create Game", [=]() { music_player.stop(); present_controller(std::make_shared<GameScreenController>("", port(), true)); } },
-		{ "Player Name:", [=]() { game_menu_view.begin_edit(player_name(), set_player_name); }, player_name },
-		{ "Port:", [=]() { game_menu_view.begin_edit(port(), set_port); }, port },
-		{ "Back", [=]() { game_menu_view.pop_menu(); } }
+		{ "Player Name:", [=]() { game_menu_view->begin_edit(player_name(), set_player_name); }, player_name },
+		{ "Port:", [=]() { game_menu_view->begin_edit(port(), set_port); }, port },
+		{ "Back", [=]() { game_menu_view->pop_menu(); } }
 	};
 
-	options_menu = game_menu_view.create_options_menu();
+	options_menu = game_menu_view->create_options_menu();
 
-	game_menu_view.push_menu(&main_menu);
+	game_menu_view->push_menu(&main_menu);
 }
 
 void MenuScreenController::update()
 {
+	if (!game_menu_view->menu_visible())
+		exit_game();
+
 	fade_time = std::min(fade_time + game_time().time_elapsed() * 2.0f, 1.0f);
 
 	t = std::fmod(t + game_time().time_elapsed() * 0.01f, 2.0f);
@@ -110,7 +113,7 @@ void MenuScreenController::update()
 
 	Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, 0.2f)));
 
-	game_menu_view.update();
+	game_menu_view->update();
 
 	if (fade_time < 1.0f)
 		Path::rect(canvas()->size())->fill(canvas(), Brush::solid(Colorf(0.0f, 0.0f, 0.0f, clamp(1.0f - fade_time, 0.0f, 1.0f))));

@@ -27,6 +27,8 @@ public:
 	void pop_menu();
 	void begin_edit(std::string value, std::function<void(std::string)> set_value);
 
+	bool menu_visible() const { return !menu_stack.empty(); }
+
 	GameMenu create_options_menu();
 
 private:

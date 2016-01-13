@@ -3,6 +3,7 @@
 
 #include "screen_view_controller.h"
 #include "Model/GameWorld/game_world.h"
+#include "Views/GameMenuView/game_menu_view.h"
 
 class GameScreenController : public ScreenViewController
 {
@@ -13,8 +14,12 @@ public:
 	void update() override;
 
 private:
+	void create_menus();
 	void server_thread_main();
 	void on_log_event(const std::string &type, const std::string &text);
+
+	GameMenu game_menu, options_menu;
+	std::shared_ptr<GameMenuView> game_menu_view = std::make_shared<GameMenuView>();
 
 	std::unique_ptr<GameWorld> client_game;
 	std::unique_ptr<GameWorld> server_game;

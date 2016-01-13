@@ -83,6 +83,9 @@ void GameMenuView::begin_edit(std::string value, std::function<void(std::string)
 
 void GameMenuView::on_key_down(const uicore::InputEvent &e)
 {
+	if (menu_stack.empty())
+		return;
+
 	if (edit_mode)
 	{
 		if (e.id == keycode_enter)
@@ -91,6 +94,10 @@ void GameMenuView::on_key_down(const uicore::InputEvent &e)
 			if (edit_set_value)
 				edit_set_value(edit_value);
 			edit_set_value = std::function<void(std::string)>();
+		}
+		else if (e.id == keycode_escape)
+		{
+			edit_mode = false;
 		}
 		else if (e.id == keycode_backspace && !edit_value.empty())
 		{
@@ -115,12 +122,16 @@ void GameMenuView::on_key_down(const uicore::InputEvent &e)
 		{
 			menu_stack.top()->at(current_menu_index).click();
 		}
+		else if (e.id == keycode_escape)
+		{
+			pop_menu();
+		}
 	}
 }
 
 void GameMenuView::on_mouse_up(const uicore::InputEvent &e)
 {
-	if (edit_mode)
+	if (edit_mode || menu_stack.empty())
 		return;
 
 	if (e.id == mouse_left)
@@ -141,7 +152,7 @@ void GameMenuView::on_mouse_up(const uicore::InputEvent &e)
 
 void GameMenuView::on_mouse_move(const uicore::InputEvent &e)
 {
-	if (edit_mode)
+	if (edit_mode || menu_stack.empty())
 		return;
 
 	int i = 0;
@@ -158,6 +169,9 @@ void GameMenuView::on_mouse_move(const uicore::InputEvent &e)
 
 void GameMenuView::update()
 {
+	if (menu_stack.empty())
+		return;
+
 	const auto &menu = *menu_stack.top();
 
 	auto font_metrics_h1 = font_h1->font_metrics(canvas());

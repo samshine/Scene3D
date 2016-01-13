@@ -73,6 +73,7 @@ void Screen::run()
 		window_desc.set_size(Sizef(1920.0f, 1280.0f), true);
 		window_desc.set_allow_resize();
 		window_desc.set_visible(false);
+		window_desc.set_allow_alt_enter();
 
 		window = DisplayWindow::create(window_desc);
 		gc = window->gc();
@@ -154,7 +155,7 @@ void Screen::run()
 
 			{
 				ScopeTimer scope_timer("DisplayWindow::flip");
-				window->flip(0);
+				window->flip(1);
 			}
 
 			ScopeTimerResults::end();
