@@ -14,20 +14,20 @@
 
 using namespace uicore;
 
-BloomPass::BloomPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+BloomPass::BloomPass(SceneRender &inout) : inout(inout)
 {
-	if (gc->shader_language() == shader_glsl)
+	if (inout.gc->shader_language() == shader_glsl)
 	{
-		extract_shader = ShaderSetup::compile(gc, "bloom extract", vertex_bloom_extract_glsl(), fragment_bloom_extract_glsl(), "");
+		extract_shader = ShaderSetup::compile(inout.gc, "bloom extract", vertex_bloom_extract_glsl(), fragment_bloom_extract_glsl(), "");
 		extract_shader->bind_frag_data_location(0, "FragColor");
 
-		combine_shader = ShaderSetup::compile(gc, "bloom combine", vertex_bloom_combine_glsl(), fragment_bloom_combine_glsl(), "");
+		combine_shader = ShaderSetup::compile(inout.gc, "bloom combine", vertex_bloom_combine_glsl(), fragment_bloom_combine_glsl(), "");
 		combine_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		extract_shader = ShaderSetup::compile(gc, "bloom extract", vertex_bloom_extract_hlsl(), fragment_bloom_extract_hlsl(), "");
-		combine_shader = ShaderSetup::compile(gc, "bloom combine", vertex_bloom_combine_hlsl(), fragment_bloom_combine_hlsl(), "");
+		extract_shader = ShaderSetup::compile(inout.gc, "bloom extract", vertex_bloom_extract_hlsl(), fragment_bloom_extract_hlsl(), "");
+		combine_shader = ShaderSetup::compile(inout.gc, "bloom combine", vertex_bloom_combine_hlsl(), fragment_bloom_combine_hlsl(), "");
 	}
 
 	ShaderSetup::link(extract_shader, "bloom extract");
@@ -50,18 +50,18 @@ BloomPass::BloomPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(in
 		Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
 		Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
 	};
-	rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
-	rect_primarray = PrimitivesArray::create(gc);
+	rect_positions = VertexArrayVector<Vec4f>(inout.gc, positions, 6);
+	rect_primarray = PrimitivesArray::create(inout.gc);
 	rect_primarray->set_attributes(0, rect_positions);
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = gc->create_blend_state(blend_desc);
+	blend_state = inout.gc->create_blend_state(blend_desc);
 
 	BlendStateDescription add_blend_desc;
 	add_blend_desc.enable_blending(true);
 	add_blend_desc.set_blend_function(blend_one, blend_one, blend_zero, blend_one);
-	add_blend_state = gc->create_blend_state(add_blend_desc);
+	add_blend_state = inout.gc->create_blend_state(add_blend_desc);
 }
 
 void BloomPass::run()

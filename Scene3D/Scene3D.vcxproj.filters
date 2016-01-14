@@ -199,6 +199,9 @@
     <Filter Include="Sources\Scene3D\SceneEngine\Passes\ShadowMap">
       <UniqueIdentifier>{cfb88e07-c6d6-431f-bf50-44407ad8acab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scene3D\SceneEngine\Passes\Decals">
+      <UniqueIdentifier>{742cda6d-4ece-4abb-8738-2f11c04c88b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1422,6 +1425,27 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Model\model_shader_description.h">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\decals_pass.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\fragment_decals_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\fragment_decals_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\vertex_decals_glsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\vertex_decals_hlsl.h">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene3D\scene_decal.h">
+      <Filter>Include\Scene3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Scene3D\Scene\scene_decal_impl.h">
+      <Filter>Sources\Scene3D\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2026,6 +2050,12 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Decals\decals_pass.cpp">
+      <Filter>Sources\Scene3D\SceneEngine\Passes\Decals</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Scene3D\Scene\scene_decal.cpp">
+      <Filter>Sources\Scene3D\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ class SceneRender;
 class ShadowMapPass : public ScenePass
 {
 public:
-	ShadowMapPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
+	ShadowMapPass(SceneRender &inout);
 	std::string name() const override { return "shadow"; }
 	void run() override;
 

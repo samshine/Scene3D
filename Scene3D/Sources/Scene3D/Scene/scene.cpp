@@ -9,6 +9,7 @@
 #include "scene_impl.h"
 #include "scene_object_impl.h"
 #include "scene_light_probe_impl.h"
+#include "scene_decal_impl.h"
 
 using namespace uicore;
 
@@ -148,6 +149,28 @@ void SceneImpl::foreach_emitter(const Vec3f &position, const std::function<void(
 	for (SceneItem *item : cull_provider->cull(position))
 	{
 		SceneParticleEmitterImpl *v = dynamic_cast<SceneParticleEmitterImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_decal(const FrustumPlanes &frustum, const std::function<void(SceneDecalImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(frustum))
+	{
+		SceneDecalImpl *v = dynamic_cast<SceneDecalImpl*>(item);
+		if (v)
+			callback(v);
+	}
+}
+
+void SceneImpl::foreach_decal(const Vec3f &position, const std::function<void(SceneDecalImpl *)> &callback)
+{
+	ScopeTimeFunction();
+	for (SceneItem *item : cull_provider->cull(position))
+	{
+		SceneDecalImpl *v = dynamic_cast<SceneDecalImpl*>(item);
 		if (v)
 			callback(v);
 	}

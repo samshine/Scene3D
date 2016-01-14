@@ -8,7 +8,7 @@
 class FinalPass : public ScenePass
 {
 public:
-	FinalPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
+	FinalPass(SceneRender &inout);
 	std::string name() const override { return "final"; }
 	void run() override;
 

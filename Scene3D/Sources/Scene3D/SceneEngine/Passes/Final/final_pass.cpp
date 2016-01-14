@@ -10,16 +10,16 @@
 
 using namespace uicore;
 
-FinalPass::FinalPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+FinalPass::FinalPass(SceneRender &inout) : inout(inout)
 {
-	if (gc->shader_language() == shader_glsl)
+	if (inout.gc->shader_language() == shader_glsl)
 	{
-		present_shader = ShaderSetup::compile(gc, "present", vertex_present_glsl(), fragment_present_glsl(), "");
+		present_shader = ShaderSetup::compile(inout.gc, "present", vertex_present_glsl(), fragment_present_glsl(), "");
 		present_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		present_shader = ShaderSetup::compile(gc, "present", vertex_present_hlsl(), fragment_present_hlsl(), "");
+		present_shader = ShaderSetup::compile(inout.gc, "present", vertex_present_hlsl(), fragment_present_hlsl(), "");
 	}
 	if (!present_shader->try_link())
 		throw Exception("Shader linking failed!");
@@ -36,19 +36,19 @@ FinalPass::FinalPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(in
 		Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
 		Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
 	};
-	rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
-	rect_primarray = PrimitivesArray::create(gc);
+	rect_positions = VertexArrayVector<Vec4f>(inout.gc, positions, 6);
+	rect_primarray = PrimitivesArray::create(inout.gc);
 	rect_primarray->set_attributes(0, rect_positions);
 
 	RasterizerStateDescription rasterizer_desc;
 	rasterizer_desc.set_culled(false);
-	rasterizer_state = gc->create_rasterizer_state(rasterizer_desc);
+	rasterizer_state = inout.gc->create_rasterizer_state(rasterizer_desc);
 }
 
 void FinalPass::run()
 {
 	ScopeTimeFunction();
-	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(gc, lightsource_pass.final_color);
+	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(inout.gc, inout.final_color);
 
 	inout.final_color->set_min_filter(filter_nearest);
 	inout.final_color->set_mag_filter(filter_nearest);

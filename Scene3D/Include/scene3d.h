@@ -10,6 +10,7 @@
 #include "Scene3D/scene_model.h"
 #include "Scene3D/scene_object.h"
 #include "Scene3D/scene_particle_emitter.h"
+#include "Scene3D/scene_decal.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/MapData/map_data.h"
 #include "Scene3D/LevelData/level_data.h"

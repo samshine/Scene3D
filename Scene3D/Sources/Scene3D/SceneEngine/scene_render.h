@@ -11,6 +11,7 @@
 #include "Scene3D/SceneEngine/Passes/Lightsource/lightsource_pass.h"
 #include "Scene3D/SceneEngine/Passes/LightsourceSimple/lightsource_simple_pass.h"
 #include "Scene3D/SceneEngine/Passes/GBuffer/gbuffer_pass.h"
+#include "Scene3D/SceneEngine/Passes/Decals/decals_pass.h"
 #include "Scene3D/SceneEngine/Passes/Skybox/skybox_pass.h"
 #include "Scene3D/SceneEngine/Passes/Bloom/bloom_pass.h"
 #include "Scene3D/SceneEngine/Passes/SSAO/ssao_pass.h"

@@ -10,16 +10,16 @@
 
 using namespace uicore;
 
-SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+SSAOPass::SSAOPass(SceneRender &inout) : inout(inout)
 {
-	if (gc->shader_language() == shader_glsl)
+	if (inout.gc->shader_language() == shader_glsl)
 	{
-		extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_glsl(), fragment_ssao_extract_glsl(), "");
+		extract_shader = ShaderSetup::compile(inout.gc, "ssao", vertex_ssao_extract_glsl(), fragment_ssao_extract_glsl(), "");
 		extract_shader->bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		extract_shader = ShaderSetup::compile(gc, "ssao", vertex_ssao_extract_hlsl(), fragment_ssao_extract_hlsl(), "");
+		extract_shader = ShaderSetup::compile(inout.gc, "ssao", vertex_ssao_extract_hlsl(), fragment_ssao_extract_hlsl(), "");
 	}
 
 	extract_shader->bind_attribute_location(0, "PositionInProjection");
@@ -40,13 +40,13 @@ SSAOPass::SSAOPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inou
 		Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
 		Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
 	};
-	rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
-	rect_primarray = PrimitivesArray::create(gc);
+	rect_positions = VertexArrayVector<Vec4f>(inout.gc, positions, 6);
+	rect_primarray = PrimitivesArray::create(inout.gc);
 	rect_primarray->set_attributes(0, rect_positions);
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = gc->create_blend_state(blend_desc);
+	blend_state = inout.gc->create_blend_state(blend_desc);
 }
 
 void SSAOPass::run()

@@ -8,17 +8,17 @@
 
 using namespace uicore;
 
-ShadowMapPass::ShadowMapPass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+ShadowMapPass::ShadowMapPass(SceneRender &inout) : inout(inout)
 {
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);
-	blend_state = gc->create_blend_state(blend_desc);
+	blend_state = inout.gc->create_blend_state(blend_desc);
 
 	DepthStencilStateDescription depth_stencil_desc;
 	depth_stencil_desc.enable_depth_write(true);
 	depth_stencil_desc.enable_depth_test(true);
 	depth_stencil_desc.set_depth_compare_function(compare_lequal);
-	depth_stencil_state = gc->create_depth_stencil_state(depth_stencil_desc);
+	depth_stencil_state = inout.gc->create_depth_stencil_state(depth_stencil_desc);
 }
 
 void ShadowMapPass::run()

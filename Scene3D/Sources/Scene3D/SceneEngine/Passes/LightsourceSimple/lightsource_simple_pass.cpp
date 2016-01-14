@@ -18,23 +18,23 @@
 
 using namespace uicore;
 
-LightsourceSimplePass::LightsourceSimplePass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+LightsourceSimplePass::LightsourceSimplePass(SceneRender &inout) : inout(inout)
 {
-	if (gc->shader_language() == shader_glsl)
+	if (inout.gc->shader_language() == shader_glsl)
 	{
-		icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_glsl(), fragment_light_glsl());
-		rect_light_program = compile_and_link(gc, vertex_rect_glsl(), fragment_light_glsl(), "RECT_PASS");
+		icosahedron_light_program = compile_and_link(inout.gc, vertex_icosahedron_glsl(), fragment_light_glsl());
+		rect_light_program = compile_and_link(inout.gc, vertex_rect_glsl(), fragment_light_glsl(), "RECT_PASS");
 	}
 	else
 	{
-		icosahedron_light_program = compile_and_link(gc, vertex_icosahedron_hlsl(), fragment_light_hlsl());
-		rect_light_program = compile_and_link(gc, vertex_rect_hlsl(), fragment_light_hlsl(), "RECT_PASS");
+		icosahedron_light_program = compile_and_link(inout.gc, vertex_icosahedron_hlsl(), fragment_light_hlsl());
+		rect_light_program = compile_and_link(inout.gc, vertex_rect_hlsl(), fragment_light_hlsl(), "RECT_PASS");
 	}
 
-	light_instance_texture = Texture1D::create(gc, max_lights * vectors_per_light, tf_rgba32f);
+	light_instance_texture = Texture1D::create(inout.gc, max_lights * vectors_per_light, tf_rgba32f);
 	light_instance_transfer = PixelBuffer::create(max_lights * vectors_per_light, 1, tf_rgba32f);
 
-	icosahedron.reset(new Icosahedron(gc, true));
+	icosahedron.reset(new Icosahedron(inout.gc, true));
 }
 
 LightsourceSimplePass::~LightsourceSimplePass()

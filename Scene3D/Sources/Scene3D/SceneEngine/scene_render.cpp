@@ -110,25 +110,26 @@ void SceneRender::setup_passes()
 	// use_compute_shader_pass = false; // Disable because it crashes with Oculus Rift
 
 	passes.push_back(std::make_shared<GBufferPass>(*this));
+	passes.push_back(std::make_shared<DecalsPass>(*this));
 	passes.push_back(std::make_shared<SkyboxPass>(*this));
-	passes.push_back(std::make_shared<ShadowMapPass>(gc, *this));
+	passes.push_back(std::make_shared<ShadowMapPass>(*this));
 	
 	if (use_compute_shader_pass)
 	{
-		passes.push_back(std::make_shared<LightsourcePass>(gc, *this));
+		passes.push_back(std::make_shared<LightsourcePass>(*this));
 	}
 	else
 	{
-		passes.push_back(std::make_shared<LightsourceSimplePass>(gc, *this));
+		passes.push_back(std::make_shared<LightsourceSimplePass>(*this));
 	}
 	
 	passes.push_back(std::make_shared<TransparencyPass>(*this));
 	passes.push_back(std::make_shared<ParticleEmitterPass>(*this));
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));
-	passes.push_back(std::make_shared<BloomPass>(gc, *this));
-	//passes.push_back(std::make_shared<SSAOPass>(gc, *this));
+	passes.push_back(std::make_shared<BloomPass>(*this));
+	//passes.push_back(std::make_shared<SSAOPass>(*this));
 	passes.push_back(std::make_shared<SceneLinesPass>(*this));
-	passes.push_back(std::make_shared<FinalPass>(gc, *this));
+	passes.push_back(std::make_shared<FinalPass>(*this));
 }
 
 void SceneRender::setup_pass_buffers()

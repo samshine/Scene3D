@@ -9,7 +9,7 @@
 class BloomPass : public ScenePass
 {
 public:
-	BloomPass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
+	BloomPass(SceneRender &inout);
 	std::string name() const override { return "bloom"; }
 	void run() override;
 

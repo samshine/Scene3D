@@ -19,6 +19,7 @@ class Resource_BaseImpl;
 class SceneParticleEmitterImpl;
 class SceneParticleEmitterVisitor;
 class SceneLightProbeImpl;
+class SceneDecalImpl;
 
 class SceneImpl : public Scene
 {
@@ -42,6 +43,8 @@ public:
 	void foreach_light_probe(const uicore::Vec3f &position, const std::function<void(SceneLightProbeImpl *)> &callback);
 	void foreach_emitter(const uicore::FrustumPlanes &frustum, const std::function<void(SceneParticleEmitterImpl *)> &callback);
 	void foreach_emitter(const uicore::Vec3f &position, const std::function<void(SceneParticleEmitterImpl *)> &callback);
+	void foreach_decal(const uicore::FrustumPlanes &frustum, const std::function<void(SceneDecalImpl *)> &callback);
+	void foreach_decal(const uicore::Vec3f &position, const std::function<void(SceneDecalImpl *)> &callback);
 
 	template<typename T> void foreach_type(const uicore::FrustumPlanes &frustum, const std::function<void(T *)> &callback)
 	{
@@ -64,6 +67,7 @@ private:
 	std::list<SceneLightImpl *> lights;
 	std::list<SceneLightProbeImpl *> light_probes;
 	std::list<SceneParticleEmitterImpl *> emitters;
+	std::list<SceneDecalImpl *> decals;
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
 
@@ -75,6 +79,8 @@ private:
 	friend class SceneLightProbeImpl;
 	friend class SceneParticleEmitter;
 	friend class SceneParticleEmitterImpl;
+	friend class SceneDecal;
+	friend class SceneDecalImpl;
 	friend class SceneModel;
 	friend class SceneModelImpl;
 	friend class Scene;

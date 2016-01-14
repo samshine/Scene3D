@@ -17,23 +17,23 @@
 
 using namespace uicore;
 
-LightsourcePass::LightsourcePass(const GraphicContextPtr &gc, SceneRender &inout) : inout(inout)
+LightsourcePass::LightsourcePass(SceneRender &inout) : inout(inout)
 {
-	if (gc->shader_language() == shader_glsl)
+	if (inout.gc->shader_language() == shader_glsl)
 	{
-		cull_tiles_program = compile_and_link(gc, "cull tiles", cull_tiles_glsl());
-		render_tiles_program = compile_and_link(gc, "render tiles", render_tiles_glsl());
+		cull_tiles_program = compile_and_link(inout.gc, "cull tiles", cull_tiles_glsl());
+		render_tiles_program = compile_and_link(inout.gc, "render tiles", render_tiles_glsl());
 	}
 	else
 	{
-		cull_tiles_program = compile_and_link(gc, "cull tiles", cull_tiles_hlsl());
-		render_tiles_program = compile_and_link(gc, "render tiles", render_tiles_hlsl());
+		cull_tiles_program = compile_and_link(inout.gc, "cull tiles", cull_tiles_hlsl());
+		render_tiles_program = compile_and_link(inout.gc, "render tiles", render_tiles_hlsl());
 	}
 
-	compute_uniforms = UniformVector<Uniforms>(gc, 1);
-	compute_lights = StorageVector<GPULight>(gc, max_lights);
+	compute_uniforms = UniformVector<Uniforms>(inout.gc, 1);
+	compute_lights = StorageVector<GPULight>(inout.gc, max_lights);
 	for (int i = 0; i < num_transfer_lights; i++)
-		transfer_lights[i] = StagingVector<GPULight>(gc, max_lights);
+		transfer_lights[i] = StagingVector<GPULight>(inout.gc, max_lights);
 }
 
 LightsourcePass::~LightsourcePass()

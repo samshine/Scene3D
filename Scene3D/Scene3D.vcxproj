@@ -51,6 +51,7 @@
     <ClInclude Include="Include\Scene3D\Performance\scope_timer.h" />
     <ClInclude Include="Include\Scene3D\scene.h" />
     <ClInclude Include="Include\Scene3D\scene_camera.h" />
+    <ClInclude Include="Include\Scene3D\scene_decal.h" />
     <ClInclude Include="Include\Scene3D\scene_engine.h" />
     <ClInclude Include="Include\Scene3D\scene_light.h" />
     <ClInclude Include="Include\Scene3D\scene_light_probe.h" />
@@ -311,6 +312,11 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_glsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\decals_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\fragment_decals_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\fragment_decals_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\vertex_decals_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Decals\vertex_decals_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\accumulate_lpv_hlsl.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\init_gv_hlsl.h" />
@@ -400,6 +406,7 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\shadow_maps.h" />
     <ClInclude Include="Sources\Scene3D\SceneEngine\work_queue.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_camera_impl.h" />
+    <ClInclude Include="Sources\Scene3D\Scene\scene_decal_impl.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_impl.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_light_impl.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_light_probe_impl.h" />
@@ -584,6 +591,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_render.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Model\model_shader_cache.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Decals\decals_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Final\final_pass.cpp" />
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\GaussianBlur\gaussian_blur.cpp" />
@@ -609,6 +617,7 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\work_queue.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_camera.cpp" />
+    <ClCompile Include="Sources\Scene3D\Scene\scene_decal.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_light.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_light_probe.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_model.cpp" />

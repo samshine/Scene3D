@@ -14,7 +14,7 @@ class SceneImpl;
 class LightsourceSimplePass : public ScenePass
 {
 public:
-	LightsourceSimplePass(const uicore::GraphicContextPtr &gc, SceneRender &inout);
+	LightsourceSimplePass(SceneRender &inout);
 	~LightsourceSimplePass();
 
 	std::string name() const override { return "light"; }
