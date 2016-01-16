@@ -17,7 +17,11 @@ LockStepServerTime::~LockStepServerTime()
 
 int LockStepServerTime::ticks_elapsed() const
 {
+#ifdef _DEBUG
+	return std::min(game_time.ticks_elapsed(), 3);
+#else
 	return game_time.ticks_elapsed();
+#endif
 }
 
 float LockStepServerTime::tick_time_elapsed() const

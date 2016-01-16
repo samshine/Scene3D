@@ -20,7 +20,11 @@ LockStepClientTime::~LockStepClientTime()
 
 int LockStepClientTime::ticks_elapsed() const
 {
+#ifdef _DEBUG
+	return std::min(client_tick_time - last_client_tick_time, 3);
+#else
 	return client_tick_time - last_client_tick_time;
+#endif
 }
 
 float LockStepClientTime::tick_time_elapsed() const
