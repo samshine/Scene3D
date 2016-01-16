@@ -32,6 +32,7 @@ public:
 	SceneCameraPtr scene_camera;
 	ScenePtr scene;
 	std::vector<SceneObjectPtr> objects;
+	std::vector<SceneDecalPtr> decals;
 
 	std::map<uicore::Vec3f, std::shared_ptr<SceneModel>> box_models;
 	std::map<uicore::Vec2f, std::shared_ptr<SceneModel>> capsule_models;

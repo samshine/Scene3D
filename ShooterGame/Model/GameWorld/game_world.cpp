@@ -229,12 +229,12 @@ void GameWorld::remove(GameObject *obj)
 {
 	if (obj->_id != 0)
 	{
-		if (!client)
+		/*if (!client)
 		{
 			NetGameEvent net_event("destroy");
 			net_event.add_argument(obj->id());
 			network->queue_event("all", net_event, net_tick.arrival_tick_time);
-		}
+		}*/
 
 		delete_list.push_back(obj->_id);
 		obj->_id = 0;
@@ -321,11 +321,12 @@ void GameWorld::net_event_received(const std::string &sender, const uicore::NetG
 			{
 				it->second->net_event_received(sender, net_event);
 
-				if (net_event.get_name() == "destroy")
+				/*if (net_event.get_name() == "destroy")
 				{
+					auto obj = it->second;
 					remote_objects.erase(it);
-					remove(it->second.get());
-				}
+					remove(obj.get());
+				}*/
 			}
 			else if (net_event.get_name() == "create")
 			{

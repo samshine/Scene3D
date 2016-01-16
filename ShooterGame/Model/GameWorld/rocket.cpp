@@ -85,12 +85,9 @@ void Rocket::tick()
 
 	pos += direction * (speed * time_elapsed());
 
-	if (world()->client)
-		return;
-
 	auto ray_hit = world()->collision->ray_test_nearest(last_pos, pos, [&](const Physics3DHit &result)
 	{
-		return result.object->data_object() != owner;
+		return owner ? result.object->data_object() != owner : true;
 	});
 
 	if (ray_hit)
@@ -100,26 +97,41 @@ void Rocket::tick()
 		float radius = 4.0f;
 		float max_damage = 150.0f;
 		float force = 1250.0f;
-		for (const auto &contact : world()->collision->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
+
+		if (!world()->client)
 		{
-			PlayerPawn *pawn = contact.object->data<PlayerPawn>();
-			if (pawn)
+			for (const auto &contact : world()->collision->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
 			{
-				auto pawn_center = pawn->get_position() + pawn->eye_offset;
-				auto impulse_dir = pawn_center - explosion_center;
-				auto dist = impulse_dir.length();
-
-				if (dist < radius)
+				PlayerPawn *pawn = contact.object->data<PlayerPawn>();
+				if (pawn)
 				{
-					if (dist != 0.0f)
-						impulse_dir *= 1.0f / dist;
-					float impact = 1.0f - dist / radius;
+					auto pawn_center = pawn->get_position() + pawn->eye_offset;
+					auto impulse_dir = pawn_center - explosion_center;
+					auto dist = impulse_dir.length();
 
-					pawn->apply_damage(max_damage * impact);
-					pawn->apply_impulse(impulse_dir * (impact * force));
+					if (dist < radius)
+					{
+						if (dist != 0.0f)
+							impulse_dir *= 1.0f / dist;
+						float impact = 1.0f - dist / radius;
+
+						pawn->apply_damage(max_damage * impact);
+						pawn->apply_impulse(impulse_dir * (impact * force));
+					}
 				}
 			}
 		}
+
+		if (world()->client)
+		{
+			auto decal = SceneDecal::create(world()->client->scene);
+			decal->set_position(ray_hit.position);
+			decal->set_orientation(orientation);
+			decal->set_extents(Vec3f(2.0f, 2.0f, 2.0f));
+			decal->set_diffuse_texture("rocketdecal.png");
+			world()->client->decals.push_back(decal);
+		}
+
 		world()->remove(this);
 	}
 }
