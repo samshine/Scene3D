@@ -33,6 +33,14 @@ void DecalsPass::run()
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
+	float aspect = inout.viewport.width() / (float)inout.viewport.height();
+	float field_of_view_y_degrees = inout.field_of_view;
+	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
+	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+	float rcp_f = 1.0f / f;
+	float rcp_f_div_aspect = 1.0f / (f / aspect);
+	Vec2f two_rcp_viewport_size(2.0f / inout.viewport.width(), 2.0f / inout.viewport.height());
+
 	std::vector<SceneDecalImpl*> decals;
 	inout.scene->foreach_decal(frustum, [&](SceneDecalImpl *decal) { decals.push_back(decal); });
 
@@ -72,9 +80,12 @@ void DecalsPass::run()
 
 	UniformBlock uniforms;
 	uniforms.eye_to_projection = eye_to_projection;
+	uniforms.rcp_f = rcp_f;
+	uniforms.rcp_f_div_aspect = rcp_f_div_aspect;
+	uniforms.two_rcp_viewport_size = two_rcp_viewport_size;
 	gpu_uniforms.upload_data(inout.gc, &uniforms, 1);
 
-	inout.gc->set_frame_buffer(inout.fb_gbuffer);
+	inout.gc->set_frame_buffer(inout.fb_decals);
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
@@ -86,6 +97,7 @@ void DecalsPass::run()
 	inout.gc->set_uniform_buffer(0, gpu_uniforms);
 	inout.gc->set_texture(0, instance_texture);
 	inout.gc->set_texture(1, diffuse_texture.get());
+	inout.gc->set_texture(2, inout.normal_z_gbuffer);
 
 	inout.gc->set_primitives_array(prim_array);
 	inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6 * 6, (int)decals.size());
@@ -125,6 +137,7 @@ void DecalsPass::setup()
 		program->set_uniform1i("InstanceTexture", 0);
 		program->set_uniform1i("DiffuseTexture", 1);
 		program->set_uniform1i("DiffuseSampler", 1);
+		program->set_uniform1i("NormalZTexture", 2);
 
 		std::vector<Vec3f> cpu_box_positions =
 		{

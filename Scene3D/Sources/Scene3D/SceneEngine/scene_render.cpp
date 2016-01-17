@@ -140,6 +140,7 @@ void SceneRender::setup_pass_buffers()
 		return;
 
 	fb_gbuffer = nullptr;
+	fb_decals = nullptr;
 	fb_self_illumination = nullptr;
 	for (auto &fb_blur : fb_bloom_blurv) fb_blur = nullptr;
 	for (auto &fb_blur : fb_bloom_blurh) fb_blur = nullptr;
@@ -186,6 +187,12 @@ void SceneRender::setup_pass_buffers()
 	fb_gbuffer->attach_color(3, self_illumination_gbuffer);
 	fb_gbuffer->attach_color(4, normal_z_gbuffer);
 	fb_gbuffer->attach_depth(zbuffer);
+
+	fb_decals = FrameBuffer::create(gc);
+	fb_decals->attach_color(0, diffuse_color_gbuffer);
+	fb_decals->attach_color(1, specular_color_gbuffer);
+	fb_decals->attach_color(2, specular_level_gbuffer);
+	fb_decals->attach_color(3, self_illumination_gbuffer);
 
 	fb_self_illumination = FrameBuffer::create(gc);
 	fb_self_illumination->attach_color(0, self_illumination_gbuffer);

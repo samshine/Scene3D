@@ -1,17 +1,24 @@
 namespace { const char *fragment_decals_hlsl() { return R"shaderend(
 
+// Direct3D's render targets are top-down, while OpenGL uses bottom-up
+#define TOP_DOWN_RENDER_TARGET
+
 cbuffer Uniforms
 {
 	float4x4 EyeToProjection;
+	float rcp_f;
+	float rcp_f_div_aspect;
+	float2 two_rcp_viewport_size;
 };
 
 struct PixelIn
 {
 	float4 ScreenPos : SV_Position;
-	float2 Texcoord : PixelTexcoord;
 	float Cutoff : PixelCutoff;
 	float Glossiness : PixelGlossiness;
 	float SpecularLevel : PixelSpecularLevel;
+	nointerpolation float3x3 RotateEyeToObject : PixelRotateEyeToObject;
+	nointerpolation float3 TranslateEyeToObject : PixelTranslateEyeToObject;
 };
 
 struct PixelOut
@@ -19,16 +26,54 @@ struct PixelOut
 	float4 FragColor : SV_Target0;
 };
 
+Texture2D NormalZTexture;
+
 Texture2D DiffuseTexture;
 SamplerState DiffuseSampler;
 
+float3 unproject_direction(float2 pos);
+float3 unproject(float2 pos, float eye_z);
+
 PixelOut main(PixelIn input)
 {
-	float4 textureColor = DiffuseTexture.Sample(DiffuseSampler, input.Texcoord);
+	int x = int(input.ScreenPos.x);
+	int y = int(input.ScreenPos.y);
+	int2 pos = int2(x,y);
+	uint3 texelpos = uint3(pos,0);
+
+	float4 normal_and_z = NormalZTexture.Load(texelpos);
+	float z_in_eye = normal_and_z.w;
+	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
+	float3 position_in_object = mul(input.RotateEyeToObject, position_in_eye + input.TranslateEyeToObject);
+
+	clip(0.5f - abs(position_in_object));
+
+	float4 textureColor = DiffuseTexture.Sample(DiffuseSampler, position_in_object.xy + 0.5);
 
 	PixelOut output;
 	output.FragColor = textureColor;
 	return output;
+}
+
+float3 unproject_direction(float2 pos)
+{
+//	float field_of_view_y_rad = field_of_view_y_degrees * M_PI / 180.0f;
+//	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+//	float rcp_f = 1.0f / f;
+//	float rcp_f_div_aspect = 1.0f / (f / aspect);
+	float2 normalized = float2(pos * two_rcp_viewport_size);
+#if defined(TOP_DOWN_RENDER_TARGET)
+	normalized.x = normalized.x - 1.0f;
+	normalized.y = 1.0f - normalized.y;
+#else
+	normalized -= 1.0f;
+#endif
+	return float3(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
+}
+
+float3 unproject(float2 pos, float eye_z)
+{
+	return unproject_direction(pos) * eye_z;
 }
 
 )shaderend"; } }

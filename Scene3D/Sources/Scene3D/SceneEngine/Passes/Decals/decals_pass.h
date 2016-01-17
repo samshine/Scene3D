@@ -21,6 +21,9 @@ private:
 	struct UniformBlock
 	{
 		uicore::Mat4f eye_to_projection;
+		float rcp_f;
+		float rcp_f_div_aspect;
+		uicore::Vec2f two_rcp_viewport_size;
 	};
 
 	const int vectors_per_instance = 4;

@@ -3,6 +3,9 @@ namespace { const char *vertex_decals_hlsl() { return R"shaderend(
 cbuffer Uniforms
 {
 	float4x4 EyeToProjection;
+	float rcp_f;
+	float rcp_f_div_aspect;
+	float2 two_rcp_viewport_size;
 }
 
 struct VertexIn
@@ -14,10 +17,11 @@ struct VertexIn
 struct VertexOut
 {
 	float4 Position : SV_Position;
-	float2 Texcoord : PixelTexcoord;
 	float Cutoff : PixelCutoff;
 	float Glossiness : PixelGlossiness;
 	float SpecularLevel : PixelSpecularLevel;
+	nointerpolation float3x3 RotateEyeToObject : PixelRotateEyeToObject;
+	nointerpolation float3 TranslateEyeToObject : PixelTranslateEyeToObject;
 };
 
 Texture2D InstanceTexture;
@@ -32,10 +36,11 @@ VertexOut main(VertexIn input)
 
 	VertexOut output;
 	output.Position = mul(EyeToProjection, mul(objectToEye, input.Position));
-	output.Texcoord = input.Position.xy * 0.5 + 0.5;
 	output.Cutoff = instanceData3.x;
 	output.Glossiness = instanceData3.y;
 	output.SpecularLevel = instanceData3.z;
+	output.RotateEyeToObject = transpose(float3x3(objectToEye[0].xyz, objectToEye[1].xyz, objectToEye[2].xyz));
+	output.TranslateEyeToObject = float3(-objectToEye[0].w, -objectToEye[1].w, -objectToEye[2].w);
 	return output;
 }
 

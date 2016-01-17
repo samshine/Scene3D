@@ -51,6 +51,7 @@ public:
 	enum { bloom_levels = 4 };
 
 	uicore::FrameBufferPtr fb_gbuffer;
+	uicore::FrameBufferPtr fb_decals;
 	uicore::FrameBufferPtr fb_self_illumination;
 	uicore::FrameBufferPtr fb_bloom_blurv[bloom_levels];
 	uicore::FrameBufferPtr fb_bloom_blurh[bloom_levels];
