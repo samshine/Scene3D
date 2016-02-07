@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "game_object.h"
+#include "Model/ClientWorld/client_world.h"
 
-class PlayerRagdoll : public GameObject
+class PlayerRagdoll : public GameObject, public ClientObject
 {
 public:
-	PlayerRagdoll(GameWorld *world, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
+	PlayerRagdoll(const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~PlayerRagdoll();
 
 	void tick() override;

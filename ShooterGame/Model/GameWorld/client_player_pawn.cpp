@@ -1,8 +1,6 @@
 
 #include "precomp.h"
 #include "client_player_pawn.h"
-#include "game_world.h"
-#include "game_tick.h"
 #include "collision_game_object.h"
 #include "game_master.h"
 #include "Model/Settings/settings.h"
@@ -10,56 +8,44 @@
 
 using namespace uicore;
 
-ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
+ClientPlayerPawn::ClientPlayerPawn()
 {
-	camera = SceneCamera::create(world->client->scene);
+	camera = SceneCamera::create(client_world()->scene);
 	camera_shape = Physics3DShape::sphere(0.5f);
+
+	func_received_event("create") = [this](const std::string &sender, const JsonValue &net_event) { net_create(net_event); };
+	func_received_event("player-pawn-update") = [this](const std::string &sender, const JsonValue &net_event) { net_update(net_event); };
+	func_received_event("player-pawn-hit") = [this](const std::string &sender, const JsonValue &net_event) { net_hit(net_event); };
 }
 
 ClientPlayerPawn::~ClientPlayerPawn()
 {
 }
 
-void ClientPlayerPawn::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
+void ClientPlayerPawn::net_create(const JsonValue &net_event)
 {
-	if (net_event.get_name() == "create")
-	{
-		net_create(net_event);
-	}
-	else if (net_event.get_name() == "player-pawn-update")
-	{
-		net_update(net_event);
-	}
-	else if (net_event.get_name() == "player-pawn-hit")
-	{
-		net_hit(net_event);
-	}
-}
-
-void ClientPlayerPawn::net_create(const uicore::NetGameEvent &net_event)
-{
-	net_update(net_event, 1);
+	net_update(net_event);
 
 	if (is_owner)
 	{
-		world()->client->scene_camera = camera;
-		world()->game_master->client_player = to_type<ClientPlayerPawn>();
+		client_world()->scene_camera = camera;
+		GameMaster::instance()->client_player = cast<ClientPlayerPawn>();
 	}
 }
 
-void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int skip)
+void ClientPlayerPawn::net_update(const JsonValue &net_event)
 {
-	is_owner = net_event.get_argument(skip + 1).get_boolean();
-	health = net_event.get_argument(skip + 19).get_number();
+	is_owner = net_event["owner"].to_boolean();
+	health = net_event["health"].to_float();
 
 	if (is_owner)
 	{
 		// Remove obsolete entries
-		while (!sent_movements.empty() && sent_movements.front().tick_time < receive_tick_time())
+		while (!sent_movements.empty() && sent_movements.front().tick_time < tick_time())
 			sent_movements.erase(sent_movements.begin());
 
 		// Do nothing if this packet is older than anything we have in our move buffer
-		if (sent_movements.empty() || sent_movements.front().tick_time != receive_tick_time())
+		if (sent_movements.empty() || sent_movements.front().tick_time != tick_time())
 		{
 			return;
 		}
@@ -69,13 +55,13 @@ void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int ski
 
 		// Grab server position and velocity received by server
 		Vec3f pos, velocity;
-		pos.x = net_event.get_argument(skip + 12).get_number();
-		pos.y = net_event.get_argument(skip + 13).get_number();
-		pos.z = net_event.get_argument(skip + 14).get_number();
-		velocity.x = net_event.get_argument(skip + 15).get_number();
-		velocity.y = net_event.get_argument(skip + 16).get_number();
-		velocity.z = net_event.get_argument(skip + 17).get_number();
-		bool is_flying = net_event.get_argument(skip + 18).get_boolean();
+		pos.x = net_event["x"].to_float();
+		pos.y = net_event["y"].to_float();
+		pos.z = net_event["z"].to_float();
+		velocity.x = net_event["vx"].to_float();
+		velocity.y = net_event["vy"].to_float();
+		velocity.z = net_event["vz"].to_float();
+		bool is_flying = net_event["flying"].to_boolean();
 		character_controller.warp(pos, velocity, is_flying);
 
 		// Replay movements until now to get new predicted client position
@@ -84,34 +70,34 @@ void ClientPlayerPawn::net_update(const uicore::NetGameEvent &net_event, int ski
 	}
 	else
 	{
-		key_forward.next_pressed = net_event.get_argument(skip + 2).get_boolean();
-		key_back.next_pressed = net_event.get_argument(skip + 3).get_boolean();
-		key_left.next_pressed = net_event.get_argument(skip + 4).get_boolean();
-		key_right.next_pressed = net_event.get_argument(skip + 5).get_boolean();
-		key_jump.next_pressed = net_event.get_argument(skip + 6).get_boolean();
-		key_fire_primary.next_pressed = net_event.get_argument(skip + 7).get_boolean();
-		key_fire_secondary.next_pressed = net_event.get_argument(skip + 8).get_boolean();
-		key_weapon = net_event.get_argument(skip + 9).get_integer();
-		dir = net_event.get_argument(skip + 10).get_number();
-		up = net_event.get_argument(skip + 11).get_number();
+		key_forward.next_pressed = net_event["forward"].to_boolean();
+		key_back.next_pressed = net_event["back"].to_boolean();
+		key_left.next_pressed = net_event["left"].to_boolean();
+		key_right.next_pressed = net_event["right"].to_boolean();
+		key_jump.next_pressed = net_event["jump"].to_boolean();
+		key_fire_primary.next_pressed = net_event["firePrimary"].to_boolean();
+		key_fire_secondary.next_pressed = net_event["fireSecondary"].to_boolean();
+		key_weapon = net_event["weapon"].to_int();
+		dir = net_event["dir"].to_float();
+		up = net_event["up"].to_float();
 
 		Vec3f pos, velocity;
-		pos.x = net_event.get_argument(skip + 12).get_number();
-		pos.y = net_event.get_argument(skip + 13).get_number();
-		pos.z = net_event.get_argument(skip + 14).get_number();
-		velocity.x = net_event.get_argument(skip + 15).get_number();
-		velocity.y = net_event.get_argument(skip + 16).get_number();
-		velocity.z = net_event.get_argument(skip + 17).get_number();
-		bool is_flying = net_event.get_argument(skip + 18).get_boolean();
+		pos.x = net_event["x"].to_float();
+		pos.y = net_event["y"].to_float();
+		pos.z = net_event["z"].to_float();
+		velocity.x = net_event["vx"].to_float();
+		velocity.y = net_event["vy"].to_float();
+		velocity.z = net_event["vz"].to_float();
+		bool is_flying = net_event["flying"].to_boolean();
 		character_controller.warp(pos, velocity, is_flying);
 	}
 }
 
-void ClientPlayerPawn::net_hit(const uicore::NetGameEvent &net_event)
+void ClientPlayerPawn::net_hit(const JsonValue &net_event)
 {
 	if (!sound || !sound->playing())
 	{
-		sound = AudioObject::create(world()->client->audio);
+		sound = AudioObject::create(client_world()->audio);
 		switch (rand() * 4 / (RAND_MAX + 1))
 		{
 		default:
@@ -132,33 +118,33 @@ void ClientPlayerPawn::tick()
 {
 	if (is_owner)
 	{
-		key_forward.next_pressed = world()->client->buttons.buttons["move-forward"].down;
-		key_back.next_pressed = world()->client->buttons.buttons["move-back"].down;
-		key_left.next_pressed = world()->client->buttons.buttons["move-left"].down;
-		key_right.next_pressed = world()->client->buttons.buttons["move-right"].down;
-		key_jump.next_pressed = world()->client->buttons.buttons["jump"].down;
-		key_fire_primary.next_pressed = world()->client->buttons.buttons["fire-primary"].down;
-		key_fire_secondary.next_pressed = world()->client->buttons.buttons["fire-secondary"].down;
+		key_forward.next_pressed = client_world()->buttons.buttons["move-forward"].down;
+		key_back.next_pressed = client_world()->buttons.buttons["move-back"].down;
+		key_left.next_pressed = client_world()->buttons.buttons["move-left"].down;
+		key_right.next_pressed = client_world()->buttons.buttons["move-right"].down;
+		key_jump.next_pressed = client_world()->buttons.buttons["jump"].down;
+		key_fire_primary.next_pressed = client_world()->buttons.buttons["fire-primary"].down;
+		key_fire_secondary.next_pressed = client_world()->buttons.buttons["fire-secondary"].down;
 		key_weapon = 0;
-		if (world()->client->buttons.buttons["switch-to-icelauncher"].down) key_weapon = 1;
-		else if (world()->client->buttons.buttons["switch-to-rocketlauncher"].down) key_weapon = 2;
-		else if (world()->client->buttons.buttons["switch-to-dualguns"].down) key_weapon = 3;
-		else if (world()->client->buttons.buttons["switch-to-sniperrifle"].down) key_weapon = 4;
-		else if (world()->client->buttons.buttons["switch-to-tractorbeam"].down) key_weapon = 5;
+		if (client_world()->buttons.buttons["switch-to-icelauncher"].down) key_weapon = 1;
+		else if (client_world()->buttons.buttons["switch-to-rocketlauncher"].down) key_weapon = 2;
+		else if (client_world()->buttons.buttons["switch-to-dualguns"].down) key_weapon = 3;
+		else if (client_world()->buttons.buttons["switch-to-sniperrifle"].down) key_weapon = 4;
+		else if (client_world()->buttons.buttons["switch-to-tractorbeam"].down) key_weapon = 5;
 
-		NetGameEvent netevent("player-pawn-input");
-		netevent.add_argument(remote_id());
-		netevent.add_argument(NetGameEventValue(key_forward.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_back.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_left.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_right.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_jump.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_fire_primary.next_pressed));
-		netevent.add_argument(NetGameEventValue(key_fire_secondary.next_pressed));
-		netevent.add_argument(key_weapon);
-		netevent.add_argument(dir);
-		netevent.add_argument(up);
-		send_net_event("server", netevent);
+		auto message = JsonValue::object();
+		message["name"] = JsonValue::string("player-pawn-input");
+		message["forward"] = JsonValue::boolean(key_forward.next_pressed);
+		message["back"] = JsonValue::boolean(key_back.next_pressed);
+		message["left"] = JsonValue::boolean(key_left.next_pressed);
+		message["right"] = JsonValue::boolean(key_right.next_pressed);
+		message["jump"] = JsonValue::boolean(key_jump.next_pressed);
+		message["firePrimary"] = JsonValue::boolean(key_fire_primary.next_pressed);
+		message["fireSecondary"] = JsonValue::boolean(key_fire_secondary.next_pressed);
+		message["weapon"] = JsonValue::number(key_weapon);
+		message["dir"] = JsonValue::number(dir);
+		message["up"] = JsonValue::number(up);
+		send_event("server", message);
 	}
 
 	bool was_moving = animation_move_speed > 0.0f;
@@ -183,7 +169,7 @@ void ClientPlayerPawn::tick()
 	{
 		step_movement = 0.0f;
 
-		auto sound_land = AudioObject::create(world()->client->audio);
+		auto sound_land = AudioObject::create(client_world()->audio);
 
 		shake_camera(0.04f, 0.2f);
 
@@ -223,7 +209,7 @@ void ClientPlayerPawn::tick()
 			step_movement = std::fmod(step_movement, step_distance);
 			left_step = !left_step;
 
-			auto sound_footstep = AudioObject::create(world()->client->audio);
+			auto sound_footstep = AudioObject::create(client_world()->audio);
 			if (left_step)
 			{
 				if (rand() > RAND_MAX / 2)
@@ -260,7 +246,7 @@ void ClientPlayerPawn::tick()
 
 		if (anim == "jump")
 		{
-			auto sound = AudioObject::create(world()->client->audio);
+			auto sound = AudioObject::create(client_world()->audio);
 			if (rand() > RAND_MAX / 2)
 				sound->set_sound("Sound/Character/jump1.ogg");
 			else
@@ -298,8 +284,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	dir = std::remainder(dir + world()->client->mouse_movement.x * Settings::mouse_speed_x() * mouse_speed_multiplier * 0.01f, 360.0f);
-	up = clamp(up + world()->client->mouse_movement.y * Settings::mouse_speed_y() * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
+	dir = std::remainder(dir + client_world()->mouse_movement.x * Settings::mouse_speed_x() * mouse_speed_multiplier * 0.01f, 360.0f);
+	up = clamp(up + client_world()->mouse_movement.y * Settings::mouse_speed_y() * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 
@@ -326,7 +312,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		float max_zoom_out = 15.0f;
 		Vec3f ideal_look_pos = look_pos + look_dir.rotate_vector(Vec3f(0.0f, 0.0f, -max_zoom_out));
 
-		auto hit = world()->collision->sweep_test_nearest(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf(), 0.0f, [&](const Physics3DHit &result)
+		auto hit = game_world()->kinematic_collision()->sweep_test_nearest(camera_shape, look_pos, Quaternionf(), ideal_look_pos, Quaternionf(), 0.0f, [&](const Physics3DHit &result)
 		{
 			return result.object->data<CollisionGameObject>() == nullptr; // Ignore all game objects
 		});
@@ -362,8 +348,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (!scene_object)
 		{
-			auto model = SceneModel::create(world()->client->scene, "Models/Kachujin/Kachujin.cmodel");
-			scene_object = SceneObject::create(world()->client->scene, model);
+			auto model = SceneModel::create(client_world()->scene, "Models/Kachujin/Kachujin.cmodel");
+			scene_object = SceneObject::create(client_world()->scene, model);
 
 			if (animation_move_speed > 0.0f)
 				scene_object->play_animation("forward", false);

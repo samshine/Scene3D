@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClInclude Include="Include\Collision3D\sphere_shape.h" />
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h" />
+    <ClInclude Include="Include\GameWorld\game_object.h" />
+    <ClInclude Include="Include\GameWorld\game_world.h" />
     <ClInclude Include="Include\log_event.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
@@ -72,6 +74,26 @@
     <ClInclude Include="Include\Sound\soundprovider_session.h" />
     <ClInclude Include="Include\Sound\sound_cache.h" />
     <ClInclude Include="Include\Sound\sound_sse.h" />
+    <ClInclude Include="Sources\GameWorld\game_world_impl.h" />
+    <ClInclude Include="Sources\GameWorld\Network\game_network.h" />
+    <ClInclude Include="Sources\GameWorld\Network\game_network_client.h" />
+    <ClInclude Include="Sources\GameWorld\Network\game_network_server.h" />
+    <ClInclude Include="Sources\GameWorld\Network\game_tick.h" />
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_client_time.h" />
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_server_time.h" />
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_time.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\client.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\client_impl.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection_impl.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection_site.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event_dispatcher.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event_value.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\network_data.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\network_event.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\server.h" />
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\server_impl.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletCollisionCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletDynamicsCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.h" />
@@ -436,6 +458,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp" />
+    <ClCompile Include="Sources\GameWorld\game_object.cpp" />
+    <ClCompile Include="Sources\GameWorld\game_world.cpp" />
+    <ClCompile Include="Sources\GameWorld\game_world_impl.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\game_network_client.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\game_network_server.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\lock_step_client_time.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\lock_step_server_time.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\client.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\connection.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\connection_impl.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\event.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\event_value.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\network_data.cpp" />
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\server.cpp" />
     <ClCompile Include="Sources\log_event.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp" />

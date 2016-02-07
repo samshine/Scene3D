@@ -1,23 +1,21 @@
 
 #pragma once
 
+#include "Model/ClientWorld/client_world.h"
 #include "player_pawn.h"
-#include "Model/Network/NetGame/event.h"
 
-class ClientPlayerPawn : public PlayerPawn
+class ClientPlayerPawn : public PlayerPawn, public ClientObject
 {
 public:
-	ClientPlayerPawn(GameWorld *world);
+	ClientPlayerPawn();
 	~ClientPlayerPawn();
 
 	void tick() override;
 	void frame(float time_elapsed, float interpolated_time) override;
 
-	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
-
-	void net_create(const uicore::NetGameEvent &net_event);
-	void net_update(const uicore::NetGameEvent &net_event, int skip = 0);
-	void net_hit(const uicore::NetGameEvent &net_event);
+	void net_create(const uicore::JsonValue &net_event);
+	void net_update(const uicore::JsonValue &net_event);
+	void net_hit(const uicore::JsonValue &net_event);
 
 	SceneCameraPtr camera;
 

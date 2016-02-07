@@ -79,7 +79,7 @@ void LockStepClientTime::update()
 		{
 			client_tick_time = server_tick_time - jitter_ticks;
 			last_client_tick_time = client_tick_time;
-			log_event("net", "Re-syncing. Ping: %1 ms, Tick delta: %2, jitter: %3, ping ticks: %4", actual_ping, tick_delta, jitter_ticks, ping_ticks);
+			//log_event("net", "Re-syncing. Ping: %1 ms, Tick delta: %2, jitter: %3, ping ticks: %4", actual_ping, tick_delta, jitter_ticks, ping_ticks);
 			break;
 		}
 		else if (tick_delta > -jitter_ticks) // Slow time if client is too close to server

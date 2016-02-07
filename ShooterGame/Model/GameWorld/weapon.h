@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "game_tick.h"
-
 class PlayerPawn;
 
 enum class WeaponFireType
@@ -45,7 +43,7 @@ public:
 	Weapon(PlayerPawn *player);
 	~Weapon();
 
-	void tick(const GameTick &tick);
+	void tick(float time_elapsed);
 	void frame(float time_elapsed, float interpolated_time);
 
 	void start_fire(const std::string &subtype);
@@ -57,10 +55,10 @@ public:
 	static std::map<std::string, WeaponDescription> &weapons();
 
 private:
-	void tick_ready(const GameTick &tick);
-	void tick_hiding_old_weapon(const GameTick &tick);
-	void tick_showing_new_weapon(const GameTick &tick);
-	void tick_firing(const GameTick &tick);
+	void tick_ready(float time_elapsed);
+	void tick_hiding_old_weapon(float time_elapsed);
+	void tick_showing_new_weapon(float time_elapsed);
+	void tick_firing(float time_elapsed);
 
 	void fire_bullet();
 

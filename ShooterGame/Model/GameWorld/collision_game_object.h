@@ -1,15 +1,9 @@
 
 #pragma once
 
-#include "game_object.h"
-
 class CollisionGameObject : public GameObject, public Physics3DDataObject
 {
 public:
-	CollisionGameObject(GameWorld *world) : GameObject(world)
-	{
-	}
-
 	~CollisionGameObject()
 	{
 		detach();

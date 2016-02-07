@@ -1,15 +1,13 @@
 
 #include "precomp.h"
 #include "player_pawn.h"
-#include "game_world.h"
-#include "game_tick.h"
 #include <algorithm>
 
 using namespace uicore;
 
-PlayerPawn::PlayerPawn(GameWorld *world) : CollisionGameObject(world), character_controller(world->collision)
+PlayerPawn::PlayerPawn() : character_controller(game_world()->kinematic_collision())
 {
-	auto collision_obj = Physics3DObject::collision_body(world->collision, Physics3DShape::capsule(character_controller.get_radius(), character_controller.get_height() * 0.5f));
+	auto collision_obj = Physics3DObject::collision_body(game_world()->kinematic_collision(), Physics3DShape::capsule(character_controller.get_radius(), character_controller.get_height() * 0.5f));
 	//collision_obj->set_kinematic_object();
 	collision_obj->set_character_object();
 	set_collision_object(collision_obj);
@@ -47,7 +45,7 @@ void PlayerPawn::tick()
 	else
 		weapon->stop_fire("secondary");
 
-	weapon->tick(game_tick());
+	weapon->tick(time_elapsed());
 }
 
 void PlayerPawn::ground_moved(const Vec3f &offset)
@@ -59,7 +57,7 @@ void PlayerPawn::update_input()
 {
 	PlayerPawnMovement movement;
 
-	movement.tick_time = arrival_tick_time();
+	movement.tick_time = send_tick_time();
 
 	key_forward.update(time_elapsed());
 	key_back.update(time_elapsed());

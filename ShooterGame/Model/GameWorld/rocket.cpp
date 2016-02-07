@@ -1,33 +1,32 @@
 
 #include "precomp.h"
 #include "rocket.h"
-#include "game_world.h"
 #include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
 using namespace uicore;
 
-Rocket::Rocket(PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation) : GameObject(owner->world()), owner(owner), pos(init_pos), orientation(init_orientation)
+Rocket::Rocket(PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation) : owner(owner), pos(init_pos), orientation(init_orientation)
 {
 	last_pos = pos;
 	last_orientation = orientation;
 }
 
-Rocket::Rocket(GameWorld *init_world, const uicore::NetGameEvent &net_event) : GameObject(init_world)
+Rocket::Rocket(const uicore::JsonValue &net_event)
 {
-	pos = Vec3f(net_event.get_argument(2), net_event.get_argument(3), net_event.get_argument(4));
-	orientation = Quaternionf(net_event.get_argument(8), net_event.get_argument(5), net_event.get_argument(6), net_event.get_argument(7));
+	pos = Vec3f(net_event["x"].to_float(), net_event["y"].to_float(), net_event["z"].to_float());
+	orientation = Quaternionf(net_event["rw"].to_float(), net_event["rx"].to_float(), net_event["ry"].to_float(), net_event["rz"].to_float());
 
 	last_pos = pos;
 	last_orientation = orientation;
 
-	if (world()->client)
+	if (client_world())
 	{
-		auto model = SceneModel::create(world()->client->scene, "Models/Rocket_launcher/Bullet.cmodel");
-		scene_object = SceneObject::create(world()->client->scene, model, pos, orientation, Vec3f(4.0f));
+		auto model = SceneModel::create(client_world()->scene, "Models/Rocket_launcher/Bullet.cmodel");
+		scene_object = SceneObject::create(client_world()->scene, model, pos, orientation, Vec3f(4.0f));
 
-		sound = AudioObject::create(world()->client->audio);
+		sound = AudioObject::create(client_world()->audio);
 		sound->set_sound("Sound/Weapons/grenade_launch.ogg");
 		sound->set_attenuation_begin(1.0f);
 		sound->set_attenuation_end(100.0f);
@@ -35,7 +34,7 @@ Rocket::Rocket(GameWorld *init_world, const uicore::NetGameEvent &net_event) : G
 		sound->set_position(pos);
 		sound->play();
 
-		emitter = SceneParticleEmitter::create(world()->client->scene);
+		emitter = SceneParticleEmitter::create(client_world()->scene);
 		emitter->set_type(SceneParticleEmitter::type_spot);
 		emitter->set_position(pos);
 		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
@@ -52,20 +51,17 @@ Rocket::Rocket(GameWorld *init_world, const uicore::NetGameEvent &net_event) : G
 
 void Rocket::send_create()
 {
-	NetGameEvent net_event("create");
-
-	net_event.add_argument(id());
-	net_event.add_argument("rocket");
-
-	net_event.add_argument(pos.x);
-	net_event.add_argument(pos.y);
-	net_event.add_argument(pos.z);
-	net_event.add_argument(orientation.x);
-	net_event.add_argument(orientation.y);
-	net_event.add_argument(orientation.z);
-	net_event.add_argument(orientation.w);
-
-	send_net_event("all", net_event);
+	JsonValue message = JsonValue::object();
+	message["name"] = JsonValue::string("create");
+	message["type"] = JsonValue::string("rocket");
+	message["x"] = JsonValue::number(pos.x);
+	message["y"] = JsonValue::number(pos.y);
+	message["z"] = JsonValue::number(pos.z);
+	message["rx"] = JsonValue::number(orientation.x);
+	message["ry"] = JsonValue::number(orientation.y);
+	message["rz"] = JsonValue::number(orientation.z);
+	message["rw"] = JsonValue::number(orientation.w);
+	send_event("all", message);
 }
 
 void Rocket::tick()
@@ -76,7 +72,7 @@ void Rocket::tick()
 	time_left = std::max(time_left - time_elapsed(), 0.0f);
 	if (time_left == 0.0f)
 	{
-		world()->remove(this);
+		remove();
 		return;
 	}
 
@@ -85,7 +81,7 @@ void Rocket::tick()
 
 	pos += direction * (speed * time_elapsed());
 
-	auto ray_hit = world()->collision->ray_test_nearest(last_pos, pos, [&](const Physics3DHit &result)
+	auto ray_hit = game_world()->kinematic_collision()->ray_test_nearest(last_pos, pos, [&](const Physics3DHit &result)
 	{
 		return owner ? result.object->data_object() != owner : true;
 	});
@@ -98,9 +94,9 @@ void Rocket::tick()
 		float max_damage = 150.0f;
 		float force = 1250.0f;
 
-		if (!world()->client)
+		if (!client_world())
 		{
-			for (const auto &contact : world()->collision->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
+			for (const auto &contact : game_world()->kinematic_collision()->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
 			{
 				PlayerPawn *pawn = contact.object->data<PlayerPawn>();
 				if (pawn)
@@ -122,17 +118,17 @@ void Rocket::tick()
 			}
 		}
 
-		if (world()->client)
+		if (client_world())
 		{
-			auto decal = SceneDecal::create(world()->client->scene);
+			auto decal = SceneDecal::create(client_world()->scene);
 			decal->set_position(ray_hit.position);
 			decal->set_orientation(orientation);
 			decal->set_extents(Vec3f(2.0f, 2.0f, 2.0f));
 			decal->set_diffuse_texture("rocketdecal.png");
-			world()->client->decals.push_back(decal);
+			client_world()->decals.push_back(decal);
 		}
 
-		world()->remove(this);
+		remove();
 	}
 }
 

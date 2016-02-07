@@ -1,17 +1,15 @@
 
 #include "precomp.h"
 #include "player_ragdoll.h"
-#include "game_world.h"
-#include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
 using namespace uicore;
 
-PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation) : GameObject(world)
+PlayerRagdoll::PlayerRagdoll(const Vec3f &pos, const Quaternionf &orientation)
 {
-	//auto model = SceneModel::create(world->client->scene, "Models/Kachujin/Kachujin.cmodel");
-	//scene_object = SceneObject::create(world->client->scene, model);
+	//auto model = SceneModel::create(client_world()->scene, "Models/Kachujin/Kachujin.cmodel");
+	//scene_object = SceneObject::create(client_world()->scene, model);
 
 	float scale = 0.55f;
 	float margin = 0.1f * scale;
@@ -65,7 +63,7 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	{
 		objects[i]->set_position(pos);
 		objects[i]->set_orientation(orientation);
-		parts[i] = Physics3DObject::rigid_body(world->collision, shapes[i], mass[i], pos, orientation);
+		parts[i] = Physics3DObject::rigid_body(game_world()->dynamic_collision(), shapes[i], mass[i], pos, orientation);
 	}
 
 	calc_constraint_location(joint_head, part_torso, Vec3f(0, sizes[part_torso].y, 0), part_head, Vec3f(0, -sizes[part_head].y, 0), Quaternionf(1, 0, 0, 0));
@@ -78,31 +76,31 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 	calc_constraint_location(joint_torso_upper_arm_left, part_torso, Vec3f(sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_left].x, 0), part_upper_arm_left, Vec3f(0, -sizes[part_upper_arm_left].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
 	calc_constraint_location(joint_torso_upper_arm_right, part_torso, Vec3f(-sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_right].x, 0), part_upper_arm_right, Vec3f(0, -sizes[part_upper_arm_right].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
 	
-	joints[joint_head] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_head], joints_pos_a[joint_head], joints_pos_b[joint_head], joints_rotate_a[joint_head], joints_rotate_b[joint_head]);
+	joints[joint_head] = Physics3DConstraint::cone_twist(game_world()->dynamic_collision(), parts[part_torso], parts[part_head], joints_pos_a[joint_head], joints_pos_b[joint_head], joints_rotate_a[joint_head], joints_rotate_b[joint_head]);
 	//joints[joint_head]->set_cone_twist_limit(0.0f, 0.7f, 0.5f);
 
-	joints[joint_upper_arm_right_lower_arm_right] = Physics3DConstraint::hinge(world->collision, parts[part_upper_arm_right], parts[part_lower_arm_right], joints_pos_a[joint_upper_arm_right_lower_arm_right], joints_pos_b[joint_upper_arm_right_lower_arm_right], joints_rotate_a[joint_upper_arm_right_lower_arm_right], joints_rotate_b[joint_upper_arm_right_lower_arm_right]);
+	joints[joint_upper_arm_right_lower_arm_right] = Physics3DConstraint::hinge(game_world()->dynamic_collision(), parts[part_upper_arm_right], parts[part_lower_arm_right], joints_pos_a[joint_upper_arm_right_lower_arm_right], joints_pos_b[joint_upper_arm_right_lower_arm_right], joints_rotate_a[joint_upper_arm_right_lower_arm_right], joints_rotate_b[joint_upper_arm_right_lower_arm_right]);
 	joints[joint_upper_arm_right_lower_arm_right]->set_hinge_limit(-PI_F / 2.0f, 0);
 
-	joints[joint_upper_arm_left_lower_arm_left] = Physics3DConstraint::hinge(world->collision, parts[part_upper_arm_left], parts[part_lower_arm_left], joints_pos_a[joint_upper_arm_left_lower_arm_left], joints_pos_b[joint_upper_arm_left_lower_arm_left], joints_rotate_a[joint_upper_arm_left_lower_arm_left], joints_rotate_b[joint_upper_arm_left_lower_arm_left]);
+	joints[joint_upper_arm_left_lower_arm_left] = Physics3DConstraint::hinge(game_world()->dynamic_collision(), parts[part_upper_arm_left], parts[part_lower_arm_left], joints_pos_a[joint_upper_arm_left_lower_arm_left], joints_pos_b[joint_upper_arm_left_lower_arm_left], joints_rotate_a[joint_upper_arm_left_lower_arm_left], joints_rotate_b[joint_upper_arm_left_lower_arm_left]);
 	joints[joint_upper_arm_left_lower_arm_left]->set_hinge_limit(-PI_F / 2.0f, 0);
 
-	joints[joint_upper_leg_right_lower_leg_right] = Physics3DConstraint::hinge(world->collision, parts[part_upper_leg_right], parts[part_lower_leg_right], joints_pos_a[joint_upper_leg_right_lower_leg_right], joints_pos_b[joint_upper_leg_right_lower_leg_right], joints_rotate_a[joint_upper_leg_right_lower_leg_right], joints_rotate_b[joint_upper_leg_right_lower_leg_right]);
+	joints[joint_upper_leg_right_lower_leg_right] = Physics3DConstraint::hinge(game_world()->dynamic_collision(), parts[part_upper_leg_right], parts[part_lower_leg_right], joints_pos_a[joint_upper_leg_right_lower_leg_right], joints_pos_b[joint_upper_leg_right_lower_leg_right], joints_rotate_a[joint_upper_leg_right_lower_leg_right], joints_rotate_b[joint_upper_leg_right_lower_leg_right]);
 	joints[joint_upper_leg_right_lower_leg_right]->set_hinge_limit(-PI_F / 2.0f, 0);
 
-	joints[joint_upper_leg_left_lower_leg_left] = Physics3DConstraint::hinge(world->collision, parts[part_upper_leg_left], parts[part_lower_leg_left], joints_pos_a[joint_upper_leg_left_lower_leg_left], joints_pos_b[joint_upper_leg_left_lower_leg_left], joints_rotate_a[joint_upper_leg_left_lower_leg_left], joints_rotate_b[joint_upper_leg_left_lower_leg_left]);
+	joints[joint_upper_leg_left_lower_leg_left] = Physics3DConstraint::hinge(game_world()->dynamic_collision(), parts[part_upper_leg_left], parts[part_lower_leg_left], joints_pos_a[joint_upper_leg_left_lower_leg_left], joints_pos_b[joint_upper_leg_left_lower_leg_left], joints_rotate_a[joint_upper_leg_left_lower_leg_left], joints_rotate_b[joint_upper_leg_left_lower_leg_left]);
 	joints[joint_upper_leg_left_lower_leg_left]->set_hinge_limit(-PI_F / 2.0f, 0);
 
-	joints[joint_torso_upper_leg_right] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_upper_leg_right], joints_pos_a[joint_torso_upper_leg_right], joints_pos_b[joint_torso_upper_leg_right], joints_rotate_a[joint_torso_upper_leg_right], joints_rotate_b[joint_torso_upper_leg_right]);
+	joints[joint_torso_upper_leg_right] = Physics3DConstraint::cone_twist(game_world()->dynamic_collision(), parts[part_torso], parts[part_upper_leg_right], joints_pos_a[joint_torso_upper_leg_right], joints_pos_b[joint_torso_upper_leg_right], joints_rotate_a[joint_torso_upper_leg_right], joints_rotate_b[joint_torso_upper_leg_right]);
 	//joints[joint_torso_upper_leg_right]->set_cone_twist_limit(0.0f, PI_F / 4.0f, PI_F / 4.0f);
 
-	joints[joint_torso_upper_leg_left] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_upper_leg_left], joints_pos_a[joint_torso_upper_leg_left], joints_pos_b[joint_torso_upper_leg_left], joints_rotate_a[joint_torso_upper_leg_left], joints_rotate_b[joint_torso_upper_leg_left]);
+	joints[joint_torso_upper_leg_left] = Physics3DConstraint::cone_twist(game_world()->dynamic_collision(), parts[part_torso], parts[part_upper_leg_left], joints_pos_a[joint_torso_upper_leg_left], joints_pos_b[joint_torso_upper_leg_left], joints_rotate_a[joint_torso_upper_leg_left], joints_rotate_b[joint_torso_upper_leg_left]);
 	//joints[joint_torso_upper_leg_left]->set_cone_twist_limit(0.0f, PI_F / 4.0f, PI_F / 4.0f);
 
-	joints[joint_torso_upper_arm_right] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_upper_arm_right], joints_pos_a[joint_torso_upper_arm_right], joints_pos_b[joint_torso_upper_arm_right], joints_rotate_a[joint_torso_upper_arm_right], joints_rotate_b[joint_torso_upper_arm_right]);
+	joints[joint_torso_upper_arm_right] = Physics3DConstraint::cone_twist(game_world()->dynamic_collision(), parts[part_torso], parts[part_upper_arm_right], joints_pos_a[joint_torso_upper_arm_right], joints_pos_b[joint_torso_upper_arm_right], joints_rotate_a[joint_torso_upper_arm_right], joints_rotate_b[joint_torso_upper_arm_right]);
 	//joints[joint_torso_upper_arm_right]->set_cone_twist_limit(0.0f, PI_F / 2.0f, PI_F / 2.0f);
 
-	joints[joint_torso_upper_arm_left] = Physics3DConstraint::cone_twist(world->collision, parts[part_torso], parts[part_upper_arm_left], joints_pos_a[joint_torso_upper_arm_left], joints_pos_b[joint_torso_upper_arm_left], joints_rotate_a[joint_torso_upper_arm_left], joints_rotate_b[joint_torso_upper_arm_left]);
+	joints[joint_torso_upper_arm_left] = Physics3DConstraint::cone_twist(game_world()->dynamic_collision(), parts[part_torso], parts[part_upper_arm_left], joints_pos_a[joint_torso_upper_arm_left], joints_pos_b[joint_torso_upper_arm_left], joints_rotate_a[joint_torso_upper_arm_left], joints_rotate_b[joint_torso_upper_arm_left]);
 	//joints[joint_torso_upper_arm_left]->set_cone_twist_limit(0.0f, PI_F / 2.0f, PI_F / 2.0f);
 }
 
@@ -112,18 +110,18 @@ PlayerRagdoll::~PlayerRagdoll()
 
 SceneObjectPtr PlayerRagdoll::scene_box(const uicore::Vec3f &box_size)
 {
-	auto &model = world()->client->box_models[box_size];
+	auto &model = client_world()->box_models[box_size];
 	if (!model)
-		model = SceneModel::create(world()->client->scene, create_box(box_size));
-	return SceneObject::create(world()->client->scene, model);
+		model = SceneModel::create(client_world()->scene, create_box(box_size));
+	return SceneObject::create(client_world()->scene, model);
 }
 
 SceneObjectPtr PlayerRagdoll::scene_capsule(float radius, float height)
 {
-	auto &model = world()->client->capsule_models[Vec2f(radius, height)];
+	auto &model = client_world()->capsule_models[Vec2f(radius, height)];
 	if (!model)
-		model = SceneModel::create(world()->client->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
-	return SceneObject::create(world()->client->scene, model);
+		model = SceneModel::create(client_world()->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
+	return SceneObject::create(client_world()->scene, model);
 }
 
 void PlayerRagdoll::calc_constraint_location(JointName joint, PartName part_a, Vec3f pos_a, PartName part_b, Vec3f pos_b, uicore::Quaternionf rotation)

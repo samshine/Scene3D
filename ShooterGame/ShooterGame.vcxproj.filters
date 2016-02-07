@@ -22,15 +22,6 @@
     <ClInclude Include="Model\GameWorld\flag.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Model\GameWorld\game_object.h">
-      <Filter>Model\GameWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\GameWorld\game_tick.h">
-      <Filter>Model\GameWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\GameWorld\game_world.h">
-      <Filter>Model\GameWorld</Filter>
-    </ClInclude>
     <ClInclude Include="Model\GameWorld\player_list.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
@@ -55,24 +46,6 @@
     <ClInclude Include="Model\GameWorld\weapon.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Network\game_network.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\game_network_client.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\game_network_server.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\lock_step_client_time.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\lock_step_server_time.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\lock_step_time.h">
-      <Filter>Model\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Audio\music_player.h">
       <Filter>Model\Audio</Filter>
     </ClInclude>
@@ -81,42 +54,6 @@
     </ClInclude>
     <ClInclude Include="Model\GameWorld\character_controller.h">
       <Filter>Model\GameWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\client.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\client_impl.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\connection.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\connection_impl.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\connection_site.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\event.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\event_dispatcher.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\event_value.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\network_data.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\network_event.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\server.h">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Network\NetGame\server_impl.h">
-      <Filter>Model\Network\NetGame</Filter>
     </ClInclude>
     <ClInclude Include="Model\GameWorld\robot_player_pawn.h">
       <Filter>Model\GameWorld</Filter>
@@ -138,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="Model\Settings\settings.h">
       <Filter>Model\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ClientWorld\client_world.h">
+      <Filter>Model\ClientWorld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,12 +102,6 @@
     <ClCompile Include="Model\GameWorld\flag.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Model\GameWorld\game_object.cpp">
-      <Filter>Model\GameWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\GameWorld\game_world.cpp">
-      <Filter>Model\GameWorld</Filter>
-    </ClCompile>
     <ClCompile Include="Model\GameWorld\player_pawn.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
@@ -186,18 +120,6 @@
     <ClCompile Include="Model\GameWorld\weapon.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Network\game_network_client.cpp">
-      <Filter>Model\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\game_network_server.cpp">
-      <Filter>Model\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\lock_step_client_time.cpp">
-      <Filter>Model\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\lock_step_server_time.cpp">
-      <Filter>Model\Network</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Audio\music_player.cpp">
       <Filter>Model\Audio</Filter>
     </ClCompile>
@@ -206,27 +128,6 @@
     </ClCompile>
     <ClCompile Include="Model\GameWorld\character_controller.cpp">
       <Filter>Model\GameWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\client.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\connection.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\connection_impl.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\event.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\event_value.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\network_data.cpp">
-      <Filter>Model\Network\NetGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Network\NetGame\server.cpp">
-      <Filter>Model\Network\NetGame</Filter>
     </ClCompile>
     <ClCompile Include="Model\GameWorld\robot_player_pawn.cpp">
       <Filter>Model\GameWorld</Filter>
@@ -246,6 +147,9 @@
     <ClCompile Include="Model\Settings\settings.cpp">
       <Filter>Model\Settings</Filter>
     </ClCompile>
+    <ClCompile Include="Model\ClientWorld\client_world.cpp">
+      <Filter>Model\ClientWorld</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -263,17 +167,11 @@
     <Filter Include="Model\GameWorld">
       <UniqueIdentifier>{8cca7bf5-8fa1-4285-a851-a2372530bb73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Network">
-      <UniqueIdentifier>{2fc8d71d-0225-4a26-a055-83141c33c136}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\Audio">
       <UniqueIdentifier>{46362776-b3d3-4973-8461-7c8c6bdd19bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model\Input">
       <UniqueIdentifier>{021ec2b5-478e-4ab3-b0ac-c2407e42d296}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Network\NetGame">
-      <UniqueIdentifier>{a5a60a89-a3e9-4b2d-a630-30dd97273a18}</UniqueIdentifier>
     </Filter>
     <Filter Include="Views">
       <UniqueIdentifier>{b589df7e-339c-47a1-a225-47690cbf3e2a}</UniqueIdentifier>
@@ -286,6 +184,9 @@
     </Filter>
     <Filter Include="Model\Settings">
       <UniqueIdentifier>{b7a05c00-d3bd-44e0-b807-8e62f97ed9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\ClientWorld">
+      <UniqueIdentifier>{0f78aaf0-e044-4700-b7ea-b849353f5c2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

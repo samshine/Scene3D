@@ -2,7 +2,6 @@
 #include "precomp.h"
 #include "weapon.h"
 #include "client_player_pawn.h"
-#include "game_world.h"
 #include "rocket.h"
 #include <algorithm>
 
@@ -18,23 +17,23 @@ Weapon::~Weapon()
 {
 }
 
-void Weapon::tick(const GameTick &tick)
+void Weapon::tick(float time_elapsed)
 {
-	animation_timer = std::max(animation_timer - tick.time_elapsed, 0.0f);
+	animation_timer = std::max(animation_timer - time_elapsed, 0.0f);
 
 	switch (weapon_state)
 	{
 	case ready:
-		tick_ready(tick);
+		tick_ready(time_elapsed);
 		break;
 	case hiding_old_weapon:
-		tick_hiding_old_weapon(tick);
+		tick_hiding_old_weapon(time_elapsed);
 		break;
 	case showing_new_weapon:
-		tick_showing_new_weapon(tick);
+		tick_showing_new_weapon(time_elapsed);
 		break;
 	case firing:
-		tick_firing(tick);
+		tick_firing(time_elapsed);
 		break;
 	}
 }
@@ -79,15 +78,15 @@ void Weapon::fire_bullet()
 	Vec3f offset(0.1f, -0.1f, 0.0f);
 	Vec3f bullet_pos = player->get_position() + player->eye_offset + player->get_orientation().rotate_vector(offset);
 
-	if (subtype.bullet == "Rocket" && !player->world()->client)
+	if (subtype.bullet == "Rocket" && !player->cast<ClientPlayerPawn>())
 	{
 		auto rocket = std::make_shared<Rocket>(player, bullet_pos, player->get_orientation());
-		player->world()->add(rocket);
+		player->game_world()->add_object(rocket);
 		rocket->send_create();
 	}
 }
 
-void Weapon::tick_ready(const GameTick &tick)
+void Weapon::tick_ready(float time_elapsed)
 {
 	if (!next_weapon_type.empty())
 	{
@@ -106,7 +105,7 @@ void Weapon::tick_ready(const GameTick &tick)
 	}
 }
 
-void Weapon::tick_hiding_old_weapon(const GameTick &tick)
+void Weapon::tick_hiding_old_weapon(float time_elapsed)
 {
 	if (animation_timer == 0.0f)
 	{
@@ -118,7 +117,8 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 		if (!weapon_type.empty())
 			animation_timer = weapons()[weapon_type].show_time;
 
-		if (player->world()->client)
+		auto client_pawn = player->cast<ClientPlayerPawn>();
+		if (client_pawn)
 		{
 			const auto &subtype = weapon_subtype == "primary" ? weapons()[weapon_type].primary : weapons()[weapon_type].secondary;
 
@@ -128,10 +128,10 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 			float up = weapon_description.rotation.x;
 			float tilt = weapon_description.rotation.z;
 
-			auto model = SceneModel::create(player->world()->client->scene, weapon_description.mesh);
-			weapon_object = SceneObject::create(player->world()->client->scene, model);
-			weapon_object->set_position(static_cast<ClientPlayerPawn*>(player)->camera->position());
-			weapon_object->set_orientation(static_cast<ClientPlayerPawn*>(player)->camera->orientation());
+			auto model = SceneModel::create(client_pawn->client_world()->scene, weapon_description.mesh);
+			weapon_object = SceneObject::create(client_pawn->client_world()->scene, model);
+			weapon_object->set_position(client_pawn->camera->position());
+			weapon_object->set_orientation(client_pawn->camera->orientation());
 			weapon_object->set_scale(Vec3f(weapon_description.scale));
 			weapon_object->move(weapon_description.position);
 			weapon_object->rotate(dir, up, tilt);
@@ -140,7 +140,7 @@ void Weapon::tick_hiding_old_weapon(const GameTick &tick)
 	}
 }
 
-void Weapon::tick_showing_new_weapon(const GameTick &tick)
+void Weapon::tick_showing_new_weapon(float time_elapsed)
 {
 	if (animation_timer == 0.0f)
 	{
@@ -151,7 +151,7 @@ void Weapon::tick_showing_new_weapon(const GameTick &tick)
 	}
 }
 
-void Weapon::tick_firing(const GameTick &tick)
+void Weapon::tick_firing(float time_elapsed)
 {
 	if (animation_timer == 0.0f)
 	{

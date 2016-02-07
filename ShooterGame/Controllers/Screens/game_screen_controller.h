@@ -2,8 +2,9 @@
 #pragma once
 
 #include "screen_view_controller.h"
-#include "Model/GameWorld/game_world.h"
 #include "Views/GameMenuView/game_menu_view.h"
+
+class ClientWorld;
 
 class GameScreenController : public ScreenViewController
 {
@@ -15,14 +16,15 @@ public:
 
 private:
 	void create_menus();
-	void server_thread_main();
+	void server_thread_main(std::string hostname, std::string port);
 	void on_log_event(const std::string &type, const std::string &text);
 
 	GameMenu game_menu, options_menu;
 	std::shared_ptr<GameMenuView> game_menu_view = std::make_shared<GameMenuView>();
 
-	std::unique_ptr<GameWorld> client_game;
-	std::unique_ptr<GameWorld> server_game;
+	GameWorldPtr client_game;
+	std::shared_ptr<ClientWorld> client_world;
+	GameWorldPtr server_game;
 	uicore::FontPtr font, font2, font3, font_small;
 	uicore::ImagePtr crosshair;
 
@@ -38,5 +40,7 @@ private:
 	std::thread server_thread;
 	std::mutex server_mutex;
 	bool stop_server = false;
+	bool server_running = false;
+	std::condition_variable server_condition_var;
 	std::exception_ptr server_exception;
 };

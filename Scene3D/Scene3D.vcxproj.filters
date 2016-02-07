@@ -202,6 +202,18 @@
     <Filter Include="Sources\Scene3D\SceneEngine\Passes\Decals">
       <UniqueIdentifier>{742cda6d-4ece-4abb-8738-2f11c04c88b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\GameWorld">
+      <UniqueIdentifier>{8e73a68a-c689-4cb4-9e55-a3307c8bed10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld">
+      <UniqueIdentifier>{5e0f89da-435d-47ff-84ab-99d15bb06e35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Network">
+      <UniqueIdentifier>{77a42f3e-558a-4a2d-b09f-9f247068006a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Network\NetGame">
+      <UniqueIdentifier>{a76acff4-be40-4492-a024-0a93c58e0038}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\physics3d.h">
@@ -1446,6 +1458,72 @@
     <ClInclude Include="Sources\Scene3D\Scene\scene_decal_impl.h">
       <Filter>Sources\Scene3D\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\GameWorld\game_world.h">
+      <Filter>Include\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\GameWorld\game_object.h">
+      <Filter>Include\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\game_world_impl.h">
+      <Filter>Sources\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\game_network.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\game_network_client.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\game_network_server.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_client_time.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_server_time.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\lock_step_time.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\client.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\client_impl.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection_impl.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\connection_site.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event_dispatcher.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\event_value.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\network_data.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\network_event.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\server.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\NetGame\server_impl.h">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\Network\game_tick.h">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2056,6 +2134,48 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\Scene\scene_decal.cpp">
       <Filter>Sources\Scene3D\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\game_world.cpp">
+      <Filter>Sources\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\game_world_impl.cpp">
+      <Filter>Sources\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\game_object.cpp">
+      <Filter>Sources\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\game_network_client.cpp">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\game_network_server.cpp">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\lock_step_client_time.cpp">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\lock_step_server_time.cpp">
+      <Filter>Sources\GameWorld\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\client.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\connection.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\connection_impl.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\event.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\event_value.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\network_data.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\Network\NetGame\server.cpp">
+      <Filter>Sources\GameWorld\Network\NetGame</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

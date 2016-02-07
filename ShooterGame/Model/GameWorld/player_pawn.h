@@ -58,7 +58,7 @@ public:
 class PlayerPawn : public CollisionGameObject
 {
 public:
-	PlayerPawn(GameWorld *world);
+	PlayerPawn();
 	~PlayerPawn();
 
 	void tick() override;

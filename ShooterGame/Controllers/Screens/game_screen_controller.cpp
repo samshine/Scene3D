@@ -4,7 +4,6 @@
 #include "menu_screen_controller.h"
 #include "Model/GameWorld/game_master.h"
 #include "Model/GameWorld/client_player_pawn.h"
-#include "Model/Network/lock_step_client_time.h"
 #include "Model/Settings/settings.h"
 
 using namespace uicore;
@@ -43,19 +42,24 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 
 	if (host_game)
 	{
-		server_game = std::make_unique<GameWorld>(hostname, port);
-		server_thread = std::thread(&GameScreenController::server_thread_main, this);
+		server_thread = std::thread(&GameScreenController::server_thread_main, this, hostname, port);
+
+		std::unique_lock<std::mutex> lock(server_mutex);
+		server_condition_var.wait(lock, [&]() { return server_running; });
 	}
-	client_game = std::make_unique<GameWorld>(!hostname.empty() ? hostname : "localhost", port, std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache()));
+
+	client_game = GameWorld::create_client(!hostname.empty() ? hostname : "localhost", port);
+	client_world = std::make_shared<ClientWorld>(window(), scene_engine(), sound_cache());
+	GameMaster::create();
 }
 
 GameScreenController::~GameScreenController()
 {
-	if (server_game)
+	if (server_thread.joinable())
 	{
-		server_mutex.lock();
+		std::unique_lock<std::mutex> lock(server_mutex);
 		stop_server = true;
-		server_mutex.unlock();
+		lock.unlock();
 		server_thread.join();
 	}
 }
@@ -78,10 +82,18 @@ void GameScreenController::create_menus()
 	});
 }
 
-void GameScreenController::server_thread_main()
+void GameScreenController::server_thread_main(std::string hostname, std::string port)
 {
 	try
 	{
+		server_game = GameWorld::create_server(hostname, port);
+		GameWorld::set_current(server_game);
+
+		std::unique_lock<std::mutex> lock(server_mutex);
+		server_running = true;
+		lock.unlock();
+		server_condition_var.notify_all();
+
 		while (true)
 		{
 			server_mutex.lock();
@@ -92,14 +104,16 @@ void GameScreenController::server_thread_main()
 			}
 			server_mutex.unlock();
 
-			server_game->update(Vec2i(), false);
-			System::sleep(5);
+			server_game->update();
+			System::sleep(1);
 		}
 	}
 	catch (...)
 	{
 		server_exception = std::current_exception();
 	}
+
+	GameWorld::set_current(nullptr);
 }
 
 void GameScreenController::on_log_event(const std::string &type, const std::string &text)
@@ -116,9 +130,10 @@ void GameScreenController::update()
 		std::rethrow_exception(except);
 	}
 
-	client_game->update(mouse_delta(), cursor_hidden());
+	client_game->update();
+	client_world->update(mouse_delta(), cursor_hidden());
 
-	scene_viewport()->set_camera(client_game->client->scene_camera);
+	scene_viewport()->set_camera(client_world->scene_camera);
 	scene_viewport()->update(gc(), game_time().time_elapsed());
 	scene_viewport()->render(gc());
 
@@ -161,7 +176,7 @@ void GameScreenController::update()
 	}
 	else
 	{
-		auto player = client_game->game_master->client_player;
+		auto player = GameMaster::instance()->client_player;
 		if (player)
 		{
 			std::string health_text = string_format("Health: %1%%", (int)std::ceil(player->get_health()));
@@ -180,7 +195,7 @@ void GameScreenController::update()
 			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
 		}
 
-		std::string score_text = string_format("Score: %1", client_game->game_master->score);
+		std::string score_text = string_format("Score: %1", GameMaster::instance()->score);
 
 		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
@@ -199,14 +214,14 @@ void GameScreenController::update()
 			update_stats.push_back(string_format("Scene visits: %1", scene_engine()->scene_visits()));
 			update_stats.push_back("");
 
-			for (const auto &result : client_game->client->scene_engine->gpu_results())
+			for (const auto &result : client_world->scene_engine->gpu_results())
 				update_stats.push_back(string_format("%1: %2 ms", result.name, Text::to_string(result.time_elapsed * 1000.0f, 2, false)));
 
 			update_stats_cooldown = 1.0f;
 
 			update_stats2 = ScopeTimerResults::timer_results();
 
-			ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
+			//ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
 		}
 
 		fps_counter++;
@@ -234,11 +249,11 @@ void GameScreenController::update()
 			y += font_small_metrics.line_height();
 		}
 
-		if (client_game->game_master->announcement_timeout > 0.0f)
+		if (GameMaster::instance()->announcement_timeout > 0.0f)
 		{
-			auto announcement_text1 = client_game->game_master->announcement_text1;
-			auto announcement_text2 = client_game->game_master->announcement_text2;
-			float alpha = clamp(client_game->game_master->announcement_timeout, 0.0f, 1.0f);
+			auto announcement_text1 = GameMaster::instance()->announcement_text1;
+			auto announcement_text2 = GameMaster::instance()->announcement_text2;
+			float alpha = clamp(GameMaster::instance()->announcement_timeout, 0.0f, 1.0f);
 			Colorf black = Colorf::black;
 			Colorf color1 = Colorf::lightgoldenrodyellow;
 			Colorf color2 = Colorf::whitesmoke;

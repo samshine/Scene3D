@@ -1,23 +1,26 @@
 
 #pragma once
 
-#include "game_object.h"
+#include "Model/ClientWorld/client_world.h"
+
 #include "player_list.h"
 #include "team_list.h"
 
 class ClientPlayerPawn;
 class ServerPlayerPawn;
 class RobotPlayerPawn;
+class SpawnPoint;
 
-class GameMaster : public GameObject
+class GameMaster : public GameObject, public ClientObject
 {
 public:
-	GameMaster(GameWorld *world);
+	static void create();
+	static GameMaster *instance();
 
-	void game_start();
+	GameMaster();
+	~GameMaster();
 
 	void tick() override;
-	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event) override;
 
 	std::shared_ptr<PlayerList> player_list = std::make_shared<PlayerList>();
 	std::shared_ptr<TeamList> team_list = std::make_shared<TeamList>();
@@ -25,6 +28,10 @@ public:
 	std::shared_ptr<ClientPlayerPawn> client_player;
 	std::map<std::string, std::shared_ptr<ServerPlayerPawn>> server_players;
 	std::vector<std::shared_ptr<RobotPlayerPawn>> bots;
+
+	std::shared_ptr<MapData> map_data;
+	std::vector<std::shared_ptr<SpawnPoint>> spawn_points;
+	std::vector<Physics3DObjectPtr> level_collision_objects;
 
 	std::string announcement_text1;
 	std::string announcement_text2;
@@ -37,4 +44,7 @@ public:
 	void player_killed(std::shared_ptr<ServerPlayerPawn> player);
 
 	const int static_id = -1;
+
+private:
+	void on_player_killed(const std::string &sender, const uicore::JsonValue &message);
 };

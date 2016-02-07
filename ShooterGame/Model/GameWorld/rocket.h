@@ -1,15 +1,15 @@
 
 #pragma once
 
-#include "game_object.h"
+#include "Model/ClientWorld/client_world.h"
 
 class PlayerPawn;
 
-class Rocket : public GameObject
+class Rocket : public GameObject, public ClientObject
 {
 public:
 	Rocket(PlayerPawn *owner, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
-	Rocket(GameWorld *world, const uicore::NetGameEvent &net_event);
+	Rocket(const uicore::JsonValue &net_event);
 
 	void send_create();
 

@@ -1,12 +1,11 @@
 
 #include "precomp.h"
 #include "robot_player_pawn.h"
-#include "game_world.h"
 #include "game_master.h"
 
 using namespace uicore;
 
-RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
+RobotPlayerPawn::RobotPlayerPawn(const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(owner, spawn)
 {
 }
 
@@ -70,7 +69,7 @@ void RobotPlayerPawn::tick_path()
 		float nearest_dist2 = 0.0f;
 
 		int index = 0;
-		for (const auto &node : world()->map_data->path_nodes)
+		for (const auto &node : GameMaster::instance()->map_data->path_nodes)
 		{
 			auto v = node.position - get_position();
 			float dist2 = Vec3f::dot(v, v);
@@ -85,14 +84,14 @@ void RobotPlayerPawn::tick_path()
 		if (nearest_segment == -1)
 			return;
 
-		current_path = create_path_steps(nearest_segment, rand() % world()->map_data->path_nodes.size(), 100, -1);
+		current_path = create_path_steps(nearest_segment, rand() % GameMaster::instance()->map_data->path_nodes.size(), 100, -1);
 		current_path_index = 0;
 	}
 
 	if (current_path_index == current_path.size())
 		return;
 
-	auto path_point = world()->map_data->path_nodes[current_path[current_path_index]].position;
+	auto path_point = GameMaster::instance()->map_data->path_nodes[current_path[current_path_index]].position;
 
 	auto path_pos = Vec2f(path_point.x, path_point.z);
 	auto robot_pos = Vec2f(get_position().x, get_position().z);
@@ -136,7 +135,7 @@ void RobotPlayerPawn::tick_path()
 
 std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_segment, int max_depth, int avoid_segment)
 {
-	std::vector<bool> visited(world()->map_data->path_nodes.size());
+	std::vector<bool> visited(GameMaster::instance()->map_data->path_nodes.size());
 
 	if (avoid_segment != -1)
 		visited[avoid_segment] = true;
@@ -150,7 +149,7 @@ std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_s
 	int current_depth = 0;
 	while (current_segment != end_segment && current_depth < max_depth)
 	{
-		const auto &segment = world()->map_data->path_nodes[current_segment];
+		const auto &segment = GameMaster::instance()->map_data->path_nodes[current_segment];
 
 		bool found_end = false;
 		for (auto next_segment : segment.connections)
@@ -220,7 +219,7 @@ void RobotPlayerPawn::track_target()
 {
 	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
-	for (auto it : world()->game_master->server_players)
+	for (auto it : GameMaster::instance()->server_players)
 	{
 		auto other_pawn = it.second;
 		if (other_pawn.get() != this)
@@ -240,7 +239,7 @@ void RobotPlayerPawn::track_target()
 		auto eye_pos = get_position() + eye_offset;
 		auto target_eye_pos = target->get_position() + eye_offset;
 
-		bool line_of_sight = !world()->collision->ray_test_any(eye_pos, target_eye_pos, [&](const Physics3DHit &result)
+		bool line_of_sight = !game_world()->kinematic_collision()->ray_test_any(eye_pos, target_eye_pos, [&](const Physics3DHit &result)
 		{
 			return result.object->data_object() == nullptr;
 		});

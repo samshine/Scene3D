@@ -1,31 +1,31 @@
 
 #include "precomp.h"
 #include "elevator.h"
-#include "game_world.h"
-#include "game_tick.h"
 #include "collision_game_object.h"
 #include "player_pawn.h"
 #include <algorithm>
 
 using namespace uicore;
 
-Elevator::Elevator(GameWorld *world, int level_obj_id, const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
-: GameObject(world), level_obj_id(level_obj_id), pos1(pos1), pos2(pos2), orientation(orientation)
+Elevator::Elevator(const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
+: pos1(pos1), pos2(pos2), orientation(orientation)
 {
 	box_size.x *= scale;
 	box_size.z *= scale;
 	box_shape = Physics3DShape::box(box_size);
-	body = Physics3DObject::collision_body(world->collision, box_shape, pos1, orientation);
+	body = Physics3DObject::collision_body(game_world()->kinematic_collision(), box_shape, pos1, orientation);
 	body->set_kinematic_object();
 
-	if (world->client)
+	if (client_world())
 	{
-		auto model = SceneModel::create(world->client->scene, model_name);
-		scene_object = SceneObject::create(world->client->scene, model, pos1, orientation, Vec3f(scale));
+		auto model = SceneModel::create(client_world()->scene, model_name);
+		scene_object = SceneObject::create(client_world()->scene, model, pos1, orientation, Vec3f(scale));
 
 		// For debugging collision box
-		//auto model = SceneModel::create(world->client->scene, create_box());
-		//scene_object = SceneObject::create(world->client->scene, model, pos1, orientation, Vec3f(1.0f));
+		//auto model = SceneModel::create(client_world()->scene, create_box());
+		//scene_object = SceneObject::create(client_world()->scene, model, pos1, orientation, Vec3f(1.0f));
+
+		func_received_event("elevator-update") = bind_member(this, &Elevator::on_elevator_update);
 	}
 }
 
@@ -33,24 +33,19 @@ Elevator::~Elevator()
 {
 }
 
-void Elevator::net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event)
+void Elevator::on_elevator_update(const std::string &sender, const uicore::JsonValue &message)
 {
-	if (world()->client && net_event.get_name() == "elevator-update")
-	{
-		state = (State)net_event.get_argument(1).get_integer();
-		time = net_event.get_argument(2).get_number();
-	}
+	state = (State)message["state"].to_int();
+	time = message["time"].to_float();
 }
 
 void Elevator::send_net_update(const std::string &target)
 {
-	NetGameEvent net_event("elevator-update");
-
-	net_event.add_argument(-level_obj_id);
-	net_event.add_argument((int)state);
-	net_event.add_argument(time);
-
-	send_net_event(target, net_event);
+	JsonValue message = JsonValue::object();
+	message["name"] = JsonValue::string("elevator-update");
+	message["state"] = JsonValue::number((int)state);
+	message["time"] = JsonValue::number(time);
+	send_event(target, message);
 }
 
 void Elevator::tick()
@@ -72,7 +67,7 @@ void Elevator::tick_down()
 		state = state_start_triggered;
 		time = 0.250f;
 
-		if (!world()->client)
+		if (!client_world())
 			send_net_update("all");
 	}
 }
@@ -87,7 +82,7 @@ void Elevator::tick_start_triggered()
 		if (scene_object)
 			scene_object->play_animation("up", true);
 
-		if (!world()->client)
+		if (!client_world())
 			send_net_update("all");
 	}
 }
@@ -105,7 +100,7 @@ void Elevator::tick_moving_up()
 	Vec3f from_pos = mix(pos1, pos2, time);
 	Vec3f to_pos = mix(pos1, pos2, new_time);
 
-	for (const auto &hit : world()->collision->sweep_test_all(box_shape, from_pos, orientation, to_pos, orientation))
+	for (const auto &hit : game_world()->kinematic_collision()->sweep_test_all(box_shape, from_pos, orientation, to_pos, orientation))
 	{
 		PlayerPawn *hit_player = hit.object->data<PlayerPawn>();
 		if (hit_player)
@@ -129,7 +124,7 @@ void Elevator::tick_moving_up()
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (!world()->client)
+		if (!client_world())
 			send_net_update("all");
 	}
 }
@@ -146,7 +141,7 @@ void Elevator::tick_up()
 		if (scene_object)
 			scene_object->play_animation("down", true);
 
-		if (!world()->client)
+		if (!client_world())
 			send_net_update("all");
 	}
 }
@@ -175,7 +170,7 @@ void Elevator::tick_moving_down()
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (!world()->client)
+		if (!client_world())
 			send_net_update("all");
 	}
 }
@@ -184,7 +179,7 @@ bool Elevator::test_start_trigger()
 {
 	Vec3f trigger_pos = pos1 + Vec3f(0.0, 1.0f, 0.0f);
 
-	return world()->collision->sweep_test_any(box_shape, pos1, orientation, trigger_pos, orientation, 0.0f, [](const Physics3DHit &result)
+	return game_world()->kinematic_collision()->sweep_test_any(box_shape, pos1, orientation, trigger_pos, orientation, 0.0f, [](const Physics3DHit &result)
 	{
 		return result.object->data<PlayerPawn>() != nullptr;
 	});
