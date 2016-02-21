@@ -99,7 +99,7 @@ float GridView::calculate_preferred_width(const CanvasPtr &canvas)
 		{
 			auto &cell = cells[col + row * cell_width];
 			if (cell)
-				width += cell->calculate_preferred_width(canvas);
+				width += cell->preferred_width(canvas);
 		}
 		max_width = std::max(max_width, width);
 	}
@@ -118,7 +118,7 @@ float GridView::calculate_preferred_height(const CanvasPtr &canvas, float width)
 		{
 			auto &cell = cells[col + row * cell_width];
 			if (cell)
-				row_height = std::max(cell->calculate_preferred_height(canvas, total_width / cell_width), row_height);
+				row_height = std::max(cell->preferred_height(canvas, total_width / cell_width), row_height);
 		}
 		height += row_height;
 	}

@@ -68,7 +68,7 @@ public:
 
 	void log(const CompilerMessage &msg)
 	{
-		auto log_text = log_scroll->content_view()->add_subview<uicore::SpanLayoutView>();
+		auto log_text = log_scroll->content_view()->add_subview<uicore::TextBlockView>();
 		if (!msg.file.empty())
 			log_text->add_text(msg.file, "file");
 		if (msg.line > 0)

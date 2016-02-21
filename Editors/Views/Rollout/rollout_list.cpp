@@ -7,7 +7,7 @@ using namespace uicore;
 RolloutList::RolloutList()
 {
 	style()->set("border: 1px solid rgb(100,100,100)");
-	style()->set("flex: 1 0 main-size");
+	style()->set("flex: 1 0 auto");
 	style()->set("flex-direction: column");
 	style()->set("height: 300px");
 	style()->set("padding: 5px");
