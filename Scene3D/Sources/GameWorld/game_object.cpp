@@ -10,6 +10,11 @@ GameObject::GameObject()
 {
 }
 
+GameWorld *GameObject::game_world() const
+{
+	return GameWorld::current().get();
+}
+
 void GameObject::send_event(const std::string &target, const JsonValue &message)
 {
 	auto world = static_cast<GameWorldImpl*>(game_world());

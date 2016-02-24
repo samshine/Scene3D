@@ -30,6 +30,10 @@ GameWorldImpl::GameWorldImpl(const std::string &hostname, const std::string &por
 
 GameWorldImpl::~GameWorldImpl()
 {
+	// Destroy game objects before shutting down rest of the game world
+	objects.clear();
+	added_objects.clear();
+	remote_objects.clear();
 }
 
 void GameWorldImpl::update()

@@ -19,7 +19,7 @@ public:
 	void received_event(const std::string &sender, const uicore::JsonValue &message);
 	void send_event(const std::string &target, const uicore::JsonValue &message);
 
-	GameWorld *game_world() const { return _game_world; }
+	GameWorld *game_world() const;
 
 	GameObjectPtr local_object(int id) const;
 	GameObjectPtr remote_object(int id) const;
@@ -53,7 +53,6 @@ protected:
 private:
 	int _local_id = 0;
 	int _remote_id = 0;
-	GameWorld *_game_world = nullptr;
 
 	std::map<std::string, std::function<void(const std::string &sender, const uicore::JsonValue &message)>> _func_received_event;
 

@@ -3,8 +3,11 @@
 
 #include <string>
 #include <map>
+#include <list>
 #include "Model/Audio/music_player.h"
 #include "Model/Input/input_buttons.h"
+
+class ClientObject;
 
 class ClientWorld
 {
@@ -32,6 +35,8 @@ public:
 
 	InputButtons buttons;
 	uicore::Point mouse_movement;
+
+	std::list<ClientObject *> client_objects;
 };
 
 class ClientObject
@@ -43,6 +48,7 @@ public:
 	virtual void frame(float time_elapsed, float interpolated_time) { }
 
 	ClientWorld *client_world();
-};
 
-typedef std::shared_ptr<ClientObject> ClientObjectPtr;
+private:
+	std::list<ClientObject *>::iterator iterator;
+};

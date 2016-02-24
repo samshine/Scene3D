@@ -49,12 +49,16 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	}
 
 	client_game = GameWorld::create_client(!hostname.empty() ? hostname : "localhost", port);
+	GameWorld::set_current(client_game);
+
 	client_world = std::make_shared<ClientWorld>(window(), scene_engine(), sound_cache());
 	GameMaster::create();
 }
 
 GameScreenController::~GameScreenController()
 {
+	GameWorld::set_current(nullptr);
+
 	if (server_thread.joinable())
 	{
 		std::unique_lock<std::mutex> lock(server_mutex);
