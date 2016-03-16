@@ -8,9 +8,9 @@
 
 using namespace uicore;
 
-ClientPlayerPawn::ClientPlayerPawn()
+ClientPlayerPawn::ClientPlayerPawn(GameWorld *world) : PlayerPawn(world)
 {
-	camera = SceneCamera::create(client_world()->scene);
+	camera = SceneCamera::create(game_world()->client()->scene());
 	camera_shape = Physics3DShape::sphere(0.5f);
 
 	func_received_event("create") = [this](const std::string &sender, const JsonValue &net_event) { net_create(net_event); };
@@ -28,7 +28,7 @@ void ClientPlayerPawn::net_create(const JsonValue &net_event)
 
 	if (is_owner)
 	{
-		client_world()->scene_camera = camera;
+		game_world()->client()->scene_camera() = camera;
 		GameMaster::instance()->client_player = cast<ClientPlayerPawn>();
 	}
 }
@@ -97,7 +97,7 @@ void ClientPlayerPawn::net_hit(const JsonValue &net_event)
 {
 	if (!sound || !sound->playing())
 	{
-		sound = AudioObject::create(client_world()->audio);
+		sound = AudioObject::create(game_world()->client()->audio());
 		switch (rand() * 4 / (RAND_MAX + 1))
 		{
 		default:
@@ -118,19 +118,19 @@ void ClientPlayerPawn::tick()
 {
 	if (is_owner)
 	{
-		key_forward.next_pressed = client_world()->buttons.buttons["move-forward"].down;
-		key_back.next_pressed = client_world()->buttons.buttons["move-back"].down;
-		key_left.next_pressed = client_world()->buttons.buttons["move-left"].down;
-		key_right.next_pressed = client_world()->buttons.buttons["move-right"].down;
-		key_jump.next_pressed = client_world()->buttons.buttons["jump"].down;
-		key_fire_primary.next_pressed = client_world()->buttons.buttons["fire-primary"].down;
-		key_fire_secondary.next_pressed = client_world()->buttons.buttons["fire-secondary"].down;
+		key_forward.next_pressed = game_world()->client()->button_down("move-forward");
+		key_back.next_pressed = game_world()->client()->button_down("move-back");
+		key_left.next_pressed = game_world()->client()->button_down("move-left");
+		key_right.next_pressed = game_world()->client()->button_down("move-right");
+		key_jump.next_pressed = game_world()->client()->button_down("jump");
+		key_fire_primary.next_pressed = game_world()->client()->button_down("fire-primary");
+		key_fire_secondary.next_pressed = game_world()->client()->button_down("fire-secondary");
 		key_weapon = 0;
-		if (client_world()->buttons.buttons["switch-to-icelauncher"].down) key_weapon = 1;
-		else if (client_world()->buttons.buttons["switch-to-rocketlauncher"].down) key_weapon = 2;
-		else if (client_world()->buttons.buttons["switch-to-dualguns"].down) key_weapon = 3;
-		else if (client_world()->buttons.buttons["switch-to-sniperrifle"].down) key_weapon = 4;
-		else if (client_world()->buttons.buttons["switch-to-tractorbeam"].down) key_weapon = 5;
+		if (game_world()->client()->button_down("switch-to-icelauncher")) key_weapon = 1;
+		else if (game_world()->client()->button_down("switch-to-rocketlauncher")) key_weapon = 2;
+		else if (game_world()->client()->button_down("switch-to-dualguns")) key_weapon = 3;
+		else if (game_world()->client()->button_down("switch-to-sniperrifle")) key_weapon = 4;
+		else if (game_world()->client()->button_down("switch-to-tractorbeam")) key_weapon = 5;
 
 		auto message = JsonValue::object();
 		message["name"] = JsonValue::string("player-pawn-input");
@@ -169,7 +169,7 @@ void ClientPlayerPawn::tick()
 	{
 		step_movement = 0.0f;
 
-		auto sound_land = AudioObject::create(client_world()->audio);
+		auto sound_land = AudioObject::create(game_world()->client()->audio());
 
 		shake_camera(0.04f, 0.2f);
 
@@ -209,7 +209,7 @@ void ClientPlayerPawn::tick()
 			step_movement = std::fmod(step_movement, step_distance);
 			left_step = !left_step;
 
-			auto sound_footstep = AudioObject::create(client_world()->audio);
+			auto sound_footstep = AudioObject::create(game_world()->client()->audio());
 			if (left_step)
 			{
 				if (rand() > RAND_MAX / 2)
@@ -246,7 +246,7 @@ void ClientPlayerPawn::tick()
 
 		if (anim == "jump")
 		{
-			auto sound = AudioObject::create(client_world()->audio);
+			auto sound = AudioObject::create(game_world()->client()->audio());
 			if (rand() > RAND_MAX / 2)
 				sound->set_sound("Sound/Character/jump1.ogg");
 			else
@@ -280,17 +280,17 @@ void ClientPlayerPawn::tick()
 	}
 }
 
-void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
+void ClientPlayerPawn::frame()
 {
 	float mouse_speed_multiplier = 1.0f;
 
-	dir = std::remainder(dir + client_world()->mouse_movement.x * Settings::mouse_speed_x() * mouse_speed_multiplier * 0.01f, 360.0f);
-	up = clamp(up + client_world()->mouse_movement.y * Settings::mouse_speed_y() * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
+	dir = std::remainder(dir + game_world()->client()->mouse_movement().x * Settings::mouse_speed_x() * mouse_speed_multiplier * 0.01f, 360.0f);
+	up = clamp(up + game_world()->client()->mouse_movement().y * Settings::mouse_speed_y() * mouse_speed_multiplier * 0.01f, -90.0f, 90.0f);
 
 	bool first_person_camera = true;
 
 	Quaternionf look_dir = Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ);
-	Vec3f look_pos = mix(last_position, next_position, interpolated_time) + eye_offset;
+	Vec3f look_pos = mix(last_position, next_position, frame_interpolated_time()) + eye_offset;
 
 	/*
 	static FilePtr file = File::create_always("c:\\development\\debug_frame_pos.csv");
@@ -301,7 +301,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	file->write(str.data(), str.length());
 	*/
 
-	shake_timer = std::max(shake_timer - time_elapsed * shake_speed, 0.0f);
+	shake_timer = std::max(shake_timer - frame_time_elapsed() * shake_speed, 0.0f);
 	if (shake_timer > 0.0f)
 		look_pos.y += std::sin(shake_timer * 2.0f * PI) * shake_magnitude;
 
@@ -331,7 +331,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 		available_zoom_out = 0.0f;
 	}
 
-	zoom_out = std::min(zoom_out + time_elapsed * 5.0f, available_zoom_out);
+	zoom_out = std::min(zoom_out + frame_time_elapsed() * 5.0f, available_zoom_out);
 
 	bool show_mesh = false;
 
@@ -348,8 +348,8 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	{
 		if (!scene_object)
 		{
-			auto model = SceneModel::create(client_world()->scene, "Models/Kachujin/Kachujin.cmodel");
-			scene_object = SceneObject::create(client_world()->scene, model);
+			auto model = SceneModel::create(game_world()->client()->scene(), "Models/Kachujin/Kachujin.cmodel");
+			scene_object = SceneObject::create(game_world()->client()->scene(), model);
 
 			if (animation_move_speed > 0.0f)
 				scene_object->play_animation("forward", false);
@@ -357,9 +357,9 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 				scene_object->play_animation("default", false);
 		}
 
-		scene_object->set_position(mix(last_position, next_position, interpolated_time));
+		scene_object->set_position(mix(last_position, next_position, frame_interpolated_time()));
 		scene_object->set_orientation(Quaternionf(clamp(-up * 0.5f, -15.0f, 15.0f), 180.0f + dir, 0.0f, angle_degrees, order_YXZ));
-		scene_object->update(time_elapsed);
+		scene_object->update(frame_time_elapsed());
 	}
 	else
 	{
@@ -369,7 +369,7 @@ void ClientPlayerPawn::frame(float time_elapsed, float interpolated_time)
 	camera->set_position(look_pos);
 	camera->set_orientation(look_dir);
 
-	weapon->frame(time_elapsed, interpolated_time);
+	weapon->frame(frame_time_elapsed(), frame_interpolated_time());
 }
 
 void ClientPlayerPawn::shake_camera(float magnitude, float duration)

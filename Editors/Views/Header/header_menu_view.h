@@ -13,7 +13,7 @@ public:
 private:
 	void button_clicked(uicore::PointerEvent &e);
 
-	std::shared_ptr<uicore::ButtonView> button;
+	std::shared_ptr<uicore::ButtonBaseView> button;
 	std::shared_ptr<HeaderMenuPopupController> menu;
 };
 

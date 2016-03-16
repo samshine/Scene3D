@@ -7,7 +7,7 @@
 
 using namespace uicore;
 
-ServerPlayerPawn::ServerPlayerPawn(const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : owner(owner)
+ServerPlayerPawn::ServerPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : PlayerPawn(world), owner(owner)
 {
 	dir = spawn->dir;
 	up = spawn->up;

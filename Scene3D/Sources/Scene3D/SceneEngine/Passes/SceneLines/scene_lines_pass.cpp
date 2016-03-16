@@ -90,7 +90,7 @@ void SceneLinesPass::setup()
 		program->bind_attribute_location(1, "AttrColor");
 		program->bind_frag_data_location(0, "FragColor");
 		if (!program->try_link())
-			throw Exception(string_format("Lines program failed to link: %1", program->get_info_log()));
+			throw Exception(string_format("Lines program failed to link: %1", program->info_log()));
 		program->set_uniform_buffer_index("Uniforms", 0);
 
 		gpu_uniforms = uicore::UniformVector<UniformBlock>(inout.gc, 1);

@@ -246,7 +246,7 @@ ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, 
 	auto program = ProgramObject::create(gc);
 	program->attach(compute_shader);
 	if (!program->try_link())
-		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->info_log()));
 
 	// Uniforms
 	program->set_uniform_buffer_index("Uniforms", 0);

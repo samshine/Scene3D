@@ -13,8 +13,8 @@ AnimationsController::AnimationsController()
 	animations = std::make_shared<RolloutView>("ANIMATIONS");
 	animation = std::make_shared<RolloutView>("ANIMATION");
 
-	view->content_view()->add_subview(animations);
-	view->content_view()->add_subview(animation);
+	view->content_view()->add_child(animations);
+	view->content_view()->add_child(animation);
 
 	animations_list = std::make_shared<RolloutList>();
 	start_property = std::make_shared<RolloutTextFieldProperty>("START FRAME");
@@ -24,14 +24,14 @@ AnimationsController::AnimationsController()
 	loop_property = std::make_shared<RolloutTextFieldProperty>("LOOP");
 	rarity_property = std::make_shared<RolloutTextFieldProperty>("RARITY");
 
-	animations->content->add_subview(animations_list);
+	animations->content->add_child(animations_list);
 
-	animation->content->add_subview(start_property);
-	animation->content->add_subview(end_property);
-	animation->content->add_subview(play_property);
-	animation->content->add_subview(move_property);
-	animation->content->add_subview(loop_property);
-	animation->content->add_subview(rarity_property);
+	animation->content->add_child(start_property);
+	animation->content->add_child(end_property);
+	animation->content->add_child(play_property);
+	animation->content->add_child(move_property);
+	animation->content->add_child(loop_property);
+	animation->content->add_child(rarity_property);
 
 	slots.connect(animations_list->sig_selection_changed(), this, &AnimationsController::animations_list_selection_changed);
 	slots.connect(animations_list->sig_edit_saved(), this, &AnimationsController::animations_list_edit_saved);

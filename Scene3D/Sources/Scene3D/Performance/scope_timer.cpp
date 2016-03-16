@@ -33,7 +33,7 @@ void ScopeTimerResults::start()
 	instance->current_results.clear();
 	instance->current_start_time = rdtsc();
 	instance->current_end_time = instance->current_start_time;
-	instance->current_start_microseconds = System::get_microseconds();
+	instance->current_start_microseconds = System::microseconds();
 }
 
 void ScopeTimerResults::add_result(const ScopeTimerResult &result)
@@ -61,7 +61,7 @@ void ScopeTimerResults::end()
 	instance->results = instance->current_results;
 	instance->start_time = instance->current_start_time;
 	instance->end_time = instance->current_end_time;
-	instance->elapsed_microseconds = System::get_microseconds() - instance->current_start_microseconds;
+	instance->elapsed_microseconds = System::microseconds() - instance->current_start_microseconds;
 }
 
 int ScopeTimerResults::percentage(const char *name)

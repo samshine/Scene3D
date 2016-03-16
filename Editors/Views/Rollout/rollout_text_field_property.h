@@ -8,8 +8,8 @@ class RolloutTextFieldProperty : public uicore::View
 public:
 	RolloutTextFieldProperty(const std::string &label);
 
-	std::shared_ptr<uicore::LabelView> label;
-	std::shared_ptr<uicore::TextFieldView> text_field;
+	std::shared_ptr<uicore::LabelBaseView> label;
+	std::shared_ptr<uicore::TextFieldBaseView> text_field;
 
 	uicore::Signal<void()> &sig_value_changed() { return _sig_value_changed; }
 

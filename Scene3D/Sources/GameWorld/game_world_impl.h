@@ -8,38 +8,18 @@
 #include "Network/game_tick.h"
 #include "Physics3D/physics3d_world.h"
 
-class GameWorldImpl : public GameWorld
+class GameWorldImpl
 {
 public:
-	GameWorldImpl(const std::string &hostname, const std::string &port, bool client);
+	GameWorldImpl(const std::string &hostname, const std::string &port, std::shared_ptr<GameWorldClient> client);
 	~GameWorldImpl();
 
-	void update() override;
-
-	GameObjectPtr local_object(int id) override;
-	GameObjectPtr remote_object(int id) override;
-
-	void add_object(GameObjectPtr obj) override;
-	void add_static_object(int static_id, GameObjectPtr obj) override;
+	void add_object(GameObjectPtr obj);
+	void add_static_object(int static_id, GameObjectPtr obj);
 	void remove_object(GameObject *);
-
-	float time_elapsed() const override;
-	int tick_time() const override;
-	int send_tick_time() const override;
-
-	float frame_time_elapsed() const override;
-	float frame_interpolated_time() const override;
-
-	Physics3DWorldPtr kinematic_collision() const override { return _kinematic_collision; }
-	Physics3DWorldPtr dynamic_collision() const override { return _dynamic_collision; }
-
-	uicore::Signal<void(const std::string &peer_id)> &sig_peer_connected() override;
-	uicore::Signal<void(const std::string &peer_id)> &sig_peer_disconnected() override;
-	std::function<GameObjectPtr(const uicore::JsonValue &args)> &func_create_object(const std::string &type) override { return create_object_factory[type]; }
 
 	void send_event(const std::string &target, int id, const uicore::JsonValue &message);
 
-private:
 	void tick();
 
 	void net_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
@@ -47,7 +27,7 @@ private:
 	std::map<std::string, std::function<GameObjectPtr(const uicore::JsonValue &args)>> create_object_factory;
 
 	std::shared_ptr<GameNetwork> network;
-	bool client = false;
+	std::shared_ptr<GameWorldClient> client;
 
 	std::shared_ptr<LockStepTime> lock_step_time;
 	GameTick net_tick;

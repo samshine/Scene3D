@@ -85,7 +85,7 @@ void WorkQueueImpl::queue_item(std::shared_ptr<WorkItem> item)
 {
 	if (threads.empty())
 	{
-		int num_cores = serial_queue ? 1 : uicore::max(System::get_num_cores() - 1, 1);
+		int num_cores = serial_queue ? 1 : uicore::max(System::num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
 			threads.push_back(std::thread(&WorkQueueImpl::worker_main, this));

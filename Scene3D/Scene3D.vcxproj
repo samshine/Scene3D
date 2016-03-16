@@ -23,6 +23,7 @@
     <ClInclude Include="Include\Collision3D\triangle_mesh_shape.h" />
     <ClInclude Include="Include\GameWorld\game_object.h" />
     <ClInclude Include="Include\GameWorld\game_world.h" />
+    <ClInclude Include="Include\GameWorld\game_world_client.h" />
     <ClInclude Include="Include\log_event.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Include\sound.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_world.h" />
+    <ClInclude Include="Include\Sound\music_player.h" />
     <ClInclude Include="Include\Sound\sound.h" />
     <ClInclude Include="Include\Sound\soundbuffer.h" />
     <ClInclude Include="Include\Sound\soundbuffer_session.h" />
@@ -74,7 +76,9 @@
     <ClInclude Include="Include\Sound\soundprovider_session.h" />
     <ClInclude Include="Include\Sound\sound_cache.h" />
     <ClInclude Include="Include\Sound\sound_sse.h" />
+    <ClInclude Include="Sources\GameWorld\game_world_client_impl.h" />
     <ClInclude Include="Sources\GameWorld\game_world_impl.h" />
+    <ClInclude Include="Sources\GameWorld\input_buttons.h" />
     <ClInclude Include="Sources\GameWorld\Network\game_network.h" />
     <ClInclude Include="Sources\GameWorld\Network\game_network_client.h" />
     <ClInclude Include="Sources\GameWorld\Network\game_network_server.h" />
@@ -460,7 +464,8 @@
     <ClCompile Include="Sources\Collision3D\triangle_mesh_shape.cpp" />
     <ClCompile Include="Sources\GameWorld\game_object.cpp" />
     <ClCompile Include="Sources\GameWorld\game_world.cpp" />
-    <ClCompile Include="Sources\GameWorld\game_world_impl.cpp" />
+    <ClCompile Include="Sources\GameWorld\game_world_client.cpp" />
+    <ClCompile Include="Sources\GameWorld\input_buttons.cpp" />
     <ClCompile Include="Sources\GameWorld\Network\game_network_client.cpp" />
     <ClCompile Include="Sources\GameWorld\Network\game_network_server.cpp" />
     <ClCompile Include="Sources\GameWorld\Network\lock_step_client_time.cpp" />
@@ -662,6 +667,7 @@
     <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp" />
     <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp" />
+    <ClCompile Include="Sources\Sound\music_player.cpp" />
     <ClCompile Include="Sources\Sound\Platform\Win32\soundoutput_win32.cpp" />
     <ClCompile Include="Sources\Sound\setupsound.cpp" />
     <ClCompile Include="Sources\Sound\sound.cpp" />

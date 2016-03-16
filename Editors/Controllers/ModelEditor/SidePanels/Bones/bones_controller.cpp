@@ -13,13 +13,13 @@ BonesController::BonesController()
 	bones = std::make_shared<RolloutView>("BONES");
 	bone = std::make_shared<RolloutView>("BONE");
 
-	view->content_view()->add_subview(bones);
-	view->content_view()->add_subview(bone);
+	view->content_view()->add_child(bones);
+	view->content_view()->add_child(bone);
 
 	bones_list = std::make_shared<RolloutList>();
 	bones_list->set_allow_edit(false);
 
-	bones->content->add_subview(bones_list);
+	bones->content->add_child(bones_list);
 
 	slots.connect(bones_list->sig_selection_changed(), this, &BonesController::bones_list_selection_changed);
 	slots.connect(bones_list->sig_selection_clicked(), this, &BonesController::bones_list_selection_clicked);

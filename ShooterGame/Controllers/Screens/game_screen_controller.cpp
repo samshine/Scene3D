@@ -48,16 +48,15 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 		server_condition_var.wait(lock, [&]() { return server_running; });
 	}
 
-	client_game = GameWorld::create_client(!hostname.empty() ? hostname : "localhost", port);
-	GameWorld::set_current(client_game);
-
-	client_world = std::make_shared<ClientWorld>(window(), scene_engine(), sound_cache());
-	GameMaster::create();
+	client = std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache());
+	client_game = std::make_shared<GameWorld>(!hostname.empty() ? hostname : "localhost", port, client);
+	GameMaster::create(client_game.get());
 }
 
 GameScreenController::~GameScreenController()
 {
-	GameWorld::set_current(nullptr);
+	client_game.reset();
+	client.reset();
 
 	if (server_thread.joinable())
 	{
@@ -90,8 +89,8 @@ void GameScreenController::server_thread_main(std::string hostname, std::string 
 {
 	try
 	{
-		server_game = GameWorld::create_server(hostname, port);
-		GameWorld::set_current(server_game);
+		server_game = std::make_shared<GameWorld>(hostname, port, nullptr);
+		GameMaster::create(server_game.get());
 
 		std::unique_lock<std::mutex> lock(server_mutex);
 		server_running = true;
@@ -116,8 +115,6 @@ void GameScreenController::server_thread_main(std::string hostname, std::string 
 	{
 		server_exception = std::current_exception();
 	}
-
-	GameWorld::set_current(nullptr);
 }
 
 void GameScreenController::on_log_event(const std::string &type, const std::string &text)
@@ -134,10 +131,9 @@ void GameScreenController::update()
 		std::rethrow_exception(except);
 	}
 
-	client_game->update();
-	client_world->update(mouse_delta(), cursor_hidden());
+	client_game->update(mouse_delta(), cursor_hidden());
 
-	scene_viewport()->set_camera(client_world->scene_camera);
+	scene_viewport()->set_camera(client->scene_camera());
 	scene_viewport()->update(gc(), game_time().time_elapsed());
 	scene_viewport()->render(gc());
 
@@ -218,7 +214,7 @@ void GameScreenController::update()
 			update_stats.push_back(string_format("Scene visits: %1", scene_engine()->scene_visits()));
 			update_stats.push_back("");
 
-			for (const auto &result : client_world->scene_engine->gpu_results())
+			for (const auto &result : client->scene_engine()->gpu_results())
 				update_stats.push_back(string_format("%1: %2 ms", result.name, Text::to_string(result.time_elapsed * 1000.0f, 2, false)));
 
 			update_stats_cooldown = 1.0f;

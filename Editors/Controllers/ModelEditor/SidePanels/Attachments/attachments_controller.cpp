@@ -15,8 +15,8 @@ AttachmentsController::AttachmentsController()
 	attachments = std::make_shared<RolloutView>("ATTACHMENTS");
 	attachment = std::make_shared<RolloutView>("ATTACHMENT");
 
-	view->content_view()->add_subview(attachments);
-	view->content_view()->add_subview(attachment);
+	view->content_view()->add_child(attachments);
+	view->content_view()->add_child(attachment);
 
 	attachments_list = std::make_shared<RolloutList>();
 	position_property = std::make_shared<RolloutPositionProperty>("POSITION");
@@ -25,13 +25,13 @@ AttachmentsController::AttachmentsController()
 	test_model_property = std::make_shared<RolloutBrowseFieldProperty>("TEST MODEL");
 	test_scale_property = std::make_shared<RolloutTextFieldProperty>("TEST SCALE");
 
-	attachments->content->add_subview(attachments_list);
+	attachments->content->add_child(attachments_list);
 
-	attachment->content->add_subview(position_property);
-	attachment->content->add_subview(orientation_property);
-	attachment->content->add_subview(bone_name_property);
-	attachment->content->add_subview(test_model_property);
-	attachment->content->add_subview(test_scale_property);
+	attachment->content->add_child(position_property);
+	attachment->content->add_child(orientation_property);
+	attachment->content->add_child(bone_name_property);
+	attachment->content->add_child(test_model_property);
+	attachment->content->add_child(test_scale_property);
 
 	slots.connect(attachments_list->sig_selection_changed(), this, &AttachmentsController::attachments_list_selection_changed);
 	slots.connect(attachments_list->sig_edit_saved(), this, &AttachmentsController::attachments_list_edit_saved);
@@ -78,7 +78,7 @@ void AttachmentsController::update_attachment_fields()
 
 		bone_name_property->text_field->set_text(attachment.bone_name);
 
-		test_model_property->browse_field->set_text(PathHelp::get_basename(attachment.test_model));
+		test_model_property->browse_field->set_text(PathHelp::basename(attachment.test_model));
 		test_scale_property->text_field->set_text(Text::to_string(attachment.test_scale));
 	}
 	else
@@ -175,7 +175,7 @@ void AttachmentsController::test_model_property_browse()
 		dialog.set_filename(attachment.test_model);
 		if (dialog.show())
 		{
-			attachment.test_model = dialog.get_filename();
+			attachment.test_model = dialog.filename();
 			app_model->undo_system.execute<UpdateAttachmentCommand>(selection, attachment);
 
 			update_attachment_fields();

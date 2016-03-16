@@ -62,8 +62,8 @@ void LockStepClientTime::update()
 	game_time.update();
 
 	/*static FilePtr file = File::create_always("c:\\development\\debug.csv");
-	static uint64_t start_time = System::get_microseconds();
-	auto str = string_format("%1;%2;%3\r\n", (System::get_microseconds() - start_time) / 1000.0, game_time.ticks_elapsed(), game_time.tick_interpolation_time());
+	static uint64_t start_time = System::microseconds();
+	auto str = string_format("%1;%2;%3\r\n", (System::microseconds() - start_time) / 1000.0, game_time.ticks_elapsed(), game_time.tick_interpolation_time());
 	file->write(str.data(), str.length());*/
 
 	last_client_tick_time = client_tick_time;
@@ -100,7 +100,7 @@ void LockStepClientTime::update()
 	next_send_ping = std::max(next_send_ping - game_time.ticks_elapsed(), 0);
 	if (next_send_ping == 0)
 	{
-		network->queue_event("server", NetGameEvent("LockStepPing", { (unsigned int)System::get_time() }));
+		network->queue_event("server", NetGameEvent("LockStepPing", { (unsigned int)System::time() }));
 		next_send_ping = ticks_per_second;
 	}
 }
@@ -122,7 +122,7 @@ void LockStepClientTime::on_event_received(const std::string &sender, const uico
 		unsigned int send_time = net_event.get_argument(0);
 		server_tick_time = net_event.get_argument(1);
 
-		actual_ping = (unsigned int)(System::get_time() - send_time);
+		actual_ping = (unsigned int)(System::time() - send_time);
 
 		ping_ticks = 4; // 128 ms ping means it roughly arrives at server after 64 ms (each tick is 16 ms, 4 * 16 * 2 = 128)
 		jitter_ticks = 2; // 32 ms jitter

@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-RobotPlayerPawn::RobotPlayerPawn(const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(owner, spawn)
+RobotPlayerPawn::RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn) : ServerPlayerPawn(world, owner, spawn)
 {
 }
 

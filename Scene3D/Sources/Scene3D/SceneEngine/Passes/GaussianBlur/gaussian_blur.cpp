@@ -19,7 +19,7 @@ void GaussianBlur::vertical(const uicore::GraphicContextPtr &gc, float blur_amou
 	input.get()->set_mag_filter(filter_nearest);
 	input.get()->set_min_filter(filter_nearest);
 
-	auto size = output->get_size();
+	auto size = output->size();
 
 	gc->set_frame_buffer(output);
 	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());
@@ -44,7 +44,7 @@ void GaussianBlur::horizontal(const uicore::GraphicContextPtr &gc, float blur_am
 	input.get()->set_mag_filter(filter_nearest);
 	input.get()->set_min_filter(filter_nearest);
 
-	auto size = output->get_size();
+	auto size = output->size();
 
 	gc->set_frame_buffer(output);
 	gc->set_viewport(Rectf(0.0f, 0.0f, (float)size.width, (float)size.height), gc->texture_image_y_axis());

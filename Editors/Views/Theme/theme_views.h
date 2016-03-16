@@ -1,13 +1,13 @@
 
 #pragma once
 
-class ThemeScrollView : public uicore::ScrollView
+class ThemeScrollView : public uicore::ScrollBaseView
 {
 public:
 	ThemeScrollView();
 };
 
-class ThemeScrollBarView : public uicore::ScrollBarView
+class ThemeScrollBarView : public uicore::ScrollBarBaseView
 {
 public:
 	ThemeScrollBarView();

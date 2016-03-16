@@ -11,12 +11,12 @@ RolloutView::RolloutView(const std::string &title)
 
 	header = std::make_shared<RolloutHeader>();
 	header->set_text(title);
-	add_subview(header);
+	add_child(header);
 
 	content = std::make_shared<View>();
 	content->style()->set("flex-direction: column");
 	content->style()->set("margin: 5px 10px");
-	add_subview(content);
+	add_child(content);
 }
 
 const float RolloutView::label_width = 100.0f;

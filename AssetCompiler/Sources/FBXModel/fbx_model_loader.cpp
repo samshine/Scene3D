@@ -299,7 +299,7 @@ ModelDataTextureMap FBXModelLoader::create_texture_channel(int channel, const ch
 
 	if (texture)
 	{
-		std::string filename = PathHelp::combine(model->base_path, PathHelp::get_filename(texture->GetFileName()));
+		std::string filename = PathHelp::combine(model->base_path, PathHelp::filename(texture->GetFileName()));
 		std::string uv_set = texture->UVSet.Get();
 
 		Vec3f translate = to_vec3f(texture->Translation.Get());

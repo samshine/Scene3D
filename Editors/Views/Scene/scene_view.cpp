@@ -65,7 +65,7 @@ void SceneView::render_content(const CanvasPtr &canvas)
 	canvas->end();
 
 	auto gc = canvas->gc();
-	auto window = view_tree()->get_display_window();
+	auto window = view_tree()->display_window();
 
 	sig_update_scene(scene_viewport, gc, window);
 

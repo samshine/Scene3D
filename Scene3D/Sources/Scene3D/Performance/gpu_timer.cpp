@@ -44,7 +44,7 @@ void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 
 	if (impl->unused_disjoint_queries.empty())
 	{
-		ID3D11Device *device = D3DTarget::get_device_handle(gc);
+		ID3D11Device *device = D3DTarget::device_handle(gc);
 		D3D11_QUERY_DESC desc;
 		desc.Query = D3D11_QUERY_TIMESTAMP_DISJOINT;
 		desc.MiscFlags = 0;
@@ -62,7 +62,7 @@ void GPUTimer::begin_frame(const GraphicContextPtr &gc)
 	impl->frames.back()->disjoint_query = impl->unused_disjoint_queries.back();
 	impl->unused_disjoint_queries.pop_back();
 
-	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
+	ID3D11DeviceContext *context = D3DTarget::device_context_handle(gc);
 	context->Begin(impl->frames.back()->disjoint_query.get());
 #endif
 }
@@ -94,7 +94,7 @@ void GPUTimer::end_frame(const GraphicContextPtr &gc)
 	if (gc->shader_language() != shader_hlsl)
 		return;
 
-	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
+	ID3D11DeviceContext *context = D3DTarget::device_context_handle(gc);
 	context->End(impl->frames.back()->disjoint_query.get());
 #endif
 }
@@ -105,7 +105,7 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(const GraphicContextPtr &gc)
 	if (gc->shader_language() != shader_hlsl)
 		return std::vector<GPUTimer::Result>();
 
-	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
+	ID3D11DeviceContext *context = D3DTarget::device_context_handle(gc);
 
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjoint_data;
 	if (context->GetData(impl->frames.front()->disjoint_query.get(), &disjoint_data, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0) != S_OK)
@@ -145,7 +145,7 @@ void GPUTimerImpl::timestamp(const GraphicContextPtr &gc)
 
 	if (unused_queries.empty())
 	{
-		ID3D11Device *device = D3DTarget::get_device_handle(gc);
+		ID3D11Device *device = D3DTarget::device_handle(gc);
 		D3D11_QUERY_DESC desc;
 		desc.Query = D3D11_QUERY_TIMESTAMP;
 		desc.MiscFlags = 0;
@@ -161,7 +161,7 @@ void GPUTimerImpl::timestamp(const GraphicContextPtr &gc)
 	frames.back()->queries.push_back(unused_queries.back());
 	unused_queries.pop_back();
 
-	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
+	ID3D11DeviceContext *context = D3DTarget::device_context_handle(gc);
 	context->End(frames.back()->queries.back().get());
 }
 #endif

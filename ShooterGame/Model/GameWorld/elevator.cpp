@@ -7,8 +7,8 @@
 
 using namespace uicore;
 
-Elevator::Elevator(const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
-: pos1(pos1), pos2(pos2), orientation(orientation)
+Elevator::Elevator(GameWorld *world, const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orientation, const std::string &model_name, float scale)
+: GameObject(world), pos1(pos1), pos2(pos2), orientation(orientation)
 {
 	box_size.x *= scale;
 	box_size.z *= scale;
@@ -16,14 +16,14 @@ Elevator::Elevator(const Vec3f &pos1, const Vec3f &pos2, const Quaternionf &orie
 	body = Physics3DObject::collision_body(game_world()->kinematic_collision(), box_shape, pos1, orientation);
 	body->set_kinematic_object();
 
-	if (client_world())
+	if (game_world()->client())
 	{
-		auto model = SceneModel::create(client_world()->scene, model_name);
-		scene_object = SceneObject::create(client_world()->scene, model, pos1, orientation, Vec3f(scale));
+		auto model = SceneModel::create(game_world()->client()->scene(), model_name);
+		scene_object = SceneObject::create(game_world()->client()->scene(), model, pos1, orientation, Vec3f(scale));
 
 		// For debugging collision box
-		//auto model = SceneModel::create(client_world()->scene, create_box());
-		//scene_object = SceneObject::create(client_world()->scene, model, pos1, orientation, Vec3f(1.0f));
+		//auto model = SceneModel::create(game_world()->client()->scene(), create_box());
+		//scene_object = SceneObject::create(game_world()->client()->scene(), model, pos1, orientation, Vec3f(1.0f));
 
 		func_received_event("elevator-update") = bind_member(this, &Elevator::on_elevator_update);
 	}
@@ -67,7 +67,7 @@ void Elevator::tick_down()
 		state = state_start_triggered;
 		time = 0.250f;
 
-		if (!client_world())
+		if (!game_world()->client())
 			send_net_update("all");
 	}
 }
@@ -82,7 +82,7 @@ void Elevator::tick_start_triggered()
 		if (scene_object)
 			scene_object->play_animation("up", true);
 
-		if (!client_world())
+		if (!game_world()->client())
 			send_net_update("all");
 	}
 }
@@ -124,7 +124,7 @@ void Elevator::tick_moving_up()
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (!client_world())
+		if (!game_world()->client())
 			send_net_update("all");
 	}
 }
@@ -141,7 +141,7 @@ void Elevator::tick_up()
 		if (scene_object)
 			scene_object->play_animation("down", true);
 
-		if (!client_world())
+		if (!game_world()->client())
 			send_net_update("all");
 	}
 }
@@ -170,7 +170,7 @@ void Elevator::tick_moving_down()
 		if (scene_object)
 			scene_object->play_animation("default", true);
 
-		if (!client_world())
+		if (!game_world()->client())
 			send_net_update("all");
 	}
 }

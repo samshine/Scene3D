@@ -9,5 +9,5 @@ class SidePanelController : public WorkspaceDockableController
 public:
 	SidePanelController();
 
-	std::shared_ptr<uicore::ScrollView> view = std::make_shared<ThemeScrollView>();
+	std::shared_ptr<uicore::ScrollBaseView> view = std::make_shared<ThemeScrollView>();
 };

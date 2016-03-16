@@ -105,7 +105,7 @@ void LensFlarePass::setup()
 		program->bind_attribute_location(0, "AttrPosition");
 		program->bind_frag_data_location(0, "FragColor");
 		if (!program->try_link())
-			throw Exception(string_format("Lens flare program failed to link: %1", program->get_info_log()));
+			throw Exception(string_format("Lens flare program failed to link: %1", program->info_log()));
 		program->set_uniform_buffer_index("Uniforms", 0);
 		program->set_uniform1i("InstanceTexture", 0);
 		program->set_uniform1i("FlareTexture", 1);

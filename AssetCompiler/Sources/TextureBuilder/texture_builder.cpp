@@ -12,7 +12,7 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 		{
 			PixelBufferSetPtr pixelbuffer_set;
 
-			std::string filetype = PathHelp::get_extension(texture.name);
+			std::string filetype = PathHelp::extension(texture.name);
 			if (Text::equal_caseless(filetype, "dds"))
 			{
 				pixelbuffer_set = DDSFormat::load(texture.name);
@@ -31,7 +31,7 @@ void TextureBuilder::build(std::shared_ptr<ModelData> model_data, const std::str
 			auto sha1 = SHA1::create();
 			sha1->add(file_data->buffer());
 			sha1->calculate();
-			std::string hash = sha1->get_hash();
+			std::string hash = sha1->hash();
 
 			std::string filename = hash + ".png";
 			File::write_all_bytes(PathHelp::combine(output_path, filename), file_data->buffer());

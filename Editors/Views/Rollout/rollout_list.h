@@ -49,8 +49,8 @@ public:
 	RolloutListItemView(RolloutList *list);
 
 	RolloutList *list = nullptr;
-	std::shared_ptr<uicore::LabelView> label;
-	std::shared_ptr<uicore::TextFieldView> textfield;
+	std::shared_ptr<uicore::LabelBaseView> label;
+	std::shared_ptr<uicore::TextFieldBaseView> textfield;
 
 	void begin_edit();
 	void save_edit();

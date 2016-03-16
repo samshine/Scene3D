@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "soundbuffer.h"
+
 class MusicPlayer
 {
 public:

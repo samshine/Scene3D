@@ -10,10 +10,10 @@ class MapSelectRolloutView : public RolloutView
 public:
 	MapSelectRolloutView() : RolloutView("SELECT")
 	{
-		button_select = content->add_subview<RolloutButton>("SELECT");
-		button_select_move = content->add_subview<RolloutButton>("MOVE");
-		button_select_rotate = content->add_subview<RolloutButton>("ROTATE");
-		button_select_scale = content->add_subview<RolloutButton>("SCALE");
+		button_select = content->add_child<RolloutButton>("SELECT");
+		button_select_move = content->add_child<RolloutButton>("MOVE");
+		button_select_rotate = content->add_child<RolloutButton>("ROTATE");
+		button_select_scale = content->add_child<RolloutButton>("SCALE");
 	}
 
 	std::shared_ptr<RolloutButton> button_select;

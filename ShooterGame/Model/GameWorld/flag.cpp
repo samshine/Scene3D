@@ -5,12 +5,13 @@
 
 using namespace uicore;
 
-Flag::Flag(const Vec3f &pos, const Quaternionf &orientation, const std::string &model_name, float scale, const std::string &animation, const Vec3f &collision_box_size, const std::string &team)
+Flag::Flag(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation, const std::string &model_name, float scale, const std::string &animation, const Vec3f &collision_box_size, const std::string &team)
+	: GameObject(world)
 {
-	if (client_world())
+	if (game_world()->client())
 	{
-		auto model = SceneModel::create(client_world()->scene, model_name);
-		scene_object = SceneObject::create(client_world()->scene, model, pos, orientation, Vec3f(scale));
+		auto model = SceneModel::create(game_world()->client()->scene(), model_name);
+		scene_object = SceneObject::create(game_world()->client()->scene(), model, pos, orientation, Vec3f(scale));
 		scene_object->play_animation(animation, true);
 	}
 }
@@ -23,8 +24,8 @@ void Flag::tick()
 {
 }
 
-void Flag::frame(float time_elapsed, float interpolated_time)
+void Flag::frame()
 {
 	if (scene_object)
-		scene_object->update(time_elapsed);
+		scene_object->update(frame_time_elapsed());
 }

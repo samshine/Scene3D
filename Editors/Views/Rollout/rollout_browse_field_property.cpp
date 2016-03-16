@@ -10,7 +10,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
-	label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelBaseView>();
 	label->style()->set("margin-right: 5px");
 	label->style()->set("flex: none");
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
@@ -19,7 +19,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	label->style()->set("color: rgb(153,180,198)");
 	label->set_text(label_text);
 
-	browse_field = std::make_shared<LabelView>();
+	browse_field = std::make_shared<LabelBaseView>();
 	browse_field->style()->set("flex: auto");
 	browse_field->style()->set("background: rgba(255,255,255,0.07843)");
 	browse_field->style()->set("border-radius: 3px");
@@ -27,8 +27,8 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	browse_field->style()->set("font: 12px/18px 'Lato'");
 	browse_field->style()->set("color: white");
 
-	add_subview(label);
-	add_subview(browse_field);
+	add_child(label);
+	add_child(browse_field);
 
 	slots.connect(browse_field->sig_pointer_release(), [&, this](PointerEvent &e)
 	{

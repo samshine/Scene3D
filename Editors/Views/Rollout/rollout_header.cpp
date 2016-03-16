@@ -10,10 +10,10 @@ RolloutHeader::RolloutHeader()
 	style()->set("padding: 2px 10px");
 	style()->set("background: rgb(6,31,62)");
 
-	label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelBaseView>();
 	label->style()->set("font: 12px/18px 'Lato'");
 	label->style()->set("color: white");
-	add_subview(label);
+	add_child(label);
 }
 
 void RolloutHeader::set_text(const std::string &text)

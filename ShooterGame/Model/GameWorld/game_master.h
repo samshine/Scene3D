@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "Model/ClientWorld/client_world.h"
-
 #include "player_list.h"
 #include "team_list.h"
 
@@ -11,13 +9,13 @@ class ServerPlayerPawn;
 class RobotPlayerPawn;
 class SpawnPoint;
 
-class GameMaster : public GameObject, public ClientObject
+class GameMaster : public GameObject
 {
 public:
-	static void create();
+	static void create(GameWorld *world);
 	static GameMaster *instance();
 
-	GameMaster();
+	GameMaster(GameWorld *world);
 	~GameMaster();
 
 	void tick() override;

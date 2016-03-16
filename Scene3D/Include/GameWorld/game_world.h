@@ -8,37 +8,45 @@ class GameObject;
 typedef std::shared_ptr<GameObject> GameObjectPtr;
 class Physics3DWorld;
 typedef std::shared_ptr<Physics3DWorld> Physics3DWorldPtr;
+class GameWorldImpl;
+class GameWorldClient;
 
 class GameWorld
 {
 public:
-	static std::shared_ptr<GameWorld> create_server(const std::string &hostname, const std::string &port);
-	static std::shared_ptr<GameWorld> create_client(const std::string &hostname, const std::string &port);
+	GameWorld(const std::string &hostname, const std::string &port, std::shared_ptr<GameWorldClient> client);
+	~GameWorld();
 
-	static std::shared_ptr<GameWorld> current();
-	static void set_current(std::shared_ptr<GameWorld> world);
+	void update(uicore::Vec2i mouse_movement = uicore::Vec2i(), bool has_focus = false);
 
-	virtual void update() = 0;
+	const std::shared_ptr<GameWorldClient> &client();
 
-	virtual GameObjectPtr local_object(int id) = 0;
-	virtual GameObjectPtr remote_object(int id) = 0;
+	GameObjectPtr local_object(int id);
+	GameObjectPtr remote_object(int id);
 
-	virtual void add_object(GameObjectPtr obj) = 0;
-	virtual void add_static_object(int static_id, GameObjectPtr obj) = 0;
+	void add_object(GameObjectPtr obj);
+	void add_static_object(int static_id, GameObjectPtr obj);
 
-	virtual float time_elapsed() const = 0;
-	virtual int tick_time() const = 0;
-	virtual int send_tick_time() const = 0;
+	float time_elapsed() const;
+	int tick_time() const;
+	int send_tick_time() const;
 
-	virtual float frame_time_elapsed() const = 0;
-	virtual float frame_interpolated_time() const = 0;
+	float frame_time_elapsed() const;
+	float frame_interpolated_time() const;
 
-	virtual Physics3DWorldPtr kinematic_collision() const = 0;
-	virtual Physics3DWorldPtr dynamic_collision() const = 0;
+	Physics3DWorldPtr kinematic_collision() const;
+	Physics3DWorldPtr dynamic_collision() const;
 
-	virtual uicore::Signal<void(const std::string &peer_id)> &sig_peer_connected() = 0;
-	virtual uicore::Signal<void(const std::string &peer_id)> &sig_peer_disconnected() = 0;
-	virtual std::function<GameObjectPtr(const uicore::JsonValue &args)> &func_create_object(const std::string &type) = 0;
+	uicore::Signal<void(const std::string &peer_id)> &sig_peer_connected();
+	uicore::Signal<void(const std::string &peer_id)> &sig_peer_disconnected();
+	std::function<GameObjectPtr(const uicore::JsonValue &args)> &func_create_object(const std::string &type);
+
+private:
+	GameWorld(const GameWorld &) = delete;
+	GameWorld &operator =(const GameWorld &) = delete;
+
+	std::unique_ptr<GameWorldImpl> impl;
+	friend class GameObject;
 };
 
 typedef std::shared_ptr<GameWorld> GameWorldPtr;

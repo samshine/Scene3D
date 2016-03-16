@@ -46,12 +46,6 @@
     <ClInclude Include="Model\GameWorld\weapon.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Audio\music_player.h">
-      <Filter>Model\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Input\input_buttons.h">
-      <Filter>Model\Input</Filter>
-    </ClInclude>
     <ClInclude Include="Model\GameWorld\character_controller.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
@@ -75,9 +69,6 @@
     </ClInclude>
     <ClInclude Include="Model\Settings\settings.h">
       <Filter>Model\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ClientWorld\client_world.h">
-      <Filter>Model\ClientWorld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,12 +111,6 @@
     <ClCompile Include="Model\GameWorld\weapon.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Audio\music_player.cpp">
-      <Filter>Model\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Input\input_buttons.cpp">
-      <Filter>Model\Input</Filter>
-    </ClCompile>
     <ClCompile Include="Model\GameWorld\character_controller.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
@@ -147,9 +132,6 @@
     <ClCompile Include="Model\Settings\settings.cpp">
       <Filter>Model\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ClientWorld\client_world.cpp">
-      <Filter>Model\ClientWorld</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -167,12 +149,6 @@
     <Filter Include="Model\GameWorld">
       <UniqueIdentifier>{8cca7bf5-8fa1-4285-a851-a2372530bb73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Audio">
-      <UniqueIdentifier>{46362776-b3d3-4973-8461-7c8c6bdd19bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\Input">
-      <UniqueIdentifier>{021ec2b5-478e-4ab3-b0ac-c2407e42d296}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Views">
       <UniqueIdentifier>{b589df7e-339c-47a1-a225-47690cbf3e2a}</UniqueIdentifier>
     </Filter>
@@ -184,9 +160,6 @@
     </Filter>
     <Filter Include="Model\Settings">
       <UniqueIdentifier>{b7a05c00-d3bd-44e0-b807-8e62f97ed9f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model\ClientWorld">
-      <UniqueIdentifier>{0f78aaf0-e044-4700-b7ea-b849353f5c2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

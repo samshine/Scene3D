@@ -48,7 +48,7 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 	program->bind_frag_data_location(0, "FragColor");
 
 	if (!program->try_link())
-		throw Exception(string_format("Light source simple shader linking failed: %1", program->get_info_log()));
+		throw Exception(string_format("Light source simple shader linking failed: %1", program->info_log()));
 
 	program->bind_attribute_location(0, "AttrPositionInObject");
 	program->set_uniform_buffer_index("Uniforms", 0);

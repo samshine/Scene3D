@@ -4,7 +4,7 @@
 #include "screen_view_controller.h"
 #include "Views/GameMenuView/game_menu_view.h"
 
-class ClientWorld;
+class GameWorldClient;
 
 class GameScreenController : public ScreenViewController
 {
@@ -22,8 +22,8 @@ private:
 	GameMenu game_menu, options_menu;
 	std::shared_ptr<GameMenuView> game_menu_view = std::make_shared<GameMenuView>();
 
+	std::shared_ptr<GameWorldClient> client;
 	GameWorldPtr client_game;
-	std::shared_ptr<ClientWorld> client_world;
 	GameWorldPtr server_game;
 	uicore::FontPtr font, font2, font3, font_small;
 	uicore::ImagePtr crosshair;

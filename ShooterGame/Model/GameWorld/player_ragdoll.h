@@ -1,16 +1,14 @@
 
 #pragma once
 
-#include "Model/ClientWorld/client_world.h"
-
-class PlayerRagdoll : public GameObject, public ClientObject
+class PlayerRagdoll : public GameObject
 {
 public:
-	PlayerRagdoll(const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
+	PlayerRagdoll(GameWorld *world, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
 	~PlayerRagdoll();
 
 	void tick() override;
-	void frame(float time_elapsed, float interpolated_time) override;
+	void frame() override;
 
 private:
 	enum PartName

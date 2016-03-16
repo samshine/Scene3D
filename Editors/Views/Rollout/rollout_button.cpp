@@ -9,7 +9,7 @@ RolloutButton::RolloutButton(const std::string &label)
 	style()->set("flex-direction: column; flex: none");
 	style()->set("margin: 3px 0");
 
-	button = std::make_shared<ButtonView>();
+	button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: auto");
 	button->style()->set("background: rgba(255,255,255,0.07843)");
 	button->style()->set("border-radius: 3px");
@@ -22,5 +22,5 @@ RolloutButton::RolloutButton(const std::string &label)
 
 	button->style("selected")->set("background: rgba(255,255,255,0.27843)");
 
-	add_subview(button);
+	add_child(button);
 }

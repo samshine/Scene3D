@@ -7,13 +7,13 @@
 
 using namespace uicore;
 
-Rocket::Rocket(PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation) : owner(owner), pos(init_pos), orientation(init_orientation)
+Rocket::Rocket(GameWorld *world, PlayerPawn *owner, const uicore::Vec3f &init_pos, const uicore::Quaternionf &init_orientation) : GameObject(world), owner(owner), pos(init_pos), orientation(init_orientation)
 {
 	last_pos = pos;
 	last_orientation = orientation;
 }
 
-Rocket::Rocket(const uicore::JsonValue &net_event)
+Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObject(world)
 {
 	pos = Vec3f(net_event["x"].to_float(), net_event["y"].to_float(), net_event["z"].to_float());
 	orientation = Quaternionf(net_event["rw"].to_float(), net_event["rx"].to_float(), net_event["ry"].to_float(), net_event["rz"].to_float());
@@ -21,12 +21,12 @@ Rocket::Rocket(const uicore::JsonValue &net_event)
 	last_pos = pos;
 	last_orientation = orientation;
 
-	if (client_world())
+	if (game_world()->client())
 	{
-		auto model = SceneModel::create(client_world()->scene, "Models/Rocket_launcher/Bullet.cmodel");
-		scene_object = SceneObject::create(client_world()->scene, model, pos, orientation, Vec3f(4.0f));
+		auto model = SceneModel::create(game_world()->client()->scene(), "Models/Rocket_launcher/Bullet.cmodel");
+		scene_object = SceneObject::create(game_world()->client()->scene(), model, pos, orientation, Vec3f(4.0f));
 
-		sound = AudioObject::create(client_world()->audio);
+		sound = AudioObject::create(game_world()->client()->audio());
 		sound->set_sound("Sound/Weapons/grenade_launch.ogg");
 		sound->set_attenuation_begin(1.0f);
 		sound->set_attenuation_end(100.0f);
@@ -34,7 +34,7 @@ Rocket::Rocket(const uicore::JsonValue &net_event)
 		sound->set_position(pos);
 		sound->play();
 
-		emitter = SceneParticleEmitter::create(client_world()->scene);
+		emitter = SceneParticleEmitter::create(game_world()->client()->scene());
 		emitter->set_type(SceneParticleEmitter::type_spot);
 		emitter->set_position(pos);
 		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
@@ -94,7 +94,7 @@ void Rocket::tick()
 		float max_damage = 150.0f;
 		float force = 1250.0f;
 
-		if (!client_world())
+		if (!game_world()->client())
 		{
 			for (const auto &contact : game_world()->kinematic_collision()->contact_test_all(Physics3DShape::sphere(radius), explosion_center, Quaternionf()))
 			{
@@ -118,35 +118,35 @@ void Rocket::tick()
 			}
 		}
 
-		if (client_world())
+		if (game_world()->client())
 		{
-			auto decal = SceneDecal::create(client_world()->scene);
+			auto decal = SceneDecal::create(game_world()->client()->scene());
 			decal->set_position(ray_hit.position);
 			decal->set_orientation(orientation);
 			decal->set_extents(Vec3f(2.0f, 2.0f, 2.0f));
 			decal->set_diffuse_texture("rocketdecal.png");
-			client_world()->decals.push_back(decal);
+			game_world()->client()->decals().push_back(decal);
 		}
 
 		remove();
 	}
 }
 
-void Rocket::frame(float time_elapsed, float interpolated_time)
+void Rocket::frame()
 {
 	if (scene_object)
 	{
-		scene_object->set_position(mix(last_pos, pos, interpolated_time));
-		scene_object->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
-		scene_object->update(time_elapsed);
+		scene_object->set_position(mix(last_pos, pos, frame_interpolated_time()));
+		scene_object->set_orientation(Quaternionf::lerp(last_orientation, orientation, frame_interpolated_time()));
+		scene_object->update(frame_time_elapsed());
 	}
 
 	if (emitter)
 	{
-		emitter->set_position(mix(last_pos, pos, interpolated_time));
-		//emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, interpolated_time));
+		emitter->set_position(mix(last_pos, pos, frame_interpolated_time()));
+		//emitter->set_orientation(Quaternionf::lerp(last_orientation, orientation, frame_interpolated_time()));
 	}
 
 	if (sound)
-		sound->set_position(mix(last_pos, pos, interpolated_time));
+		sound->set_position(mix(last_pos, pos, frame_interpolated_time()));
 }

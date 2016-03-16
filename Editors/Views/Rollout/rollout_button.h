@@ -3,12 +3,12 @@
 
 class RolloutView;
 
-class RolloutButton : public uicore::ButtonView
+class RolloutButton : public uicore::ButtonBaseView
 {
 public:
 	RolloutButton(const std::string &label);
 
-	std::shared_ptr<uicore::ButtonView> button;
+	std::shared_ptr<uicore::ButtonBaseView> button;
 
 private:
 };

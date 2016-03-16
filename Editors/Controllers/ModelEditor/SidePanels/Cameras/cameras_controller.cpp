@@ -13,13 +13,13 @@ CamerasController::CamerasController()
 	cameras = std::make_shared<RolloutView>("CAMERAS");
 	camera = std::make_shared<RolloutView>("CAMERA");
 
-	view->content_view()->add_subview(cameras);
-	view->content_view()->add_subview(camera);
+	view->content_view()->add_child(cameras);
+	view->content_view()->add_child(camera);
 
 	cameras_list = std::make_shared<RolloutList>();
 	cameras_list->set_allow_edit(false);
 
-	cameras->content->add_subview(cameras_list);
+	cameras->content->add_child(cameras_list);
 
 	slots.connect(cameras_list->sig_selection_changed(), this, &CamerasController::cameras_list_selection_changed);
 	slots.connect(cameras_list->sig_selection_clicked(), this, &CamerasController::cameras_list_selection_clicked);

@@ -10,7 +10,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
-	label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelBaseView>();
 	label->style()->set("margin-right: 5px");
 	label->style()->set("flex: none");
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
@@ -19,7 +19,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	label->style()->set("color: rgb(153,180,198)");
 	label->set_text(label_text);
 
-	text_field = std::make_shared<TextFieldView>();
+	text_field = std::make_shared<TextFieldBaseView>();
 	text_field->style()->set("flex: auto");
 	text_field->style()->set("background: rgba(255,255,255,0.07843)");
 	text_field->style()->set("border-radius: 3px");
@@ -27,8 +27,8 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	text_field->style()->set("font: 12px/18px 'Lato'");
 	text_field->style()->set("color: white");
 
-	add_subview(label);
-	add_subview(text_field);
+	add_child(label);
+	add_child(text_field);
 
 	slots.connect(text_field->sig_enter_pressed(), [&, this]()
 	{

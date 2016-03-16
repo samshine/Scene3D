@@ -61,7 +61,7 @@ void Screen::run()
 {
 	try
 	{
-		srand((unsigned int)System::get_time());
+		srand((unsigned int)System::time());
 
 		ScopeTimerResults scope_timer_results;
 

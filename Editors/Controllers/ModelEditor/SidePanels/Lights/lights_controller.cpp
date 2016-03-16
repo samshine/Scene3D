@@ -13,13 +13,13 @@ LightsController::LightsController()
 	lights = std::make_shared<RolloutView>("LIGHTS");
 	light = std::make_shared<RolloutView>("LIGHT");
 
-	view->content_view()->add_subview(lights);
-	view->content_view()->add_subview(light);
+	view->content_view()->add_child(lights);
+	view->content_view()->add_child(light);
 
 	lights_list = std::make_shared<RolloutList>();
 	lights_list->set_allow_edit(false);
 
-	lights->content->add_subview(lights_list);
+	lights->content->add_child(lights_list);
 
 	slots.connect(lights_list->sig_selection_changed(), this, &LightsController::lights_list_selection_changed);
 	slots.connect(lights_list->sig_selection_clicked(), this, &LightsController::lights_list_selection_clicked);

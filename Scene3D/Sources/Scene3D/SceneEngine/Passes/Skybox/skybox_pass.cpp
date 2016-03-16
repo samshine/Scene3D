@@ -225,7 +225,7 @@ void SkyboxPass::create_billboard_program()
 	billboard_program->bind_attribute_location(0, "AttrPosition");
 	billboard_program->bind_frag_data_location(0, "FragColor");
 	if (!billboard_program->try_link())
-		throw Exception(string_format("Link failed: %1", billboard_program->get_info_log()));
+		throw Exception(string_format("Link failed: %1", billboard_program->info_log()));
 	billboard_program->set_uniform1i("InstanceTexture", 0);
 	billboard_program->set_uniform1i("ParticleTexture", 1);
 	billboard_program->set_uniform1i("ParticleTextureSampler", 1);
@@ -248,7 +248,7 @@ void SkyboxPass::create_cube_program()
 	cube_program->bind_attribute_location(0, "AttrPosition");
 	cube_program->bind_frag_data_location(0, "FragColor");
 	if (!cube_program->try_link())
-		throw Exception(string_format("Link failed: %1", cube_program->get_info_log()));
+		throw Exception(string_format("Link failed: %1", cube_program->info_log()));
 	cube_program->set_uniform1i("SkyboxTexture", 0);
 	cube_program->set_uniform1i("SkyboxTextureSampler", 0);
 	cube_program->set_uniform_buffer_index("Uniforms", 0);

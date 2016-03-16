@@ -11,21 +11,17 @@ typedef std::shared_ptr<GameObject> GameObjectPtr;
 class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
-	GameObject();
+	GameObject(GameWorld *world);
 	virtual ~GameObject() { }
 
 	virtual void tick() { }
-	
+	virtual void frame() { }
+
 	void received_event(const std::string &sender, const uicore::JsonValue &message);
 	void send_event(const std::string &target, const uicore::JsonValue &message);
 
-	GameWorld *game_world() const;
+	GameWorld *game_world() const { return _game_world; }
 
-	GameObjectPtr local_object(int id) const;
-	GameObjectPtr remote_object(int id) const;
-
-	void add_object(GameObjectPtr obj) const;
-	void add_static_object(int static_id, GameObjectPtr obj) const;
 	void remove();
 
 	float time_elapsed() const;
@@ -51,10 +47,12 @@ protected:
 	uicore::SlotContainer slots;
 
 private:
+	GameWorld *_game_world;
 	int _local_id = 0;
 	int _remote_id = 0;
 
 	std::map<std::string, std::function<void(const std::string &sender, const uicore::JsonValue &message)>> _func_received_event;
 
+	friend class GameWorld;
 	friend class GameWorldImpl;
 };

@@ -11,11 +11,11 @@ using namespace uicore;
 
 MapEditController::MapEditController()
 {
-	select = view->content_view()->add_subview<MapSelectRolloutView>();
-	create = view->content_view()->add_subview<MapCreateRolloutView>();
-	create_object = view->content_view()->add_subview<MapObjectRolloutView>();
-	objects = view->content_view()->add_subview<MapObjectListRolloutView>();
-	edit_object = view->content_view()->add_subview<MapObjectRolloutView>();
+	select = view->content_view()->add_child<MapSelectRolloutView>();
+	create = view->content_view()->add_child<MapCreateRolloutView>();
+	create_object = view->content_view()->add_child<MapObjectRolloutView>();
+	objects = view->content_view()->add_child<MapObjectListRolloutView>();
+	edit_object = view->content_view()->add_child<MapObjectRolloutView>();
 
 	create_object->position->set_hidden();
 	create_object->id->text_field->set_text(MapAppModel::instance()->create_object_template.id);
@@ -24,7 +24,7 @@ MapEditController::MapEditController()
 	create_object->up->text_field->set_text(MapAppModel::instance()->create_object_template.up);
 	create_object->tilt->text_field->set_text(MapAppModel::instance()->create_object_template.tilt);
 	create_object->scale->text_field->set_text(MapAppModel::instance()->create_object_template.scale);
-	create_object->mesh->browse_field->set_text(PathHelp::get_basename(MapAppModel::instance()->create_object_template.mesh));
+	create_object->mesh->browse_field->set_text(PathHelp::basename(MapAppModel::instance()->create_object_template.mesh));
 	create_object->fields->text_field->set_text(MapAppModel::instance()->create_object_template.fields.to_json());
 
 	select->button_select->button->func_clicked() = bind_member(this, &MapEditController::select_clicked);
@@ -173,8 +173,8 @@ void MapEditController::create_object_mesh_browse()
 	dialog.set_filename(object.mesh);
 	if (dialog.show())
 	{
-		object.mesh = dialog.get_filename();
-		create_object->mesh->browse_field->set_text(PathHelp::get_basename(object.mesh));
+		object.mesh = dialog.filename();
+		create_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
 	}
 }
 
@@ -193,7 +193,7 @@ void MapEditController::create_object_field_value_changed()
 void MapEditController::object_updated(size_t index)
 {
 	const auto &object = MapAppModel::instance()->desc.objects[index];
-	objects->objects_list->set_item_text(index, string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::get_basename(object.mesh)));
+	objects->objects_list->set_item_text(index, string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::basename(object.mesh)));
 
 	if (index == objects->objects_list->selected_item())
 		update_object_fields();
@@ -206,7 +206,7 @@ void MapEditController::update_objects()
 	int i = 0;
 	for (const auto &object : MapAppModel::instance()->desc.objects)
 	{
-		objects->objects_list->add_item(string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::get_basename(object.mesh)));
+		objects->objects_list->add_item(string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::basename(object.mesh)));
 		i++;
 	}
 
@@ -240,7 +240,7 @@ void MapEditController::update_object_fields()
 		edit_object->up->text_field->set_text(Text::to_string(object.up));
 		edit_object->tilt->text_field->set_text(Text::to_string(object.tilt));
 		edit_object->scale->text_field->set_text(Text::to_string(object.scale));
-		edit_object->mesh->browse_field->set_text(PathHelp::get_basename(object.mesh));
+		edit_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
 		edit_object->fields->text_field->set_text(object.fields.to_json());
 	}
 	else
@@ -355,9 +355,9 @@ void MapEditController::edit_object_mesh_browse()
 		dialog.set_filename(object.mesh);
 		if (dialog.show())
 		{
-			object.mesh = dialog.get_filename();
+			object.mesh = dialog.filename();
 			MapAppModel::instance()->undo_system.execute<UpdateMapObjectCommand>(selection, object);
-			edit_object->mesh->browse_field->set_text(PathHelp::get_basename(object.mesh));
+			edit_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
 		}
 	}
 }

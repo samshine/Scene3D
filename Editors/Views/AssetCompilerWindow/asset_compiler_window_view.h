@@ -10,23 +10,23 @@ public:
 	{
 		using namespace uicore;
 
-		auto asset_list_row = add_subview<RowView>();
-		auto asset_list_label = asset_list_row->add_subview<LabelView>();
-		asset_list_edit = asset_list_row->add_subview<TextFieldView>();
-		asset_list_browse = asset_list_row->add_subview<ButtonView>();
+		auto asset_list_row = add_child<RowView>();
+		auto asset_list_label = asset_list_row->add_child<LabelBaseView>();
+		asset_list_edit = asset_list_row->add_child<TextFieldBaseView>();
+		asset_list_browse = asset_list_row->add_child<ButtonBaseView>();
 
-		auto output_row = add_subview<RowView>();
-		auto output_label = output_row->add_subview<LabelView>();
-		output_edit = output_row->add_subview<TextFieldView>();
-		output_browse = output_row->add_subview<ButtonView>();
+		auto output_row = add_child<RowView>();
+		auto output_label = output_row->add_child<LabelBaseView>();
+		output_edit = output_row->add_child<TextFieldBaseView>();
+		output_browse = output_row->add_child<ButtonBaseView>();
 
-		log_scroll = add_subview<ThemeScrollView>();
+		log_scroll = add_child<ThemeScrollView>();
 
-		auto buttons_row = add_subview<RowView>();
-		buttons_row->add_subview<SpacerView>();
-		build_button = buttons_row->add_subview<ButtonView>();
-		clean_button = buttons_row->add_subview<ButtonView>();
-		cancel_button = buttons_row->add_subview<ButtonView>();
+		auto buttons_row = add_child<RowView>();
+		buttons_row->add_child<SpacerView>();
+		build_button = buttons_row->add_child<ButtonBaseView>();
+		clean_button = buttons_row->add_child<ButtonBaseView>();
+		cancel_button = buttons_row->add_child<ButtonBaseView>();
 
 		style()->set("background: rgb(240,240,240)");
 		style()->set("font: 12px/15px 'Segoe UI'");
@@ -62,13 +62,13 @@ public:
 
 	void clear()
 	{
-		while (!log_scroll->content_view()->subviews().empty())
-			log_scroll->content_view()->subviews().back()->remove_from_super();
+		while (!log_scroll->content_view()->children().empty())
+			log_scroll->content_view()->children().back()->remove_from_parent();
 	}
 
 	void log(const CompilerMessage &msg)
 	{
-		auto log_text = log_scroll->content_view()->add_subview<uicore::TextBlockView>();
+		auto log_text = log_scroll->content_view()->add_child<uicore::TextBlockBaseView>();
 		if (!msg.file.empty())
 			log_text->add_text(msg.file, "file");
 		if (msg.line > 0)
@@ -93,15 +93,15 @@ public:
 		log_text->add_text(msg.text);
 	}
 
-	std::shared_ptr<uicore::ScrollView> log_scroll;
+	std::shared_ptr<uicore::ScrollBaseView> log_scroll;
 
-	std::shared_ptr<uicore::TextFieldView> asset_list_edit;
-	std::shared_ptr<uicore::ButtonView> asset_list_browse;
+	std::shared_ptr<uicore::TextFieldBaseView> asset_list_edit;
+	std::shared_ptr<uicore::ButtonBaseView> asset_list_browse;
 
-	std::shared_ptr<uicore::TextFieldView> output_edit;
-	std::shared_ptr<uicore::ButtonView> output_browse;
+	std::shared_ptr<uicore::TextFieldBaseView> output_edit;
+	std::shared_ptr<uicore::ButtonBaseView> output_browse;
 
-	std::shared_ptr<uicore::ButtonView> build_button;
-	std::shared_ptr<uicore::ButtonView> clean_button;
-	std::shared_ptr<uicore::ButtonView> cancel_button;
+	std::shared_ptr<uicore::ButtonBaseView> build_button;
+	std::shared_ptr<uicore::ButtonBaseView> clean_button;
+	std::shared_ptr<uicore::ButtonBaseView> cancel_button;
 };

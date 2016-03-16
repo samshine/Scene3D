@@ -9,7 +9,7 @@ using namespace uicore;
 
 std::shared_ptr<SoundProvider> SoundProvider::file(const std::string &filename, bool streamed)
 {
-	return file(File::open_existing(filename), streamed, PathHelp::get_extension(filename));
+	return file(File::open_existing(filename), streamed, PathHelp::extension(filename));
 }
 
 std::shared_ptr<SoundProvider> SoundProvider::file(const uicore::IODevicePtr &file, bool streamed, const std::string &type)

@@ -23,8 +23,8 @@ WorkspaceController::WorkspaceController()
 	dock_view->style()->set("flex-direction: column");
 	dock_view->set_hidden(true);
 
-	view->add_subview(center_view);
-	view->add_subview(dock_view);
+	view->add_child(center_view);
+	view->add_child(dock_view);
 }
 
 void WorkspaceController::set_center(const std::shared_ptr<WorkspaceDockableController> &view_controller)
@@ -33,13 +33,13 @@ void WorkspaceController::set_center(const std::shared_ptr<WorkspaceDockableCont
 
 	if (center)
 	{
-		center->root_view()->remove_from_super();
+		center->root_view()->remove_from_parent();
 		center->workspace_controller_ptr = nullptr;
 		center.reset();
 	}
 
 	if (view_controller)
-		center_view->add_subview(view_controller->root_view());
+		center_view->add_child(view_controller->root_view());
 
 	center = view_controller;
 }
@@ -50,12 +50,12 @@ void WorkspaceController::set_docked(const std::shared_ptr<WorkspaceDockableCont
 
 	if (docked)
 	{
-		docked->root_view()->remove_from_super();
+		docked->root_view()->remove_from_parent();
 		docked.reset();
 	}
 
 	if (view_controller)
-		dock_view->add_subview(view_controller->view);
+		dock_view->add_child(view_controller->view);
 
 	docked = view_controller;
 	dock_view->set_hidden(!docked);
@@ -65,12 +65,12 @@ void WorkspaceController::remove(WorkspaceDockableController *controller)
 {
 	if (center.get() == controller)
 	{
-		center->root_view()->remove_from_super();
+		center->root_view()->remove_from_parent();
 		center.reset();
 	}
 	else if (docked.get() == controller)
 	{
-		docked->root_view()->remove_from_super();
+		docked->root_view()->remove_from_parent();
 		docked.reset();
 	}
 }

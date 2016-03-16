@@ -1524,6 +1524,18 @@
     <ClInclude Include="Sources\GameWorld\Network\game_tick.h">
       <Filter>Sources\GameWorld\Network</Filter>
     </ClInclude>
+    <ClInclude Include="Include\GameWorld\game_world_client.h">
+      <Filter>Include\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\game_world_client_impl.h">
+      <Filter>Sources\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GameWorld\input_buttons.h">
+      <Filter>Sources\GameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sound\music_player.h">
+      <Filter>Include\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2138,9 +2150,6 @@
     <ClCompile Include="Sources\GameWorld\game_world.cpp">
       <Filter>Sources\GameWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GameWorld\game_world_impl.cpp">
-      <Filter>Sources\GameWorld</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\GameWorld\game_object.cpp">
       <Filter>Sources\GameWorld</Filter>
     </ClCompile>
@@ -2176,6 +2185,15 @@
     </ClCompile>
     <ClCompile Include="Sources\GameWorld\Network\NetGame\server.cpp">
       <Filter>Sources\GameWorld\Network\NetGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\game_world_client.cpp">
+      <Filter>Sources\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GameWorld\input_buttons.cpp">
+      <Filter>Sources\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Sound\music_player.cpp">
+      <Filter>Sources\Sound</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

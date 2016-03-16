@@ -15,16 +15,16 @@ HeaderView::HeaderView()
 	left_buttons = std::make_shared<View>();
 	left_buttons->style()->set("flex: none");
 	left_buttons->style()->set("flex-direction: row");
-	add_subview(left_buttons);
+	add_child(left_buttons);
 
 	auto spacer = std::make_shared<View>();
 	spacer->style()->set("flex: auto");
-	add_subview(spacer);
+	add_child(spacer);
 
 	right_buttons = std::make_shared<View>();
 	right_buttons->style()->set("flex: none");
 	right_buttons->style()->set("flex-direction: row");
-	add_subview(right_buttons);
+	add_child(right_buttons);
 }
 
 void HeaderView::add_left_button(const std::string &text, std::function<void()> click)
@@ -50,20 +50,20 @@ void HeaderView::add_right_button(const std::string &text, const std::string &ic
 std::shared_ptr<HeaderMenuView> HeaderView::add_left_menu(const std::string &text, const std::string &icon)
 {
 	auto menu = std::make_shared<HeaderMenuView>(text, icon, false);
-	left_buttons->add_subview(menu);
+	left_buttons->add_child(menu);
 	return menu;
 }
 
 std::shared_ptr<HeaderMenuView> HeaderView::add_right_menu(const std::string &text, const std::string &icon, bool last)
 {
 	auto menu = std::make_shared<HeaderMenuView>(text, icon, last);
-	right_buttons->add_subview(menu);
+	right_buttons->add_child(menu);
 	return menu;
 }
 
 void HeaderView::create_button(const std::string &text, const std::string &icon, std::function<void()> click, bool left, bool last)
 {
-	auto button = std::make_shared<ButtonView>();
+	auto button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: none");
 	button->style()->set("margin: auto 0");
 	button->style()->set("padding: 5px 10px");
@@ -80,9 +80,9 @@ void HeaderView::create_button(const std::string &text, const std::string &icon,
 	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e) { click(); e.stop_propagation(); });
 	if (left)
-		left_buttons->add_subview(button);
+		left_buttons->add_child(button);
 	else
-		right_buttons->add_subview(button);
+		right_buttons->add_child(button);
 
 	if (last)
 		button->move_label_before_image();

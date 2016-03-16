@@ -10,7 +10,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 	style()->set("flex-direction: row");
 	style()->set("margin: 3px 0");
 
-	label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelBaseView>();
 	label->style()->set("margin-right: 5px");
 	label->style()->set("flex: none");
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
@@ -18,12 +18,12 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 	label->style()->set("font: 12px/18px 'Lato'");
 	label->style()->set("color: rgb(153,180,198)");
 	label->set_text(label_text);
-	add_subview(label);
+	add_child(label);
 
 	auto value_group = std::make_shared<View>();
 	value_group->style()->set("flex: auto");
 	value_group->style()->set("flex-direction: column");
-	add_subview(value_group);
+	add_child(value_group);
 
 	char *label_texts[] = { "X:", "Y:", "Z:" };
 	for (int i = 0; i < 3; i++)
@@ -33,25 +33,25 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 		if (i > 0)
 			row->style()->set("padding-top: 5px");
 
-		std::shared_ptr<LabelView> input_label = std::make_shared<LabelView>();
+		std::shared_ptr<LabelBaseView> input_label = std::make_shared<LabelBaseView>();
 		input_label->style()->set("margin-right: 5px");
 		input_label->style()->set("flex: none");
 		input_label->style()->set("padding: 2px 0");
 		input_label->style()->set("font: 12px/18px 'Lato'");
 		input_label->style()->set("color: rgb(153,180,198)");
 		input_label->set_text(label_texts[i]);
-		row->add_subview(input_label);
+		row->add_child(input_label);
 
-		std::shared_ptr<TextFieldView> input = std::make_shared<TextFieldView>();
+		std::shared_ptr<TextFieldBaseView> input = std::make_shared<TextFieldBaseView>();
 		input->style()->set("flex: auto");
 		input->style()->set("background: rgba(255,255,255,0.07843)");
 		input->style()->set("border-radius: 3px");
 		input->style()->set("padding: 2px");
 		input->style()->set("font: 12px/18px 'Lato'");
 		input->style()->set("color: white");
-		row->add_subview(input);
+		row->add_child(input);
 
-		value_group->add_subview(row);
+		value_group->add_child(row);
 
 		slots.connect(input->sig_enter_pressed(), [&, this]()
 		{

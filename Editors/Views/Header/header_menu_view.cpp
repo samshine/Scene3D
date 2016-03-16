@@ -10,7 +10,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	style()->set("flex: none");
 	style()->set("padding: 2px 0");
 
-	button = std::make_shared<ButtonView>();
+	button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: none");
 	button->style()->set("margin: auto 0");
 	button->style()->set("padding: 3px 10px");
@@ -26,7 +26,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: white");
 	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
-	add_subview(button);
+	add_child(button);
 
 	menu = std::make_shared<HeaderMenuPopupController>(this, last);
 
@@ -56,7 +56,7 @@ void HeaderMenuView::button_clicked(PointerEvent &e)
 
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
 {
-	auto button = std::make_shared<ButtonView>();
+	auto button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: none");
 	button->style()->set("padding: 3px 10px");
 	button->label()->set_text(Text::to_upper(text));
@@ -69,5 +69,5 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 		menu->dismiss();
 		click();
 	});
-	menu->items->add_subview(button);
+	menu->items->add_child(button);
 }

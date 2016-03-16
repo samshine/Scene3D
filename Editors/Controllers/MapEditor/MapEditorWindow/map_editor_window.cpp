@@ -22,8 +22,8 @@ MapEditorWindow::MapEditorWindow()
 	header_view = std::make_shared<HeaderView>();
 	workspace_controller = std::make_shared<WorkspaceController>();
 
-	view->add_subview(header_view);
-	view->add_subview(workspace_controller->view);
+	view->add_child(header_view);
+	view->add_child(workspace_controller->view);
 
 	slots.connect(view->sig_close(), [this](CloseEvent &e)
 	{
@@ -52,7 +52,7 @@ MapEditorWindow::MapEditorWindow()
 void MapEditorWindow::update_window_title()
 {
 	if (!MapAppModel::instance()->open_filename.empty())
-		set_title(PathHelp::get_basename(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
+		set_title(PathHelp::basename(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
 	else
 		set_title("Model Editor");
 }
@@ -66,7 +66,7 @@ void MapEditorWindow::on_open()
 	dialog.set_filename(MapAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
-		MapAppModel::instance()->open(dialog.get_filename());
+		MapAppModel::instance()->open(dialog.filename());
 		update_window_title();
 	}
 }
@@ -92,8 +92,8 @@ void MapEditorWindow::on_save_as()
 	dialog.set_filename(MapAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
-		std::string filename = dialog.get_filename();
-		if (PathHelp::get_extension(filename).empty())
+		std::string filename = dialog.filename();
+		if (PathHelp::extension(filename).empty())
 			filename += ".mapdesc";
 		MapAppModel::instance()->save(filename);
 		update_window_title();

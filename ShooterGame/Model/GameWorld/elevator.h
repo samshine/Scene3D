@@ -1,12 +1,10 @@
 
 #pragma once
 
-#include "Model/ClientWorld/client_world.h"
-
-class Elevator : public GameObject, public ClientObject
+class Elevator : public GameObject
 {
 public:
-	Elevator(const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale);
+	Elevator(GameWorld *world, const uicore::Vec3f &pos1, const uicore::Vec3f &pos2, const uicore::Quaternionf &orientation, const std::string &model_name, float scale);
 	~Elevator();
 
 	void tick() override;

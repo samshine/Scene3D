@@ -29,7 +29,7 @@ void AssetCompilerWindow::asset_list_browse_clicked()
 	dialog.set_title("Select Assets Base Folder");
 	dialog.set_initial_directory(view->asset_list_edit->text());
 	if (dialog.show())
-		view->asset_list_edit->set_text(dialog.get_selected_path());
+		view->asset_list_edit->set_text(dialog.selected_path());
 }
 
 void AssetCompilerWindow::output_browse_clicked()
@@ -38,7 +38,7 @@ void AssetCompilerWindow::output_browse_clicked()
 	dialog.set_title("Select Output Folder");
 	dialog.set_initial_directory(view->output_edit->text());
 	if (dialog.show())
-		view->output_edit->set_text(dialog.get_selected_path());
+		view->output_edit->set_text(dialog.selected_path());
 }
 
 void AssetCompilerWindow::build_button_clicked()

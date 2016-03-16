@@ -1,20 +1,18 @@
 
 #pragma once
 
-#include "Model/ClientWorld/client_world.h"
-
 class PlayerPawn;
 
-class Rocket : public GameObject, public ClientObject
+class Rocket : public GameObject
 {
 public:
-	Rocket(PlayerPawn *owner, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
-	Rocket(const uicore::JsonValue &net_event);
+	Rocket(GameWorld *world, PlayerPawn *owner, const uicore::Vec3f &pos, const uicore::Quaternionf &orientation);
+	Rocket(GameWorld *world, const uicore::JsonValue &net_event);
 
 	void send_create();
 
 	void tick() override;
-	void frame(float time_elapsed, float interpolated_time) override;
+	void frame() override;
 
 private:
 	float time_left = 10.0f;

@@ -80,7 +80,7 @@ void Weapon::fire_bullet()
 
 	if (subtype.bullet == "Rocket" && !player->cast<ClientPlayerPawn>())
 	{
-		auto rocket = std::make_shared<Rocket>(player, bullet_pos, player->get_orientation());
+		auto rocket = std::make_shared<Rocket>(player->game_world(), player, bullet_pos, player->get_orientation());
 		player->game_world()->add_object(rocket);
 		rocket->send_create();
 	}
@@ -128,8 +128,8 @@ void Weapon::tick_hiding_old_weapon(float time_elapsed)
 			float up = weapon_description.rotation.x;
 			float tilt = weapon_description.rotation.z;
 
-			auto model = SceneModel::create(client_pawn->client_world()->scene, weapon_description.mesh);
-			weapon_object = SceneObject::create(client_pawn->client_world()->scene, model);
+			auto model = SceneModel::create(client_pawn->game_world()->client()->scene(), weapon_description.mesh);
+			weapon_object = SceneObject::create(client_pawn->game_world()->client()->scene(), model);
 			weapon_object->set_position(client_pawn->camera->position());
 			weapon_object->set_orientation(client_pawn->camera->orientation());
 			weapon_object->set_scale(Vec3f(weapon_description.scale));

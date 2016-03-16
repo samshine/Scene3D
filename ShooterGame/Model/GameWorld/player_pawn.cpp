@@ -5,7 +5,7 @@
 
 using namespace uicore;
 
-PlayerPawn::PlayerPawn() : character_controller(game_world()->kinematic_collision())
+PlayerPawn::PlayerPawn(GameWorld *world) : CollisionGameObject(world), character_controller(game_world()->kinematic_collision())
 {
 	auto collision_obj = Physics3DObject::collision_body(game_world()->kinematic_collision(), Physics3DShape::capsule(character_controller.get_radius(), character_controller.get_height() * 0.5f));
 	//collision_obj->set_kinematic_object();

@@ -26,8 +26,8 @@ ModelEditorWindow::ModelEditorWindow()
 	header_view = std::make_shared<HeaderView>();
 	workspace_controller = std::make_shared<WorkspaceController>();
 
-	view->add_subview(header_view);
-	view->add_subview(workspace_controller->view);
+	view->add_child(header_view);
+	view->add_child(workspace_controller->view);
 
 	view->style()->set("background: rgb(240,240,240)");
 
@@ -72,7 +72,7 @@ ModelEditorWindow::ModelEditorWindow()
 void ModelEditorWindow::update_window_title()
 {
 	if (!ModelAppModel::instance()->open_filename.empty())
-		set_title(PathHelp::get_basename(ModelAppModel::instance()->open_filename) + " - Scene3D Model Editor");
+		set_title(PathHelp::basename(ModelAppModel::instance()->open_filename) + " - Scene3D Model Editor");
 	else
 		set_title("Model Editor");
 }
@@ -86,7 +86,7 @@ void ModelEditorWindow::on_open()
 	dialog.set_filename(ModelAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
-		ModelAppModel::instance()->open(dialog.get_filename());
+		ModelAppModel::instance()->open(dialog.filename());
 		update_window_title();
 	}
 }
@@ -112,8 +112,8 @@ void ModelEditorWindow::on_save_as()
 	dialog.set_filename(ModelAppModel::instance()->open_filename);
 	if (dialog.show())
 	{
-		std::string filename = dialog.get_filename();
-		if (PathHelp::get_extension(filename).empty())
+		std::string filename = dialog.filename();
+		if (PathHelp::extension(filename).empty())
 			filename += ".modeldesc";
 		ModelAppModel::instance()->save(filename);
 		update_window_title();
@@ -129,7 +129,7 @@ void ModelEditorWindow::on_change_model()
 	dialog.set_filename(ModelAppModel::instance()->desc.fbx_filename);
 	if (dialog.show())
 	{
-		ModelAppModel::instance()->set_fbx_model(dialog.get_filename());
+		ModelAppModel::instance()->set_fbx_model(dialog.filename());
 	}
 }
 

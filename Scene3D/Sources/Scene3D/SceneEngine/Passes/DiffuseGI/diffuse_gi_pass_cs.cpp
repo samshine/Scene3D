@@ -41,7 +41,7 @@ void DiffuseGIPassCS::run()
 /*
 	update_buffers(gc);
 
-	Size viewport = diffuse_color_gbuffer->get_size();
+	Size viewport = diffuse_color_gbuffer->size();
 	int tile_size = 16;
 	int num_tiles_x = (viewport.width + tile_size - 1) / tile_size;
 	int num_tiles_y = (viewport.height + tile_size - 1) / tile_size;
@@ -73,7 +73,7 @@ ProgramObjectPtr DiffuseGIPassCS::compile_and_link(const GraphicContextPtr &gc, 
 	auto program = ProgramObject::create(gc);
 	program->attach(compute_shader);
 	if (!program->try_link())
-		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->info_log()));
 
 	// Uniforms
 	//program.set_uniform_buffer_index("Uniforms", 0);

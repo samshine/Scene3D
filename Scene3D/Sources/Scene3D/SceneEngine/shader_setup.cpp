@@ -50,5 +50,5 @@ ProgramObjectPtr ShaderSetup::compile(const GraphicContextPtr &gc, const std::st
 void ShaderSetup::link(ProgramObjectPtr &program, const std::string &program_name)
 {
 	if (!program->try_link())
-		throw Exception(string_format("Failed to link %1: %2", program_name, program->get_info_log()));
+		throw Exception(string_format("Failed to link %1: %2", program_name, program->info_log()));
 }

@@ -13,7 +13,7 @@ public:
 	void normalize();
 	void maximize(int column, int row);
 
-	void layout_subviews(const uicore::CanvasPtr &canvas) override;
+	void layout_children(const uicore::CanvasPtr &canvas) override;
 	float calculate_preferred_width(const uicore::CanvasPtr &canvas) override;
 	float calculate_preferred_height(const uicore::CanvasPtr &canvas, float width) override;
 

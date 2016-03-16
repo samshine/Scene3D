@@ -10,7 +10,7 @@ class MapObjectListRolloutView : public RolloutView
 public:
 	MapObjectListRolloutView() : RolloutView("OBJECTS")
 	{
-		objects_list = content->add_subview<RolloutList>();
+		objects_list = content->add_child<RolloutList>();
 		objects_list->set_allow_edit(false);
 	}
 

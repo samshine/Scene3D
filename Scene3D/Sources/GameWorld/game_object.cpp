@@ -6,19 +6,13 @@
 
 using namespace uicore;
 
-GameObject::GameObject()
+GameObject::GameObject(GameWorld *world) : _game_world(world)
 {
-}
-
-GameWorld *GameObject::game_world() const
-{
-	return GameWorld::current().get();
 }
 
 void GameObject::send_event(const std::string &target, const JsonValue &message)
 {
-	auto world = static_cast<GameWorldImpl*>(game_world());
-	world->send_event(target, world->client && local_id() > 0 ? remote_id() : local_id(), message);
+	game_world()->impl->send_event(target, game_world()->client() && remote_id(), message);
 }
 
 void GameObject::received_event(const std::string &sender, const uicore::JsonValue &message)
@@ -28,29 +22,9 @@ void GameObject::received_event(const std::string &sender, const uicore::JsonVal
 		it->second(sender, message);
 }
 
-GameObjectPtr GameObject::local_object(int id) const
-{
-	return game_world()->local_object(id);
-}
-
-GameObjectPtr GameObject::remote_object(int id) const
-{
-	return game_world()->remote_object(id);
-}
-
-void GameObject::add_object(GameObjectPtr obj) const
-{
-	game_world()->add_object(std::move(obj));
-}
-
-void GameObject::add_static_object(int static_id, GameObjectPtr obj) const
-{
-	game_world()->add_static_object(static_id, std::move(obj));
-}
-
 void GameObject::remove()
 {
-	static_cast<GameWorldImpl*>(game_world())->remove_object(this);
+	game_world()->impl->remove_object(this);
 }
 
 float GameObject::time_elapsed() const

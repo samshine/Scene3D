@@ -21,7 +21,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 	if (json["version"].to_number() != 1)
 		throw Exception("Unsupported model description file version");
 
-	desc.fbx_filename = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json["fbx_filename"].to_string());
+	desc.fbx_filename = PathHelp::make_absolute(PathHelp::fullpath(filename), json["fbx_filename"].to_string());
 
 	for (const auto &json_animation : json["animations"].items())
 	{
@@ -45,7 +45,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		attachment.position = Vec3f(json_attachment["position"]["x"].to_float(), json_attachment["position"]["y"].to_float(), json_attachment["position"]["z"].to_float());
 		if (!json_attachment["test_model"].is_undefined())
 		{
-			attachment.test_model = PathHelp::make_absolute(PathHelp::get_fullpath(filename), json_attachment["test_model"].to_string());
+			attachment.test_model = PathHelp::make_absolute(PathHelp::fullpath(filename), json_attachment["test_model"].to_string());
 			attachment.test_scale = json_attachment["test_scale"].to_float();
 		}
 		desc.attachment_points.push_back(attachment);
@@ -115,7 +115,7 @@ void ModelDesc::save(const std::string &filename)
 		json_attachment["position"]["x"].set_number(attachment.position.x);
 		json_attachment["position"]["y"].set_number(attachment.position.y);
 		json_attachment["position"]["z"].set_number(attachment.position.z);
-		json_attachment["test_model"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), attachment.test_model));
+		json_attachment["test_model"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), attachment.test_model));
 		json_attachment["test_scale"].set_number(attachment.test_scale);
 		json_attachment_points.items().push_back(json_attachment);
 	}
@@ -140,7 +140,7 @@ void ModelDesc::save(const std::string &filename)
 	json["attachment_points"] = json_attachment_points;
 	json["materials"] = json_materials;
 	json["emitters"] = json_emitters;
-	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::get_fullpath(filename), fbx_filename));
+	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), fbx_filename));
 
 	File::write_all_text(filename, json.to_json());
 }

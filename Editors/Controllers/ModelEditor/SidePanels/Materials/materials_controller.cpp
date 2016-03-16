@@ -13,8 +13,8 @@ MaterialsController::MaterialsController()
 	materials = std::make_shared<RolloutView>("MATERIALS");
 	material = std::make_shared<RolloutView>("MATERIAL");
 
-	view->content_view()->add_subview(materials);
-	view->content_view()->add_subview(material);
+	view->content_view()->add_child(materials);
+	view->content_view()->add_child(material);
 
 	materials_list = std::make_shared<RolloutList>();
 	two_sided_property = std::make_shared<RolloutTextFieldProperty>("TWO SIDED");
@@ -23,11 +23,11 @@ MaterialsController::MaterialsController()
 
 	materials_list->set_allow_edit(false);
 
-	materials->content->add_subview(materials_list);
+	materials->content->add_child(materials_list);
 
-	material->content->add_subview(two_sided_property);
-	material->content->add_subview(alpha_test_property);
-	material->content->add_subview(transparent_property);
+	material->content->add_child(two_sided_property);
+	material->content->add_child(alpha_test_property);
+	material->content->add_child(transparent_property);
 
 	slots.connect(materials_list->sig_selection_changed(), this, &MaterialsController::materials_list_selection_changed);
 	slots.connect(materials_list->sig_selection_clicked(), this, &MaterialsController::materials_list_selection_clicked);

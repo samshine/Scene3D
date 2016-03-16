@@ -1,17 +1,16 @@
 
 #pragma once
 
-#include "Model/ClientWorld/client_world.h"
 #include "player_pawn.h"
 
-class ClientPlayerPawn : public PlayerPawn, public ClientObject
+class ClientPlayerPawn : public PlayerPawn
 {
 public:
-	ClientPlayerPawn();
+	ClientPlayerPawn(GameWorld *world);
 	~ClientPlayerPawn();
 
 	void tick() override;
-	void frame(float time_elapsed, float interpolated_time) override;
+	void frame() override;
 
 	void net_create(const uicore::JsonValue &net_event);
 	void net_update(const uicore::JsonValue &net_event);

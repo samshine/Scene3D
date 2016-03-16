@@ -13,15 +13,15 @@ class MapObjectRolloutView : public RolloutView
 public:
 	MapObjectRolloutView() : RolloutView("OBJECT")
 	{
-		id = content->add_subview<RolloutTextFieldProperty>("ID");
-		type = content->add_subview<RolloutTextFieldProperty>("TYPE");
-		position = content->add_subview<RolloutPositionProperty>("POSITION");
-		dir = content->add_subview<RolloutTextFieldProperty>("DIR");
-		up = content->add_subview<RolloutTextFieldProperty>("UP");
-		tilt = content->add_subview<RolloutTextFieldProperty>("TILT");
-		scale = content->add_subview<RolloutTextFieldProperty>("SCALE");
-		mesh = content->add_subview<RolloutBrowseFieldProperty>("MODEL");
-		fields = content->add_subview<RolloutTextFieldProperty>("FIELDS");
+		id = content->add_child<RolloutTextFieldProperty>("ID");
+		type = content->add_child<RolloutTextFieldProperty>("TYPE");
+		position = content->add_child<RolloutPositionProperty>("POSITION");
+		dir = content->add_child<RolloutTextFieldProperty>("DIR");
+		up = content->add_child<RolloutTextFieldProperty>("UP");
+		tilt = content->add_child<RolloutTextFieldProperty>("TILT");
+		scale = content->add_child<RolloutTextFieldProperty>("SCALE");
+		mesh = content->add_child<RolloutBrowseFieldProperty>("MODEL");
+		fields = content->add_child<RolloutTextFieldProperty>("FIELDS");
 	}
 
 	std::shared_ptr<RolloutTextFieldProperty> id;

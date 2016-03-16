@@ -8,5 +8,5 @@ public:
 	void set_text(const std::string &text);
 
 private:
-	std::shared_ptr<uicore::LabelView> label;
+	std::shared_ptr<uicore::LabelBaseView> label;
 };

@@ -14,7 +14,7 @@ EnvironmentController::EnvironmentController()
 	environment = std::make_shared<RolloutView>("ENVIRONMENT");
 	map_model_property = std::make_shared<RolloutBrowseFieldProperty>("MAP MODEL");
 
-	environment->content->add_subview(map_model_property);
+	environment->content->add_child(map_model_property);
 
 	character = std::make_shared<RolloutView>("CHARACTER CONTROLLER");
 	gravity_property = std::make_shared<RolloutTextFieldProperty>("GRAVITY");
@@ -29,20 +29,20 @@ EnvironmentController::EnvironmentController()
 	air_movement_property = std::make_shared<RolloutTextFieldProperty>("AIR MOVEMENT");
 	bounce_property = std::make_shared<RolloutTextFieldProperty>("BOUNCE");
 
-	character->content->add_subview(gravity_property);
-	character->content->add_subview(height_property);
-	character->content->add_subview(radius_property);
-	character->content->add_subview(step_height_property);
-	character->content->add_subview(mass_property);
-	character->content->add_subview(acceleration_property);
-	character->content->add_subview(run_speed_property);
-	character->content->add_subview(friction_property);
-	character->content->add_subview(air_resistance_property);
-	character->content->add_subview(air_movement_property);
-	character->content->add_subview(bounce_property);
+	character->content->add_child(gravity_property);
+	character->content->add_child(height_property);
+	character->content->add_child(radius_property);
+	character->content->add_child(step_height_property);
+	character->content->add_child(mass_property);
+	character->content->add_child(acceleration_property);
+	character->content->add_child(run_speed_property);
+	character->content->add_child(friction_property);
+	character->content->add_child(air_resistance_property);
+	character->content->add_child(air_movement_property);
+	character->content->add_child(bounce_property);
 
-	view->content_view()->add_subview(environment);
-	view->content_view()->add_subview(character);
+	view->content_view()->add_child(environment);
+	view->content_view()->add_child(character);
 
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &EnvironmentController::map_model_updated);
 	slots.connect(map_model_property->sig_browse(), this, &EnvironmentController::map_model_property_browse);
@@ -83,7 +83,7 @@ EnvironmentController::EnvironmentController()
 
 void EnvironmentController::map_model_updated()
 {
-	map_model_property->browse_field->set_text(PathHelp::get_basename(ModelAppModel::instance()->map_model));
+	map_model_property->browse_field->set_text(PathHelp::basename(ModelAppModel::instance()->map_model));
 }
 
 void EnvironmentController::map_model_property_browse()
@@ -95,7 +95,7 @@ void EnvironmentController::map_model_property_browse()
 	dialog.set_filename(ModelAppModel::instance()->map_model);
 	if (dialog.show())
 	{
-		ModelAppModel::instance()->undo_system.execute<SetMapModelCommand>(dialog.get_filename());
+		ModelAppModel::instance()->undo_system.execute<SetMapModelCommand>(dialog.filename());
 	}
 }
 

@@ -117,7 +117,7 @@ CacheLoadTexture::CacheLoadTexture(SceneEngineImpl *cache, Resource<TexturePtr> 
 
 void CacheLoadTexture::process_work()
 {
-	std::string extension = PathHelp::get_extension(material_name);
+	std::string extension = PathHelp::extension(material_name);
 	std::string filename = material_name;
 
 	if (!File::exists(filename))
@@ -183,7 +183,7 @@ void CacheLoadTexture::work_completed()
 				ComPtr<ID3D11Debug> debug;
 				ComPtr<ID3D11InfoQueue> info_queue;
 
-				ID3D11Device *device = D3DTarget::get_device_handle(cache->gc);
+				ID3D11Device *device = D3DTarget::device_handle(cache->gc);
 
 				HRESULT result = device->QueryInterface(__uuidof(ID3D11Debug), (void**)debug.output_variable());
 				if (FAILED(result))
@@ -247,7 +247,7 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 {
 	try
 	{
-		std::string base_path = PathHelp::get_fullpath(material_name);
+		std::string base_path = PathHelp::fullpath(material_name);
 		auto xml = XmlDocument::load(File::open_existing(material_name), false);
 		auto frames = xml->document_element()->named_item("frames");
 		auto video = xml->document_element()->named_item("video");
@@ -303,7 +303,7 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 			int grid_width = 16;
 			int grid_height = 16;
 			PixelBufferPtr image(width, height, tf_srgb8_alpha8);
-			Vec4ub *pixels = image.get_data<Vec4ub>();
+			Vec4ub *pixels = image.data<Vec4ub>();
 			for (int y = 0; y < height; y++)
 			{
 				for (int x = 0; x < width; x++)
@@ -336,17 +336,17 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 		image->premultiply_alpha();
 
 		// Convert to DXT
-		/*if (is_power_of_two(image.get_width(), image.get_height()))
+		/*if (is_power_of_two(image.width(), image.height()))
 		{
 			image = image.to_format(tf_rgba8);
 
 			crn_comp_params comp_params;
-			comp_params.m_width = image.get_width();
-			comp_params.m_height = image.get_height();
+			comp_params.m_width = image.width();
+			comp_params.m_height = image.height();
 			comp_params.m_format = cCRNFmtDXT5;
 			comp_params.m_dxt_quality = cCRNDXTQualitySuperFast;
 			comp_params.m_file_type = cCRNFileTypeDDS;
-			comp_params.m_pImages[0][0] = image.get_data<crn_uint32>();
+			comp_params.m_pImages[0][0] = image.data<crn_uint32>();
 			if (linear)
 				comp_params.set_flag(cCRNCompFlagPerceptual, false);
 
@@ -361,10 +361,10 @@ void CacheLoadTexture::load_clanlib_texture(const std::string &material_name)
 				DataBuffer buffer(dds_file_data, dds_file_size);
 				IODevice_Memory file(buffer);
 				PixelBufferSetPtr set = DDSProvider::load(file);
-				int levels = set.get_max_level();
+				int levels = set.max_level();
 				for (int i = 0; i < levels; i++)
 				{
-					loaded_levels.push_back(TextureLevel(set.get_image(0, i)));
+					loaded_levels.push_back(TextureLevel(set.image(0, i)));
 				}
 			}
 			catch (...)
@@ -427,7 +427,7 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 		if (type == 0)
 		{
 			PixelBufferPtr image(1, 1, tf_rgba8);
-			image.get_data_uint32()[0] = 0xff0000ff;
+			image.data_uint32()[0] = 0xff0000ff;
 
 			pixelbuffer_set = PixelBufferSetPtr(image);
 			//throw Exception("Unsupported JPEG compression type");
@@ -440,15 +440,15 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 				{
 					DataBuffer image_data(width * height);
 					file.seek(mipmap_offsets[level]);
-					file.read(image_data.get_data(), image_data.get_size());
+					file.read(image_data.data(), image_data.size());
 
 					PixelBufferPtr image(width, height, tf_srgb8_alpha8);
 					PixelBufferPtrLock4ub output(image);
 
 					for (unsigned int y = 0; y < height; y++)
 					{
-						unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data.get_data() + width * y);
-						Vec4ub *output_line = output.get_row(y);
+						unsigned char *input_line = reinterpret_cast<unsigned char*>(image_data.data() + width * y);
+						Vec4ub *output_line = output.row(y);
 						for (unsigned int x = 0; x < width; x++)
 						{
 							unsigned char alpha = (palette_argb[input_line[x]] >> 24) & 0xff;
@@ -524,13 +524,13 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 
 					DataBuffer image(s3tc_size);
 					file.seek(mipmap_offsets[level]);
-					file.read(image.get_data(), image.get_size());
+					file.read(image.data(), image.size());
 
 					// For some reason the mipmap sizes specified in the file appear to be incorrect.
 					// I.e. a 8x2 DXT1 image only has 8 bytes of data, while it should have 16 bytes.
 					// This code repeats the data available until we get a full image.
 					unsigned int mipmap_size = min(s3tc_size, mipmap_sizes[level]);
-					unsigned char *image_data = reinterpret_cast<unsigned char *>(image.get_data());
+					unsigned char *image_data = reinterpret_cast<unsigned char *>(image.data());
 					for (unsigned int i = mipmap_size; i < s3tc_size; i++)
 						image_data[i] = image_data[i % mipmap_size];
 
@@ -564,7 +564,7 @@ void CacheLoadTexture::load_blp_texture(const std::string &material_name)
 	{
 		loaded_levels.clear();
 		PixelBufferPtr image(1, 1, tf_rgba8);
-		image.get_data_uint32()[0] = 0xff0000ff;
+		image.data_uint32()[0] = 0xff0000ff;
 		loaded_levels.push_back(TextureLevel(image));
 	}
 */

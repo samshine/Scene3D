@@ -8,7 +8,7 @@ namespace
 {
 	std::string settings_filename()
 	{
-		auto appdata_path = Directory::get_appdata("ShooterGame", "ShooterGame", "1");
+		auto appdata_path = Directory::appdata("ShooterGame", "ShooterGame", "1");
 		return PathHelp::combine(appdata_path, "settings.json");
 	}
 }

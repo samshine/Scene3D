@@ -19,13 +19,13 @@ void RolloutList::clear()
 {
 	_selected_item = -1;
 	for (auto &item : _items)
-		item->remove_from_super();
+		item->remove_from_parent();
 	_items.clear();
 }
 
 int RolloutList::add_item(const std::string &text)
 {
-	auto item = content_view()->add_subview<RolloutListItemView>(this);
+	auto item = content_view()->add_child<RolloutListItemView>(this);
 	item->label->set_text(text);
 	item->textfield->set_text(text);
 	_items.push_back(item);
@@ -40,7 +40,7 @@ void RolloutList::remove_item(int index)
 	if (selected_item() == index)
 		clear_selection();
 
-	_items[index]->remove_from_super();
+	_items[index]->remove_from_parent();
 	_items.erase(_items.begin() + index);
 }
 
@@ -118,16 +118,16 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 	style()->set("padding: 3px");
 	style()->set("border-radius: 2px");
 
-	label = std::make_shared<LabelView>();
+	label = std::make_shared<LabelBaseView>();
 	label->style()->set("font: 12px/18px 'Lato'");
 	label->style()->set("color: white");
-	add_subview(label);
+	add_child(label);
 
-	textfield = std::make_shared<TextFieldView>();
+	textfield = std::make_shared<TextFieldBaseView>();
 	textfield->set_hidden();
 	textfield->style()->set("font: 12px/18px 'Lato'");
 	textfield->style()->set("color: white");
-	add_subview(textfield);
+	add_child(textfield);
 
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
 	{

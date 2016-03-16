@@ -13,7 +13,7 @@ enum class RobotPlayerMode
 class RobotPlayerPawn : public ServerPlayerPawn
 {
 public:
-	RobotPlayerPawn(const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
+	RobotPlayerPawn(GameWorld *world, const std::string &owner, std::shared_ptr<SpawnPoint> spawn);
 
 	void tick() override;
 	void apply_impulse(const uicore::Vec3f &force) override;

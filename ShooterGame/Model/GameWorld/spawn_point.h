@@ -4,7 +4,7 @@
 class SpawnPoint : public GameObject
 {
 public:
-	SpawnPoint(const uicore::Vec3f &pos, float dir, float up, float tilt, const std::string &team);
+	SpawnPoint(GameWorld *world, const uicore::Vec3f &pos, float dir, float up, float tilt, const std::string &team);
 
 	void tick() override;
 

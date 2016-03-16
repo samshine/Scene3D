@@ -6,10 +6,10 @@
 
 using namespace uicore;
 
-PlayerRagdoll::PlayerRagdoll(const Vec3f &pos, const Quaternionf &orientation)
+PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternionf &orientation) : GameObject(world)
 {
-	//auto model = SceneModel::create(client_world()->scene, "Models/Kachujin/Kachujin.cmodel");
-	//scene_object = SceneObject::create(client_world()->scene, model);
+	//auto model = SceneModel::create(game_world()->client()->scene(), "Models/Kachujin/Kachujin.cmodel");
+	//scene_object = SceneObject::create(game_world()->client()->scene(), model);
 
 	float scale = 0.55f;
 	float margin = 0.1f * scale;
@@ -110,18 +110,18 @@ PlayerRagdoll::~PlayerRagdoll()
 
 SceneObjectPtr PlayerRagdoll::scene_box(const uicore::Vec3f &box_size)
 {
-	auto &model = client_world()->box_models[box_size];
+	auto &model = game_world()->client()->box_models()[box_size];
 	if (!model)
-		model = SceneModel::create(client_world()->scene, create_box(box_size));
-	return SceneObject::create(client_world()->scene, model);
+		model = SceneModel::create(game_world()->client()->scene(), create_box(box_size));
+	return SceneObject::create(game_world()->client()->scene(), model);
 }
 
 SceneObjectPtr PlayerRagdoll::scene_capsule(float radius, float height)
 {
-	auto &model = client_world()->capsule_models[Vec2f(radius, height)];
+	auto &model = game_world()->client()->capsule_models()[Vec2f(radius, height)];
 	if (!model)
-		model = SceneModel::create(client_world()->scene, create_box(Vec3f(radius, height * 0.5f, radius)));
-	return SceneObject::create(client_world()->scene, model);
+		model = SceneModel::create(game_world()->client()->scene(), create_box(Vec3f(radius, height * 0.5f, radius)));
+	return SceneObject::create(game_world()->client()->scene(), model);
 }
 
 void PlayerRagdoll::calc_constraint_location(JointName joint, PartName part_a, Vec3f pos_a, PartName part_b, Vec3f pos_b, uicore::Quaternionf rotation)
@@ -177,7 +177,7 @@ void PlayerRagdoll::tick()
 	}
 }
 
-void PlayerRagdoll::frame(float time_elapsed, float interpolated_time)
+void PlayerRagdoll::frame()
 {
 	/*
 	std::vector<Vec3f> positions;
@@ -192,9 +192,9 @@ void PlayerRagdoll::frame(float time_elapsed, float interpolated_time)
 
 	for (int i = 0; i < total_parts; i++)
 	{
-		objects[i]->update(time_elapsed);
-		objects[i]->set_position(mix(prev_pos[i], next_pos[i], interpolated_time));
-		objects[i]->set_orientation(Quaternionf::slerp(prev_orientation[i], next_orientation[i], interpolated_time));
+		objects[i]->update(frame_time_elapsed());
+		objects[i]->set_position(mix(prev_pos[i], next_pos[i], frame_interpolated_time()));
+		objects[i]->set_orientation(Quaternionf::slerp(prev_orientation[i], next_orientation[i], frame_interpolated_time()));
 	}
 }
 

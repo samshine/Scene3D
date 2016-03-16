@@ -30,9 +30,9 @@ void AssetCompilerImpl::build()
 			{
 				for (const auto &filename : Directory::files(path))
 				{
-					auto path = PathHelp::get_fullpath(filename);
-					auto name = PathHelp::get_basename(filename);
-					auto ext = PathHelp::get_extension(filename);
+					auto path = PathHelp::fullpath(filename);
+					auto name = PathHelp::basename(filename);
+					auto ext = PathHelp::extension(filename);
 
 					auto output_path = PathHelp::combine(build_directory, PathHelp::make_relative(asset_directory, path));
 

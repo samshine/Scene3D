@@ -49,16 +49,16 @@ void GridView::set_cell(int column, int row, const std::shared_ptr<uicore::View>
 	auto &cell = cells[column + row * cell_width];
 	if (cell)
 	{
-		cell->remove_from_super();
+		cell->remove_from_parent();
 		cell = nullptr;
 	}
 
-	add_subview(view);
+	add_child(view);
 	cell = view;
 	set_needs_layout();
 }
 
-void GridView::layout_subviews(const CanvasPtr &canvas)
+void GridView::layout_children(const CanvasPtr &canvas)
 {
 	if (maximized_row != -1 && maximized_column != -1)
 	{
