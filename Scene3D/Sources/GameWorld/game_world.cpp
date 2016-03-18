@@ -39,6 +39,9 @@ void GameWorld::update(uicore::Vec2i mouse_movement, bool has_focus)
 		int arrival_tick_time = impl->lock_step_time->arrival_tick_time() + i;
 		float tick_time_elapsed = impl->lock_step_time->tick_time_elapsed();
 
+		kinematic_collision()->step_simulation_once(tick_time_elapsed);
+		dynamic_collision()->step_simulation_once(tick_time_elapsed);
+
 		impl->net_tick = GameTick(tick_time_elapsed, receive_tick_time, arrival_tick_time);
 		impl->network->receive_events(receive_tick_time);
 		impl->tick();
@@ -260,15 +263,6 @@ void GameWorldImpl::net_event_received(const std::string &sender, const NetGameE
 						remote_objects[obj_id] = instance;
 					}
 				}
-				/*
-				std::shared_ptr<GameObject> instance;
-				std::string type = net_event.get_argument(1);
-
-				if (type == "player-pawn")
-				instance = std::make_shared<ClientPlayerPawn>(this);
-				else if (type == "rocket")
-				instance = std::make_shared<Rocket>(this, net_event);
-				*/
 			}
 		}
 	}

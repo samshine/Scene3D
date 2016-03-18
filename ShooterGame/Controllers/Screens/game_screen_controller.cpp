@@ -42,7 +42,7 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 
 	if (host_game)
 	{
-		server_thread = std::thread(&GameScreenController::server_thread_main, this, hostname, port);
+		server_thread = std::thread(&GameScreenController::server_thread_main, this, !hostname.empty() ? hostname : "localhost", port);
 
 		std::unique_lock<std::mutex> lock(server_mutex);
 		server_condition_var.wait(lock, [&]() { return server_running; });
@@ -113,7 +113,11 @@ void GameScreenController::server_thread_main(std::string hostname, std::string 
 	}
 	catch (...)
 	{
+		std::unique_lock<std::mutex> lock(server_mutex);
 		server_exception = std::current_exception();
+		server_running = true;
+		lock.unlock();
+		server_condition_var.notify_all();
 	}
 }
 
@@ -176,7 +180,7 @@ void GameScreenController::update()
 	}
 	else
 	{
-		auto player = GameMaster::instance()->client_player;
+		auto player = GameMaster::instance(client_game.get())->client_player;
 		if (player)
 		{
 			std::string health_text = string_format("Health: %1%%", (int)std::ceil(player->get_health()));
@@ -195,7 +199,7 @@ void GameScreenController::update()
 			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
 		}
 
-		std::string score_text = string_format("Score: %1", GameMaster::instance()->score);
+		std::string score_text = string_format("Score: %1", GameMaster::instance(client_game.get())->score);
 
 		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
 		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
@@ -249,11 +253,11 @@ void GameScreenController::update()
 			y += font_small_metrics.line_height();
 		}
 
-		if (GameMaster::instance()->announcement_timeout > 0.0f)
+		if (GameMaster::instance(client_game.get())->announcement_timeout > 0.0f)
 		{
-			auto announcement_text1 = GameMaster::instance()->announcement_text1;
-			auto announcement_text2 = GameMaster::instance()->announcement_text2;
-			float alpha = clamp(GameMaster::instance()->announcement_timeout, 0.0f, 1.0f);
+			auto announcement_text1 = GameMaster::instance(client_game.get())->announcement_text1;
+			auto announcement_text2 = GameMaster::instance(client_game.get())->announcement_text2;
+			float alpha = clamp(GameMaster::instance(client_game.get())->announcement_timeout, 0.0f, 1.0f);
 			Colorf black = Colorf::black;
 			Colorf color1 = Colorf::lightgoldenrodyellow;
 			Colorf color2 = Colorf::whitesmoke;

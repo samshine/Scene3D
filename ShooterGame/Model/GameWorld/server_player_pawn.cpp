@@ -42,8 +42,8 @@ void ServerPlayerPawn::on_player_pawn_input(const std::string &sender, const uic
 	key_left.next_pressed = message["left"].to_boolean();
 	key_right.next_pressed = message["right"].to_boolean();
 	key_jump.next_pressed = message["jump"].to_boolean();
-	key_fire_primary.next_pressed = message["fire-primary"].to_boolean();
-	key_fire_secondary.next_pressed = message["fire-secondary"].to_boolean();
+	key_fire_primary.next_pressed = message["firePrimary"].to_boolean();
+	key_fire_secondary.next_pressed = message["fireSecondary"].to_boolean();
 	key_weapon = message["weapon"].to_int();
 	dir = message["dir"].to_float();
 	up = message["up"].to_float();
@@ -61,8 +61,7 @@ void ServerPlayerPawn::apply_damage(float damage)
 
 	if (health <= 0.0f && last_health > 0.0f)
 	{
-		if (GameMaster::instance())
-			GameMaster::instance()->player_killed(cast<ServerPlayerPawn>());
+		GameMaster::instance(this)->player_killed(cast<ServerPlayerPawn>());
 	}
 }
 

@@ -13,10 +13,13 @@ class GameMaster : public GameObject
 {
 public:
 	static void create(GameWorld *world);
-	static GameMaster *instance();
+	static GameMaster *instance(GameWorld *world);
+	static GameMaster *instance(GameObject *obj);
 
 	GameMaster(GameWorld *world);
 	~GameMaster();
+
+	void setup_game();
 
 	void tick() override;
 
@@ -40,8 +43,6 @@ public:
 	void net_peer_disconnected(const std::string &peer_id);
 
 	void player_killed(std::shared_ptr<ServerPlayerPawn> player);
-
-	const int static_id = -1;
 
 private:
 	void on_player_killed(const std::string &sender, const uicore::JsonValue &message);

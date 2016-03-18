@@ -2,60 +2,62 @@
 #include "precomp.h"
 #include "game_master.h"
 #include "server_player_pawn.h"
+#include "client_player_pawn.h"
 #include "robot_player_pawn.h"
 #include "player_ragdoll.h"
 #include "powerup.h"
 #include "elevator.h"
 #include "flag.h"
 #include "spawn_point.h"
+#include "rocket.h"
 #include <unordered_map>
 
 using namespace uicore;
 
-namespace
+//#define NO_BOTS
+
+void GameMaster::create(GameWorld *world)
 {
-#if _MSC_VER < 1900
-	GameMaster __declspec(thread) *instance_ptr = nullptr;
-#else
-	thread_local GameMaster *instance_ptr = nullptr;
-#endif
+	auto game_master = std::make_shared<GameMaster>(world);
+	world->add_static_object(1, game_master);
+	game_master->setup_game();
 }
 
-#define NO_BOTS
-
-GameMaster *GameMaster::instance()
+GameMaster *GameMaster::instance(GameWorld *world)
 {
-	return instance_ptr;
+	return (GameMaster *)world->local_object(-1).get();
+}
+
+GameMaster *GameMaster::instance(GameObject *obj)
+{
+	return instance(obj->game_world());
 }
 
 GameMaster::GameMaster(GameWorld *world) : GameObject(world)
 {
 	func_received_event("player-killed") = bind_member(this, &GameMaster::on_player_killed);
-	//func_create_object("foobar") = [](const JsonValue &args) -> GameObjectPtr { return nullptr; };
+	func_create_object("player-pawn") = [&](const JsonValue &args) -> GameObjectPtr { auto pawn = std::make_shared<ClientPlayerPawn>(game_world()); pawn->net_create(args); return pawn; };
+	func_create_object("rocket") = [&](const JsonValue &args) -> GameObjectPtr { return std::make_shared<Rocket>(game_world(), args); };
+
 	slots.connect(sig_peer_connected(), this, &GameMaster::net_peer_connected);
 	slots.connect(sig_peer_disconnected(), this, &GameMaster::net_peer_disconnected);
-	instance_ptr = this;
 }
 
 GameMaster::~GameMaster()
 {
-	instance_ptr = nullptr;
 }
 
-void GameMaster::create(GameWorld *world)
+void GameMaster::setup_game()
 {
-	auto game_master = std::make_shared<GameMaster>(world);
-
-	int level_obj_id = 1;
-	world->add_static_object(level_obj_id++, game_master);
+	int level_obj_id = 2;
 
 	std::string map_name = "Levels/Liandri/liandri2.cmap";
 
-	game_master->map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name));
+	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name));
 
 	std::unordered_map<std::string, Physics3DShapePtr> level_shapes;
 
-	for (const auto &item : game_master->map_data->objects)
+	for (const auto &item : map_data->objects)
 	{
 		if (item.type != "Level")
 			continue;
@@ -76,18 +78,18 @@ void GameMaster::create(GameWorld *world)
 
 		auto shape = (item.scale == 1.0f) ? it->second : Physics3DShape::scale_model(it->second, scale);
 
-		game_master->level_collision_objects.push_back(Physics3DObject::rigid_body(game_master->game_world()->kinematic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
-		game_master->level_collision_objects.push_back(Physics3DObject::rigid_body(game_master->game_world()->dynamic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->kinematic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->dynamic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
 	}
 
-	for (auto obj : game_master->level_collision_objects)
+	for (auto obj : level_collision_objects)
 	{
 		obj->set_static_object();
 	}
 
-	if (game_master->game_world()->client())
+	if (game_world()->client())
 	{
-		game_master->game_world()->client()->music_player().play(
+		game_world()->client()->music_player().play(
 		{
 			"Resources/Assets/Music/game1.ogg",
 			"Resources/Assets/Music/game2.ogg",
@@ -100,9 +102,9 @@ void GameMaster::create(GameWorld *world)
 		colors.push_back(Colorf(0.001f, 0.002f, 0.005f, 1.0f));
 		colors.push_back(Colorf(0.001f, 0.002f, 0.01f, 1.0f));
 		colors.push_back(Colorf(0.001f, 0.002f, 0.02f, 1.0f));
-		game_master->game_world()->client()->scene()->set_skybox_gradient(colors);
+		game_world()->client()->scene()->set_skybox_gradient(colors);
 
-		for (const auto &item : game_master->map_data->objects)
+		for (const auto &item : map_data->objects)
 		{
 			if (item.type != "Static" && item.type != "Level")
 				continue;
@@ -112,14 +114,14 @@ void GameMaster::create(GameWorld *world)
 			Vec3f rotate(item.dir, item.up, item.tilt);
 			std::string model_name = item.mesh;
 			std::string animation_name = item.animation;
-			game_master->game_world()->client()->objects().push_back(SceneObject::create(game_master->game_world()->client()->scene(), SceneModel::create(game_master->game_world()->client()->scene(), model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
-			game_master->game_world()->client()->objects().back()->play_animation(animation_name, true);
+			game_world()->client()->objects().push_back(SceneObject::create(game_world()->client()->scene(), SceneModel::create(game_world()->client()->scene(), model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+			game_world()->client()->objects().back()->play_animation(animation_name, true);
 		}
 
-		game_master->game_world()->client()->load_buttons("Resources/Config/input.json");
+		game_world()->client()->load_buttons("Resources/Config/input.json");
 	}
 
-	for (const auto &objdesc : game_master->map_data->objects)
+	for (const auto &objdesc : map_data->objects)
 	{
 		Quaternionf orientation(objdesc.up, objdesc.dir, objdesc.tilt, angle_degrees, order_YXZ);
 
@@ -128,7 +130,7 @@ void GameMaster::create(GameWorld *world)
 		if (objdesc.type == "Elevator")
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
-			world->add_static_object(level_obj_id++, std::make_shared<Elevator>(world, objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale));
+			game_world()->add_static_object(level_obj_id++, std::make_shared<Elevator>(game_world(), objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale));
 		}
 		else if (objdesc.type == "Powerup")
 		{
@@ -136,36 +138,36 @@ void GameMaster::create(GameWorld *world)
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			float respawn_time = fields["respawnTime"].to_float();
 
-			world->add_object(std::make_shared<Powerup>(world, objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, respawn_time, powerup_type));
+			game_world()->add_object(std::make_shared<Powerup>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, respawn_time, powerup_type));
 		}
 		else if (objdesc.type == "Flag")
 		{
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			std::string team = fields["team"].to_string();
 
-			world->add_object(std::make_shared<Flag>(world, objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, team));
+			game_world()->add_object(std::make_shared<Flag>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, team));
 		}
 		else if (objdesc.type == "SpawnPoint")
 		{
 			std::string team = fields["team"].to_string();
 
-			auto spawn = std::make_shared<SpawnPoint>(world, objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
-			world->add_object(spawn);
-			game_master->spawn_points.push_back(spawn);
+			auto spawn = std::make_shared<SpawnPoint>(game_world(), objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
+			game_world()->add_object(spawn);
+			spawn_points.push_back(spawn);
 		}
 	}
 
 #ifndef NO_BOTS
-	if (!world()->client)
+	if (!game_world()->client())
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			float random = rand() / (float)RAND_MAX;
-			int spawn_index = (int)std::round((world()->spawn_points.size() - 1) * random);
+			int spawn_index = (int)std::round((spawn_points.size() - 1) * random);
 
-			auto pawn = std::make_shared<RobotPlayerPawn>(world, "server", game_master->spawn_points[spawn_index]);
-			game_master->add_object(pawn);
-			game_master->bots.push_back(pawn);
+			auto pawn = std::make_shared<RobotPlayerPawn>(game_world(), "server", spawn_points[spawn_index]);
+			game_world()->add_object(pawn);
+			bots.push_back(pawn);
 		}
 	}
 #endif

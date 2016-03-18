@@ -63,13 +63,15 @@ void RobotPlayerPawn::tick_stationary()
 
 void RobotPlayerPawn::tick_path()
 {
+	auto game_master = GameMaster::instance(this);
+
 	if (current_path_index == current_path.size())
 	{
 		int nearest_segment = -1;
 		float nearest_dist2 = 0.0f;
 
 		int index = 0;
-		for (const auto &node : GameMaster::instance()->map_data->path_nodes)
+		for (const auto &node : game_master->map_data->path_nodes)
 		{
 			auto v = node.position - get_position();
 			float dist2 = Vec3f::dot(v, v);
@@ -84,14 +86,14 @@ void RobotPlayerPawn::tick_path()
 		if (nearest_segment == -1)
 			return;
 
-		current_path = create_path_steps(nearest_segment, rand() % GameMaster::instance()->map_data->path_nodes.size(), 100, -1);
+		current_path = create_path_steps(nearest_segment, rand() % game_master->map_data->path_nodes.size(), 100, -1);
 		current_path_index = 0;
 	}
 
 	if (current_path_index == current_path.size())
 		return;
 
-	auto path_point = GameMaster::instance()->map_data->path_nodes[current_path[current_path_index]].position;
+	auto path_point = game_master->map_data->path_nodes[current_path[current_path_index]].position;
 
 	auto path_pos = Vec2f(path_point.x, path_point.z);
 	auto robot_pos = Vec2f(get_position().x, get_position().z);
@@ -135,7 +137,9 @@ void RobotPlayerPawn::tick_path()
 
 std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_segment, int max_depth, int avoid_segment)
 {
-	std::vector<bool> visited(GameMaster::instance()->map_data->path_nodes.size());
+	auto game_master = GameMaster::instance(this);
+
+	std::vector<bool> visited(game_master->map_data->path_nodes.size());
 
 	if (avoid_segment != -1)
 		visited[avoid_segment] = true;
@@ -149,7 +153,7 @@ std::vector<int> RobotPlayerPawn::create_path_steps(int start_segment, int end_s
 	int current_depth = 0;
 	while (current_segment != end_segment && current_depth < max_depth)
 	{
-		const auto &segment = GameMaster::instance()->map_data->path_nodes[current_segment];
+		const auto &segment = game_master->map_data->path_nodes[current_segment];
 
 		bool found_end = false;
 		for (auto next_segment : segment.connections)
@@ -219,7 +223,7 @@ void RobotPlayerPawn::track_target()
 {
 	std::shared_ptr<ServerPlayerPawn> target = nullptr;
 
-	for (auto it : GameMaster::instance()->server_players)
+	for (auto it : GameMaster::instance(this)->server_players)
 	{
 		auto other_pawn = it.second;
 		if (other_pawn.get() != this)

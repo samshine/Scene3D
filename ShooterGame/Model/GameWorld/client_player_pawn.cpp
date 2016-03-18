@@ -29,7 +29,7 @@ void ClientPlayerPawn::net_create(const JsonValue &net_event)
 	if (is_owner)
 	{
 		game_world()->client()->scene_camera() = camera;
-		GameMaster::instance()->client_player = cast<ClientPlayerPawn>();
+		GameMaster::instance(this)->client_player = cast<ClientPlayerPawn>();
 	}
 }
 

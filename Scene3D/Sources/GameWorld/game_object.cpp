@@ -12,12 +12,12 @@ GameObject::GameObject(GameWorld *world) : _game_world(world)
 
 void GameObject::send_event(const std::string &target, const JsonValue &message)
 {
-	game_world()->impl->send_event(target, game_world()->client() && remote_id(), message);
+	game_world()->impl->send_event(target, game_world()->client() ? remote_id() : local_id(), message);
 }
 
 void GameObject::received_event(const std::string &sender, const uicore::JsonValue &message)
 {
-	auto it = _func_received_event.find(message["type"].to_string());
+	auto it = _func_received_event.find(message["name"].to_string());
 	if (it != _func_received_event.end())
 		it->second(sender, message);
 }

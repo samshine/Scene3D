@@ -31,7 +31,7 @@ public:
 	float frame_time_elapsed() const;
 	float frame_interpolated_time() const;
 
-	std::function<void(const std::string &sender, const uicore::JsonValue &message)> func_received_event(const std::string &name) { return _func_received_event[name]; }
+	std::function<void(const std::string &sender, const uicore::JsonValue &message)> &func_received_event(const std::string &name) { return _func_received_event[name]; }
 
 	uicore::Signal<void(const std::string &peer_id)> &sig_peer_connected();
 	uicore::Signal<void(const std::string &peer_id)> &sig_peer_disconnected();
