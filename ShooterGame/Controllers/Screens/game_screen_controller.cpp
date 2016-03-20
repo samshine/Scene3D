@@ -207,28 +207,42 @@ void GameScreenController::update()
 		update_stats_cooldown = std::max(update_stats_cooldown - game_time().time_elapsed(), 0.0f);
 		if (update_stats_cooldown == 0.0f)
 		{
-			fps = string_format("%1 fps", fps_counter);
-			fps_counter = 0;
+			if (!frame_stats.empty())
+			{
+				FrameStatistics *min_frame = nullptr;
+				FrameStatistics *max_frame = nullptr;
 
-			update_stats.clear();
-			update_stats.push_back(string_format("Models drawn: %1", scene_engine()->models_drawn()));
-			update_stats.push_back(string_format("Instances drawn: %1", scene_engine()->instances_drawn()));
-			update_stats.push_back(string_format("Draw calls: %1", scene_engine()->draw_calls()));
-			update_stats.push_back(string_format("Triangles drawn: %1", scene_engine()->triangles_drawn()));
-			update_stats.push_back(string_format("Scene visits: %1", scene_engine()->scene_visits()));
-			update_stats.push_back("");
+				for (auto &frame : frame_stats)
+				{
+					if (!min_frame || min_frame->frame_ms > frame.frame_ms)
+						min_frame = &frame;
+					if (!max_frame || max_frame->frame_ms < frame.frame_ms)
+						max_frame = &frame;
+				}
 
-			for (const auto &result : client->scene_engine()->gpu_results())
-				update_stats.push_back(string_format("%1: %2 ms", result.name, Text::to_string(result.time_elapsed * 1000.0f, 2, false)));
+				fps = string_format("%1 fps (min %2 ms, max %3 ms)", frame_stats.size(), min_frame->frame_ms, max_frame->frame_ms);
 
-			update_stats_cooldown = 1.0f;
+				update_stats.clear();
+				update_stats.push_back(string_format("Models drawn: %1", max_frame->models_drawn));
+				update_stats.push_back(string_format("Instances drawn: %1", max_frame->instances_drawn));
+				update_stats.push_back(string_format("Draw calls: %1", max_frame->draw_calls));
+				update_stats.push_back(string_format("Triangles drawn: %1", max_frame->triangles_drawn));
+				update_stats.push_back(string_format("Scene visits: %1", max_frame->scene_visits));
+				update_stats.push_back("");
 
-			update_stats2 = ScopeTimerResults::timer_results();
+				for (const auto &result : max_frame->gpu_results)
+					update_stats.push_back(string_format("%1: %2 ms", result.name, Text::to_string(result.time_elapsed * 1000.0f, 2, false)));
 
-			//ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
+				update_stats_cooldown = 1.0f;
+
+				update_stats2 = max_frame->cpu_results;
+
+				frame_stats.clear();
+				//ping = string_format("%1 ms ping", LockStepClientTime::actual_ping);
+			}
 		}
 
-		fps_counter++;
+		frame_stats.push_back(Screen::instance()->last_frame_stats());
 
 		y = 200.0f + font_small_metrics.baseline_offset();
 		for (const auto &text : update_stats)

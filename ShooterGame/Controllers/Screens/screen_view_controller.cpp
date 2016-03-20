@@ -109,6 +109,8 @@ void Screen::run()
 		bool cursor_hidden = false;
 		Pointf mouse_down_pos;
 
+		last_fps_timestamp = System::microseconds();
+
 		while (RunLoop::process())
 		{
 			if (!screen_controller)
@@ -155,10 +157,25 @@ void Screen::run()
 
 			{
 				ScopeTimer scope_timer("DisplayWindow::flip");
-				window->flip(1);
+				window->flip(0);
 			}
 
 			ScopeTimerResults::end();
+
+			int64_t timestamp = System::microseconds();
+			int frame_ms = (int)((timestamp - last_fps_timestamp) / 1000);
+			last_fps_timestamp = timestamp;
+
+			FrameStatistics stats;
+			stats.frame_ms = frame_ms;
+			stats.cpu_results = ScopeTimerResults::timer_results();
+			//stats.gpu_results = client->scene_engine()->gpu_results();
+			//stats.models_drawn = scene_engine()->models_drawn();
+			//stats.instances_drawn = scene_engine()->instances_drawn();
+			//stats.draw_calls = scene_engine()->draw_calls();
+			//stats.triangles_drawn = scene_engine()->triangles_drawn();
+			//stats.scene_visits = scene_engine()->scene_visits();
+			frame_stats = stats;
 		}
 	}
 	catch (...)
