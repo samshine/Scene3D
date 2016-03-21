@@ -10,6 +10,8 @@ class SceneEngine
 public:
 	static std::shared_ptr<SceneEngine> create();
 
+	virtual void wait_next_frame_ready(const uicore::GraphicContextPtr &gc) = 0;
+
 	virtual int models_drawn() const = 0;
 	virtual int instances_drawn() const = 0;
 	virtual int draw_calls() const = 0;

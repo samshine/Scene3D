@@ -19,7 +19,7 @@ void GBufferPass::run()
 
 	setup_gbuffer();
 
-	inout.gc->set_frame_buffer(inout.fb_gbuffer);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_gbuffer);
 
 	if (inout.gc->shader_language() == shader_glsl)
 	{

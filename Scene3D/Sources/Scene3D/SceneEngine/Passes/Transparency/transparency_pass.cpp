@@ -17,7 +17,7 @@ void TransparencyPass::run()
 
 	setup();
 
-	inout.gc->set_frame_buffer(inout.fb_final_color);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
 
 	Size viewport_size = inout.viewport.size();
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());

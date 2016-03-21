@@ -14,8 +14,6 @@ using namespace uicore;
 
 ModelRender::ModelRender()
 {
-	instance_buffers.resize(buffer_count);
-	staging_buffers.resize(buffer_count);
 }
 
 void ModelRender::begin(SceneImpl *new_scene, const Mat4f &new_world_to_eye, const Mat4f &new_eye_to_projection, ModelRenderMode new_render_mode)
@@ -216,23 +214,37 @@ SceneLightProbeImpl *ModelRender::find_nearest_probe(const Vec3f &position)
 
 Texture2DPtr ModelRender::get_instance_buffer(int size)
 {
-	auto buffer = instance_buffers.front();
-	if (!buffer || buffer->size().width * buffer->size().height < size)
-		buffer = Texture2D::create(scene->engine()->render.gc, 256, std::max((size + 255) / 256, 1), tf_rgba32f);
+	auto &inout = scene->engine()->render;
+	auto &instance_buffers = inout.frames.front()->model_instance_buffers;
+	auto &next = inout.frames.front()->next_model_instance_buffer;
 
-	instance_buffers.push_back(buffer);
-	instance_buffers.pop_front();
+	if (instance_buffers.size() <= next)
+		instance_buffers.resize(next + 1);
+	auto &buffer = instance_buffers[next];
+
+	auto height_needed = std::max((size + 255) / 256, 1);
+	if (!buffer || buffer->size().height < height_needed)
+		buffer = Texture2D::create(scene->engine()->render.gc, 256, height_needed, tf_rgba32f);
+
+	next++;
 	return buffer;
 }
 
 StagingTexturePtr ModelRender::get_staging_buffer(int size)
 {
-	auto buffer = staging_buffers.front();
-	if (!buffer || buffer->size().width * buffer->size().height < size)
-		buffer = StagingTexture::create(scene->engine()->render.gc, 256, std::max((size + 255) / 256, 1), StagingDirection::to_gpu, tf_rgba32f);
+	auto &inout = scene->engine()->render;
+	auto &staging_buffers = inout.frames.front()->model_staging_buffers;
+	auto &next = inout.frames.front()->next_model_staging_buffer;
 
-	staging_buffers.push_back(buffer);
-	staging_buffers.pop_front();
+	if (staging_buffers.size() <= next)
+		staging_buffers.resize(next + 1);
+	auto &buffer = staging_buffers[next];
+
+	auto height_needed = std::max((size + 255) / 256, 1);
+	if (!buffer || buffer->size().height < height_needed)
+		buffer = StagingTexture::create(scene->engine()->render.gc, 256, height_needed, StagingDirection::to_gpu, tf_rgba32f);
+
+	next++;
 	return buffer;
 }
 

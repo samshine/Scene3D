@@ -48,7 +48,7 @@ void SkyboxPass::run()
 		inout.skybox_texture = texture;
 	}
 
-	inout.gc->set_frame_buffer(inout.fb_self_illumination);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_self_illumination);
 
 	Size viewport_size = inout.viewport.size();
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());

@@ -226,7 +226,7 @@ void LightsourceSimplePass::render()
 
 	//inout.timer.begin_time(inout.gc, "light(simple)");
 
-	inout.gc->set_frame_buffer(inout.fb_final_color);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
 
 	inout.gc->set_viewport(inout.viewport.size(), inout.gc->texture_image_y_axis());
 
@@ -234,12 +234,12 @@ void LightsourceSimplePass::render()
 
 	inout.gc->set_uniform_buffer(0, uniforms);
 	inout.gc->set_texture(0, light_instance_texture);
-	inout.gc->set_texture(1, inout.normal_z_gbuffer);
-	inout.gc->set_texture(2, inout.diffuse_color_gbuffer);
-	inout.gc->set_texture(3, inout.specular_color_gbuffer);
-	inout.gc->set_texture(4, inout.specular_level_gbuffer);
-	inout.gc->set_texture(5, inout.shadow_maps.shadow_maps);
-	inout.gc->set_texture(6, inout.self_illumination_gbuffer);
+	inout.gc->set_texture(1, inout.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.frames.front()->diffuse_color_gbuffer);
+	inout.gc->set_texture(3, inout.frames.front()->specular_color_gbuffer);
+	inout.gc->set_texture(4, inout.frames.front()->specular_level_gbuffer);
+	inout.gc->set_texture(5, inout.frames.front()->shadow_maps);
+	inout.gc->set_texture(6, inout.frames.front()->self_illumination_gbuffer);
 
 	inout.gc->set_blend_state(blend_state);
 

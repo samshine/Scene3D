@@ -50,12 +50,12 @@ void FinalPass::run()
 	ScopeTimeFunction();
 	//Texture2DPtr &log_average_light_texture = log_average_light.find_log_average_light(inout.gc, inout.final_color);
 
-	inout.final_color->set_min_filter(filter_nearest);
-	inout.final_color->set_mag_filter(filter_nearest);
+	inout.frames.front()->final_color->set_min_filter(filter_nearest);
+	inout.frames.front()->final_color->set_mag_filter(filter_nearest);
 
 	if (inout.fb_viewport) inout.gc->set_frame_buffer(inout.fb_viewport);
 	inout.gc->set_viewport(inout.viewport, inout.gc->texture_image_y_axis());
-	inout.gc->set_texture(0, inout.final_color);
+	inout.gc->set_texture(0, inout.frames.front()->final_color);
 	inout.gc->set_program_object(present_shader);
 	inout.gc->set_rasterizer_state(rasterizer_state);
 	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);

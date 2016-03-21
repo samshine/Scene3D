@@ -27,28 +27,17 @@ class SceneCameraImpl;
 class SceneEngineImpl;
 class SceneViewportImpl;
 
-class SceneRender
+class SceneRenderFrame
 {
 public:
-	SceneRender(SceneEngineImpl *engine);
-
-	void render(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport);
-	void update(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed);
-
-	SceneEngineImpl *engine = nullptr;
-	SceneImpl *scene = nullptr;
-	SceneCameraImpl *camera = nullptr;
-	SceneViewportImpl *scene_viewport = nullptr;
-	uicore::Rect viewport = uicore::Size(640, 480);
-	uicore::FrameBufferPtr fb_viewport;
-
-	float field_of_view = 60.0f;
-	uicore::Mat4f world_to_eye;
-
-	uicore::GraphicContextPtr gc;
-	float time_elapsed = 0.0f;
-
 	enum { bloom_levels = 4 };
+
+	uicore::Texture2DArrayPtr shadow_maps;
+	uicore::Texture2DPtr shadow_map_blur_texture;
+	uicore::FrameBufferPtr fb_shadow_map_blur;
+
+	std::vector<uicore::FrameBufferPtr> fb_shadow_map;
+	std::vector<uicore::Texture2DPtr> shadow_map_view;
 
 	uicore::FrameBufferPtr fb_gbuffer;
 	uicore::FrameBufferPtr fb_decals;
@@ -72,13 +61,47 @@ public:
 	uicore::Texture2DPtr bloom_blurv[bloom_levels];
 	uicore::Texture2DPtr bloom_blurh[bloom_levels];
 
-	ShadowMaps shadow_maps;
+	std::vector<uicore::Texture2DPtr> model_instance_buffers;
+	std::vector<uicore::StagingTexturePtr> model_staging_buffers;
+	int next_model_instance_buffer = 0;
+	int next_model_staging_buffer = 0;
+
+	uicore::ComPtr<ID3D11Query> frame_finished;
+
+	void setup_pass_buffers(SceneRender *render);
+};
+
+class SceneRender
+{
+public:
+	SceneRender(SceneEngineImpl *engine);
+
+	void wait_next_frame_ready(const uicore::GraphicContextPtr &gc);
+
+	void render(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport);
+	void update(const uicore::GraphicContextPtr &gc, SceneViewportImpl *viewport, float time_elapsed);
+
+	SceneEngineImpl *engine = nullptr;
+	SceneImpl *scene = nullptr;
+	SceneCameraImpl *camera = nullptr;
+	SceneViewportImpl *scene_viewport = nullptr;
+	uicore::Rect viewport = uicore::Size(640, 480);
+	uicore::FrameBufferPtr fb_viewport;
+
+	float field_of_view = 60.0f;
+	uicore::Mat4f world_to_eye;
+
+	uicore::GraphicContextPtr gc;
+	float time_elapsed = 0.0f;
+
 	GaussianBlur blur;
+	std::shared_ptr<ShadowMaps> shadow_maps;
 
 	uicore::Texture2DPtr skybox_texture;
 	bool show_skybox_stars = false;
 
 	std::vector<std::shared_ptr<ScenePass>> passes;
+	std::deque<std::shared_ptr<SceneRenderFrame>> frames;
 
 	ModelRender model_render;
 
@@ -95,5 +118,4 @@ private:
 	SceneRender &operator=(const SceneRender &) = delete;
 
 	void setup_passes();
-	void setup_pass_buffers();
 };

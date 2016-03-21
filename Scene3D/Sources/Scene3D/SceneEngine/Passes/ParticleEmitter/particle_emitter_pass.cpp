@@ -147,7 +147,7 @@ void ParticleEmitterPass::run()
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
 
-	inout.gc->set_frame_buffer(inout.engine->render.fb_final_color);
+	inout.gc->set_frame_buffer(inout.engine->render.frames.front()->fb_final_color);
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
 	inout.gc->set_blend_state(blend_state);
@@ -155,7 +155,7 @@ void ParticleEmitterPass::run()
 	inout.gc->set_primitives_array(prim_array);
 
 	inout.gc->set_program_object(program);
-	inout.gc->set_texture(0, inout.engine->render.normal_z_gbuffer);
+	inout.gc->set_texture(0, inout.engine->render.frames.front()->normal_z_gbuffer);
 	inout.gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)

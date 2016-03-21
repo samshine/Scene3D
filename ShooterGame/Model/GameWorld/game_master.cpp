@@ -14,7 +14,7 @@
 
 using namespace uicore;
 
-//#define NO_BOTS
+#define NO_BOTS
 
 void GameMaster::create(GameWorld *world)
 {

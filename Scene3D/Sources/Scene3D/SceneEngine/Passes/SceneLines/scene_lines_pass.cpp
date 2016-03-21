@@ -46,7 +46,7 @@ void SceneLinesPass::run()
 	uniforms.world_to_projection = eye_to_projection * inout.world_to_eye;
 	gpu_uniforms.upload_data(inout.gc, &uniforms, 1);
 
-	inout.gc->set_frame_buffer(inout.fb_final_color);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_range(0.0f, 0.9f);

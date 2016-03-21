@@ -85,7 +85,7 @@ void DecalsPass::run()
 	uniforms.two_rcp_viewport_size = two_rcp_viewport_size;
 	gpu_uniforms.upload_data(inout.gc, &uniforms, 1);
 
-	inout.gc->set_frame_buffer(inout.fb_decals);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_decals);
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
@@ -97,7 +97,7 @@ void DecalsPass::run()
 	inout.gc->set_uniform_buffer(0, gpu_uniforms);
 	inout.gc->set_texture(0, instance_texture);
 	inout.gc->set_texture(1, diffuse_texture.get());
-	inout.gc->set_texture(2, inout.normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.frames.front()->normal_z_gbuffer);
 
 	inout.gc->set_primitives_array(prim_array);
 	inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6 * 6, (int)decals.size());

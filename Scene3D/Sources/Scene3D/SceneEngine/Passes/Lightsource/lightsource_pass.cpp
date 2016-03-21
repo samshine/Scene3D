@@ -170,7 +170,7 @@ void LightsourcePass::render()
 	ScopeTimeFunction();
 
 	zminmax.viewport = inout.viewport;
-	zminmax.normal_z = inout.normal_z_gbuffer;
+	zminmax.normal_z = inout.frames.front()->normal_z_gbuffer;
 	zminmax.minmax(inout.gc);
 	update_buffers();
 
@@ -180,13 +180,13 @@ void LightsourcePass::render()
 	inout.gc->set_storage_buffer(0, compute_lights);
 	inout.gc->set_storage_buffer(1, compute_visible_lights);
 	inout.gc->set_texture(0, zminmax.result);
-	inout.gc->set_texture(1, inout.normal_z_gbuffer);
-	inout.gc->set_texture(2, inout.diffuse_color_gbuffer);
-	inout.gc->set_texture(3, inout.specular_color_gbuffer);
-	inout.gc->set_texture(4, inout.specular_level_gbuffer);
-	inout.gc->set_texture(5, inout.shadow_maps.shadow_maps);
-	inout.gc->set_texture(6, inout.self_illumination_gbuffer);
-	inout.gc->set_image_texture(0, inout.final_color);
+	inout.gc->set_texture(1, inout.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.frames.front()->diffuse_color_gbuffer);
+	inout.gc->set_texture(3, inout.frames.front()->specular_color_gbuffer);
+	inout.gc->set_texture(4, inout.frames.front()->specular_level_gbuffer);
+	inout.gc->set_texture(5, inout.frames.front()->shadow_maps);
+	inout.gc->set_texture(6, inout.frames.front()->self_illumination_gbuffer);
+	inout.gc->set_image_texture(0, inout.frames.front()->final_color);
 
 	inout.gc->set_program_object(cull_tiles_program);
 	inout.gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);

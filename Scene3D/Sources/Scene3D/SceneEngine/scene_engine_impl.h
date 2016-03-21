@@ -18,6 +18,8 @@ public:
 	SceneEngineImpl();
 	~SceneEngineImpl();
 
+	void wait_next_frame_ready(const uicore::GraphicContextPtr &gc) override { render.wait_next_frame_ready(gc); }
+
 	int models_drawn() const override { return render.models_drawn; }
 	int instances_drawn() const override { return render.instances_drawn; }
 	int draw_calls() const override { return render.draw_calls; }

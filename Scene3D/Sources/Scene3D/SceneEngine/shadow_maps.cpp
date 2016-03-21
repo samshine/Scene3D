@@ -12,25 +12,27 @@ ShadowMaps::ShadowMaps(SceneRender &render) : render(render)
 
 void ShadowMaps::setup(int shadow_map_size, int max_active_maps, TextureFormat format)
 {
-	if (shadow_maps)
+	if (render.frames.front()->shadow_maps)
 		return;
 
-	shadow_maps = Texture2DArray::create(render.gc, shadow_map_size, shadow_map_size, max_active_maps, format);
+	render.frames.front()->shadow_maps = Texture2DArray::create(render.gc, shadow_map_size, shadow_map_size, max_active_maps, format);
 
-	blur_texture = Texture2D::create(render.gc, shadow_map_size, shadow_map_size, format);
-	fb_blur = FrameBuffer::create(render.gc);
-	fb_blur->attach_color(0, blur_texture);
+	render.frames.front()->shadow_map_blur_texture = Texture2D::create(render.gc, shadow_map_size, shadow_map_size, format);
+	render.frames.front()->fb_shadow_map_blur = FrameBuffer::create(render.gc);
+	render.frames.front()->fb_shadow_map_blur->attach_color(0, render.frames.front()->shadow_map_blur_texture);
 
 	auto depth_texture = Texture2D::create(render.gc, shadow_map_size, shadow_map_size, tf_depth_component32);
 	for (int i = 0; i < max_active_maps; i++)
 	{
 		ShadowMapLight light;
-		light.framebuffer = FrameBuffer::create(render.gc);
-		light.framebuffer->attach_color(0, shadow_maps, i);
-		light.framebuffer->attach_depth(depth_texture);
-		light.view = shadow_maps->create_2d_view(i, format, 0, 1);
-		lights.push_back(light);
+		auto fb = FrameBuffer::create(render.gc);
+		fb->attach_color(0, render.frames.front()->shadow_maps, i);
+		fb->attach_depth(depth_texture);
+		render.frames.front()->fb_shadow_map.push_back(fb);
+		render.frames.front()->shadow_map_view.push_back(render.frames.front()->shadow_maps->create_2d_view(i, format, 0, 1));
 	}
+
+	lights.resize(max_active_maps);
 }
 
 void ShadowMaps::start_frame()

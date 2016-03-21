@@ -25,7 +25,7 @@ void ShadowMapPass::run()
 {
 	ScopeTimeFunction();
 
-	inout.shadow_maps.setup(1024, 8, tf_rg32f);
+	inout.shadow_maps->setup(1024, 8, tf_rg32f);
 
 	Size viewport_size = inout.viewport.size();
 
@@ -33,15 +33,15 @@ void ShadowMapPass::run()
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);
 
-	inout.shadow_maps.start_frame();
+	inout.shadow_maps->start_frame();
 	inout.scene->foreach_light(frustum, [&](SceneLightImpl *light)
 	{
 		// Only spot lights with shadow casting enabled uses shadow maps right now, so only generate for those
 		if (light->type() == SceneLight::type_spot && light->shadow_caster())
-			inout.shadow_maps.add_light(light);
+			inout.shadow_maps->add_light(light);
 	});
 
-	for (auto &slot : inout.shadow_maps.lights)
+	for (auto &slot : inout.shadow_maps->lights)
 	{
 		if (!slot.light)
 			continue;
@@ -55,8 +55,11 @@ void ShadowMapPass::render_map(ShadowMapLight &slot)
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
 	inout.gc->set_blend_state(blend_state);
 
-	inout.gc->set_frame_buffer(slot.framebuffer);
-	inout.gc->set_viewport(slot.view->size(), inout.gc->texture_image_y_axis());
+	auto &fb = inout.frames.front()->fb_shadow_map[slot.light->shadow_map_index];
+	auto &view = inout.frames.front()->shadow_map_view[slot.light->shadow_map_index];
+
+	inout.gc->set_frame_buffer(fb);
+	inout.gc->set_viewport(view->size(), inout.gc->texture_image_y_axis());
 	inout.gc->clear_depth(1.0f);
 
 	float field_of_view = slot.light->falloff();
@@ -86,6 +89,6 @@ void ShadowMapPass::render_map(ShadowMapLight &slot)
 	inout.gc->reset_uniform_buffer(1);
 	inout.gc->reset_frame_buffer();
 
-	inout.blur.horizontal(inout.gc, 1.3f, 9, slot.view, inout.shadow_maps.fb_blur);
-	inout.blur.vertical(inout.gc, 1.3f, 9, inout.shadow_maps.blur_texture, slot.framebuffer);
+	inout.blur.horizontal(inout.gc, 1.3f, 9, view, inout.frames.front()->fb_shadow_map_blur);
+	inout.blur.vertical(inout.gc, 1.3f, 9, inout.frames.front()->shadow_map_blur_texture, fb);
 }

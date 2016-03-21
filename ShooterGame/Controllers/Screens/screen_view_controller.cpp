@@ -118,6 +118,11 @@ void Screen::run()
 
 			ScopeTimerResults::start();
 
+			{
+				ScopeTimer scope_timer("SceneEngine::wait_next_frame_ready");
+				scene_engine->wait_next_frame_ready(gc);
+			}
+
 			bool hide_cursor = screen_controller->cursor_hidden() && window->has_focus();
 			if (cursor_hidden != hide_cursor)
 			{
@@ -157,7 +162,7 @@ void Screen::run()
 
 			{
 				ScopeTimer scope_timer("DisplayWindow::flip");
-				window->flip(0);
+				window->flip(1);
 			}
 
 			ScopeTimerResults::end();

@@ -69,11 +69,11 @@ void BloomPass::run()
 	ScopeTimeFunction();
 
 	// Extract bloom from render color buffer:
-	inout.final_color->set_min_filter(filter_linear);
-	inout.final_color->set_mag_filter(filter_linear);
-	inout.gc->set_frame_buffer(inout.fb_bloom_blurv[0]);
-	inout.gc->set_viewport(inout.bloom_blurv[0]->size(), inout.gc->texture_image_y_axis());
-	inout.gc->set_texture(0, inout.final_color);
+	inout.frames.front()->final_color->set_min_filter(filter_linear);
+	inout.frames.front()->final_color->set_mag_filter(filter_linear);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_bloom_blurv[0]);
+	inout.gc->set_viewport(inout.frames.front()->bloom_blurv[0]->size(), inout.gc->texture_image_y_axis());
+	inout.gc->set_texture(0, inout.frames.front()->final_color);
 	inout.gc->set_blend_state(blend_state);
 	inout.gc->set_program_object(extract_shader);
 	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
@@ -84,24 +84,24 @@ void BloomPass::run()
 	const float bloom_amount = 4.0f;
 
 	// Blur and downscale:
-	for (int i = 0; i < inout.bloom_levels - 1; i++)
+	for (int i = 0; i < inout.frames.front()->bloom_levels - 1; i++)
 	{
-		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
-		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i + 1]);
+		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurv[i], inout.frames.front()->fb_bloom_blurh[i]);
+		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurh[i], inout.frames.front()->fb_bloom_blurv[i + 1]);
 	}
 
 	// Upscale and blur:
-	for (int i = inout.bloom_levels - 1; i > 0; i--)
+	for (int i = inout.frames.front()->bloom_levels - 1; i > 0; i--)
 	{
-		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[i], inout.fb_bloom_blurh[i]);
-		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[i], inout.fb_bloom_blurv[i]);
+		inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurv[i], inout.frames.front()->fb_bloom_blurh[i]);
+		inout.blur.vertical(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurh[i], inout.frames.front()->fb_bloom_blurv[i]);
 
 		// Linear upscale:
-		inout.bloom_blurv[i]->set_min_filter(filter_linear);
-		inout.bloom_blurv[i]->set_mag_filter(filter_linear);
-		inout.gc->set_frame_buffer(inout.fb_bloom_blurv[i - 1]);
-		inout.gc->set_viewport(inout.bloom_blurv[i - 1]->size(), inout.gc->texture_image_y_axis());
-		inout.gc->set_texture(0, inout.bloom_blurv[i]);
+		inout.frames.front()->bloom_blurv[i]->set_min_filter(filter_linear);
+		inout.frames.front()->bloom_blurv[i]->set_mag_filter(filter_linear);
+		inout.gc->set_frame_buffer(inout.frames.front()->fb_bloom_blurv[i - 1]);
+		inout.gc->set_viewport(inout.frames.front()->bloom_blurv[i - 1]->size(), inout.gc->texture_image_y_axis());
+		inout.gc->set_texture(0, inout.frames.front()->bloom_blurv[i]);
 		inout.gc->set_blend_state(blend_state);
 		inout.gc->set_program_object(combine_shader);
 		inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
@@ -110,15 +110,15 @@ void BloomPass::run()
 		inout.gc->reset_frame_buffer();
 	}
 
-	inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.bloom_blurv[0], inout.fb_bloom_blurh[0]);
-	inout.blur.vertical(inout.gc, bloom_amount, 5, inout.bloom_blurh[0], inout.fb_bloom_blurv[0]);
+	inout.blur.horizontal(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurv[0], inout.frames.front()->fb_bloom_blurh[0]);
+	inout.blur.vertical(inout.gc, bloom_amount, 5, inout.frames.front()->bloom_blurh[0], inout.frames.front()->fb_bloom_blurv[0]);
 
 	// Add bloom to render color buffer:
-	inout.bloom_blurv[0]->set_min_filter(filter_linear);
-	inout.bloom_blurv[0]->set_mag_filter(filter_linear);
-	inout.gc->set_frame_buffer(inout.fb_final_color);
-	inout.gc->set_viewport(inout.final_color->size(), inout.gc->texture_image_y_axis());
-	inout.gc->set_texture(0, inout.bloom_blurv[0]);
+	inout.frames.front()->bloom_blurv[0]->set_min_filter(filter_linear);
+	inout.frames.front()->bloom_blurv[0]->set_mag_filter(filter_linear);
+	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
+	inout.gc->set_viewport(inout.frames.front()->final_color->size(), inout.gc->texture_image_y_axis());
+	inout.gc->set_texture(0, inout.frames.front()->bloom_blurv[0]);
 	inout.gc->set_blend_state(add_blend_state);
 	inout.gc->set_program_object(combine_shader);
 	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);

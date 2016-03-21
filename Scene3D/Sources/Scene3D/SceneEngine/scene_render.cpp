@@ -7,8 +7,29 @@
 
 using namespace uicore;
 
-SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine), shadow_maps(*this)
+SceneRender::SceneRender(SceneEngineImpl *engine) : engine(engine)
 {
+}
+
+void SceneRender::wait_next_frame_ready(const GraphicContextPtr &gc)
+{
+	if (frames.empty() || !frames.back()->frame_finished)
+		return;
+
+	auto dc = D3DTarget::device_context_handle(gc);
+	if (!dc)
+		return;
+
+	while (true)
+	{
+		BOOL data = 0;
+		HRESULT result = dc->GetData(frames.back()->frame_finished, &data, sizeof(DWORD), 0);
+		if (result == S_OK)
+			break;
+		else if (FAILED(result))
+			throw Exception("D3D11DeviceContext.GetData(D3D11_QUERY_EVENT) failed");
+		System::sleep(1); // TBD; is this a good idea?
+	}
 }
 
 void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *new_scene_viewport)
@@ -40,7 +61,25 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	gpu_timer.begin_frame(gc);
 
 	setup_passes();
-	setup_pass_buffers();
+
+	if (frames.empty())
+	{
+		frames.push_back(std::make_shared<SceneRenderFrame>());
+		frames.push_back(std::make_shared<SceneRenderFrame>());
+	}
+	else
+	{
+		frames.push_back(frames.front());
+		frames.pop_front();
+	}
+
+	frames.front()->setup_pass_buffers(this);
+
+	frames.front()->next_model_instance_buffer = 0;
+	frames.front()->next_model_staging_buffer = 0;
+
+	if (!shadow_maps)
+		shadow_maps = std::make_shared<ShadowMaps>(*this);
 
 	for (const auto &pass : passes)
 	{
@@ -63,6 +102,27 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 
 	gpu_timer.end_frame(gc);
 	gpu_results = gpu_timer.get_results(gc);
+
+	if (!frames.front()->frame_finished)
+	{
+		auto device = D3DTarget::device_handle(gc);
+		if (device)
+		{
+			D3D11_QUERY_DESC query_desc;
+			query_desc.Query = D3D11_QUERY_EVENT;
+			query_desc.MiscFlags = 0;
+			HRESULT result = device->CreateQuery(&query_desc, frames.front()->frame_finished.output_variable());
+			if (FAILED(result))
+				throw Exception("D3D11Device.CreateQuery(D3D11_QUERY_EVENT) failed");
+		}
+	}
+
+	if (frames.front()->frame_finished)
+	{
+		auto dc = D3DTarget::device_context_handle(gc);
+		dc->End(frames.front()->frame_finished);
+	}
+
 	gc = nullptr;
 	camera = nullptr;
 	scene = nullptr;
@@ -132,9 +192,12 @@ void SceneRender::setup_passes()
 	passes.push_back(std::make_shared<FinalPass>(*this));
 }
 
-void SceneRender::setup_pass_buffers()
+/////////////////////////////////////////////////////////////////////////////
+
+void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 {
-	Size viewport_size = viewport.size();
+	Size viewport_size = render->viewport.size();
+	auto &gc = render->gc;
 
 	if (diffuse_color_gbuffer && diffuse_color_gbuffer->size() == viewport_size && gc->is_frame_buffer_owner(fb_gbuffer))
 		return;

@@ -57,8 +57,4 @@ private:
 	ModelShaderCache shader_cache;
 
 	const int batch_size = 1024;
-	const int buffer_count = 300;
-
-	std::deque<uicore::Texture2DPtr> instance_buffers;
-	std::deque<uicore::StagingTexturePtr> staging_buffers;
 };
