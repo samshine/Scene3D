@@ -85,7 +85,7 @@ uicore::Texture2DPtr ModelRender::upload_instances(ModelMesh *mesh, const std::v
 
 	auto staging_buffer = get_staging_buffer(instances.size() * vectors_per_instance);
 	staging_buffer->lock(inout.gc, access_write_discard);
-	auto vectors = staging_buffer->data<Vec4f>();
+	volatile auto vectors = staging_buffer->data<Vec4f>();
 
 	for (const auto &object : instances)
 	{

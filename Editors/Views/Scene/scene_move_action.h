@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "game_time.h"
+
 class SceneMoveAction : public uicore::ViewAction
 {
 public:
@@ -17,6 +19,6 @@ public:
 
 private:
 	uicore::TimerPtr timer = uicore::Timer::create();
-	uicore::GameTime gametime;
+	GameTime gametime;
 	std::map<uicore::Key, bool> keys;
 };

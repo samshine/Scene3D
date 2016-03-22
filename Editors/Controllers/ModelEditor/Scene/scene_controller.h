@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "game_time.h"
 #include "Controllers/Workspace/workspace_controller.h"
 
 class SceneView;
@@ -36,7 +37,7 @@ private:
 	uicore::Vec3f position;
 	uicore::Vec3f rotation;
 
-	uicore::GameTime gametime;
+	GameTime gametime;
 
 	uicore::SlotContainer slots;
 };

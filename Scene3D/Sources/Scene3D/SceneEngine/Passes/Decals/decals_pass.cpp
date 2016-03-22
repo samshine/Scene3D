@@ -62,7 +62,7 @@ void DecalsPass::run()
 	}
 
 	instance_transfer[current_instance_transfer]->lock(inout.gc, access_write_discard);
-	auto instance_data = instance_transfer[current_instance_transfer]->data<Vec4f>();
+	volatile auto instance_data = instance_transfer[current_instance_transfer]->data<Vec4f>();
 	for (const auto &decal : decals)
 	{
 		Mat4f object_to_eye = inout.world_to_eye * uicore::Mat4f::translate(decal->position()) * decal->orientation().to_matrix() * uicore::Mat4f::scale(decal->extents());

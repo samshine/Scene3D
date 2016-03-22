@@ -47,7 +47,7 @@ void LensFlarePass::run()
 	}
 
 	instance_transfer[current_instance_transfer]->lock(inout.gc, access_write_discard);
-	auto instance_data = instance_transfer[current_instance_transfer]->data<Vec4f>();
+	volatile auto instance_data = instance_transfer[current_instance_transfer]->data<Vec4f>();
 	for (size_t i = 0; i < lights.size(); i++)
 		instance_data[i] = Vec4f(lights[i]->position(), lights[i]->attenuation_end()/7.0f);
 	instance_transfer[current_instance_transfer]->unlock();

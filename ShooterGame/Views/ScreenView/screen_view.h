@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "game_time.h"
+
 class ScreenView
 {
 public:
@@ -8,7 +10,7 @@ public:
 
 	const uicore::DisplayWindowPtr &window() const;
 	uicore::Vec2i mouse_delta() const;
-	const uicore::GameTime game_time() const;
+	const GameTime game_time() const;
 
 	const uicore::GraphicContextPtr &gc() const;
 	const uicore::CanvasPtr &canvas() const;

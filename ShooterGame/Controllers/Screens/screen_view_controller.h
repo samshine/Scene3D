@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "game_time.h"
+
 class FrameStatistics
 {
 public:
@@ -21,7 +23,7 @@ public:
 
 	const uicore::DisplayWindowPtr &window() const;
 	uicore::Vec2i mouse_delta() const;
-	const uicore::GameTime game_time() const;
+	const GameTime game_time() const;
 
 	const uicore::GraphicContextPtr &gc() const;
 	const uicore::CanvasPtr &canvas() const;
@@ -70,7 +72,7 @@ private:
 
 	std::shared_ptr<ScreenViewController> screen_controller;
 
-	uicore::GameTime game_time;
+	GameTime game_time;
 	uicore::Vec2i delta_mouse_move;
 
 	int64_t last_fps_timestamp = uicore::System::microseconds();

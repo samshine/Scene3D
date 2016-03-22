@@ -2,6 +2,7 @@
 #pragma once
 
 #include "lock_step_time.h"
+#include "game_time.h"
 #include "NetGame/event.h"
 #include <memory>
 
@@ -28,7 +29,7 @@ public:
 private:
 	void on_event_received(const std::string &sender, const uicore::NetGameEvent &net_event);
 
-	uicore::GameTime game_time;
+	GameTime game_time;
 	std::shared_ptr<GameNetwork> network;
 
 	int server_tick_time = 0;

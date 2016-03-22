@@ -24,6 +24,7 @@
     <ClInclude Include="Include\GameWorld\game_object.h" />
     <ClInclude Include="Include\GameWorld\game_world.h" />
     <ClInclude Include="Include\GameWorld\game_world_client.h" />
+    <ClInclude Include="Include\game_time.h" />
     <ClInclude Include="Include\log_event.h" />
     <ClInclude Include="Include\physics3d.h" />
     <ClInclude Include="Include\Physics3D\physics3d_constraint.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Sources\GameWorld\Network\NetGame\network_event.h" />
     <ClInclude Include="Sources\GameWorld\Network\NetGame\server.h" />
     <ClInclude Include="Sources\GameWorld\Network\NetGame\server_impl.h" />
+    <ClInclude Include="Sources\game_time_impl.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletCollisionCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\btBulletDynamicsCommon.h" />
     <ClInclude Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.h" />
@@ -477,6 +479,7 @@
     <ClCompile Include="Sources\GameWorld\Network\NetGame\event_value.cpp" />
     <ClCompile Include="Sources\GameWorld\Network\NetGame\network_data.cpp" />
     <ClCompile Include="Sources\GameWorld\Network\NetGame\server.cpp" />
+    <ClCompile Include="Sources\game_time.cpp" />
     <ClCompile Include="Sources\log_event.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp" />
     <ClCompile Include="Sources\Physics3D\Bullet\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp" />

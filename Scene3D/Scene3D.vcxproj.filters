@@ -1536,6 +1536,12 @@
     <ClInclude Include="Include\Sound\music_player.h">
       <Filter>Include\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Include\game_time.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\game_time_impl.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2194,6 +2200,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Sound\music_player.cpp">
       <Filter>Sources\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\game_time.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

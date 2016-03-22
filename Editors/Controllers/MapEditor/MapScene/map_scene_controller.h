@@ -3,6 +3,7 @@
 
 #include "Controllers/Workspace/workspace_controller.h"
 #include "Views/Grid/grid_view.h"
+#include "game_time.h"
 
 class SceneView;
 
@@ -44,7 +45,7 @@ private:
 	uicore::Vec3f position[4];
 	uicore::Vec3f rotation[4];
 
-	uicore::GameTime gametime;
+	GameTime gametime;
 
 	friend class MapSceneCreateObjectAction;
 };

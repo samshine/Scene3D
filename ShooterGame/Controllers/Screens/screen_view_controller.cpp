@@ -17,7 +17,7 @@ uicore::Vec2i ScreenViewController::mouse_delta() const
 	return Screen::instance()->delta_mouse_move;
 }
 
-const uicore::GameTime ScreenViewController::game_time() const
+const GameTime ScreenViewController::game_time() const
 {
 	return Screen::instance()->game_time;
 }
