@@ -123,7 +123,7 @@ void Rocket::tick()
 			auto decal = SceneDecal::create(game_world()->client()->scene());
 			decal->set_position(ray_hit.position);
 			decal->set_orientation(orientation);
-			decal->set_extents(Vec3f(2.0f, 2.0f, 2.0f));
+			decal->set_extents(Vec3f(1.0f, 1.0f, 1.0f));
 			decal->set_diffuse_texture("rocketdecal.png");
 			game_world()->client()->decals().push_back(decal);
 		}

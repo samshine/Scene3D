@@ -1,4 +1,6 @@
-namespace { const char *fragment_decals_hlsl() { return R"shaderend(
+namespace {
+	const char *fragment_decals_hlsl() {
+		return R"shaderend(
 
 // Direct3D's render targets are top-down, while OpenGL uses bottom-up
 #define TOP_DOWN_RENDER_TARGET
@@ -17,8 +19,10 @@ struct PixelIn
 	float Cutoff : PixelCutoff;
 	float Glossiness : PixelGlossiness;
 	float SpecularLevel : PixelSpecularLevel;
-	nointerpolation float3x3 RotateEyeToObject : PixelRotateEyeToObject;
-	nointerpolation float3 TranslateEyeToObject : PixelTranslateEyeToObject;
+	float3 BoxCenter : PixelBoxCenter;
+	float4 BoxX : PixelBoxX;
+	float4 BoxY : PixelBoxY;
+	float4 BoxZ : PixelBoxZ;
 };
 
 struct PixelOut
@@ -44,7 +48,12 @@ PixelOut main(PixelIn input)
 	float4 normal_and_z = NormalZTexture.Load(texelpos);
 	float z_in_eye = normal_and_z.w;
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
-	float3 position_in_object = mul(input.RotateEyeToObject, position_in_eye + input.TranslateEyeToObject);
+
+	float3 v = position_in_eye - input.BoxCenter;
+	float vx = dot(v, input.BoxX.xyz) * input.BoxX.w;
+	float vy = dot(v, input.BoxY.xyz) * input.BoxY.w;
+	float vz = dot(v, input.BoxZ.xyz) * input.BoxZ.w;
+	float3 position_in_object = float3(vx, vy, vz);
 
 	clip(0.5f - abs(position_in_object));
 

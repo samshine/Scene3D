@@ -20,8 +20,10 @@ struct VertexOut
 	float Cutoff : PixelCutoff;
 	float Glossiness : PixelGlossiness;
 	float SpecularLevel : PixelSpecularLevel;
-	nointerpolation float3x3 RotateEyeToObject : PixelRotateEyeToObject;
-	nointerpolation float3 TranslateEyeToObject : PixelTranslateEyeToObject;
+	float3 BoxCenter : PixelBoxCenter;
+	float4 BoxX : PixelBoxX;
+	float4 BoxY : PixelBoxY;
+	float4 BoxZ : PixelBoxZ;
 };
 
 Texture2D InstanceTexture;
@@ -39,8 +41,13 @@ VertexOut main(VertexIn input)
 	output.Cutoff = instanceData3.x;
 	output.Glossiness = instanceData3.y;
 	output.SpecularLevel = instanceData3.z;
-	output.RotateEyeToObject = transpose(float3x3(objectToEye[0].xyz, objectToEye[1].xyz, objectToEye[2].xyz));
-	output.TranslateEyeToObject = float3(-objectToEye[0].w, -objectToEye[1].w, -objectToEye[2].w);
+	output.BoxCenter = mul(objectToEye, float4(0,0,0,1)).xyz;
+	output.BoxX.xyz = mul(objectToEye, float4(1,0,0,1)).xyz - output.BoxCenter;
+	output.BoxY.xyz = mul(objectToEye, float4(0,1,0,1)).xyz - output.BoxCenter;
+	output.BoxZ.xyz = mul(objectToEye, float4(0,0,1,1)).xyz - output.BoxCenter;
+	output.BoxX.w = 0.5 / length(output.BoxX.xyz);
+	output.BoxY.w = 0.5 / length(output.BoxY.xyz);
+	output.BoxZ.w = 0.5 / length(output.BoxZ.xyz);
 	return output;
 }
 
