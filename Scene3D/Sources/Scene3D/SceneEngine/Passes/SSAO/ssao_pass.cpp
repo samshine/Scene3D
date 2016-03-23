@@ -86,6 +86,7 @@ void SSAOPass::run()
 	inout.gc->set_program_object(extract_shader);
 	inout.gc->draw_primitives(type_triangles, 6, rect_primarray);
 	inout.gc->reset_program_object();
+	inout.gc->set_texture(0, nullptr);
 	inout.gc->set_uniform_buffer(0, nullptr);
 	inout.gc->set_blend_state(nullptr);
 	inout.gc->reset_frame_buffer();

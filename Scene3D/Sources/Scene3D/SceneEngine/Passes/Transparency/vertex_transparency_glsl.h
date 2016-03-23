@@ -1,5 +1,10 @@
 namespace { const char *vertex_transparency_glsl() { return R"shaderend(
 
+layout(std140) uniform ModelRenderUniforms
+{
+	int BaseVectorOffset;
+};
+
 layout(std140) uniform ModelMaterialUniforms
 {
 	vec4 MaterialAmbient;
@@ -281,7 +286,7 @@ ivec2 GetTexelPosition(int index)
 
 int GetVectorsOffset(int instanceId)
 {
-	return instanceId * VectorsPerInstance;
+	return BaseVectorOffset + instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

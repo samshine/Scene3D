@@ -1,5 +1,10 @@
 namespace { const char *vertex_shadow_hlsl() { return R"shaderend(
 
+cbuffer ModelRenderUniforms
+{
+	uint BaseVectorOffset;
+};
+
 cbuffer ModelMaterialUniforms
 {
 	float4 MaterialAmbient;
@@ -53,7 +58,7 @@ float4x4 loadMat4(uint offset)
 
 VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 {
-	uint vectorsOffset = instanceId * VectorsPerInstance;
+	uint vectorsOffset = BaseVectorOffset + instanceId * VectorsPerInstance;
 
 	float4x4 ObjectToWorld = loadMat4(vectorsOffset + 3);
 	float4x4 WorldToEye = loadMat4(vectorsOffset + 7);

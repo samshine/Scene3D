@@ -52,6 +52,9 @@ void ShadowMapPass::run()
 
 void ShadowMapPass::render_map(ShadowMapLight &slot)
 {
+	if (slot.light->shadow_map_index < 0 || slot.light->shadow_map_index >= (int)inout.frames.front()->fb_shadow_map.size())
+		throw Exception("ShadowMapPass is broken!");
+
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
 	inout.gc->set_blend_state(blend_state);
 

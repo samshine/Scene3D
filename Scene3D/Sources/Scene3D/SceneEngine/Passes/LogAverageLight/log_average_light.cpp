@@ -119,6 +119,7 @@ Texture2DPtr &LogAverageLight::find_log_average_light(const GraphicContextPtr &g
 	gc->draw_primitives_array(type_triangles, 6);
 
 	gc->reset_texture(0);
+	gc->reset_texture(1);
 	gc->reset_program_object();
 	gc->reset_primitives_array();
 	gc->reset_frame_buffer();

@@ -12,6 +12,7 @@ public:
 	int draw_calls = 0;
 	int triangles_drawn = 0;
 	int scene_visits = 0;
+	int model_instance_maps = 0;
 	std::vector<GPUTimer::Result> gpu_results;
 	std::vector<std::string> cpu_results;
 };

@@ -228,6 +228,7 @@ void GameScreenController::update()
 				update_stats.push_back(string_format("Draw calls: %1", max_frame->draw_calls));
 				update_stats.push_back(string_format("Triangles drawn: %1", max_frame->triangles_drawn));
 				update_stats.push_back(string_format("Scene visits: %1", max_frame->scene_visits));
+				update_stats.push_back(string_format("Model instance maps: %1", max_frame->model_instance_maps));
 				update_stats.push_back("");
 
 				for (const auto &result : max_frame->gpu_results)

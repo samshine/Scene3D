@@ -35,6 +35,7 @@ void ZMinMax::minmax(const GraphicContextPtr &gc)
 		int iteration_width = texture_size.width >> i;
 		int iteration_height = texture_size.height >> i;
 
+		gc->set_texture(0, nullptr);
 		gc->set_frame_buffer((i % 2 == 0) ? fb0 : fb1);
 		gc->set_viewport(Size(iteration_width, iteration_height), gc->texture_image_y_axis());
 		if (i == 0)

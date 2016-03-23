@@ -174,12 +174,13 @@ void Screen::run()
 			FrameStatistics stats;
 			stats.frame_ms = frame_ms;
 			stats.cpu_results = ScopeTimerResults::timer_results();
-			//stats.gpu_results = client->scene_engine()->gpu_results();
-			//stats.models_drawn = scene_engine()->models_drawn();
-			//stats.instances_drawn = scene_engine()->instances_drawn();
-			//stats.draw_calls = scene_engine()->draw_calls();
-			//stats.triangles_drawn = scene_engine()->triangles_drawn();
-			//stats.scene_visits = scene_engine()->scene_visits();
+			stats.gpu_results = scene_engine->gpu_results();
+			stats.models_drawn = scene_engine->models_drawn();
+			stats.instances_drawn = scene_engine->instances_drawn();
+			stats.draw_calls = scene_engine->draw_calls();
+			stats.triangles_drawn = scene_engine->triangles_drawn();
+			stats.scene_visits = scene_engine->scene_visits();
+			stats.model_instance_maps = scene_engine->model_instance_maps();
 			frame_stats = stats;
 		}
 	}

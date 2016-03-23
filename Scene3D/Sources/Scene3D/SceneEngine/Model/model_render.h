@@ -31,17 +31,26 @@ public:
 	void end();
 
 private:
-	void render_mesh(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
-	uicore::Texture2DPtr upload_instances(ModelMesh *mesh, const std::vector<SceneObjectImpl *> &instances);
+	struct InstanceBatch
+	{
+		ModelMesh *mesh = nullptr;
+		int start = 0;
+		int count = 0;
+		SceneObjectImpl **objects = nullptr;
+	};
+
+	void render_batches(const std::vector<InstanceBatch> &batches);
+	void write_instance_data(ModelMesh *mesh, SceneObjectImpl *object, uicore::Vec4f *vectors);
 	SceneLightProbeImpl *find_nearest_probe(const uicore::Vec3f &position);
 
-	void render_early_z(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
-	void render_shadow(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
-	void render_gbuffer(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
-	void render_transparency(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_count);
+	void render_mesh(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, int instance_base, int instance_count);
+	void render_early_z(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, uicore::UniformVector<ModelRenderUniforms> &render_uniforms, int instance_count);
+	void render_shadow(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, uicore::UniformVector<ModelRenderUniforms> &render_uniforms, int instance_count);
+	void render_gbuffer(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, uicore::UniformVector<ModelRenderUniforms> &render_uniforms, int instance_count);
+	void render_transparency(ModelMesh *mesh, uicore::Texture2DPtr instance_buffer, uicore::UniformVector<ModelRenderUniforms> &render_uniforms, int instance_count);
 
 	void bind_texture(int bind_index, Resource<uicore::TexturePtr> texture, uicore::TextureWrapMode wrap_u, uicore::TextureWrapMode wrap_v);
-	void draw_elements(int start_element, int num_elements, uicore::UniformVector<ModelMaterialUniforms> uniforms, int num_instances);
+	void draw_elements(int start_element, int num_elements, uicore::UniformVector<ModelMaterialUniforms> &uniforms, uicore::UniformVector<ModelRenderUniforms> &render_uniforms, int num_instances);
 
 	static uicore::TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
 
@@ -56,5 +65,5 @@ private:
 
 	ModelShaderCache shader_cache;
 
-	const int batch_size = 1024;
+	const int num_vectors = 64 * 1024;
 };

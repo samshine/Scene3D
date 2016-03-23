@@ -25,6 +25,7 @@ public:
 	int draw_calls() const override { return render.draw_calls; }
 	int triangles_drawn() const override { return render.triangles_drawn; }
 	int scene_visits() const override { return render.scene_visits; }
+	int model_instance_maps() const override { return render.frames.front()->next_model_staging_buffer; }
 	const std::vector<GPUTimer::Result> &gpu_results() const override { return render.gpu_results; }
 
 	std::shared_ptr<Model> get_model(const std::string &model_name);

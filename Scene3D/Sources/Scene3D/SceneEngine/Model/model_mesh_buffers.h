@@ -1,6 +1,15 @@
 
 #pragma once
 
+class ModelRenderUniforms
+{
+public:
+	unsigned int base_vector_offset = 0;
+	unsigned int padding1 = 0;
+	unsigned int padding2 = 0;
+	unsigned int padding3 = 0;
+};
+
 class ModelMaterialUniforms
 {
 public:

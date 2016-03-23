@@ -77,6 +77,7 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 
 	frames.front()->next_model_instance_buffer = 0;
 	frames.front()->next_model_staging_buffer = 0;
+	frames.front()->next_model_render_uniforms = 0;
 
 	if (!shadow_maps)
 		shadow_maps = std::make_shared<ShadowMaps>(*this);
@@ -103,7 +104,7 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	gpu_timer.end_frame(gc);
 	gpu_results = gpu_timer.get_results(gc);
 
-	if (!frames.front()->frame_finished)
+	if (!frames.front()->frame_finished && render_gc->shader_language() == shader_hlsl)
 	{
 		auto device = D3DTarget::device_handle(gc);
 		if (device)

@@ -1,5 +1,10 @@
 namespace { const char *vertex_shadow_glsl() { return R"shaderend(
 
+layout(std140) uniform ModelRenderUniforms
+{
+	int BaseVectorOffset;
+};
+
 layout(std140) uniform ModelMaterialUniforms
 {
 	vec4 MaterialAmbient;
@@ -46,7 +51,7 @@ mat4 loadMat4(int offset)
 
 void main()
 {
-	int vectorsOffset = gl_InstanceID * VectorsPerInstance;
+	int vectorsOffset = BaseVectorOffset + gl_InstanceID * VectorsPerInstance;
 
 	mat4 ObjectToWorld = loadMat4(vectorsOffset + 3);
 	mat4 WorldToEye = loadMat4(vectorsOffset + 7);

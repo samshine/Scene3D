@@ -1,5 +1,10 @@
 namespace { const char *vertex_gbuffer_hlsl() { return R"shaderend(
 
+cbuffer ModelRenderUniforms
+{
+	uint BaseVectorOffset;
+};
+
 cbuffer ModelMaterialUniforms
 {
 	float4 MaterialAmbient;
@@ -260,7 +265,7 @@ int3 GetTexelPosition(uint index)
 
 uint GetVectorsOffset(uint instanceId)
 {
-	return instanceId * VectorsPerInstance;
+	return BaseVectorOffset + instanceId * VectorsPerInstance;
 }
 
 )shaderend"; } }

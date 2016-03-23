@@ -63,8 +63,10 @@ public:
 
 	std::vector<uicore::Texture2DPtr> model_instance_buffers;
 	std::vector<uicore::StagingTexturePtr> model_staging_buffers;
+	std::vector<uicore::UniformVector<ModelRenderUniforms>> model_render_uniforms;
 	int next_model_instance_buffer = 0;
 	int next_model_staging_buffer = 0;
+	int next_model_render_uniforms = 0;
 
 	uicore::ComPtr<ID3D11Query> frame_finished;
 

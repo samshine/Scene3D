@@ -99,6 +99,7 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(const GraphicContextPt
 	gbuffer->set_uniform1i("LightMapTexture", 6);
 	gbuffer->set_uniform1i("LightMapSampler", 6);
 	gbuffer->set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	gbuffer->set_uniform_buffer_index("ModelRenderUniforms", 1);
 
 	return gbuffer;
 }
@@ -167,6 +168,7 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(const GraphicCont
 	transparency->set_uniform1i("SpecularTexture", 5);
 	transparency->set_uniform1i("SpecularSampler", 5);
 	transparency->set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	transparency->set_uniform_buffer_index("ModelRenderUniforms", 1);
 
 	return transparency;
 }
@@ -201,6 +203,7 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(const GraphicContextPtr &g
 
 	program->set_uniform1i("InstanceVectors", 0);
 	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	program->set_uniform_buffer_index("ModelRenderUniforms", 1);
 
 	if (!uses_bones)
 		shadow_program = program;
@@ -240,6 +243,7 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(const GraphicContextPtr &
 
 	program->set_uniform1i("InstanceVectors", 0);
 	program->set_uniform_buffer_index("ModelMaterialUniforms", 0);
+	program->set_uniform_buffer_index("ModelRenderUniforms", 1);
 
 	if (!uses_bones)
 		early_z_program = program;
