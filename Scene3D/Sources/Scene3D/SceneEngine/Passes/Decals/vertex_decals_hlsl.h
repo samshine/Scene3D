@@ -43,11 +43,11 @@ VertexOut main(VertexIn input)
 	output.SpecularLevel = instanceData3.z;
 	output.BoxCenter = mul(objectToEye, float4(0,0,0,1)).xyz;
 	output.BoxX.xyz = mul(objectToEye, float4(1,0,0,1)).xyz - output.BoxCenter;
-	output.BoxY.xyz = mul(objectToEye, float4(0,1,0,1)).xyz - output.BoxCenter;
-	output.BoxZ.xyz = mul(objectToEye, float4(0,0,1,1)).xyz - output.BoxCenter;
-	output.BoxX.w = 0.5 / length(output.BoxX.xyz);
-	output.BoxY.w = 0.5 / length(output.BoxY.xyz);
-	output.BoxZ.w = 0.5 / length(output.BoxZ.xyz);
+	output.BoxY.xyz = mul(objectToEye, float4(0,-1,0,1)).xyz - output.BoxCenter;
+	output.BoxZ.xyz = mul(objectToEye, float4(0,0,-1,1)).xyz - output.BoxCenter;
+	output.BoxX.w = 1 / length(output.BoxX.xyz);
+	output.BoxY.w = 1 / length(output.BoxY.xyz);
+	output.BoxZ.w = 1 / length(output.BoxZ.xyz);
 	return output;
 }
 

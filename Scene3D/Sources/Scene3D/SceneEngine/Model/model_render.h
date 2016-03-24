@@ -56,6 +56,7 @@ private:
 
 	uicore::Texture2DPtr get_instance_buffer(int size);
 	uicore::StagingTexturePtr get_staging_buffer(int size);
+	uicore::UniformVector<ModelRenderUniforms> get_uniform_buffer();
 
 	SceneImpl *scene = nullptr;
 	uicore::Mat4f world_to_eye;

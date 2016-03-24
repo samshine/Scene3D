@@ -46,6 +46,7 @@ PixelOut main(PixelIn input)
 	uint3 texelpos = uint3(pos,0);
 
 	float4 normal_and_z = NormalZTexture.Load(texelpos);
+	float3 normal_in_eye = normal_and_z.xyz;
 	float z_in_eye = normal_and_z.w;
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
@@ -55,9 +56,10 @@ PixelOut main(PixelIn input)
 	float vz = dot(v, input.BoxZ.xyz) * input.BoxZ.w;
 	float3 position_in_object = float3(vx, vy, vz);
 
-	clip(0.5f - abs(position_in_object));
+	clip(1 - abs(position_in_object));
+	clip(dot(normal_in_eye, input.BoxZ.xyz * input.BoxZ.w) - input.Cutoff);
 
-	float4 textureColor = DiffuseTexture.Sample(DiffuseSampler, position_in_object.xy + 0.5);
+	float4 textureColor = DiffuseTexture.Sample(DiffuseSampler, position_in_object.xy * 0.5 + 0.5);
 
 	PixelOut output;
 	output.FragColor = textureColor;

@@ -68,6 +68,13 @@ public:
 	int next_model_staging_buffer = 0;
 	int next_model_render_uniforms = 0;
 
+	std::vector<uicore::Texture2DPtr> decal_instance_buffers;
+	std::vector<uicore::StagingTexturePtr> decal_staging_buffers;
+	std::vector<uicore::UniformVector<DecalRenderUniforms>> decal_render_uniforms;
+	int next_decal_instance_buffer = 0;
+	int next_decal_staging_buffer = 0;
+	int next_decal_render_uniforms = 0;
+
 	uicore::ComPtr<ID3D11Query> frame_finished;
 
 	void setup_pass_buffers(SceneRender *render);

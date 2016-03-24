@@ -117,29 +117,20 @@ void ModelRender::render_mesh(ModelMesh *mesh, Texture2DPtr instance_buffer, int
 	auto &inout = scene->engine()->render;
 	inout.models_drawn++;
 
-	auto &render_uniforms = inout.frames.front()->model_render_uniforms;
-	auto &next = inout.frames.front()->next_model_render_uniforms;
-
-	if (render_uniforms.size() <= next)
-		render_uniforms.resize(next + 1);
-
-	auto &buffer = render_uniforms[next];
-	if (!buffer.buffer())
-		buffer = UniformVector<ModelRenderUniforms>(inout.gc, 1);
-	next++;
+	auto gpu_uniforms = get_uniform_buffer();
 
 	ModelRenderUniforms cpu_uniforms;
 	cpu_uniforms.base_vector_offset = instance_base;
-	buffer.upload_data(inout.gc, &cpu_uniforms, 1);
+	gpu_uniforms.upload_data(inout.gc, &cpu_uniforms, 1);
 
 	shader_cache.create_states(inout.gc);
 
 	switch (render_mode)
 	{
-	case ModelRenderMode::early_z: render_early_z(mesh, instance_buffer, buffer, instance_count); break;
-	case ModelRenderMode::shadow: render_shadow(mesh, instance_buffer, buffer, instance_count); break;
-	case ModelRenderMode::gbuffer: render_gbuffer(mesh, instance_buffer, buffer, instance_count); break;
-	case ModelRenderMode::transparency: render_transparency(mesh, instance_buffer, buffer, instance_count); break;
+	case ModelRenderMode::early_z: render_early_z(mesh, instance_buffer, gpu_uniforms, instance_count); break;
+	case ModelRenderMode::shadow: render_shadow(mesh, instance_buffer, gpu_uniforms, instance_count); break;
+	case ModelRenderMode::gbuffer: render_gbuffer(mesh, instance_buffer, gpu_uniforms, instance_count); break;
+	case ModelRenderMode::transparency: render_transparency(mesh, instance_buffer, gpu_uniforms, instance_count); break;
 	}
 	
 	inout.gc->set_program_object(nullptr);
@@ -280,7 +271,7 @@ Texture2DPtr ModelRender::get_instance_buffer(int size)
 
 	auto height_needed = std::max((size + 255) / 256, 1);
 	if (!buffer || buffer->size().height < height_needed)
-		buffer = Texture2D::create(scene->engine()->render.gc, 256, height_needed, tf_rgba32f);
+		buffer = Texture2D::create(inout.gc, 256, height_needed, tf_rgba32f);
 
 	next++;
 	return buffer;
@@ -298,8 +289,24 @@ StagingTexturePtr ModelRender::get_staging_buffer(int size)
 
 	auto height_needed = std::max((size + 255) / 256, 1);
 	if (!buffer || buffer->size().height < height_needed)
-		buffer = StagingTexture::create(scene->engine()->render.gc, 256, height_needed, StagingDirection::to_gpu, tf_rgba32f);
+		buffer = StagingTexture::create(inout.gc, 256, height_needed, StagingDirection::to_gpu, tf_rgba32f);
 
+	next++;
+	return buffer;
+}
+
+UniformVector<ModelRenderUniforms> ModelRender::get_uniform_buffer()
+{
+	auto &inout = scene->engine()->render;
+	auto &render_uniforms = inout.frames.front()->model_render_uniforms;
+	auto &next = inout.frames.front()->next_model_render_uniforms;
+
+	if (render_uniforms.size() <= next)
+		render_uniforms.resize(next + 1);
+
+	auto &buffer = render_uniforms[next];
+	if (!buffer.buffer())
+		buffer = UniformVector<ModelRenderUniforms>(inout.gc, 1);
 	next++;
 	return buffer;
 }
