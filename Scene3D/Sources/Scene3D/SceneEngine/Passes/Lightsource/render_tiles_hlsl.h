@@ -40,7 +40,8 @@ StructuredBuffer<Light> lights;
 StructuredBuffer<uint> VisibleLightIndices;
 Texture2DArray<float4> shadow_maps;
 SamplerState shadow_maps_sampler;
-Texture2D<float4> normal_z;
+Texture2D<float4> smoothed_normal;
+Texture2D<float4> face_normal_z;
 Texture2D<float4> diffuse;
 Texture2D<float4> specular;
 Texture2D<float4> specular_level;
@@ -103,7 +104,8 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	int2 pos = int2(x,y);
 	uint3 texelpos = uint3(pos,0);
 
-	float4 normal_and_z = normal_z.Load(texelpos);
+	float4 face_normal_and_z = face_normal_z.Load(texelpos);
+	float3 normal_in_eye = smoothed_normal.Load(texelpos).xyz;
 	float2 glossiness_and_specular_level = specular_level.Load(texelpos).xy;
 
 	float4 black_bias = float4(0.003, 0.003, 0.003, 0.0); // Bias a little as there's no perfect black
@@ -112,8 +114,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	float3 material_self_illumination = self_illumination.Load(texelpos).xyz;
-	float3 normal_in_eye = normal_and_z.xyz;
-	float z_in_eye = normal_and_z.w;
+	float z_in_eye = face_normal_and_z.w;
 
 #if defined(DEBUG_DIFFUSE)
 	float3 color = material_diffuse_color.xyz;

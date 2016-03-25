@@ -92,8 +92,6 @@ void LightmapUV::generate(const std::shared_ptr<ModelData> &model_data)
 
 					if (!mesh.vertices.empty()) { auto value = mesh.vertices[src_index]; mesh.vertices.push_back(value); }
 					if (!mesh.normals.empty()) { auto value = mesh.normals[src_index]; mesh.normals.push_back(value); }
-					if (!mesh.tangents.empty()) { auto value = mesh.tangents[src_index]; mesh.tangents.push_back(value); }
-					if (!mesh.bitangents.empty()) { auto value = mesh.bitangents[src_index]; mesh.bitangents.push_back(value); }
 					if (!mesh.bone_weights.empty()) { auto value = mesh.bone_weights[src_index]; mesh.bone_weights.push_back(value); }
 					if (!mesh.bone_selectors.empty()) { auto value = mesh.bone_selectors[src_index]; mesh.bone_selectors.push_back(value); }
 					if (!mesh.colors.empty()) { auto value = mesh.colors[src_index]; mesh.colors.push_back(value); }

@@ -53,7 +53,8 @@ public:
 	uicore::Texture2DPtr specular_color_gbuffer;
 	uicore::Texture2DPtr specular_level_gbuffer;
 	uicore::Texture2DPtr self_illumination_gbuffer;
-	uicore::Texture2DPtr normal_z_gbuffer;
+	uicore::Texture2DPtr normal_gbuffer;
+	uicore::Texture2DPtr face_normal_z_gbuffer;
 	uicore::Texture2DPtr ambient_occlusion;
 
 	uicore::Texture2DPtr final_color;

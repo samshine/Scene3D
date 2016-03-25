@@ -28,8 +28,6 @@ class ModelMeshBuffers
 public:
 	uicore::VertexArrayVector<uicore::Vec3f> vertices;
 	uicore::VertexArrayVector<uicore::Vec3f> normals;
-	uicore::VertexArrayVector<uicore::Vec3f> bitangents;
-	uicore::VertexArrayVector<uicore::Vec3f> tangents;
 	uicore::VertexArrayVector<uicore::Vec4ub> bone_weights;
 	uicore::VertexArrayVector<uicore::Vec4ub> bone_selectors;
 	uicore::VertexArrayVector<uicore::Vec4ub> colors;

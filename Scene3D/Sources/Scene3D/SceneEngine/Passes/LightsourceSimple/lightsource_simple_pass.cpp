@@ -53,13 +53,14 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 	program->bind_attribute_location(0, "AttrPositionInObject");
 	program->set_uniform_buffer_index("Uniforms", 0);
 	program->set_uniform1i("InstanceTexture", 0);
-	program->set_uniform1i("NormalZTexture", 1);
+	program->set_uniform1i("NormalTexture", 1);
 	program->set_uniform1i("DiffuseColorTexture", 2);
 	program->set_uniform1i("SpecularColorTexture", 3);
 	program->set_uniform1i("SpecularLevelTexture", 4);
 	program->set_uniform1i("ShadowMapsTexture", 5);
 	program->set_uniform1i("ShadowMapsTextureSampler", 5);
 	program->set_uniform1i("SelfIlluminationTexture", 6);
+	program->set_uniform1i("FaceNormalZTexture", 7);
 
 	return program;
 }
@@ -234,12 +235,13 @@ void LightsourceSimplePass::render()
 
 	inout.gc->set_uniform_buffer(0, uniforms);
 	inout.gc->set_texture(0, light_instance_texture);
-	inout.gc->set_texture(1, inout.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(1, inout.frames.front()->normal_gbuffer);
 	inout.gc->set_texture(2, inout.frames.front()->diffuse_color_gbuffer);
 	inout.gc->set_texture(3, inout.frames.front()->specular_color_gbuffer);
 	inout.gc->set_texture(4, inout.frames.front()->specular_level_gbuffer);
 	inout.gc->set_texture(5, inout.frames.front()->shadow_maps);
 	inout.gc->set_texture(6, inout.frames.front()->self_illumination_gbuffer);
+	inout.gc->set_texture(7, inout.frames.front()->face_normal_z_gbuffer);
 
 	inout.gc->set_blend_state(blend_state);
 

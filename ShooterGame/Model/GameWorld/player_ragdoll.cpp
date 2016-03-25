@@ -245,8 +245,6 @@ std::shared_ptr<ModelData> PlayerRagdoll::create_box(const Vec3f &box_size)
 		for (int j = 0; j < 4; j++)
 		{
 			model_data->meshes[0].normals.push_back(normal[i]);
-			model_data->meshes[0].tangents.push_back(tangent[i]);
-			model_data->meshes[0].bitangents.push_back(bitangent);
 		}
 
 		for (int j = 0; j < 4; j++)

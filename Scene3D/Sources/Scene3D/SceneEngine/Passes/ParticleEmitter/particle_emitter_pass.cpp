@@ -155,7 +155,7 @@ void ParticleEmitterPass::run()
 	inout.gc->set_primitives_array(prim_array);
 
 	inout.gc->set_program_object(program);
-	inout.gc->set_texture(0, inout.engine->render.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(0, inout.engine->render.frames.front()->face_normal_z_gbuffer);
 	inout.gc->set_texture(1, instance_texture);
 
 	for (int slot : active_emitters)
@@ -203,7 +203,7 @@ void ParticleEmitterPass::setup()
 		if (!program->try_link())
 			throw Exception(string_format("Particle emitter program failed to link: %1", program->info_log()));
 		program->set_uniform_buffer_index("Uniforms", 0);
-		program->set_uniform1i("NormalZTexture", 0);
+		program->set_uniform1i("FaceNormalZTexture", 0);
 		program->set_uniform1i("InstanceTexture", 1);
 		program->set_uniform1i("ParticleTexture", 2);
 		program->set_uniform1i("ParticleSampler", 2);

@@ -16,12 +16,12 @@ in vec3 PixelColor;
 out vec4 FragColor;
 
 uniform sampler3D ParticleTexture;
-uniform sampler2D NormalZTexture;
+uniform sampler2D FaceNormalZTexture;
 
 void main()
 {
 	vec4 textureColor = texture(ParticleTexture, PixelTexcoord);
-	float fragmentDepthInEye = texelFetch(NormalZTexture, ivec2(gl_FragCoord.xy), 0).w;
+	float fragmentDepthInEye = texelFetch(FaceNormalZTexture, ivec2(gl_FragCoord.xy), 0).w;
 
 	float depthDiff = fragmentDepthInEye - PixelDepth;
 	float depthFade = clamp(depthDiff * RcpDepthFadeDistance, 0, 1);

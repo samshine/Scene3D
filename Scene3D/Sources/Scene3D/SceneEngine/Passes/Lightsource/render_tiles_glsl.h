@@ -46,7 +46,8 @@ readonly buffer VisibleLightIndices
 };
 
 uniform sampler2DArray shadow_maps;
-uniform sampler2D normal_z;
+uniform sampler2D smoothed_normal;
+uniform sampler2D face_normal_z;
 uniform sampler2D diffuse;
 uniform sampler2D specular;
 uniform sampler2D specular_level;
@@ -109,7 +110,8 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 {
 	ivec2 pos = ivec2(x,y);
 
-	vec4 normal_and_z = texelFetch(normal_z, pos, 0);
+	vec4 face_normal_and_z = texelFetch(face_normal_z, pos, 0);
+	vec3 normal_in_eye = texelFetch(smoothed_normal, pos, 0).xyz;
 	vec2 glossiness_and_specular_level = texelFetch(specular_level, pos, 0).xy;
 
 	vec4 black_bias = vec4(0.003, 0.003, 0.003, 0.0); // Bias a little as there's no perfect black
@@ -118,8 +120,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	vec3 material_self_illumination = texelFetch(self_illumination, pos, 0).xyz;
-	vec3 normal_in_eye = normal_and_z.xyz;
-	float z_in_eye = normal_and_z.w;
+	float z_in_eye = face_normal_and_z.w;
 
 #if defined(DEBUG_DIFFUSE)
 	vec3 color = material_diffuse_color.xyz;

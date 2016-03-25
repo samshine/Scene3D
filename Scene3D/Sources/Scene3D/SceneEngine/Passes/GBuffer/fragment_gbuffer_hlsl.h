@@ -21,8 +21,6 @@ struct PixelIn
 {
 	float4 ScreenPos : SV_Position;
 	float3 NormalInEye : NormalInEye;
-	float3 BitangentInEye : BitangentInEye;
-	float3 TangentInEye : TangentInEye;
 	float4 PositionInWorld : PositionInWorld;
 	float4 PositionInEye : PositionInEye;
 #if defined(DIFFUSE_UV)
@@ -55,6 +53,7 @@ struct PixelOut
 	float2 FragSpecularLevel : SV_Target2;
 	float4 FragSelfIllumination : SV_Target3;
 	float4 FragNormal : SV_Target4;
+	float4 FragFaceNormal : SV_Target5;
 };
 
 #if defined(DIFFUSE_ARRAY)
@@ -81,37 +80,70 @@ float3 LightMapAndProbe(PixelIn input, float4 diffuseColor);
 
 PixelOut main(PixelIn input, bool frontFacing : SV_IsFrontFace)
 {
+	float3 dFdxPos = ddx(input.PositionInEye.xyz);
+	float3 dFdyPos = ddy(input.PositionInEye.xyz);
+	float3 faceNormal = normalize(cross(dFdxPos,dFdyPos));
+
 	PixelOut output;
 	float3 normalInEyeNormalized = ApplyNormalMap(input, frontFacing);
 	output.FragDiffuseColor = float4(DiffuseColor(input), 1);
 	output.FragSpecularColor = float4(SpecularColor(input), 1);
 	output.FragSpecularLevel = float2(MaterialGlossiness, MaterialSpecularLevel);
 	output.FragSelfIllumination = float4(LightMapAndProbe(input, output.FragDiffuseColor) + SelfIlluminationColor(input, output.FragDiffuseColor), 1);
-	output.FragNormal = float4(normalInEyeNormalized, input.PositionInEye.z);
+	output.FragNormal = float4(normalInEyeNormalized, 0);
+	output.FragFaceNormal = float4(faceNormal, input.PositionInEye.z);
+
 	return output;
 }
 
 #if defined(BUMPMAP_UV)
 
+float3x3 cotangent_frame(float3 n, float3 p, float2 uv)
+{
+	// get edge vectors of the pixel triangle
+	float3 dp1 = ddx(p);
+	float3 dp2 = ddy(p);
+	float2 duv1 = ddx(uv);
+	float2 duv2 = ddy(uv);
+
+	// solve the linear system
+	float3 dp2perp = cross(n, dp2); // cross(dp2, n);
+	float3 dp1perp = cross(dp1, n); // cross(n, dp1);
+	float3 t = dp2perp * duv1.x + dp1perp * duv2.x;
+	float3 b = dp2perp * duv1.y + dp1perp * duv2.y;
+
+	// construct a scale-invariant frame
+	float invmax = rsqrt(max(dot(t,t), dot(b,b)));
+	return transpose(float3x3(t * invmax, b * invmax, n));
+}
+
 float3 ApplyNormalMap(PixelIn input, bool frontFacing)
 {
-	// Get normal vector in tangent space from normal map:
-	float3 normalInTangent = BumpMapTexture.Sample(BumpMapSampler, input.BumpMapUV).rgb * 2 - 1;
+	#define WITH_NORMALMAP_UNSIGNED
+	#define WITH_NORMALMAP_GREEN_UP
+	#define WITH_NORMALMAP_2CHANNEL
 
-	// Re-normalize normal vector in tangent space (gives smoother result and allows us to also only use a RG normal texture)
-	normalInTangent.z = sqrt(1 - dot(normalInTangent.xy, normalInTangent.xy));
+	float3 interpolatedNormal = normalize(frontFacing ? input.NormalInEye : -input.NormalInEye);
 
-	// Find normal, tangent and bitang vectors for this fragment (taking face direction into account):
-	float3 frontNormal = normalize(frontFacing ? input.NormalInEye : -input.NormalInEye);
-	float3 frontTangent = normalize(frontFacing ? input.TangentInEye : -input.TangentInEye);
-	float3 frontBitangent = normalize(frontFacing ? input.BitangentInEye : -input.BitangentInEye);
+	float3 map = BumpMapTexture.Sample(BumpMapSampler, input.BumpMapUV).xyz;
+	#if defined(WITH_NORMALMAP_UNSIGNED)
+	map = map * 255./127. - 128./127.; // Math so "odd" because 0.5 cannot be precisely described in an unsigned format
+	#endif
+	#if defined(WITH_NORMALMAP_2CHANNEL)
+	map.z = sqrt(1 - dot(map.xy, map.xy));
+	#endif
+	#if defined(WITH_NORMALMAP_GREEN_UP)
+	map.y = -map.y;
+	#endif
 
-	// Calculate normal adjusted by the normal map:
-	float3 bumpedNormal = normalInTangent.x * frontTangent - normalInTangent.y * frontBitangent + normalInTangent.z * frontNormal;
+	float3x3 tbn = cotangent_frame(interpolatedNormal, input.PositionInEye.xyz, input.BumpMapUV);
+	float3 bumpedNormal = normalize(mul(tbn, map));
 
 	// Mix between the original normal vector and the bumped normal vector according to the material properties
-	float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now
-	return normalize(lerp(frontNormal, bumpedNormal, bumpAmount));
+	//float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now
+	//return normalize(lerp(frontNormal, bumpedNormal, bumpAmount));
+
+	return bumpedNormal;
 }
 
 #else

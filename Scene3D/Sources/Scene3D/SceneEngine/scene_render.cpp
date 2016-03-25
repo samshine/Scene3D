@@ -218,7 +218,8 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	specular_color_gbuffer = nullptr;
 	specular_level_gbuffer = nullptr;
 	self_illumination_gbuffer = nullptr;
-	normal_z_gbuffer = nullptr;
+	normal_gbuffer = nullptr;
+	face_normal_z_gbuffer = nullptr;
 	for (auto &blur : bloom_blurv) blur = nullptr;
 	for (auto &blur : bloom_blurh) blur = nullptr;
 	ambient_occlusion = nullptr;
@@ -230,7 +231,8 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	specular_color_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba8);
 	specular_level_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rg16f);
 	self_illumination_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16);
-	normal_z_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
+	normal_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
+	face_normal_z_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 	zbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_depth_component24);
 
 	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
@@ -252,7 +254,8 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	fb_gbuffer->attach_color(1, specular_color_gbuffer);
 	fb_gbuffer->attach_color(2, specular_level_gbuffer);
 	fb_gbuffer->attach_color(3, self_illumination_gbuffer);
-	fb_gbuffer->attach_color(4, normal_z_gbuffer);
+	fb_gbuffer->attach_color(4, normal_gbuffer);
+	fb_gbuffer->attach_color(5, face_normal_z_gbuffer);
 	fb_gbuffer->attach_depth(zbuffer);
 
 	fb_decals = FrameBuffer::create(gc);

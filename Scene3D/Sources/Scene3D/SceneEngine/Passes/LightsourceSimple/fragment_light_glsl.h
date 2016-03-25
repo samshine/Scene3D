@@ -23,7 +23,8 @@ layout(std140) uniform Uniforms
 };
 
 uniform sampler2DArray ShadowMapsTexture;
-uniform sampler2D NormalZTexture;
+uniform sampler2D FaceNormalZTexture;
+uniform sampler2D NormalTexture;
 uniform sampler2D DiffuseColorTexture;
 uniform sampler2D SpecularColorTexture;
 uniform sampler2D SpecularLevelTexture;
@@ -52,7 +53,8 @@ void main()
 	int y = int(gl_FragCoord.y);
 	ivec2 pos = ivec2(x,y);
 	
-	vec4 normal_and_z = texelFetch(NormalZTexture, pos, 0);
+	vec4 face_normal_and_z = texelFetch(FaceNormalZTexture, pos, 0);
+	vec3 normal_in_eye = texelFetch(NormalTexture, pos, 0).xyz;
 	vec2 glossiness_and_specular_level = texelFetch(SpecularLevelTexture, pos, 0).xy;
 
 	vec4 material_diffuse_color = texelFetch(DiffuseColorTexture, pos, 0);
@@ -60,8 +62,7 @@ void main()
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	vec3 material_self_illumination = texelFetch(SelfIlluminationTexture, pos, 0).xyz;
-	vec3 normal_in_eye = normal_and_z.xyz;
-	float z_in_eye = normal_and_z.w;
+	float z_in_eye = face_normal_and_z.w;
 
 	vec3 position_in_eye = unproject(vec2(x, y) + 0.5f, z_in_eye);
 

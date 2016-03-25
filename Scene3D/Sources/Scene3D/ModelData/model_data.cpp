@@ -49,7 +49,7 @@ std::shared_ptr<ModelData> ModelData::load(const IODevicePtr &device)
 
 inline void CModelFormat::save(const IODevicePtr &file, std::shared_ptr<ModelData> data)
 {
-	file->write_uint32(13); // version number
+	file->write_uint32(14); // version number
 	file->write("ModelCaramba", 12); // file magic
 
 	file->write_uint32(data->textures.size());
@@ -71,8 +71,6 @@ inline void CModelFormat::save(const IODevicePtr &file, std::shared_ptr<ModelDat
 	{
 		file->write_uint32(data->meshes[j].vertices.size());
 		file->write_uint32(data->meshes[j].normals.size());
-		file->write_uint32(data->meshes[j].tangents.size());
-		file->write_uint32(data->meshes[j].bitangents.size());
 		file->write_uint32(data->meshes[j].bone_weights.size());
 		file->write_uint32(data->meshes[j].bone_selectors.size());
 		file->write_uint32(data->meshes[j].colors.size());
@@ -82,8 +80,6 @@ inline void CModelFormat::save(const IODevicePtr &file, std::shared_ptr<ModelDat
 
 		write_vector_contents(file, data->meshes[j].vertices);
 		write_vector_contents(file, data->meshes[j].normals);
-		write_vector_contents(file, data->meshes[j].tangents);
-		write_vector_contents(file, data->meshes[j].bitangents);
 		write_vector_contents(file, data->meshes[j].bone_weights);
 		write_vector_contents(file, data->meshes[j].bone_selectors);
 		write_vector_contents(file, data->meshes[j].colors);
@@ -246,7 +242,7 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 	if (memcmp(magic, "ModelCaramba", 12) != 0)
 		throw Exception("Not a Caramba Model file");
 
-	if (version < 6 || version > 13)
+	if (version < 6 || version > 14)
 		throw Exception("Unsupported file version");
 
 	std::shared_ptr<ModelData> data(new ModelData());
@@ -279,8 +275,12 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 	{
 		data->meshes[j].vertices.resize(file->read_uint32());
 		data->meshes[j].normals.resize(file->read_uint32());
-		data->meshes[j].tangents.resize(file->read_uint32());
-		data->meshes[j].bitangents.resize(file->read_uint32());
+		std::vector<Vec3f> tangents, bitangents;
+		if (version < 14)
+		{
+			tangents.resize(file->read_uint32());
+			bitangents.resize(file->read_uint32());
+		}
 		data->meshes[j].bone_weights.resize(file->read_uint32());
 		data->meshes[j].bone_selectors.resize(file->read_uint32());
 		data->meshes[j].colors.resize(file->read_uint32());
@@ -290,8 +290,11 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 
 		read_vector_contents(file, data->meshes[j].vertices);
 		read_vector_contents(file, data->meshes[j].normals);
-		read_vector_contents(file, data->meshes[j].tangents);
-		read_vector_contents(file, data->meshes[j].bitangents);
+		if (version < 14)
+		{
+			read_vector_contents(file, tangents);
+			read_vector_contents(file, bitangents);
+		}
 		read_vector_contents(file, data->meshes[j].bone_weights);
 		read_vector_contents(file, data->meshes[j].bone_selectors);
 		read_vector_contents(file, data->meshes[j].colors);

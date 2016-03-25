@@ -11,8 +11,6 @@ public:
 
 	uicore::Vec3f position;
 	uicore::Vec3f normal;
-	uicore::Vec3f tangent;
-	uicore::Vec3f bitangent;
 
 	uicore::Vec4ub color;
 

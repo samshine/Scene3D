@@ -58,32 +58,30 @@ ProgramObjectPtr ModelShaderCache::create_gbuffer_program(const GraphicContextPt
 		gbuffer = ShaderSetup::compile(gc, "gbuffer", vertex_gbuffer_hlsl(), fragment_gbuffer_hlsl(), defines);
 
 	gbuffer->bind_frag_data_location(0, "FragColor");
-	gbuffer->bind_frag_data_location(1, "FragFaceNormal");
 
 	gbuffer->bind_frag_data_location(0, "FragDiffuseColor");
 	gbuffer->bind_frag_data_location(1, "FragSpecularColor");
 	gbuffer->bind_frag_data_location(2, "FragSpecularLevel");
 	gbuffer->bind_frag_data_location(3, "FragSelfIllumination");
 	gbuffer->bind_frag_data_location(4, "FragNormal");
+	gbuffer->bind_frag_data_location(5, "FragFaceNormal");
 
 	gbuffer->bind_attribute_location(0, "AttrPositionInObject");
 	gbuffer->bind_attribute_location(1, "AttrNormal");
-	gbuffer->bind_attribute_location(2, "AttrBitangent");
-	gbuffer->bind_attribute_location(3, "AttrTangent");
-	gbuffer->bind_attribute_location(4, "AttrBoneWeights");
-	gbuffer->bind_attribute_location(5, "AttrBoneSelectors");
+	gbuffer->bind_attribute_location(2, "AttrBoneWeights");
+	gbuffer->bind_attribute_location(3, "AttrBoneSelectors");
 	if (description.color_channel)
-		gbuffer->bind_attribute_location(6, "AttrColor");
+		gbuffer->bind_attribute_location(4, "AttrColor");
 	if (description.diffuse_channel)
-		gbuffer->bind_attribute_location(7, "AttrUVMapA");
+		gbuffer->bind_attribute_location(5, "AttrUVMapA");
 	if (description.bumpmap_channel)
-		gbuffer->bind_attribute_location(8, "AttrUVMapB");
+		gbuffer->bind_attribute_location(6, "AttrUVMapB");
 	if (description.self_illumination_channel)
-		gbuffer->bind_attribute_location(9, "AttrUVMapC");
+		gbuffer->bind_attribute_location(7, "AttrUVMapC");
 	if (description.specular_channel)
-		gbuffer->bind_attribute_location(10, "AttrUVMapD");
+		gbuffer->bind_attribute_location(8, "AttrUVMapD");
 	if (description.lightmap_channel)
-		gbuffer->bind_attribute_location(11, "AttrUVMapE");
+		gbuffer->bind_attribute_location(9, "AttrUVMapE");
 
 	ShaderSetup::link(gbuffer, "gbuffer program");
 
@@ -129,32 +127,30 @@ ProgramObjectPtr ModelShaderCache::create_transparency_program(const GraphicCont
 		transparency = ShaderSetup::compile(gc, "transparency", vertex_transparency_hlsl(), fragment_transparency_hlsl(), defines);
 
 	transparency->bind_frag_data_location(0, "FragColor");
-	transparency->bind_frag_data_location(1, "FragFaceNormal");
 
 	transparency->bind_frag_data_location(0, "FragDiffuseColor");
 	transparency->bind_frag_data_location(1, "FragSpecularColor");
 	transparency->bind_frag_data_location(2, "FragSpecularLevel");
 	transparency->bind_frag_data_location(3, "FragSelfIllumination");
 	transparency->bind_frag_data_location(4, "FragNormal");
+	transparency->bind_frag_data_location(5, "FragFaceNormal");
 
 	transparency->bind_attribute_location(0, "AttrPositionInObject");
 	transparency->bind_attribute_location(1, "AttrNormal");
-	transparency->bind_attribute_location(2, "AttrBitangent");
-	transparency->bind_attribute_location(3, "AttrTangent");
-	transparency->bind_attribute_location(4, "AttrBoneWeights");
-	transparency->bind_attribute_location(5, "AttrBoneSelectors");
+	transparency->bind_attribute_location(2, "AttrBoneWeights");
+	transparency->bind_attribute_location(3, "AttrBoneSelectors");
 	if (description.color_channel)
-		transparency->bind_attribute_location(6, "AttrColor");
+		transparency->bind_attribute_location(4, "AttrColor");
 	if (description.diffuse_channel)
-		transparency->bind_attribute_location(7, "AttrUVMapA");
+		transparency->bind_attribute_location(5, "AttrUVMapA");
 	if (description.bumpmap_channel)
-		transparency->bind_attribute_location(8, "AttrUVMapB");
+		transparency->bind_attribute_location(6, "AttrUVMapB");
 	if (description.self_illumination_channel)
-		transparency->bind_attribute_location(9, "AttrUVMapC");
+		transparency->bind_attribute_location(7, "AttrUVMapC");
 	if (description.specular_channel)
-		transparency->bind_attribute_location(10, "AttrUVMapD");
+		transparency->bind_attribute_location(8, "AttrUVMapD");
 	if (description.lightmap_channel)
-		transparency->bind_attribute_location(11, "AttrUVMapE");
+		transparency->bind_attribute_location(9, "AttrUVMapE");
 
 	ShaderSetup::link(transparency, "transparency program");
 
@@ -194,10 +190,8 @@ ProgramObjectPtr ModelShaderCache::get_shadow_program(const GraphicContextPtr &g
 
 	program->bind_attribute_location(0, "AttrPositionInObject");
 	program->bind_attribute_location(1, "AttrNormal");
-	program->bind_attribute_location(2, "AttrBitangent");
-	program->bind_attribute_location(3, "AttrTangent");
-	program->bind_attribute_location(4, "AttrBoneWeights");
-	program->bind_attribute_location(5, "AttrBoneSelectors");
+	program->bind_attribute_location(2, "AttrBoneWeights");
+	program->bind_attribute_location(3, "AttrBoneSelectors");
 
 	ShaderSetup::link(program, "shadow program");
 
@@ -234,10 +228,8 @@ ProgramObjectPtr ModelShaderCache::get_early_z_program(const GraphicContextPtr &
 
 	program->bind_attribute_location(0, "AttrPositionInObject");
 	program->bind_attribute_location(1, "AttrNormal");
-	program->bind_attribute_location(2, "AttrBitangent");
-	program->bind_attribute_location(3, "AttrTangent");
-	program->bind_attribute_location(4, "AttrBoneWeights");
-	program->bind_attribute_location(5, "AttrBoneSelectors");
+	program->bind_attribute_location(2, "AttrBoneWeights");
+	program->bind_attribute_location(3, "AttrBoneSelectors");
 
 	ShaderSetup::link(program, "early_z program");
 

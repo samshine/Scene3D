@@ -31,7 +31,8 @@ cbuffer Uniforms
 
 Texture2DArray<float4> ShadowMapsTexture;
 SamplerState ShadowMapsTextureSampler;
-Texture2D<float4> NormalZTexture;
+Texture2D<float4> FaceNormalZTexture;
+Texture2D<float4> NormalTexture;
 Texture2D<float4> DiffuseColorTexture;
 Texture2D<float4> SpecularColorTexture;
 Texture2D<float4> SpecularLevelTexture;
@@ -63,7 +64,8 @@ PixelOut main(PixelIn input)
 	int2 pos = int2(x,y);
 	uint3 texelpos = uint3(pos,0);
 
-	float4 normal_and_z = NormalZTexture.Load(texelpos);
+	float4 face_normal_and_z = FaceNormalZTexture.Load(texelpos);
+	float3 normal_in_eye = NormalTexture.Load(texelpos).xyz;
 	float2 glossiness_and_specular_level = SpecularLevelTexture.Load(texelpos).xy;
 
 	float4 material_diffuse_color = DiffuseColorTexture.Load(texelpos);
@@ -71,8 +73,7 @@ PixelOut main(PixelIn input)
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	float3 material_self_illumination = SelfIlluminationTexture.Load(texelpos).xyz;
-	float3 normal_in_eye = normal_and_z.xyz;
-	float z_in_eye = normal_and_z.w;
+	float z_in_eye = face_normal_and_z.w;
 
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 

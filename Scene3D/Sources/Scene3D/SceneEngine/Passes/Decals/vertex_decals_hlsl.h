@@ -1,4 +1,6 @@
-namespace { const char *vertex_decals_hlsl() { return R"shaderend(
+namespace {
+	const char *vertex_decals_hlsl() {
+		return R"shaderend(
 
 cbuffer Uniforms
 {
@@ -48,6 +50,9 @@ VertexOut main(VertexIn input)
 	output.BoxX.w = 1 / length(output.BoxX.xyz);
 	output.BoxY.w = 1 / length(output.BoxY.xyz);
 	output.BoxZ.w = 1 / length(output.BoxZ.xyz);
+	output.BoxX.xyz *= output.BoxX.w;
+	output.BoxY.xyz *= output.BoxY.w;
+	output.BoxZ.xyz *= output.BoxZ.w;
 	return output;
 }
 

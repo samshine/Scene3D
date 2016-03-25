@@ -116,8 +116,6 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 			model_mesh.vertices.push_back(mapping->position);
 			//model_mesh.colors.push_back(mapping->color);
 			model_mesh.normals.push_back(mapping->normal);
-			model_mesh.tangents.push_back(mapping->tangent);
-			model_mesh.bitangents.push_back(mapping->bitangent);
 			model_mesh.bone_weights.push_back(mapping->bone_weights);
 			model_mesh.bone_selectors.push_back(mapping->bone_selectors);
 			model_mesh.channels[0].push_back(mapping->diffuse_uv);
@@ -372,13 +370,9 @@ void FBXModelLoader::convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappin
 			Vec3f position = Vec3f(mesh_to_world * Vec4f(Vec3f(to_vec4f(control_points[control_index])), 1.0f));
 			//Vec4ub color = get_color(mesh, control_index, vertex_index + ccw_point);
 			Vec3f normal = normal_mesh_to_world * get_normal(mesh, control_index, vertex_index + ccw_point);
-			Vec3f tangent = get_tangent(mesh, control_index, vertex_index + ccw_point);
-			Vec3f bitangent = get_bitangent(mesh, control_index, vertex_index + ccw_point);
 			Vec2f diffuse_uv = get_uv(mesh, control_index, vertex_index + ccw_point, 0);
 
 			normal.normalize();
-			tangent.normalize();
-			bitangent.normalize();
 
 			//diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
 			diffuse_uv.y = 1.0f - diffuse_uv.y; // Seems to be needed for Max
@@ -389,8 +383,6 @@ void FBXModelLoader::convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappin
 				vertices[control_index]->position = position;
 				//vertices[control_index]->color = color;
 				vertices[control_index]->normal = normal;
-				vertices[control_index]->tangent = tangent;
-				vertices[control_index]->bitangent = bitangent;
 				vertices[control_index]->diffuse_uv = diffuse_uv;
 				vertices[control_index]->specular_uv = diffuse_uv;
 				vertices[control_index]->normal_uv = diffuse_uv;
@@ -401,7 +393,7 @@ void FBXModelLoader::convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappin
 			else
 			{
 				VertexMapping *mapping = vertices[control_index];
-				while (mapping->position != position /*|| mapping->color != color*/ || mapping->normal != normal || mapping->tangent != tangent || mapping->bitangent != bitangent || mapping->diffuse_uv != diffuse_uv)
+				while (mapping->position != position /*|| mapping->color != color*/ || mapping->normal != normal || mapping->diffuse_uv != diffuse_uv)
 				{
 					if (mapping->next)
 					{
@@ -415,8 +407,6 @@ void FBXModelLoader::convert_polygons(FbxNode *node, FbxMesh *mesh, VertexMappin
 						mapping->position = position;
 						//mapping->color = color;
 						mapping->normal = normal;
-						mapping->tangent = tangent;
-						mapping->bitangent = bitangent;
 						mapping->diffuse_uv = diffuse_uv;
 						mapping->specular_uv = diffuse_uv;
 						mapping->normal_uv = diffuse_uv;

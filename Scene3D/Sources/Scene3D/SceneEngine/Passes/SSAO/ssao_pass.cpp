@@ -75,12 +75,12 @@ void SSAOPass::run()
 		uniforms = UniformVector<UniformBuffer>(inout.gc, &uniform_buffer, 1);
 	}
 
-	inout.frames.front()->normal_z_gbuffer->set_min_filter(filter_nearest);
-	inout.frames.front()->normal_z_gbuffer->set_mag_filter(filter_nearest);
+	inout.frames.front()->face_normal_z_gbuffer->set_min_filter(filter_nearest);
+	inout.frames.front()->face_normal_z_gbuffer->set_mag_filter(filter_nearest);
 
 	inout.gc->set_frame_buffer(inout.frames.front()->fb_ambient_occlusion);
 	inout.gc->set_viewport(inout.frames.front()->ambient_occlusion->size(), inout.gc->texture_image_y_axis());
-	inout.gc->set_texture(0, inout.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(0, inout.frames.front()->face_normal_z_gbuffer);
 	inout.gc->set_uniform_buffer(0, uniforms);
 	inout.gc->set_blend_state(blend_state);
 	inout.gc->set_program_object(extract_shader);

@@ -16,15 +16,13 @@ ModelMesh::ModelMesh(SceneEngineImpl *engine, const GraphicContextPtr &gc,  std:
 		buffers.primitives_array = PrimitivesArray::create(gc);
 		buffers.vertices = upload_vector(gc, buffers.primitives_array, 0, model_data->meshes[i].vertices);
 		buffers.normals = upload_vector(gc, buffers.primitives_array, 1, model_data->meshes[i].normals);
-		buffers.bitangents = upload_vector(gc, buffers.primitives_array, 2, model_data->meshes[i].bitangents);
-		buffers.tangents = upload_vector(gc, buffers.primitives_array, 3, model_data->meshes[i].tangents);
-		buffers.bone_weights = upload_vector(gc, buffers.primitives_array, 4, model_data->meshes[i].bone_weights, true);
-		buffers.bone_selectors = upload_vector(gc, buffers.primitives_array, 5, model_data->meshes[i].bone_selectors, false);
-		buffers.colors = upload_vector(gc, buffers.primitives_array, 6, model_data->meshes[i].colors, true);
+		buffers.bone_weights = upload_vector(gc, buffers.primitives_array, 2, model_data->meshes[i].bone_weights, true);
+		buffers.bone_selectors = upload_vector(gc, buffers.primitives_array, 3, model_data->meshes[i].bone_selectors, false);
+		buffers.colors = upload_vector(gc, buffers.primitives_array, 4, model_data->meshes[i].colors, true);
 
 		for (size_t channel = 0; channel < model_data->meshes[i].channels.size(); channel++)
 		{
-			buffers.channels.push_back(upload_vector(gc, buffers.primitives_array, 7 + channel, model_data->meshes[i].channels[channel]));
+			buffers.channels.push_back(upload_vector(gc, buffers.primitives_array, 5 + channel, model_data->meshes[i].channels[channel]));
 		}
 
 		buffers.elements = ElementArrayVector<unsigned int>(gc, model_data->meshes[i].elements);

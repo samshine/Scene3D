@@ -22,7 +22,7 @@ struct PixelOut
 };
 
 Texture3D ParticleTexture;
-Texture2D NormalZTexture;
+Texture2D FaceNormalZTexture;
 
 SamplerState ParticleSampler;
 
@@ -31,7 +31,7 @@ PixelOut main(PixelIn input)
 	PixelOut output;
 
 	float4 textureColor = ParticleTexture.Sample(ParticleSampler, input.Texcoord);
-	float fragmentDepthInEye = NormalZTexture.Load(uint3(input.ScreenPos.xy, 0)).w;
+	float fragmentDepthInEye = FaceNormalZTexture.Load(uint3(input.ScreenPos.xy, 0)).w;
 
 	float depthDiff = fragmentDepthInEye - input.DepthInEye;
 	float depthFade = saturate(depthDiff * RcpDepthFadeDistance);

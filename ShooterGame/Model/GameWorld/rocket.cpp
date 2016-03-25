@@ -124,7 +124,7 @@ void Rocket::tick()
 			decal->set_position(ray_hit.position);
 			decal->set_orientation(orientation);
 			decal->set_extents(Vec3f(1.0f, 1.0f, 1.0f));
-			decal->set_diffuse_texture("rocketdecal.png");
+			decal->set_diffuse_texture("MARBFAC3.png"/*"lensflare.png"*//*"rocketdecal.png"*/);
 			game_world()->client()->decals().push_back(decal);
 		}
 

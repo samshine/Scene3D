@@ -139,7 +139,7 @@ void DecalsPass::render_cube(const std::string &diffuse_texture, uicore::Texture
 {
 	auto &texture = diffuse_textures[diffuse_texture];
 	if (!texture.get())
-		texture = inout.engine->get_texture(inout.gc, "MARBFAC3.png"/*"lensflare.png"*/, false);
+		texture = inout.engine->get_texture(inout.gc, diffuse_texture, false);
 
 	Size viewport_size = inout.viewport.size();
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
@@ -166,7 +166,7 @@ void DecalsPass::render_cube(const std::string &diffuse_texture, uicore::Texture
 	inout.gc->set_uniform_buffer(0, gpu_uniforms);
 	inout.gc->set_texture(0, instance_buffer);
 	inout.gc->set_texture(1, texture);
-	inout.gc->set_texture(2, inout.frames.front()->normal_z_gbuffer);
+	inout.gc->set_texture(2, inout.frames.front()->face_normal_z_gbuffer);
 
 	inout.gc->set_primitives_array(prim_array);
 	inout.gc->draw_primitives_array_instanced(type_triangles, 0, 6 * 6, instance_count);
@@ -248,7 +248,7 @@ void DecalsPass::setup()
 		program->set_uniform1i("InstanceTexture", 0);
 		program->set_uniform1i("DiffuseTexture", 1);
 		program->set_uniform1i("DiffuseSampler", 1);
-		program->set_uniform1i("NormalZTexture", 2);
+		program->set_uniform1i("FaceNormalZTexture", 2);
 
 		std::vector<Vec3f> cpu_box_positions =
 		{

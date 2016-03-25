@@ -17,8 +17,6 @@ layout(std140) uniform ModelMaterialUniforms
 };
 
 in vec3 NormalInEye;
-in vec3 BitangentInEye;
-in vec3 TangentInEye;
 in vec4 PositionInWorld;
 in vec4 PositionInEye;
 #if defined(DIFFUSE_UV)
@@ -45,6 +43,7 @@ out vec4 FragSpecularColor;
 out vec2 FragSpecularLevel;
 out vec4 FragSelfIllumination;
 out vec4 FragNormal;
+out vec4 FragFaceNormal;
 
 #if defined(DIFFUSE_ARRAY)
 uniform sampler2DArray DiffuseTexture;
@@ -62,35 +61,67 @@ vec3 SelfIlluminationColor(vec4 diffuseColor);
 
 void main()
 {
+	vec3 dFdxPos = dFdx(PositionInEye);
+	vec3 dFdyPos = dFdy(PositionInEye);
+	vec3 faceNormal = normalize(cross(dFdxPos,dFdyPos));
+
 	vec3 normalInEyeNormalized = ApplyNormalMap(gl_FrontFacing);
 	FragDiffuseColor = vec4(DiffuseColor(), 1);
 	FragSpecularColor = vec4(SpecularColor(), 1);
 	FragSpecularLevel = vec2(MaterialGlossiness, MaterialSpecularLevel);
 	FragSelfIllumination = vec4(FragDiffuseColor.rgb * LightProbeColor.rgb + SelfIlluminationColor(FragDiffuseColor), 1);
-	FragNormal = vec4(normalInEyeNormalized, PositionInEye.z);
+	FragNormal = vec4(normalInEyeNormalized, 0);
+	FragFaceNormal = vec4(faceNormal, PositionInEye.z);
 }
 
 #if defined(BUMPMAP_UV)
 
-vec3 ApplyNormalMap(bool frontFacing)
+mat3 cotangent_frame(vec3 n, vec3 p, vec2 uv)
 {
-	// Get normal vector in tangent space from normal map:
-	vec3 normalInTangent = texture(BumpMapTexture, BumpMapUV).rgb * 2 - 1;
+	// get edge vectors of the pixel triangle
+	vec3 dp1 = ddx(p);
+	vec3 dp2 = ddy(p);
+	vec2 duv1 = ddx(uv);
+	vec2 duv2 = ddy(uv);
 
-	// Re-normalize normal vector in tangent space (gives smoother result and allows us to also only use a RG normal texture)
-	normalInTangent.z = sqrt(1 - dot(normalInTangent.xy, normalInTangent.xy));
+	// solve the linear system
+	vec3 dp2perp = cross(n, dp2); // cross(dp2, n);
+	vec3 dp1perp = cross(dp1, n); // cross(n, dp1);
+	vec3 t = dp2perp * duv1.x + dp1perp * duv2.x;
+	vec3 b = dp2perp * duv1.y + dp1perp * duv2.y;
 
-	// Find normal, tangent and bitang vectors for this fragment (taking face direction into account):
-	vec3 frontNormal = normalize(frontFacing ? NormalInEye : -NormalInEye);
-	vec3 frontTangent = normalize(frontFacing ? TangentInEye : -TangentInEye);
-	vec3 frontBitangent = normalize(frontFacing ? BitangentInEye : -BitangentInEye);
+	// construct a scale-invariant frame
+	float invmax = inversesqrt(max(dot(t,t), dot(b,b)));
+	return mat3(t * invmax, b * invmax, n);
+}
 
-	// Calculate normal adjusted by the normal map:
-	vec3 bumpedNormal = normalInTangent.x * frontTangent - normalInTangent.y * frontBitangent + normalInTangent.z * frontNormal;
+vec3 ApplyNormalMap(PixelIn input, bool frontFacing)
+{
+	#define WITH_NORMALMAP_UNSIGNED
+	#define WITH_NORMALMAP_GREEN_UP
+	#define WITH_NORMALMAP_2CHANNEL
+
+	vec3 interpolatedNormal = normalize(frontFacing ? NormalInEye : -NormalInEye);
+
+	vec3 map = texture(BumpMapTexture, BumpMapUV).xyz;
+	#if defined(WITH_NORMALMAP_UNSIGNED)
+	map = map * 255./127. - 128./127.; // Math so "odd" because 0.5 cannot be precisely described in an unsigned format
+	#endif
+	#if defined(WITH_NORMALMAP_2CHANNEL)
+	map.z = sqrt(1 - dot(map.xy, map.xy));
+	#endif
+	#if defined(WITH_NORMALMAP_GREEN_UP)
+	map.y = -map.y;
+	#endif
+
+	mat3 tbn = cotangent_frame(interpolatedNormal, PositionInEye.xyz, BumpMapUV);
+	vec3 bumpedNormal = normalize(mul(tbn, map));
 
 	// Mix between the original normal vector and the bumped normal vector according to the material properties
-	float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now
-	return normalize(mix(frontNormal, bumpedNormal, bumpAmount));
+	//float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now
+	//return normalize(lerp(frontNormal, bumpedNormal, bumpAmount));
+
+	return bumpedNormal;
 }
 
 #else

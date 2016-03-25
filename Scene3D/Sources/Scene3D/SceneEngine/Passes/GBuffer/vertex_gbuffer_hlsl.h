@@ -20,8 +20,6 @@ struct VertexIn
 {
 	float4 AttrPositionInObject : AttrPositionInObject;
 	float3 AttrNormal : AttrNormal;
-	float3 AttrBitangent : AttrBitangent;
-	float3 AttrTangent : AttrTangent;
 #if defined(USE_BONES)
 	float4 AttrBoneWeights : AttrBoneWeights;
 	uint4 AttrBoneSelectors : AttrBoneSelectors;
@@ -50,8 +48,6 @@ struct VertexOut
 {
 	float4 PositionInProjection : SV_Position;
 	float3 NormalInEye : NormalInEye;
-	float3 BitangentInEye : BitangentInEye;
-	float3 TangentInEye : TangentInEye;
 	float4 PositionInWorld : PositionInWorld;
 	float4 PositionInEye : PositionInEye;
 #if defined(DIFFUSE_UV)
@@ -82,8 +78,6 @@ Texture2D InstanceVectors;
 struct BonesResult
 {
 	float3 Normal;
-	float3 Tangent;
-	float3 Bitangent;
 	float4 PositionInObject;
 };
 
@@ -132,11 +126,7 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 
 	VertexOut output;
 	BonesResult bonesResult = ApplyBones(input, vectorsOffset + 16);
-	float3x3 TangentObjectToEye = (float3x3)mul(WorldToEye, ObjectToWorld);
 	output.NormalInEye = normalize(mul(ObjectNormalToEye, bonesResult.Normal));
-	output.TangentInEye = normalize(mul(TangentObjectToEye, bonesResult.Tangent));
-	output.BitangentInEye = normalize(mul(TangentObjectToEye, bonesResult.Bitangent));
-	//output.BitangentInEye = normalize(cross(output.NormalInEye, output.TangentInEye));
 #if defined(DIFFUSE_UV)
 	float3x4 UVTextureMatrix0 = loadMat3x4(vectorsOffset + MaterialOffset + 2);
 	output.UVMap0 = mul(UVTextureMatrix0, float4(input.AttrUVMap0, 0, 1)).xy;
@@ -176,8 +166,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 	{
 		result.PositionInObject = float4(0,0,0,0);
 		result.Normal = float3(0,0,0);
-		result.Tangent = float3(0,0,0);
-		result.Bitangent = float3(0,0,0);
 
 		// We use low precision input for our bone weights. Rescale so the sum still is 1.0
 		float totalWeight = input.AttrBoneWeights.x + input.AttrBoneWeights.y + input.AttrBoneWeights.z + input.AttrBoneWeights.w;
@@ -190,8 +178,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 			float3x3 rotation = (float3x3)transform;
 			result.PositionInObject += mul(transform, input.AttrPositionInObject) * input.AttrBoneWeights.x;
 			result.Normal += mul(rotation, input.AttrNormal) * input.AttrBoneWeights.x;
-			result.Tangent += mul(rotation, input.AttrTangent) * input.AttrBoneWeights.x;
-			result.Bitangent += mul(rotation, input.AttrBitangent) * input.AttrBoneWeights.x;
 		}
 
 		if (input.AttrBoneWeights.y != 0.0)
@@ -200,8 +186,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 			float3x3 rotation = (float3x3)transform;
 			result.PositionInObject += mul(transform, input.AttrPositionInObject) * input.AttrBoneWeights.y;
 			result.Normal += mul(rotation, input.AttrNormal) * input.AttrBoneWeights.y;
-			result.Tangent += mul(rotation, input.AttrTangent) * input.AttrBoneWeights.y;
-			result.Bitangent += mul(rotation, input.AttrBitangent) * input.AttrBoneWeights.y;
 		}
 
 		if (input.AttrBoneWeights.z != 0.0)
@@ -210,8 +194,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 			float3x3 rotation = (float3x3)transform;
 			result.PositionInObject += mul(transform, input.AttrPositionInObject) * input.AttrBoneWeights.z;
 			result.Normal += mul(rotation, input.AttrNormal) * input.AttrBoneWeights.z;
-			result.Tangent += mul(rotation, input.AttrTangent) * input.AttrBoneWeights.z;
-			result.Bitangent += mul(rotation, input.AttrBitangent) * input.AttrBoneWeights.z;
 		}
 
 		if (input.AttrBoneWeights.w != 0.0)
@@ -220,8 +202,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 			float3x3 rotation = (float3x3)transform;
 			result.PositionInObject += mul(transform, input.AttrPositionInObject) * input.AttrBoneWeights.w;
 			result.Normal += mul(rotation, input.AttrNormal) * input.AttrBoneWeights.w;
-			result.Tangent += mul(rotation, input.AttrTangent) * input.AttrBoneWeights.w;
-			result.Bitangent += mul(rotation, input.AttrBitangent) * input.AttrBoneWeights.w;
 		}
 
 		result.PositionInObject.w = 1.0; // For numerical stability
@@ -230,8 +210,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 	{
 		result.PositionInObject = input.AttrPositionInObject;
 		result.Normal = input.AttrNormal;
-		result.Tangent = input.AttrTangent;
-		result.Bitangent = input.AttrBitangent;
 	}
 	return result;
 }
@@ -241,8 +219,6 @@ BonesResult ApplyBones(VertexIn input, uint instanceBonesOffset)
 	BonesResult result;
 	result.PositionInObject = input.AttrPositionInObject;
 	result.Normal = input.AttrNormal;
-	result.Tangent = input.AttrTangent;
-	result.Bitangent = input.AttrBitangent;
 	return result;
 }
 #endif

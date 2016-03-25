@@ -18,8 +18,6 @@ layout(std140) uniform ModelMaterialUniforms
 
 in vec4 AttrPositionInObject;
 in vec3 AttrNormal;
-in vec3 AttrBitangent;
-in vec3 AttrTangent;
 #if defined(USE_BONES)
 in vec4 AttrBoneWeights;
 in ivec4 AttrBoneSelectors;
@@ -39,8 +37,6 @@ in vec2 AttrUVMapD;
 #endif
 
 out vec3 NormalInEye;
-out vec3 BitangentInEye;
-out vec3 TangentInEye;
 out vec4 PositionInWorld;
 out vec4 PositionInEye;
 #if defined(DIFFUSE_UV)
@@ -64,8 +60,6 @@ uniform sampler2D InstanceVectors;
 struct BonesResult
 {
 	vec3 Normal;
-	vec3 Tangent;
-	vec3 Bitangent;
 	vec4 PositionInObject;
 };
 
@@ -113,11 +107,7 @@ void main()
 	vec4 MaterialInstanceData = texelFetch(InstanceVectors, GetTexelPosition(vectorsOffset + MaterialOffset + 1), 0);
 
 	BonesResult bonesResult = ApplyBones(vectorsOffset + 15);
-	mat3 TangentObjectToEye = mat3(WorldToEye * ObjectToWorld);
 	NormalInEye = normalize(ObjectNormalToEye * bonesResult.Normal);
-	TangentInEye = normalize(TangentObjectToEye * bonesResult.Tangent);
-	BitangentInEye = normalize(TangentObjectToEye * bonesResult.Bitangent);
-	//BitangentInEye = normalize(cross(NormalInEye, TangentInEye));
 #if defined(DIFFUSE_UV)
 	mat4x3 UVTextureMatrix0 = loadMat4x3(vectorsOffset + MaterialOffset + 2);
 	UVMap0 = (UVTextureMatrix0 * vec4(AttrUVMapA, 0, 1)).xy;
@@ -165,15 +155,11 @@ BonesResult ApplyBones(int instanceBonesOffset)
 		result.PositionInObject.w = 1;
 
 		result.Normal = AttrNormal + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrNormal) + dual[0].w * AttrNormal);
-		result.Tangent = AttrTangent + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrTangent) + dual[0].w * AttrTangent);
-		result.Bitangent = AttrBitangent + 2.0 * cross(dual[0].xyz, cross(dual[0].xyz, AttrBitangent) + dual[0].w * AttrBitangent);
 	}
 	else
 	{
 		result.PositionInObject = AttrPositionInObject;
 		result.Normal = AttrNormal;
-		result.Tangent = AttrTangent;
-		result.Bitangent = AttrBitangent;
 	}
 	return result;
 }
@@ -190,8 +176,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 
 		result.PositionInObject = vec4(0,0,0,0);
 		result.Normal = vec3(0,0,0);
-		result.Tangent = vec3(0,0,0);
-		result.Bitangent = vec3(0,0,0);
 
 		if (BoneWeights.x != 0.0)
 		{
@@ -199,8 +183,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 			mat3 rotation = mat3(transform);
 			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.x;
 			result.Normal += (rotation * AttrNormal) * BoneWeights.x;
-			result.Tangent += (rotation * AttrTangent) * BoneWeights.x;
-			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.x;
 		}
 
 		if (BoneWeights.y != 0.0)
@@ -209,8 +191,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 			mat3 rotation = mat3(transform);
 			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.y;
 			result.Normal += (rotation * AttrNormal) * BoneWeights.y;
-			result.Tangent += (rotation * AttrTangent) * BoneWeights.y;
-			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.y;
 		}
 
 		if (BoneWeights.z != 0.0)
@@ -219,8 +199,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 			mat3 rotation = mat3(transform);
 			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.z;
 			result.Normal += (rotation * AttrNormal) * BoneWeights.z;
-			result.Tangent += (rotation * AttrTangent) * BoneWeights.z;
-			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.z;
 		}
 
 		if (BoneWeights.w != 0.0)
@@ -229,8 +207,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 			mat3 rotation = mat3(transform);
 			result.PositionInObject += (transform * AttrPositionInObject) * BoneWeights.w;
 			result.Normal += (rotation * AttrNormal) * BoneWeights.w;
-			result.Tangent += (rotation * AttrTangent) * BoneWeights.w;
-			result.Bitangent += (rotation * AttrBitangent) * BoneWeights.w;
 		}
 
 		result.PositionInObject.w = 1.0; // For numerical stability
@@ -239,8 +215,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 	{
 		result.PositionInObject = AttrPositionInObject;
 		result.Normal = AttrNormal;
-		result.Tangent = AttrTangent;
-		result.Bitangent = AttrBitangent;
 	}
 	return result;
 }
@@ -250,8 +224,6 @@ BonesResult ApplyBones(int instanceBonesOffset)
 	BonesResult result;
 	result.PositionInObject = AttrPositionInObject;
 	result.Normal = AttrNormal;
-	result.Tangent = AttrTangent;
-	result.Bitangent = AttrBitangent;
 	return result;
 }
 #endif
