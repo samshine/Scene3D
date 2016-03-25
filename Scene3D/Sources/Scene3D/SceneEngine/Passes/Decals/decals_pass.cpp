@@ -132,7 +132,7 @@ void DecalsPass::write_instance_data(const std::string &diffuse_texture, SceneDe
 	instance_data[0] = Vec4f(object_to_eye[0], object_to_eye[4], object_to_eye[8], object_to_eye[12]);
 	instance_data[1] = Vec4f(object_to_eye[1], object_to_eye[5], object_to_eye[9], object_to_eye[13]);
 	instance_data[2] = Vec4f(object_to_eye[2], object_to_eye[6], object_to_eye[10], object_to_eye[14]);
-	instance_data[3] = Vec4f(std::cos(decal->cutoff_angle()), decal->glossiness(), decal->specular_level(), 0.0f);
+	instance_data[3] = Vec4f(std::cos(decal->cutoff_angle() * PI / 180.0f), decal->glossiness(), decal->specular_level(), 0.0f);
 }
 
 void DecalsPass::render_cube(const std::string &diffuse_texture, uicore::Texture2DPtr instance_buffer, int instance_base, int instance_count)
@@ -231,10 +231,10 @@ void DecalsPass::setup()
 {
 	if (!program)
 	{
-		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, vertex_decals_hlsl());
+		auto vertex_shader = ShaderObject::create(inout.gc, ShaderType::vertex, inout.gc->shader_language() == shader_hlsl ? vertex_decals_hlsl() : vertex_decals_glsl());
 		vertex_shader->compile();
 
-		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, fragment_decals_hlsl());
+		auto fragment_shader = ShaderObject::create(inout.gc, ShaderType::fragment, inout.gc->shader_language() == shader_hlsl ? fragment_decals_hlsl() : fragment_decals_glsl());
 		fragment_shader->compile();
 
 		program = ProgramObject::create(inout.gc);

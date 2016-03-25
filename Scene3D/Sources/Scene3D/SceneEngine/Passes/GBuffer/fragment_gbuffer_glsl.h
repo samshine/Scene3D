@@ -61,8 +61,8 @@ vec3 SelfIlluminationColor(vec4 diffuseColor);
 
 void main()
 {
-	vec3 dFdxPos = dFdx(PositionInEye);
-	vec3 dFdyPos = dFdy(PositionInEye);
+	vec3 dFdxPos = dFdx(PositionInEye.xyz);
+	vec3 dFdyPos = dFdy(PositionInEye.xyz);
 	vec3 faceNormal = normalize(cross(dFdxPos,dFdyPos));
 
 	vec3 normalInEyeNormalized = ApplyNormalMap(gl_FrontFacing);
@@ -79,10 +79,10 @@ void main()
 mat3 cotangent_frame(vec3 n, vec3 p, vec2 uv)
 {
 	// get edge vectors of the pixel triangle
-	vec3 dp1 = ddx(p);
-	vec3 dp2 = ddy(p);
-	vec2 duv1 = ddx(uv);
-	vec2 duv2 = ddy(uv);
+	vec3 dp1 = dFdx(p);
+	vec3 dp2 = dFdy(p);
+	vec2 duv1 = dFdx(uv);
+	vec2 duv2 = dFdy(uv);
 
 	// solve the linear system
 	vec3 dp2perp = cross(n, dp2); // cross(dp2, n);
@@ -95,7 +95,7 @@ mat3 cotangent_frame(vec3 n, vec3 p, vec2 uv)
 	return mat3(t * invmax, b * invmax, n);
 }
 
-vec3 ApplyNormalMap(PixelIn input, bool frontFacing)
+vec3 ApplyNormalMap(bool frontFacing)
 {
 	#define WITH_NORMALMAP_UNSIGNED
 	#define WITH_NORMALMAP_GREEN_UP
@@ -115,7 +115,7 @@ vec3 ApplyNormalMap(PixelIn input, bool frontFacing)
 	#endif
 
 	mat3 tbn = cotangent_frame(interpolatedNormal, PositionInEye.xyz, BumpMapUV);
-	vec3 bumpedNormal = normalize(mul(tbn, map));
+	vec3 bumpedNormal = normalize(tbn * map);
 
 	// Mix between the original normal vector and the bumped normal vector according to the material properties
 	//float bumpAmount = 0.30; // Hardcoded to the 3ds max default for now

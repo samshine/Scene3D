@@ -1,6 +1,4 @@
-namespace {
-	const char *fragment_decals_hlsl() {
-		return R"shaderend(
+namespace { const char *fragment_decals_hlsl() { return R"shaderend(
 
 // Direct3D's render targets are top-down, while OpenGL uses bottom-up
 #define TOP_DOWN_RENDER_TARGET
