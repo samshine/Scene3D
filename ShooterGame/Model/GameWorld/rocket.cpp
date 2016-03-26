@@ -120,11 +120,14 @@ void Rocket::tick()
 
 		if (game_world()->client())
 		{
+			auto orientation = Quaternionf(Mat4f::look_at(Vec3f(0.0f), ray_hit.normal, std::abs(ray_hit.normal.y) > std::abs(ray_hit.normal.z) ? Vec3f(0.0f, 0.0f, 1.0f) : Vec3f(0.0f, 1.0f, 0.0f))).inverse();
+			orientation = orientation * Quaternionf(0.0f, 0.0f, (rand() / (float)RAND_MAX) * 2 * PI, angle_radians, order_XYZ);
+
 			auto decal = SceneDecal::create(game_world()->client()->scene());
 			decal->set_position(ray_hit.position);
 			decal->set_orientation(orientation);
-			decal->set_extents(Vec3f(1.0f, 1.0f, 1.0f));
-			decal->set_diffuse_texture("MARBFAC3.png"/*"lensflare.png"*//*"rocketdecal.png"*/);
+			decal->set_extents(Vec3f(1.0f, 1.0f, 0.1f));
+			decal->set_diffuse_texture(string_format("BulletHoles/bullethole%1.png", 1 + rand() % 4));
 			game_world()->client()->decals().push_back(decal);
 		}
 

@@ -10,6 +10,7 @@ layout(std140) uniform Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	vec2 two_rcp_viewport_size;
+	int instance_base;
 };
 
 in float Cutoff;

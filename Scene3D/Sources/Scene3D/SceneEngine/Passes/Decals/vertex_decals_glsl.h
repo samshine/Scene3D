@@ -7,6 +7,7 @@ layout(std140) uniform Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	vec2 two_rcp_viewport_size;
+	int instance_base;
 };
 
 in vec4 AttrPosition;
@@ -52,7 +53,7 @@ mat4 InstanceMat4(int offset)
 
 vec4 InstanceData(int offset)
 {
-	offset += gl_InstanceID * 4;
+	offset += instance_base + gl_InstanceID * 4;
 	return texelFetch(InstanceTexture, ivec2(offset % 256, offset / 256), 0);
 }
 

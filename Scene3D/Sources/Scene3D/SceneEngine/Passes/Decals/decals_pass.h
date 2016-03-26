@@ -15,6 +15,10 @@ struct DecalRenderUniforms
 	float rcp_f = 0.0f;
 	float rcp_f_div_aspect = 0.0f;
 	uicore::Vec2f two_rcp_viewport_size;
+	int instance_base = 0;
+	int padding1 = 0;
+	int padding2 = 0;
+	int padding3 = 0;
 };
 
 class DecalsPass : public ScenePass

@@ -161,6 +161,7 @@ void DecalsPass::render_cube(const std::string &diffuse_texture, uicore::Texture
 	uniforms.rcp_f = rcp_f;
 	uniforms.rcp_f_div_aspect = rcp_f_div_aspect;
 	uniforms.two_rcp_viewport_size = two_rcp_viewport_size;
+	uniforms.instance_base = instance_base;
 	gpu_uniforms.upload_data(inout.gc, &uniforms, 1);
 
 	inout.gc->set_uniform_buffer(0, gpu_uniforms);

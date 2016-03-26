@@ -9,6 +9,7 @@ cbuffer Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	float2 two_rcp_viewport_size;
+	int instance_base;
 };
 
 struct PixelIn

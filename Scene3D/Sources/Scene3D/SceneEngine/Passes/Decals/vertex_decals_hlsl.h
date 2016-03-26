@@ -8,6 +8,7 @@ cbuffer Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	float2 two_rcp_viewport_size;
+	int instance_base;
 }
 
 struct VertexIn
@@ -63,7 +64,7 @@ float4x4 InstanceMat4(VertexIn input, int offset)
 
 float4 InstanceData(VertexIn input, int offset)
 {
-	offset += input.InstanceId * 4;
+	offset += instance_base + input.InstanceId * 4;
 	return InstanceTexture.Load(uint3(offset % 256, offset / 256, 0));
 }
 
