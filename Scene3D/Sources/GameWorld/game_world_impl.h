@@ -7,6 +7,7 @@
 #include "Network/lock_step_time.h"
 #include "Network/game_tick.h"
 #include "Physics3D/physics3d_world.h"
+#include <list>
 
 class GameWorldImpl
 {
@@ -15,8 +16,6 @@ public:
 	~GameWorldImpl();
 
 	void add_object(GameObjectPtr obj);
-	void add_static_object(int static_id, GameObjectPtr obj);
-	void remove_object(GameObject *);
 
 	void send_event(const std::string &target, int id, const uicore::JsonValue &message);
 
@@ -32,12 +31,10 @@ public:
 	std::shared_ptr<LockStepTime> lock_step_time;
 	GameTick net_tick;
 
-	std::map<int, std::shared_ptr<GameObject>> objects;
-	std::map<int, std::shared_ptr<GameObject>> added_objects;
-	std::vector<int> delete_list;
-	int next_id = 1;
+	std::list<std::shared_ptr<GameObject>> objects;
 
-	std::map<int, std::shared_ptr<GameObject>> remote_objects;
+	std::map<int, GameObject*> net_objects;
+	int next_id = 1;
 
 	Physics3DWorldPtr _kinematic_collision = Physics3DWorld::create();
 	Physics3DWorldPtr _dynamic_collision = Physics3DWorld::create();

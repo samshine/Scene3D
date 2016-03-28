@@ -21,11 +21,9 @@ public:
 
 	const std::shared_ptr<GameWorldClient> &client();
 
-	GameObjectPtr local_object(int id);
-	GameObjectPtr remote_object(int id);
+	GameObjectPtr net_object(int id);
 
 	void add_object(GameObjectPtr obj);
-	void add_static_object(int static_id, GameObjectPtr obj);
 
 	float time_elapsed() const;
 	int tick_time() const;

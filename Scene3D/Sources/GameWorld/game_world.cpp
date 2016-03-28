@@ -47,10 +47,9 @@ void GameWorld::update(uicore::Vec2i mouse_movement, bool has_focus)
 		impl->tick();
 	}
 
-	for (auto it : impl->objects)
+	for (auto &obj : impl->objects)
 	{
-		if (it.first != 0)
-			it.second->frame();
+		obj->frame();
 	}
 
 	if (impl->client)
@@ -62,35 +61,17 @@ const std::shared_ptr<GameWorldClient> &GameWorld::client()
 	return impl->client;
 }
 
-GameObjectPtr GameWorld::local_object(int id)
+GameObjectPtr GameWorld::net_object(int id)
 {
-	auto it = impl->objects.find(id);
-	if (it != impl->objects.end() && it->second->local_id() != 0)
-		return it->second;
-
-	it = impl->added_objects.find(id);
-	if (it != impl->added_objects.end() && it->second->local_id() != 0)
-		return it->second;
-
-	return nullptr;
-}
-
-GameObjectPtr GameWorld::remote_object(int id)
-{
-	auto it = impl->remote_objects.find(id);
-	if (it != impl->remote_objects.end() && it->second->remote_id() != 0)
-		return it->second;
+	auto it = impl->net_objects.find(id);
+	if (it != impl->net_objects.end())
+		return it->second->shared_from_this();
 	return nullptr;
 }
 
 void GameWorld::add_object(GameObjectPtr obj)
 {
 	impl->add_object(obj);
-}
-
-void GameWorld::add_static_object(int static_id, GameObjectPtr obj)
-{
-	impl->add_static_object(static_id, obj);
 }
 
 float GameWorld::time_elapsed() const
@@ -164,59 +145,35 @@ GameWorldImpl::GameWorldImpl(const std::string &hostname, const std::string &por
 
 GameWorldImpl::~GameWorldImpl()
 {
-	// Destroy game objects before shutting down rest of the game world
 	objects.clear();
-	added_objects.clear();
-	remote_objects.clear();
+	net_objects.clear();
 }
 
 void GameWorldImpl::add_object(GameObjectPtr obj)
 {
-	obj->_local_id = next_id++;
-	added_objects[obj->_local_id] = obj;
-}
-
-void GameWorldImpl::add_static_object(int static_id, GameObjectPtr obj)
-{
-	obj->_local_id = -static_id;
-	added_objects[obj->_local_id] = obj;
-}
-
-void GameWorldImpl::remove_object(GameObject *obj)
-{
-	delete_list.push_back(obj->_local_id);
+	objects.push_back(obj);
 }
 
 void GameWorldImpl::tick()
 {
 	ScopeTimeFunction();
 
-	for (auto it : objects)
+	for (auto &obj : objects)
 	{
-		if (it.first != 0)
-			it.second->tick();
+		obj->tick();
 	}
 
-	objects.insert(added_objects.begin(), added_objects.end());
-	added_objects.clear();
-
-	for (int id : delete_list)
+	for (auto it = objects.begin(); it != objects.end();)
 	{
-		auto it = objects.find(id);
-		if (it != objects.end())
+		if ((*it)->_remove_flag)
 		{
-			int remote_id = it->second->remote_id();
-			objects.erase(it);
-
-			if (remote_id != 0)
-			{
-				auto remote_it = remote_objects.find(remote_id);
-				if (remote_it != remote_objects.end())
-					remote_objects.erase(remote_it);
-			}
+			it = objects.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
-	delete_list.clear();
 }
 
 void GameWorldImpl::send_event(const std::string &target, int id, const JsonValue &message)
@@ -237,20 +194,14 @@ void GameWorldImpl::net_event_received(const std::string &sender, const NetGameE
 		if (!message.is_object())
 			return;
 
-		if (!client)
+		auto it = net_objects.find(obj_id);
+		if (it != net_objects.end())
 		{
-			auto it = objects.find(obj_id);
-			if (it != objects.end())
-				it->second->received_event(sender, message);
+			it->second->received_event(sender, message);
 		}
-		else
+		else if (client)
 		{
-			auto it = remote_objects.find(obj_id);
-			if (it != remote_objects.end())
-			{
-				it->second->received_event(sender, message);
-			}
-			else if (message["type"].type() == JsonType::string && obj_id > 0)
+			if (message["type"].type() == JsonType::string)
 			{
 				auto it2 = create_object_factory.find(message["type"].to_string());
 				if (it2 != create_object_factory.end())
@@ -259,8 +210,7 @@ void GameWorldImpl::net_event_received(const std::string &sender, const NetGameE
 					if (instance)
 					{
 						add_object(instance);
-						instance->_remote_id = obj_id;
-						remote_objects[obj_id] = instance;
+						instance->set_net_id(obj_id);
 					}
 				}
 			}

@@ -128,6 +128,11 @@ void Rocket::tick()
 			decal->set_orientation(orientation);
 			decal->set_extents(Vec3f(1.0f, 1.0f, 0.1f));
 			decal->set_diffuse_texture(string_format("BulletHoles/bullethole%1.png", 1 + rand() % 4));
+			/*int num = 1 + rand() % 73;
+			if (num < 10)
+				decal->set_diffuse_texture(string_format("Decal/Graffity/Graffity_00%1.png", num));
+			else
+				decal->set_diffuse_texture(string_format("Decal/Graffity/Graffity_0%1.png", num));*/
 			game_world()->client()->decals().push_back(decal);
 		}
 

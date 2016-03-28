@@ -14,18 +14,19 @@
 
 using namespace uicore;
 
-#define NO_BOTS
+//#define NO_BOTS
 
 void GameMaster::create(GameWorld *world)
 {
 	auto game_master = std::make_shared<GameMaster>(world);
-	world->add_static_object(1, game_master);
+	game_master->set_net_id(-1);
+	world->add_object(game_master);
 	game_master->setup_game();
 }
 
 GameMaster *GameMaster::instance(GameWorld *world)
 {
-	return (GameMaster *)world->local_object(-1).get();
+	return (GameMaster *)world->net_object(-1).get();
 }
 
 GameMaster *GameMaster::instance(GameObject *obj)
@@ -49,7 +50,7 @@ GameMaster::~GameMaster()
 
 void GameMaster::setup_game()
 {
-	int level_obj_id = 2;
+	int level_obj_id = -2;
 
 	std::string map_name = "Levels/Liandri/liandri2.cmap";
 
@@ -130,28 +131,33 @@ void GameMaster::setup_game()
 		if (objdesc.type == "Elevator")
 		{
 			Vec3f pos2(fields["endPosition"]["x"].to_float(), fields["endPosition"]["y"].to_float(), fields["endPosition"]["z"].to_float());
-			game_world()->add_static_object(level_obj_id++, std::make_shared<Elevator>(game_world(), objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale));
+			auto elevator = std::make_shared<Elevator>(game_world(), objdesc.position, pos2, orientation, objdesc.mesh, objdesc.scale);
+			elevator->set_net_id(level_obj_id--);
+			game_world()->add_object(elevator);
 		}
 		else if (objdesc.type == "Powerup")
 		{
 			std::string powerup_type = fields["powerupType"].to_string();
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			float respawn_time = fields["respawnTime"].to_float();
-
-			game_world()->add_object(std::make_shared<Powerup>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, respawn_time, powerup_type));
+			auto powerup = std::make_shared<Powerup>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, respawn_time, powerup_type);
+			powerup->set_net_id(level_obj_id--);
+			game_world()->add_object(powerup);
 		}
 		else if (objdesc.type == "Flag")
 		{
 			Vec3f collision_box_size(fields["collisionBoxSize"]["x"].to_float(), fields["collisionBoxSize"]["y"].to_float(), fields["collisionBoxSize"]["z"].to_float());
 			std::string team = fields["team"].to_string();
-
-			game_world()->add_object(std::make_shared<Flag>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, team));
+			auto flag = std::make_shared<Flag>(game_world(), objdesc.position, orientation, objdesc.mesh, objdesc.scale, objdesc.animation, collision_box_size, team);
+			flag->set_net_id(level_obj_id--);
+			game_world()->add_object(flag);
 		}
 		else if (objdesc.type == "SpawnPoint")
 		{
 			std::string team = fields["team"].to_string();
 
 			auto spawn = std::make_shared<SpawnPoint>(game_world(), objdesc.position, objdesc.dir, objdesc.up, objdesc.tilt, team);
+			spawn->set_net_id(level_obj_id--);
 			game_world()->add_object(spawn);
 			spawn_points.push_back(spawn);
 		}
@@ -223,6 +229,7 @@ void GameMaster::on_player_killed(const std::string &sender, const uicore::JsonV
 		Vec3f position(message["x"].to_float(), message["y"].to_float(), message["z"].to_float());
 		Quaternionf orientation(message["rw"].to_float(), message["rx"].to_float(), message["ry"].to_float(), message["rz"].to_float());
 		game_world()->add_object(std::make_shared<PlayerRagdoll>(game_world(), position + Vec3f(0.0f, 1.0f, 0.0f), orientation));
+		game_world()->net_object(message["playerid"].to_int())->remove();
 
 		announcement_timeout = 2.0f;
 		announcement_text1 = "You killed ~qsr*Robot!";
@@ -246,6 +253,7 @@ void GameMaster::player_killed(std::shared_ptr<ServerPlayerPawn> server_player)
 		message["ry"] = JsonValue::number(server_player->get_orientation().y);
 		message["rz"] = JsonValue::number(server_player->get_orientation().z);
 		message["rw"] = JsonValue::number(server_player->get_orientation().w);
+		message["playerid"] = JsonValue::number(server_player->net_id());
 
 		server_player->remove();
 		send_event("all", message);

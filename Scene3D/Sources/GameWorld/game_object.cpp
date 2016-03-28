@@ -10,9 +10,22 @@ GameObject::GameObject(GameWorld *world) : _game_world(world)
 {
 }
 
+GameObject::~GameObject()
+{
+	if (_net_id != 0)
+	{
+		auto &net_objects = game_world()->impl->net_objects;
+		auto it = net_objects.find(_net_id);
+		net_objects.erase(it);
+	}
+}
+
 void GameObject::send_event(const std::string &target, const JsonValue &message)
 {
-	game_world()->impl->send_event(target, game_world()->client() ? remote_id() : local_id(), message);
+	if (!game_world()->client() && _net_id == 0)
+		create_net_id();
+
+	game_world()->impl->send_event(target, net_id(), message);
 }
 
 void GameObject::received_event(const std::string &sender, const uicore::JsonValue &message)
@@ -22,9 +35,21 @@ void GameObject::received_event(const std::string &sender, const uicore::JsonVal
 		it->second(sender, message);
 }
 
+void GameObject::create_net_id()
+{
+	_net_id = game_world()->impl->next_id++;
+	game_world()->impl->net_objects[_net_id] = this;
+}
+
+void GameObject::set_net_id(int id)
+{
+	_net_id = id;
+	game_world()->impl->net_objects[_net_id] = this;
+}
+
 void GameObject::remove()
 {
-	game_world()->impl->remove_object(this);
+	_remove_flag = true;
 }
 
 float GameObject::time_elapsed() const

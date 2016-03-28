@@ -162,7 +162,7 @@ void Screen::run()
 
 			{
 				ScopeTimer scope_timer("DisplayWindow::flip");
-				window->flip(1);
+				window->flip(0);
 			}
 
 			ScopeTimerResults::end();
