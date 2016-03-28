@@ -26,6 +26,7 @@ private:
 	uicore::Quaternionf last_orientation;
 
 	SceneObjectPtr scene_object;
+	SceneLightPtr light;
 	SceneParticleEmitterPtr emitter;
 	AudioObjectPtr sound;
 };

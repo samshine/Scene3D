@@ -3,6 +3,7 @@
 #include "rocket.h"
 #include "collision_game_object.h"
 #include "player_pawn.h"
+#include "projectile_hit.h"
 #include <algorithm>
 
 using namespace uicore;
@@ -17,6 +18,7 @@ Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObjec
 {
 	pos = Vec3f(net_event["x"].to_float(), net_event["y"].to_float(), net_event["z"].to_float());
 	orientation = Quaternionf(net_event["rw"].to_float(), net_event["rx"].to_float(), net_event["ry"].to_float(), net_event["rz"].to_float());
+	owner = (PlayerPawn*)world->net_object(net_event["ownerId"].to_int()).get();
 
 	last_pos = pos;
 	last_orientation = orientation;
@@ -46,6 +48,13 @@ Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObjec
 		emitter->set_speed(2.0f);
 		emitter->set_particle_texture("ParticleTextures/Smoke3/Smoke3.ctexture");
 		emitter->set_gradient_texture("ParticleTextures/Smoke3/gradient.png");
+
+		light = SceneLight::create(game_world()->client()->scene());
+		light->set_type(SceneLight::type_omni);
+		light->set_position(pos);
+		light->set_attenuation_start(0.0f);
+		light->set_attenuation_end(5.0f);
+		light->set_color(Vec3f(1.0f, 0.7f, 0.5f) * 0.5f);
 	}
 }
 
@@ -61,6 +70,7 @@ void Rocket::send_create()
 	message["ry"] = JsonValue::number(orientation.y);
 	message["rz"] = JsonValue::number(orientation.z);
 	message["rw"] = JsonValue::number(orientation.w);
+	message["ownerId"] = JsonValue::number(owner->net_id());
 	send_event("all", message);
 }
 
@@ -134,6 +144,8 @@ void Rocket::tick()
 			else
 				decal->set_diffuse_texture(string_format("Decal/Graffity/Graffity_0%1.png", num));*/
 			game_world()->client()->decals().push_back(decal);
+
+			game_world()->add_object(std::make_shared<ProjectileHit>(game_world(), ray_hit.position, orientation));
 		}
 
 		remove();
@@ -148,6 +160,9 @@ void Rocket::frame()
 		scene_object->set_orientation(Quaternionf::lerp(last_orientation, orientation, frame_interpolated_time()));
 		scene_object->update(frame_time_elapsed());
 	}
+
+	if (light)
+		light->set_position(mix(last_pos, pos, frame_interpolated_time()));
 
 	if (emitter)
 	{

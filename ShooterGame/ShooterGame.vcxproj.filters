@@ -70,6 +70,9 @@
     <ClInclude Include="Model\Settings\settings.h">
       <Filter>Model\Settings</Filter>
     </ClInclude>
+    <ClInclude Include="Model\GameWorld\projectile_hit.h">
+      <Filter>Model\GameWorld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -131,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="Model\Settings\settings.cpp">
       <Filter>Model\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameWorld\projectile_hit.cpp">
+      <Filter>Model\GameWorld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

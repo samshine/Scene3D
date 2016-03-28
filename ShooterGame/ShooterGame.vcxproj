@@ -164,6 +164,7 @@
     <ClInclude Include="Model\GameWorld\player_pawn.h" />
     <ClInclude Include="Model\GameWorld\player_ragdoll.h" />
     <ClInclude Include="Model\GameWorld\powerup.h" />
+    <ClInclude Include="Model\GameWorld\projectile_hit.h" />
     <ClInclude Include="Model\GameWorld\robot_player_pawn.h" />
     <ClInclude Include="Model\GameWorld\rocket.h" />
     <ClInclude Include="Model\GameWorld\server_player_pawn.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="Model\GameWorld\player_pawn.cpp" />
     <ClCompile Include="Model\GameWorld\player_ragdoll.cpp" />
     <ClCompile Include="Model\GameWorld\powerup.cpp" />
+    <ClCompile Include="Model\GameWorld\projectile_hit.cpp" />
     <ClCompile Include="Model\GameWorld\robot_player_pawn.cpp" />
     <ClCompile Include="Model\GameWorld\rocket.cpp" />
     <ClCompile Include="Model\GameWorld\server_player_pawn.cpp" />
