@@ -227,24 +227,6 @@ void ModelRender::write_instance_data(ModelMesh *mesh, SceneObjectImpl *object, 
 		float self_illumination_amount = mesh->model_data->meshes[0].draw_ranges[i].self_illumination_amount.get_value(animation_index, animation_time);
 		vectors[material_offset + 0] = Vec4f(self_illumination, self_illumination_amount);
 		vectors[material_offset + 1] = Vec4f(0.0f); // mesh->model_data->meshes[0].draw_ranges[i].diffuse_map.replaceable_texture
-
-		Mat4f uvw[4] =
-		{
-			mesh->model_data->meshes[0].draw_ranges[i].diffuse_map.get_uvw_matrix(animation_index, animation_time),
-			mesh->model_data->meshes[0].draw_ranges[i].bumpmap_map.get_uvw_matrix(animation_index, animation_time),
-			mesh->model_data->meshes[0].draw_ranges[i].self_illumination_map.get_uvw_matrix(animation_index, animation_time),
-			mesh->model_data->meshes[0].draw_ranges[i].specular_map.get_uvw_matrix(animation_index, animation_time)
-		};
-
-		for (int h = 0; h < 4; h++)
-			uvw[h].transpose();
-
-		for (int h = 0; h < 4; h++)
-		{
-			vectors[material_offset + 2 + h * 3 + 0] = Vec4f(uvw[h][0], uvw[h][1], uvw[h][2], uvw[h][3]);
-			vectors[material_offset + 2 + h * 3 + 1] = Vec4f(uvw[h][4], uvw[h][5], uvw[h][6], uvw[h][7]);
-			vectors[material_offset + 2 + h * 3 + 2] = Vec4f(uvw[h][8], uvw[h][9], uvw[h][10], uvw[h][11]);
-		}
 	}
 }
 

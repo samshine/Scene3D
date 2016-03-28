@@ -16,7 +16,7 @@ public:
 
 	static const int vectors_per_bone = 3;
 	static const int instance_base_vectors = 16;
-	static const int vectors_per_material = 14;
+	static const int vectors_per_material = 2;
 
 	std::shared_ptr<ModelData> model_data;
 	std::vector<ModelMeshBuffers> mesh_buffers;

@@ -300,12 +300,12 @@ ModelDataTextureMap FBXModelLoader::create_texture_channel(int channel, const ch
 		std::string filename = PathHelp::combine(model->base_path, PathHelp::filename(texture->GetFileName()));
 		std::string uv_set = texture->UVSet.Get();
 
-		Vec3f translate = to_vec3f(texture->Translation.Get());
+		//Vec3f translate = to_vec3f(texture->Translation.Get());
 
 		FbxDouble3 r = texture->Rotation.Get();
-		Quaternionf rotation((float)r[0], (float)r[1], (float)r[2], angle_degrees, order_XYZ);
+		//Quaternionf rotation((float)r[0], (float)r[1], (float)r[2], angle_degrees, order_XYZ);
 
-		Vec3f scale = to_vec3f(texture->Scaling.Get());
+		//Vec3f scale = to_vec3f(texture->Scaling.Get());
 
 		map.texture = (int)model_data->textures.size();
 
@@ -313,15 +313,15 @@ ModelDataTextureMap FBXModelLoader::create_texture_channel(int channel, const ch
 		map.wrap_x = texture->WrapModeU.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
 		map.wrap_y = texture->WrapModeV.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
 
-		if (texture->UVSwap.Get())
+		/*if (texture->UVSwap.Get())
 		{
 			rotation = rotation * Quaternionf(0.0f, 0.0f, 90.0f, angle_degrees, order_XYZ);
 			scale.y = -scale.y;
-		}
+		}*/
 
-		map.uvw_offset.set_single_value(translate);
-		map.uvw_rotation.set_single_value(rotation);
-		map.uvw_scale.set_single_value(scale);
+		//map.uvw_offset.set_single_value(translate);
+		//map.uvw_rotation.set_single_value(rotation);
+		//map.uvw_scale.set_single_value(scale);
 
 		model_data->textures.push_back(ModelDataTexture(filename, gamma));
 	}

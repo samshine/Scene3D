@@ -128,20 +128,16 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 	BonesResult bonesResult = ApplyBones(input, vectorsOffset + 16);
 	output.NormalInEye = normalize(mul(ObjectNormalToEye, bonesResult.Normal));
 #if defined(DIFFUSE_UV)
-	float3x4 UVTextureMatrix0 = loadMat3x4(vectorsOffset + MaterialOffset + 2);
-	output.UVMap0 = mul(UVTextureMatrix0, float4(input.AttrUVMap0, 0, 1)).xy;
+	output.UVMap0 = input.AttrUVMap0;
 #endif
 #if defined(BUMPMAP_UV)
-	float3x4 UVTextureMatrix1 = loadMat3x4(vectorsOffset + MaterialOffset + 5);
-	output.UVMap1 = mul(UVTextureMatrix1, float4(input.AttrUVMap1, 0, 1)).xy;
+	output.UVMap1 = input.AttrUVMap1;
 #endif
 #if defined(SI_UV)
-	float3x4 UVTextureMatrix2 = loadMat3x4(vectorsOffset + MaterialOffset + 8);
-	output.UVMap2 = mul(UVTextureMatrix2, float4(input.AttrUVMap2, 0, 1)).xy;
+	output.UVMap2 = input.AttrUVMap2;
 #endif
 #if defined(SPECULAR_UV)
-	float3x4 UVTextureMatrix3 = loadMat3x4(vectorsOffset + MaterialOffset + 11);
-	output.UVMap3 = mul(UVTextureMatrix3, float4(input.AttrUVMap3, 0, 1)).xy;
+	output.UVMap3 = input.AttrUVMap3;
 #endif
 #if defined(LIGHTMAP_UV)
 	output.UVMap4 = input.AttrUVMap4.xy;

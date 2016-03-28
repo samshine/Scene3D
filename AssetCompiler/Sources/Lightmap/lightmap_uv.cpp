@@ -140,7 +140,7 @@ void LightmapUV::generate(const std::shared_ptr<ModelData> &model_data)
 
 				new_range.light_map.texture = (int)model_data->textures.size() + it.first;
 				new_range.light_map.channel = lightmap_channel_index;
-				new_range.light_map.uvw_scale.set_single_value(Vec3f(1.0f));
+				//new_range.light_map.uvw_scale.set_single_value(Vec3f(1.0f));
 
 				new_elements.insert(new_elements.end(), it.second.begin(), it.second.end());
 				new_draw_ranges.push_back(new_range);

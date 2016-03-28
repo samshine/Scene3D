@@ -49,7 +49,7 @@ std::shared_ptr<ModelData> ModelData::load(const IODevicePtr &device)
 
 inline void CModelFormat::save(const IODevicePtr &file, std::shared_ptr<ModelData> data)
 {
-	file->write_uint32(14); // version number
+	file->write_uint32(15); // version number
 	file->write("ModelCaramba", 12); // file magic
 
 	file->write_uint32(data->textures.size());
@@ -119,41 +119,26 @@ inline void CModelFormat::save(const IODevicePtr &file, std::shared_ptr<ModelDat
 			file->write_int32(data->meshes[j].draw_ranges[k].diffuse_map.channel);
 			file->write_uint32(data->meshes[j].draw_ranges[k].diffuse_map.wrap_x);
 			file->write_uint32(data->meshes[j].draw_ranges[k].diffuse_map.wrap_y);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_rotation);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_scale);
 
 			file->write_int32(data->meshes[j].draw_ranges[k].specular_map.texture);
 			file->write_int32(data->meshes[j].draw_ranges[k].specular_map.channel);
 			file->write_uint32(data->meshes[j].draw_ranges[k].specular_map.wrap_x);
 			file->write_uint32(data->meshes[j].draw_ranges[k].specular_map.wrap_y);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_offset);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_rotation);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_scale);
 
 			file->write_int32(data->meshes[j].draw_ranges[k].bumpmap_map.texture);
 			file->write_int32(data->meshes[j].draw_ranges[k].bumpmap_map.channel);
 			file->write_uint32(data->meshes[j].draw_ranges[k].bumpmap_map.wrap_x);
 			file->write_uint32(data->meshes[j].draw_ranges[k].bumpmap_map.wrap_y);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_rotation);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_scale);
 
 			file->write_int32(data->meshes[j].draw_ranges[k].self_illumination_map.texture);
 			file->write_int32(data->meshes[j].draw_ranges[k].self_illumination_map.channel);
 			file->write_uint32(data->meshes[j].draw_ranges[k].self_illumination_map.wrap_x);
 			file->write_uint32(data->meshes[j].draw_ranges[k].self_illumination_map.wrap_y);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale);
 
 			file->write_int32(data->meshes[j].draw_ranges[k].light_map.texture);
 			file->write_int32(data->meshes[j].draw_ranges[k].light_map.channel);
 			file->write_uint32(data->meshes[j].draw_ranges[k].light_map.wrap_x);
 			file->write_uint32(data->meshes[j].draw_ranges[k].light_map.wrap_y);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_offset);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_rotation);
-			write_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_scale);
 
 			file->write_uint32(data->meshes[j].draw_ranges[k].start_element);
 			file->write_uint32(data->meshes[j].draw_ranges[k].num_elements);
@@ -242,7 +227,7 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 	if (memcmp(magic, "ModelCaramba", 12) != 0)
 		throw Exception("Not a Caramba Model file");
 
-	if (version < 6 || version > 14)
+	if (version < 6 || version > 15)
 		throw Exception("Unsupported file version");
 
 	std::shared_ptr<ModelData> data(new ModelData());
@@ -379,31 +364,15 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 			{
 				Mat4f uv_transform;
 				file->read(uv_transform.matrix, 16 * 4);
-
-				Vec3f uvw_offset;
-				Quaternionf uvw_rotation;
-				Vec3f uvw_scale;
-				uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
-
-				data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].diffuse_map.uvw_rotation.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].diffuse_map.uvw_scale.timelines.resize(data->animations.size());
-				for (size_t anim_index = 0; anim_index < data->animations.size(); anim_index++)
-				{
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_rotation.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_scale.timelines[anim_index].timestamps.resize(1);
-
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset.timelines[anim_index].values.push_back(uvw_offset);
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_rotation.timelines[anim_index].values.push_back(uvw_rotation);
-					data->meshes[j].draw_ranges[k].diffuse_map.uvw_scale.timelines[anim_index].values.push_back(uvw_scale);
-				}
 			}
-			else
+			else if (version < 15)
 			{
-				read_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_offset);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_rotation);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].diffuse_map.uvw_scale);
+				ModelDataAnimationData<Vec3f> uvw_offset;
+				ModelDataAnimationData<Quaternionf> uvw_rotation;
+				ModelDataAnimationData<Vec3f> uvw_scale;
+				read_animation_data(file, uvw_offset);
+				read_animation_data(file, uvw_rotation);
+				read_animation_data(file, uvw_scale);
 			}
 
 			if (version < 11)
@@ -416,31 +385,15 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 			{
 				Mat4f uv_transform;
 				file->read(uv_transform.matrix, 16 * 4);
-
-				Vec3f uvw_offset;
-				Quaternionf uvw_rotation;
-				Vec3f uvw_scale;
-				uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
-
-				data->meshes[j].draw_ranges[k].specular_map.uvw_offset.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].specular_map.uvw_rotation.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].specular_map.uvw_scale.timelines.resize(data->animations.size());
-				for (size_t anim_index = 0; anim_index < data->animations.size(); anim_index++)
-				{
-					data->meshes[j].draw_ranges[k].specular_map.uvw_offset.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].specular_map.uvw_rotation.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].specular_map.uvw_scale.timelines[anim_index].timestamps.resize(1);
-
-					data->meshes[j].draw_ranges[k].specular_map.uvw_offset.timelines[anim_index].values.push_back(uvw_offset);
-					data->meshes[j].draw_ranges[k].specular_map.uvw_rotation.timelines[anim_index].values.push_back(uvw_rotation);
-					data->meshes[j].draw_ranges[k].specular_map.uvw_scale.timelines[anim_index].values.push_back(uvw_scale);
-				}
 			}
-			else
+			else if (version < 15)
 			{
-				read_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_offset);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_rotation);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].specular_map.uvw_scale);
+				ModelDataAnimationData<Vec3f> uvw_offset;
+				ModelDataAnimationData<Quaternionf> uvw_rotation;
+				ModelDataAnimationData<Vec3f> uvw_scale;
+				read_animation_data(file, uvw_offset);
+				read_animation_data(file, uvw_rotation);
+				read_animation_data(file, uvw_scale);
 			}
 
 			if (version < 11)
@@ -453,31 +406,15 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 			{
 				Mat4f uv_transform;
 				file->read(uv_transform.matrix, 16 * 4);
-
-				Vec3f uvw_offset;
-				Quaternionf uvw_rotation;
-				Vec3f uvw_scale;
-				uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
-
-				data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].bumpmap_map.uvw_rotation.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].bumpmap_map.uvw_scale.timelines.resize(data->animations.size());
-				for (size_t anim_index = 0; anim_index < data->animations.size(); anim_index++)
-				{
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_rotation.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_scale.timelines[anim_index].timestamps.resize(1);
-
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset.timelines[anim_index].values.push_back(uvw_offset);
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_rotation.timelines[anim_index].values.push_back(uvw_rotation);
-					data->meshes[j].draw_ranges[k].bumpmap_map.uvw_scale.timelines[anim_index].values.push_back(uvw_scale);
-				}
 			}
-			else
+			else if (version < 15)
 			{
-				read_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_offset);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_rotation);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].bumpmap_map.uvw_scale);
+				ModelDataAnimationData<Vec3f> uvw_offset;
+				ModelDataAnimationData<Quaternionf> uvw_rotation;
+				ModelDataAnimationData<Vec3f> uvw_scale;
+				read_animation_data(file, uvw_offset);
+				read_animation_data(file, uvw_rotation);
+				read_animation_data(file, uvw_scale);
 			}
 
 			if (version < 11)
@@ -490,31 +427,15 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 			{
 				Mat4f uv_transform;
 				file->read(uv_transform.matrix, 16 * 4);
-
-				Vec3f uvw_offset;
-				Quaternionf uvw_rotation;
-				Vec3f uvw_scale;
-				uv_transform.decompose(uvw_offset, uvw_rotation, uvw_scale);
-
-				data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation.timelines.resize(data->animations.size());
-				data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale.timelines.resize(data->animations.size());
-				for (size_t anim_index = 0; anim_index < data->animations.size(); anim_index++)
-				{
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation.timelines[anim_index].timestamps.resize(1);
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale.timelines[anim_index].timestamps.resize(1);
-
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset.timelines[anim_index].values.push_back(uvw_offset);
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation.timelines[anim_index].values.push_back(uvw_rotation);
-					data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale.timelines[anim_index].values.push_back(uvw_scale);
-				}
 			}
-			else
+			else if (version < 15)
 			{
-				read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_offset);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_rotation);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].self_illumination_map.uvw_scale);
+				ModelDataAnimationData<Vec3f> uvw_offset;
+				ModelDataAnimationData<Quaternionf> uvw_rotation;
+				ModelDataAnimationData<Vec3f> uvw_scale;
+				read_animation_data(file, uvw_offset);
+				read_animation_data(file, uvw_rotation);
+				read_animation_data(file, uvw_scale);
 			}
 
 			if (version > 12)
@@ -524,9 +445,15 @@ inline std::shared_ptr<ModelData> CModelFormat::load(const IODevicePtr &file)
 				data->meshes[j].draw_ranges[k].light_map.wrap_x = (ModelDataTextureMap::WrapMode)file->read_uint32();
 				data->meshes[j].draw_ranges[k].light_map.wrap_y = (ModelDataTextureMap::WrapMode)file->read_uint32();
 
-				read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_offset);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_rotation);
-				read_animation_data(file, data->meshes[j].draw_ranges[k].light_map.uvw_scale);
+				if (version < 15)
+				{
+					ModelDataAnimationData<Vec3f> uvw_offset;
+					ModelDataAnimationData<Quaternionf> uvw_rotation;
+					ModelDataAnimationData<Vec3f> uvw_scale;
+					read_animation_data(file, uvw_offset);
+					read_animation_data(file, uvw_rotation);
+					read_animation_data(file, uvw_scale);
+				}
 			}
 
 			data->meshes[j].draw_ranges[k].start_element = file->read_uint32();

@@ -109,20 +109,16 @@ void main()
 	BonesResult bonesResult = ApplyBones(vectorsOffset + 15);
 	NormalInEye = normalize(ObjectNormalToEye * bonesResult.Normal);
 #if defined(DIFFUSE_UV)
-	mat4x3 UVTextureMatrix0 = loadMat4x3(vectorsOffset + MaterialOffset + 2);
-	UVMap0 = (UVTextureMatrix0 * vec4(AttrUVMapA, 0, 1)).xy;
+	UVMap0 = AttrUVMapA;
 #endif
 #if defined(BUMPMAP_UV)
-	mat4x3 UVTextureMatrix1 = loadMat4x3(vectorsOffset + MaterialOffset + 5);
-	UVMap1 = (UVTextureMatrix1 * vec4(AttrUVMapB, 0, 1)).xy;
+	UVMap1 = AttrUVMapB;
 #endif
 #if defined(SI_UV)
-	mat4x3 UVTextureMatrix2 = loadMat4x3(vectorsOffset + MaterialOffset + 8);
-	UVMap2 = (UVTextureMatrix2 * vec4(AttrUVMapC, 0, 1)).xy;
+	UVMap2 = AttrUVMapC;
 #endif
 #if defined(SPECULAR_UV)
-	mat4x3 UVTextureMatrix3 = loadMat4x3(vectorsOffset + MaterialOffset + 11);
-	UVMap3 = (UVTextureMatrix3 * vec4(AttrUVMapD, 0, 1)).xy;
+	UVMap3 = AttrUVMapD;
 #endif
 	PositionInWorld = ObjectToWorld * bonesResult.PositionInObject;
 	PositionInEye = WorldToEye * PositionInWorld;
