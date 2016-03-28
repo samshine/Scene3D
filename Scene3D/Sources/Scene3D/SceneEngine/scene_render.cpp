@@ -50,8 +50,9 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	scene = scene_viewport->scene();
 	camera = static_cast<SceneCameraImpl*>(scene_viewport->camera().get());
 
-	viewport = scene_viewport->_viewport;
+	final_viewport = scene_viewport->_viewport;
 	fb_viewport = scene_viewport->_fb_viewport;
+	viewport_size = Size((int)std::round(final_viewport.width() / scene_viewport->_viewport_scale), (int)std::round(final_viewport.height() / scene_viewport->_viewport_scale));
 
 	field_of_view = camera->field_of_view();
 	Quaternionf inv_orientation = Quaternionf::inverse(scene_viewport->camera()->orientation());
@@ -200,7 +201,7 @@ void SceneRender::setup_passes()
 
 void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 {
-	Size viewport_size = render->viewport.size();
+	Size viewport_size = render->viewport_size;
 	auto &gc = render->gc;
 
 	if (diffuse_color_gbuffer && diffuse_color_gbuffer->size() == viewport_size && gc->is_frame_buffer_owner(fb_gbuffer))

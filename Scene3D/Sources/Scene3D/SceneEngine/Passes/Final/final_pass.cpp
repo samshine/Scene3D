@@ -54,7 +54,7 @@ void FinalPass::run()
 	inout.frames.front()->final_color->set_mag_filter(filter_nearest);
 
 	if (inout.fb_viewport) inout.gc->set_frame_buffer(inout.fb_viewport);
-	inout.gc->set_viewport(inout.viewport, inout.gc->texture_image_y_axis());
+	inout.gc->set_viewport(inout.final_viewport, inout.gc->texture_image_y_axis());
 	inout.gc->set_texture(0, inout.frames.front()->final_color);
 	inout.gc->set_program_object(present_shader);
 	inout.gc->set_rasterizer_state(rasterizer_state);

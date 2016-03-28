@@ -24,7 +24,7 @@ void LensFlarePass::run()
 	if (!flare_texture.get())
 		flare_texture = inout.engine->get_texture(inout.gc, "lensflare.png", false);
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.world_to_eye);

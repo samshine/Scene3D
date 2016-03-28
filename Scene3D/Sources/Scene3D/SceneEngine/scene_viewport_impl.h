@@ -33,7 +33,7 @@ public:
 	void draw_line(const uicore::Vec3f &from, const uicore::Vec3f &to, const uicore::Vec3f &color) override;
 	void draw_3d_text(const uicore::Vec3f &location, const char *text) override;
 
-	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb) override;
+	void set_viewport(const uicore::Rect &box, const uicore::FrameBufferPtr &fb, float scale = 1.0f) override;
 	void render(const uicore::GraphicContextPtr &gc) override;
 
 	void update(const uicore::GraphicContextPtr &gc, float time_elapsed) override;
@@ -49,6 +49,7 @@ public:
 
 	uicore::Rect _viewport;
 	uicore::FrameBufferPtr _fb_viewport;
+	float _viewport_scale = 1.0f;
 
 	SceneLines _scene_lines;
 

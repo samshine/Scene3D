@@ -19,5 +19,5 @@ public:
 	virtual void update() = 0;
 	virtual void reset() = 0;
 
-	static const int ticks_per_second = 60;
+	static const int ticks_per_second = 35;
 };

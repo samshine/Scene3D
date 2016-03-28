@@ -70,7 +70,7 @@ void ParticleEmitterPass::run()
 
 	setup();
 
-	Size viewport_size = inout.engine->render.viewport.size();
+	Size viewport_size = inout.engine->render.viewport_size;
 	Mat4f eye_to_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	FrustumPlanes frustum(eye_to_cull_projection * inout.engine->render.world_to_eye);
@@ -100,20 +100,21 @@ void ParticleEmitterPass::run()
 	if (total_particle_count == 0)
 		return;
 
+	auto &instance_texture = inout.frames.front()->particle_instance_texture;
+	auto &instance_transfer = inout.frames.front()->particle_instance_transfer;
+
 	if (!instance_texture || instance_texture->width() < (int)total_particle_count * vectors_per_particle)
 	{
 		instance_texture = nullptr;
-		for (int i = 0; i < num_instance_transfer; i++)
-			instance_transfer[i] = nullptr;
+		instance_transfer = nullptr;
 
 		instance_texture = Texture2D::create(inout.gc, total_particle_count * vectors_per_particle, 1, tf_rgba32f);
-		for (int i = 0; i < num_instance_transfer; i++)
-			instance_transfer[i] = StagingTexture::create(inout.gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
+		instance_transfer = StagingTexture::create(inout.gc, total_particle_count * vectors_per_particle, 1, StagingDirection::to_gpu, tf_rgba32f, 0, usage_stream_draw);
 	}
 
-	instance_transfer[current_instance_transfer]->lock(inout.gc, access_write_discard);
+	instance_transfer->lock(inout.gc, access_write_discard);
 
-	MappedBuffer<Vec4f> vectors(instance_transfer[current_instance_transfer]->data<Vec4f>(), instance_transfer[current_instance_transfer]->width() * instance_transfer[current_instance_transfer]->height());
+	MappedBuffer<Vec4f> vectors(instance_transfer->data<Vec4f>(), instance_transfer->width() * instance_transfer->height());
 	size_t vector_offset = 0;
 	for (int slot : active_emitters)
 	{
@@ -141,9 +142,8 @@ void ParticleEmitterPass::run()
 
 		vector_offset += pass_data->cpu_particles.size() * vectors_per_particle;
 	}
-	instance_transfer[current_instance_transfer]->unlock();
-	instance_texture->set_image(inout.gc, instance_transfer[current_instance_transfer]);
-	current_instance_transfer = (current_instance_transfer + 1) % num_instance_transfer;
+	instance_transfer->unlock();
+	instance_texture->set_image(inout.gc, instance_transfer);
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
 

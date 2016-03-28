@@ -151,7 +151,7 @@ void Screen::run()
 				delta_mouse_move = Vec2i();
 			last_mouse_movement = move;
 
-			scene_viewport->set_viewport(gc->size());
+			scene_viewport->set_viewport(gc->size(), nullptr, gc->pixel_ratio() >= 2.0f ? 2.0f : 1.0f);
 
 			game_time.update();
 
@@ -162,7 +162,7 @@ void Screen::run()
 
 			{
 				ScopeTimer scope_timer("DisplayWindow::flip");
-				window->flip(0);
+				window->flip(1);
 			}
 
 			ScopeTimerResults::end();

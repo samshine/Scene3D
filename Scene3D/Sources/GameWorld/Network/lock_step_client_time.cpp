@@ -124,7 +124,7 @@ void LockStepClientTime::on_event_received(const std::string &sender, const uico
 
 		actual_ping = (unsigned int)(System::time() - send_time);
 
-		ping_ticks = 4; // 128 ms ping means it roughly arrives at server after 64 ms (each tick is 16 ms, 4 * 16 * 2 = 128)
-		jitter_ticks = 2; // 32 ms jitter
+		ping_ticks = 2; // 128 ms ping means it roughly arrives at server after 64 ms (each tick is 16 ms, 4 * 16 * 2 = 128)
+		jitter_ticks = 1; // 32 ms jitter
 	}
 }

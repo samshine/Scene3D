@@ -39,11 +39,11 @@ Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObjec
 		emitter->set_position(pos);
 		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
 		emitter->set_falloff(30.0f);
-		emitter->set_particles_per_second(25.0f);
+		emitter->set_particles_per_second(200.0f);
 		emitter->set_life_span(1.0f);
 		emitter->set_start_size(0.03f);
-		emitter->set_end_size(4.0f);
-		emitter->set_speed(4.0f);
+		emitter->set_end_size(0.70f);
+		emitter->set_speed(2.0f);
 		emitter->set_particle_texture("ParticleTextures/Smoke3/Smoke3.ctexture");
 		emitter->set_gradient_texture("ParticleTextures/Smoke3/gradient.png");
 	}

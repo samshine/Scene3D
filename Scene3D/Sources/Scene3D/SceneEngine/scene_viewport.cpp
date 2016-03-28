@@ -79,9 +79,10 @@ void SceneViewportImpl::draw_3d_text(const uicore::Vec3f &location, const char *
 	_scene_lines.text_lengths.push_back(_scene_lines.text.length() - _scene_lines.text_offsets.back());
 }
 
-void SceneViewportImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb)
+void SceneViewportImpl::set_viewport(const Rect &box, const FrameBufferPtr &fb, float scale)
 {
 	_viewport = box;
+	_viewport_scale = scale;
 	_fb_viewport = fb;
 }
 

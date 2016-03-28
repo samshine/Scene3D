@@ -19,7 +19,7 @@ void TransparencyPass::run()
 
 	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_range(0.0f, 0.9f);

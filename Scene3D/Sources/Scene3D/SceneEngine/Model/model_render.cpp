@@ -80,6 +80,18 @@ void ModelRender::end()
 
 void ModelRender::render_batches(const std::vector<InstanceBatch> &batches)
 {
+	auto instance_buffer = upload_instance_data(batches);
+
+	for (const auto &batch : batches)
+	{
+		render_mesh(batch.mesh, instance_buffer, batch.start, batch.count);
+	}
+}
+
+Texture2DPtr ModelRender::upload_instance_data(const std::vector<InstanceBatch> &batches)
+{
+	ScopeTimeFunction();
+
 	auto &inout = scene->engine()->render;
 
 	StagingTexturePtr staging_buffer = get_staging_buffer(num_vectors);
@@ -103,11 +115,7 @@ void ModelRender::render_batches(const std::vector<InstanceBatch> &batches)
 
 	Texture2DPtr instance_buffer = get_instance_buffer(num_vectors);
 	instance_buffer->set_subimage(inout.gc, 0, 0, staging_buffer, staging_buffer->size());
-
-	for (const auto &batch : batches)
-	{
-		render_mesh(batch.mesh, instance_buffer, batch.start, batch.count);
-	}
+	return instance_buffer;
 }
 
 void ModelRender::render_mesh(ModelMesh *mesh, Texture2DPtr instance_buffer, int instance_base, int instance_count)

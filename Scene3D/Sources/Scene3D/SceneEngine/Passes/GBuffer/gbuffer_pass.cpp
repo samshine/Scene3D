@@ -29,7 +29,7 @@ void GBufferPass::run()
 		glDrawBuffers(6, buffers);
 	}
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->clear_depth(1.0f);

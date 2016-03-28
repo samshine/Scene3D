@@ -66,7 +66,7 @@ void SSAOPass::run()
 			float sample_weight = (1.733f - sample_vector.length()) * 0.3f;
 			uniform_buffer.sampledata[i] = Vec4f(sample_vector * 0.4f, sample_weight);
 		}
-		float aspect = inout.viewport.width() / (float)inout.viewport.height();
+		float aspect = inout.viewport_size.width / (float)inout.viewport_size.height;
 		float field_of_view_y_degrees = inout.field_of_view;
 		float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 		float f = 1.0f / tan(field_of_view_y_rad * 0.5f);

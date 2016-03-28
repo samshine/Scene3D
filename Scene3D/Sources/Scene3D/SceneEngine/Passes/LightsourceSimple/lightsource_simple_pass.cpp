@@ -67,7 +67,7 @@ ProgramObjectPtr LightsourceSimplePass::compile_and_link(const GraphicContextPtr
 
 void LightsourceSimplePass::setup()
 {
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	if (!blend_state)
 	{
 		BlendStateDescription blend_desc;
@@ -128,7 +128,7 @@ void LightsourceSimplePass::find_lights()
 {
 	lights.clear();
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
@@ -146,16 +146,16 @@ void LightsourceSimplePass::upload()
 {
 	ScopeTimeFunction();
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	Mat4f eye_to_projection = Mat4f::perspective(inout.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e4f, handed_left, inout.gc->clip_z_range());
 
-	float aspect = inout.viewport.width()/(float)inout.viewport.height();
+	float aspect = inout.viewport_size.width / (float)inout.viewport_size.height;
 	float field_of_view_y_degrees = inout.field_of_view;
 	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
 	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	Vec2f two_rcp_viewport_size(2.0f / inout.viewport.width(), 2.0f / inout.viewport.height());
+	Vec2f two_rcp_viewport_size(2.0f / inout.viewport_size.width, 2.0f / inout.viewport_size.height);
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
@@ -229,7 +229,7 @@ void LightsourceSimplePass::render()
 
 	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
 
-	inout.gc->set_viewport(inout.viewport.size(), inout.gc->texture_image_y_axis());
+	inout.gc->set_viewport(inout.viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_range(0.0f, 0.9f);
 

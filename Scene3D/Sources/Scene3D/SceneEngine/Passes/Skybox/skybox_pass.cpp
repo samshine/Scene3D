@@ -50,7 +50,7 @@ void SkyboxPass::run()
 
 	inout.gc->set_frame_buffer(inout.frames.front()->fb_self_illumination);
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	inout.gc->set_viewport(viewport_size, inout.gc->texture_image_y_axis());
 
 	inout.gc->set_depth_stencil_state(depth_stencil_state);
@@ -107,7 +107,7 @@ void SkyboxPass::setup()
 		create_programs();
 	}
 
-	Size viewport_size = inout.viewport.size();
+	Size viewport_size = inout.viewport_size;
 	if (!blend_state)
 	{
 		BlendStateDescription blend_desc;

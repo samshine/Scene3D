@@ -35,11 +35,6 @@ private:
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;
 	static uicore::Vec3f cpu_billboard_positions[6];
 
-	uicore::Texture2DPtr instance_texture;
-	enum { num_instance_transfer = 4 };
-	uicore::StagingTexturePtr instance_transfer[num_instance_transfer];
-	int current_instance_transfer = 0;
-
 	std::vector<ParticleEmitterPassData> emitter_slots;
 	std::vector<int> active_emitters;
 	std::vector<int> free_emitters;

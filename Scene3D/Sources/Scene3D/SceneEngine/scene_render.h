@@ -76,6 +76,15 @@ public:
 	int next_decal_staging_buffer = 0;
 	int next_decal_render_uniforms = 0;
 
+	uicore::UniformVector<LightsourceUniforms> compute_uniforms;
+	uicore::StorageVector<LightsourceGPULight> compute_lights;
+	uicore::StagingVector<LightsourceGPULight> transfer_lights;
+	uicore::StorageVector<unsigned int> compute_visible_lights;
+	std::shared_ptr<ZMinMax> zminmax;
+
+	uicore::Texture2DPtr particle_instance_texture;
+	uicore::StagingTexturePtr particle_instance_transfer;
+
 	uicore::ComPtr<ID3D11Query> frame_finished;
 
 	void setup_pass_buffers(SceneRender *render);
@@ -95,7 +104,8 @@ public:
 	SceneImpl *scene = nullptr;
 	SceneCameraImpl *camera = nullptr;
 	SceneViewportImpl *scene_viewport = nullptr;
-	uicore::Rect viewport = uicore::Size(640, 480);
+	uicore::Size viewport_size = uicore::Size(640, 480);
+	uicore::Rect final_viewport = uicore::Size(640, 480);
 	uicore::FrameBufferPtr fb_viewport;
 
 	float field_of_view = 60.0f;

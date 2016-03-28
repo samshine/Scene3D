@@ -40,6 +40,7 @@ private:
 	};
 
 	void render_batches(const std::vector<InstanceBatch> &batches);
+	uicore::Texture2DPtr upload_instance_data(const std::vector<InstanceBatch> &batches);
 	void write_instance_data(ModelMesh *mesh, SceneObjectImpl *object, uicore::Vec4f *vectors);
 	SceneLightProbeImpl *find_nearest_probe(const uicore::Vec3f &position);
 
