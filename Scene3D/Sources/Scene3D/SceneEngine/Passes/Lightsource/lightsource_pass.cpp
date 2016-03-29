@@ -221,7 +221,7 @@ void LightsourcePass::update_buffers()
 	int needed_num_tiles_x = (inout.viewport_size.width + tile_size - 1) / tile_size;
 	int needed_num_tiles_y = (inout.viewport_size.height + tile_size - 1) / tile_size;
 
-	if (!inout.frames.front()->compute_visible_lights.buffer() || num_tiles_x != needed_num_tiles_x || num_tiles_y != needed_num_tiles_y)
+	if (!inout.frames.front()->compute_visible_lights.buffer() || inout.frames.front()->compute_visible_lights_size != needed_num_tiles_x * needed_num_tiles_y)
 	{
 		inout.frames.front()->compute_visible_lights = StorageVector<unsigned int>();
 		inout.gc->flush();
@@ -230,6 +230,7 @@ void LightsourcePass::update_buffers()
 		num_tiles_y = needed_num_tiles_y;
 
 		inout.frames.front()->compute_visible_lights = StorageVector<unsigned int>(inout.gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
+		inout.frames.front()->compute_visible_lights_size = num_tiles_x * num_tiles_y;
 	}
 }
 

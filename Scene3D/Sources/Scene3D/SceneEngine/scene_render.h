@@ -80,6 +80,7 @@ public:
 	uicore::StorageVector<LightsourceGPULight> compute_lights;
 	uicore::StagingVector<LightsourceGPULight> transfer_lights;
 	uicore::StorageVector<unsigned int> compute_visible_lights;
+	int compute_visible_lights_size = 0;
 	std::shared_ptr<ZMinMax> zminmax;
 
 	uicore::Texture2DPtr particle_instance_texture;
