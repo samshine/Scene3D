@@ -18,6 +18,22 @@ FBXModelLoader::FBXModelLoader(FBXModelImpl *model, const ModelDesc &desc)
 	: model_desc(desc), model(model), model_data(std::make_shared<ModelData>())
 {
 	convert_node(model->scene->GetRootNode());
+
+	if (unskinned_bone_needed)
+	{
+		unsigned char unskinned_bone = (unsigned char)bones.size();
+		for (auto &mesh : model_data->meshes)
+		{
+			for (auto &selectors : mesh.bone_selectors)
+			{
+				selectors.x = std::min(selectors.x, unskinned_bone);
+				selectors.y = std::min(selectors.y, unskinned_bone);
+				selectors.z = std::min(selectors.z, unskinned_bone);
+				selectors.w = std::min(selectors.w, unskinned_bone);
+			}
+		}
+	}
+
 	for (const auto &anim : model_desc.animations)
 	{
 		convert_bones(anim);
@@ -489,23 +505,43 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 			unsigned int max_index = 0;
 			unsigned char *bone_selectors = reinterpret_cast<unsigned char*>(&mapping->bone_selectors);
 			unsigned char *bone_weights = reinterpret_cast<unsigned char*>(&mapping->bone_weights);
+
+			bool unskinned_vertex = true;
 			for (unsigned int j = 0; j < 4; j++)
 			{
-				if (bone_selectors[j] == 255)
-				{
-					bone_selectors[j] = 0;
-				}
-
-				if (bone_weights[j] > max_sum)
-				{
-					max_sum = bone_weights[j];
-					max_index = j;
-				}
-
-				weight_sum += bone_weights[j];
+				if (bone_selectors[j] != 255)
+					unskinned_vertex = false;
 			}
-			if (weight_sum != 255)
-				bone_weights[max_index] = bone_weights[max_index] + (255 - weight_sum);
+
+			if (unskinned_vertex)
+			{
+				unskinned_bone_needed = true;
+				bone_weights[0] = 255;
+				bone_weights[1] = 0;
+				bone_weights[2] = 0;
+				bone_weights[3] = 0;
+			}
+			else 
+			{
+				for (unsigned int j = 0; j < 4; j++)
+				{
+					if (bone_selectors[j] == 255)
+					{
+						bone_selectors[j] = 0;
+					}
+
+					if (bone_weights[j] > max_sum)
+					{
+						max_sum = bone_weights[j];
+						max_index = j;
+					}
+
+					weight_sum += bone_weights[j];
+				}
+
+				if (weight_sum != 255)
+					bone_weights[max_index] = bone_weights[max_index] + (255 - weight_sum);
+			}
 		}
 	}
 }
@@ -772,6 +808,7 @@ void FBXModelLoader::convert_light(FbxNode *node)
 
 void FBXModelLoader::convert_bones(const ModelDescAnimation &animation_desc)
 {
+	model_data->bones.reserve(bones.size() + 1);
 	model_data->bones.resize(bones.size());
 
 	FbxTime::EMode time_mode = model->scene->GetGlobalSettings().GetTimeMode();
@@ -840,6 +877,15 @@ void FBXModelLoader::convert_bones(const ModelDescAnimation &animation_desc)
 
 		// FbxMatrix &object_to_world = scene_evaluator->GetNodeGlobalTransform(node, current_time);
 		// FbxAnimCurveNode &value = scene_evaluator->GetPropertyValue(value, current_time);
+	}
+
+	if (unskinned_bone_needed && !bones.empty())
+	{
+		ModelDataBone model_bone;
+		model_bone.pivot = Vec3f();
+		model_bone.position.set_single_value(Vec3f());
+		model_bone.orientation.set_single_value(Quaternionf());
+		model_data->bones.push_back(model_bone);
 	}
 }
 

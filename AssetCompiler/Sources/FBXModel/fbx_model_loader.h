@@ -57,4 +57,5 @@ private:
 	const ModelDesc &model_desc;
 	FBXModelImpl *model;
 	std::vector<SkinnedBone> bones;
+	bool unskinned_bone_needed = false;
 };
