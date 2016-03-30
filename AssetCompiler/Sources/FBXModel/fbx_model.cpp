@@ -23,9 +23,10 @@ FBXModelImpl::FBXModelImpl(const std::string &filename)
 {
 	try
 	{
-		import_scene(filename);
-		scale_scene();
-		triangulate_scene();
+		initialize_manager();
+		scene = import_scene(filename);
+		scale_scene(scene);
+		triangulate_scene(scene);
 		//bake_geometric_transforms();
 		inspect_node(scene->GetRootNode());
 	}
@@ -41,6 +42,25 @@ FBXModelImpl::~FBXModelImpl()
 {
 	if (manager)
 		manager->Destroy();
+}
+
+FbxScene *FBXModelImpl::get_animation_scene(const std::string &filename)
+{
+	try
+	{
+		auto it = animation_scenes.find(filename);
+		if (it != animation_scenes.end())
+			return it->second;
+
+		FbxScene *scene = import_scene(filename);
+		scale_scene(scene);
+		animation_scenes[filename] = scene;
+		return scene;
+	}
+	catch (...)
+	{
+		return nullptr;
+	}
 }
 
 const std::vector<std::string> &FBXModelImpl::material_names() const
@@ -186,13 +206,13 @@ void FBXModelImpl::inspect_light(FbxNode *node)
 		_light_names.push_back(name);
 }
 
-void FBXModelImpl::triangulate_scene()
+void FBXModelImpl::triangulate_scene(FbxScene *scene)
 {
 	FbxGeometryConverter converter(manager);
 	converter.Triangulate(scene, true);
 }
 
-void FBXModelImpl::scale_scene()
+void FBXModelImpl::scale_scene(FbxScene *scene)
 {
 	/*
 	const FbxSystemUnit::ConversionOptions conversionOptions = {
@@ -207,7 +227,7 @@ void FBXModelImpl::scale_scene()
 	FbxSystemUnit::m.ConvertScene(scene, FbxSystemUnit::DefaultConversionOptions);
 }
 
-void FBXModelImpl::import_scene(const std::string &filename)
+void FBXModelImpl::initialize_manager()
 {
 	manager = FbxManager::Create();
 	if (!manager)
@@ -223,17 +243,19 @@ void FBXModelImpl::import_scene(const std::string &filename)
 	bool result = manager->LoadPluginsDirectory(plugins_directory.Buffer());
 	if (!result)
 		throw Exception("FbxManager::LoadPluginsDirectory failed");
+}
 
-	scene = FbxScene::Create(manager, "My Scene");
+FbxScene *FBXModelImpl::import_scene(const std::string &filename)
+{
+	FbxScene *scene = FbxScene::Create(manager, "My Scene");
 	if (!scene)
 		throw Exception("FbxScene::Create failed");
-
 
 	FbxImporter *importer = FbxImporter::Create(manager, "");
 	if (!importer)
 		throw Exception("FbxImporter::Create failed");
 
-	result = importer->Initialize(filename.c_str(), -1, manager->GetIOSettings());
+	bool result = importer->Initialize(filename.c_str(), -1, manager->GetIOSettings());
 	if (!result)
 		throw Exception(importer->GetStatus().GetErrorString());
 
@@ -242,6 +264,8 @@ void FBXModelImpl::import_scene(const std::string &filename)
 		throw Exception("FBX file is password protected!");
 
 	importer->Destroy();
+
+	return scene;
 }
 
 void FBXModelImpl::bake_geometric_transforms(FbxNode *node)

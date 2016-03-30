@@ -33,6 +33,12 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		animation.move_speed = json_animation["move_speed"].to_float();
 		animation.loop = json_animation["loop"].to_boolean();
 		animation.rarity = json_animation["rarity"].to_int();
+		if (!json_animation["fbx_filename"].is_undefined())
+		{
+			animation.fbx_filename = json_animation["fbx_filename"].to_string();
+			if (!animation.fbx_filename.empty())
+				animation.fbx_filename = PathHelp::make_absolute(PathHelp::fullpath(filename), animation.fbx_filename);
+		}
 		desc.animations.push_back(animation);
 	}
 
@@ -97,6 +103,10 @@ void ModelDesc::save(const std::string &filename)
 		json_animation["move_speed"].set_number(animation.move_speed);
 		json_animation["loop"].set_boolean(animation.loop);
 		json_animation["rarity"].set_number(animation.rarity);
+		if (!animation.fbx_filename.empty())
+			json_animation["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), animation.fbx_filename));
+		else
+			json_animation["fbx_filename"].set_string(animation.fbx_filename);
 		json_animations.items().push_back(json_animation);
 	}
 

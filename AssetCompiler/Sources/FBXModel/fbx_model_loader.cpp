@@ -811,21 +811,45 @@ void FBXModelLoader::convert_bones(const ModelDescAnimation &animation_desc)
 	model_data->bones.reserve(bones.size() + 1);
 	model_data->bones.resize(bones.size());
 
-	FbxTime::EMode time_mode = model->scene->GetGlobalSettings().GetTimeMode();
+	FbxScene *animation_scene = nullptr;
+	if (!animation_desc.fbx_filename.empty())
+		animation_scene = model->get_animation_scene(animation_desc.fbx_filename);
+	if (animation_scene == nullptr)
+		animation_scene = model->scene;
+
+	FbxTime::EMode time_mode = animation_scene->GetGlobalSettings().GetTimeMode();
 	FbxTimeSpan timespan;
 
-	model->scene->GetGlobalSettings().GetTimelineDefaultTimeSpan(timespan);
+	FbxAnimStack *anim_stack = animation_scene->GetSrcObject<FbxAnimStack>(0);
+	if (anim_stack)
+	{
+		FbxTakeInfo *take = animation_scene->GetTakeInfo(anim_stack->GetName());
+		if (take)
+			timespan = take->mLocalTimeSpan;
+		else
+			animation_scene->GetGlobalSettings().GetTimelineDefaultTimeSpan(timespan);
+	}
+	else
+	{
+		animation_scene->GetGlobalSettings().GetTimelineDefaultTimeSpan(timespan);
+	}
+
 	float scene_start_time = (float)timespan.GetStart().GetSecondDouble();
 	float scene_stop_time = (float)timespan.GetStop().GetSecondDouble();
 
 	int start_frame = animation_desc.start_frame;
-	int end_frame = std::max(animation_desc.end_frame, start_frame);
+	int end_frame = animation_desc.end_frame;
+
+	if (end_frame == -1)
+		end_frame = (int)(timespan.GetStop() - timespan.GetStart()).GetFrameCount(time_mode) - 1;
+
+	end_frame = std::max(end_frame, start_frame);
 
 	float start_time = (float)(scene_start_time + start_frame / FbxTime::GetFrameRate(time_mode));
 	float stop_time = (float)(scene_start_time + end_frame / FbxTime::GetFrameRate(time_mode));
 	float stop_time_loop = (float)(scene_start_time + (end_frame + 1) / FbxTime::GetFrameRate(time_mode));
 
-	FbxAnimEvaluator *scene_evaluator = model->scene->GetAnimationEvaluator();
+	FbxAnimEvaluator *scene_evaluator = animation_scene->GetAnimationEvaluator();
 
 	ModelDataAnimation animation;
 	animation.name = animation_desc.name;
@@ -850,7 +874,13 @@ void FBXModelLoader::convert_bones(const ModelDescAnimation &animation_desc)
 			const auto &fbx_bone = bones[bone_index];
 			auto &model_bone = model_data->bones[bone_index];
 
-			FbxAMatrix bone_to_world = scene_evaluator->GetNodeGlobalTransform(fbx_bone.bone_node, current_time, FbxNode::eSourcePivot, true);
+			FbxNode *bone_node = nullptr;
+			if (animation_scene != model->scene)
+				bone_node = animation_scene->FindNodeByName(fbx_bone.bone_node->GetName());
+			if (bone_node == nullptr)
+				bone_node = fbx_bone.bone_node;
+
+			FbxAMatrix bone_to_world = scene_evaluator->GetNodeGlobalTransform(bone_node, current_time, FbxNode::eSourcePivot, true);
 			FbxAMatrix bind_bone_to_world = fbx_bone.bind_bone_to_world;
 
 			// Flip Z axis

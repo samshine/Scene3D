@@ -26,16 +26,20 @@ private:
 	void inspect_camera(FbxNode *node);
 	void inspect_light(FbxNode *node);
 
-	void import_scene(const std::string &filename);
-	void scale_scene();
-	void triangulate_scene();
+	void initialize_manager();
+	FbxScene *import_scene(const std::string &filename);
+	void scale_scene(FbxScene *scene);
+	void triangulate_scene(FbxScene *scene);
 	void bake_geometric_transforms(FbxNode *node = nullptr);
+
+	FbxScene *get_animation_scene(const std::string &filename);
 
 	std::string base_path;
 
 	FbxManager *manager;
 	FbxIOSettings *iosettings;
 	FbxScene *scene;
+	std::map<std::string, FbxScene *> animation_scenes;
 
 	std::vector<std::string> _material_names;
 	std::vector<std::string> _bone_names;

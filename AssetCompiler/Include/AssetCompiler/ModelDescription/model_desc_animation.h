@@ -13,4 +13,5 @@ public:
 	float move_speed = 1.0f;
 	bool loop = true;
 	int rarity = 65535;
+	std::string fbx_filename;
 };

@@ -54,6 +54,22 @@ SceneController::SceneController()
 	slots.connect(ModelAppModel::instance()->sig_map_model_updated, this, &SceneController::map_model_updated);
 	slots.connect(view->sig_update_scene, this, &SceneController::update_scene);
 
+	slots.connect(view->sig_key_press(), [this](KeyEvent &e) {
+		if ((int)e.key() >= (int)Key::key_0 && (int)e.key() <= (int)Key::key_9)
+		{
+			const auto &animations = ModelAppModel::instance()->desc.animations;
+			int anim_select = (int)e.key() - (int)Key::key_0;
+			if (anim_select < (int)animations.size())
+			{
+				const auto &animation = animations[anim_select];
+				current_animation = animation.name;
+				if (object1)
+					object1->play_animation(current_animation, false);
+			}
+			e.stop_propagation();
+		}
+	});
+
 	setup_scene();
 
 	map_model_updated();

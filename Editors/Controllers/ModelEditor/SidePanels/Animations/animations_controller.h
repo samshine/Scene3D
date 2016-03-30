@@ -5,6 +5,7 @@
 
 class RolloutView;
 class RolloutTextFieldProperty;
+class RolloutBrowseFieldProperty;
 class RolloutList;
 class RolloutListItemView;
 
@@ -25,6 +26,7 @@ private:
 	void move_property_value_changed();
 	void loop_property_value_changed();
 	void rarity_property_value_changed();
+	void fbx_filename_property_browse();
 
 	std::shared_ptr<RolloutView> animations;
 	std::shared_ptr<RolloutList> animations_list;
@@ -36,6 +38,7 @@ private:
 	std::shared_ptr<RolloutTextFieldProperty> move_property;
 	std::shared_ptr<RolloutTextFieldProperty> loop_property;
 	std::shared_ptr<RolloutTextFieldProperty> rarity_property;
+	std::shared_ptr<RolloutBrowseFieldProperty> fbx_filename_property;
 
 	uicore::SlotContainer slots;
 };
