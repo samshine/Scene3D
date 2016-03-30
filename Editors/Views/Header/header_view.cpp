@@ -7,10 +7,12 @@ using namespace uicore;
 
 HeaderView::HeaderView()
 {
-	style()->set("flex-direction: row");
-	style()->set("flex: none");
-	style()->set("background: linear-gradient(to right, rgb(15,50,77), rgb(95,128,146))");
-	style()->set("border-bottom: 1px solid rgb(159,184,194)");
+	style()->set(R"(
+		flex-direction: row;
+		flex: none;
+		background: rgb(83,83,83);
+		border-bottom: 1px solid rgb(159,184,194);
+		)");
 
 	left_buttons = std::make_shared<View>();
 	left_buttons->style()->set("flex: none");
@@ -77,7 +79,7 @@ void HeaderView::create_button(const std::string &text, const std::string &icon,
 	}
 	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
-	button->label()->style()->set("color: white");
+	button->label()->style()->set("color: rgb(230,230,230)");
 	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e) { click(); e.stop_propagation(); });
 	if (left)
 		left_buttons->add_child(button);

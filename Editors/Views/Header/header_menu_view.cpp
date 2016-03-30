@@ -9,6 +9,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	style()->set("flex-direction: row");
 	style()->set("flex: none");
 	style()->set("padding: 2px 0");
+	style()->set("background: rgb(83,83,83)");
 
 	button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: none");
@@ -24,7 +25,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	}
 	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
-	button->label()->style()->set("color: white");
+	button->label()->style()->set("color: rgb(230,230,230)");
 	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
 	add_child(button);
 
@@ -32,26 +33,12 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 
 	if (last)
 		button->move_label_before_image();
-
-	/*if (last)
-	{
-		items->style()->set("right: 0");
-	}
-	else
-	{
-		items->style()->set("left: 0");
-	}*/
 }
 
 void HeaderMenuView::button_clicked(PointerEvent &e)
 {
 	e.stop_propagation();
 	WindowManager::present_popup(this, { 0.0f, 40.0f }, menu);
-	style()->set("background: rgb(15,50,77)");
-	/*if (!items->hidden())
-		style()->set("background: rgb(15,50,77)");
-	else
-		style()->set("background: none");*/
 }
 
 void HeaderMenuView::add_item(const std::string &text, std::function<void()> click)
@@ -61,7 +48,7 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	button->style()->set("padding: 3px 10px");
 	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
-	button->label()->style()->set("color: white");
+	button->label()->style()->set("color: rgb(230,230,230)");
 	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e)
 	{
 		e.stop_propagation();

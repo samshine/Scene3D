@@ -16,7 +16,7 @@ RolloutButton::RolloutButton(const std::string &label)
 	button->style()->set("padding: 2px 5px");
 	button->label()->style()->set("flex: auto");
 	button->label()->style()->set("font: 12px/18px 'Lato'");
-	button->label()->style()->set("color: white");
+	button->label()->style()->set("color: rgb(230,230,230)");
 	button->label()->set_text_alignment(TextAlignment::center);
 	button->label()->set_text(label);
 

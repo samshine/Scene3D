@@ -135,7 +135,7 @@ void SkyboxPass::setup()
 
 void SkyboxPass::create_clouds()
 {
-	if (!inout.skybox_texture)
+	if (!inout.skybox_texture && inout.scene->skybox_gradient.empty())
 		create_cloud_texture();
 }
 

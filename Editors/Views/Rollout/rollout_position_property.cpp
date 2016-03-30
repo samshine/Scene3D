@@ -16,7 +16,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
 	label->style()->set("padding: 2px 0");
 	label->style()->set("font: 12px/18px 'Lato'");
-	label->style()->set("color: rgb(153,180,198)");
+	label->style()->set("color: rgb(230,230,230)");
 	label->set_text(label_text);
 	add_child(label);
 
@@ -38,7 +38,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 		input_label->style()->set("flex: none");
 		input_label->style()->set("padding: 2px 0");
 		input_label->style()->set("font: 12px/18px 'Lato'");
-		input_label->style()->set("color: rgb(153,180,198)");
+		input_label->style()->set("color: rgb(230,230,230)");
 		input_label->set_text(label_texts[i]);
 		row->add_child(input_label);
 
@@ -48,7 +48,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 		input->style()->set("border-radius: 3px");
 		input->style()->set("padding: 2px");
 		input->style()->set("font: 12px/18px 'Lato'");
-		input->style()->set("color: white");
+		input->style()->set("color: rgb(230,230,230)");
 		row->add_child(input);
 
 		value_group->add_child(row);

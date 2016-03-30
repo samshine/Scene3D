@@ -16,11 +16,13 @@ WorkspaceController::WorkspaceController()
 	//center_view->style()->set("padding: 5px");
 
 	dock_view = std::make_shared<View>();
-	dock_view->style()->set("flex: none");
-	dock_view->style()->set("width: 250px");
-	dock_view->style()->set("background: rgb(47,75,99)");
-	dock_view->style()->set("border-left: 1px solid rgb(109,109,109)");
-	dock_view->style()->set("flex-direction: column");
+	dock_view->style()->set(R"(
+		flex: none;
+		width: 250px;
+		background: rgb(83,83,83);/*rgb(47,75,99);*/
+		border-left: 1px solid rgb(109,109,109);
+		flex-direction: column;
+		)");
 	dock_view->set_hidden(true);
 
 	view->add_child(center_view);

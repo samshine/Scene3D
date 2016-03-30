@@ -16,7 +16,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
 	label->style()->set("padding: 2px 0");
 	label->style()->set("font: 12px/18px 'Lato'");
-	label->style()->set("color: rgb(153,180,198)");
+	label->style()->set("color: rgb(230,230,230)");
 	label->set_text(label_text);
 
 	browse_field = std::make_shared<LabelBaseView>();
@@ -25,7 +25,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	browse_field->style()->set("border-radius: 3px");
 	browse_field->style()->set("padding: 2px 5px");
 	browse_field->style()->set("font: 12px/18px 'Lato'");
-	browse_field->style()->set("color: white");
+	browse_field->style()->set("color: rgb(230,230,230)");
 
 	add_child(label);
 	add_child(browse_field);

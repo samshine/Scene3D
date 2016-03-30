@@ -6,13 +6,15 @@ using namespace uicore;
 
 RolloutHeader::RolloutHeader()
 {
-	style()->set("flex-direction: column");
-	style()->set("padding: 2px 10px");
-	style()->set("background: rgb(6,31,62)");
+	style()->set(R"(
+		flex-direction: column;
+		padding: 2px 10px;
+		background: rgb(58,58,58); /*rgb(6,31,62)*/
+		)");
 
 	label = std::make_shared<LabelBaseView>();
 	label->style()->set("font: 12px/18px 'Lato'");
-	label->style()->set("color: white");
+	label->style()->set("color: rgb(230,230,230)");
 	add_child(label);
 }
 

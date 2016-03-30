@@ -16,7 +16,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	label->style()->set(string_format("width: %1px", RolloutView::label_width));
 	label->style()->set("padding: 2px 0");
 	label->style()->set("font: 12px/18px 'Lato'");
-	label->style()->set("color: rgb(153,180,198)");
+	label->style()->set("color: rgb(230,230,230)");
 	label->set_text(label_text);
 
 	text_field = std::make_shared<TextFieldBaseView>();
@@ -25,7 +25,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	text_field->style()->set("border-radius: 3px");
 	text_field->style()->set("padding: 2px 5px");
 	text_field->style()->set("font: 12px/18px 'Lato'");
-	text_field->style()->set("color: white");
+	text_field->style()->set("color: rgb(230,230,230)");
 
 	add_child(label);
 	add_child(text_field);

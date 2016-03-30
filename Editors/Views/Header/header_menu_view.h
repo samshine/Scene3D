@@ -22,12 +22,12 @@ class HeaderMenuPopupController : public uicore::WindowController
 public:
 	HeaderMenuPopupController(HeaderMenuView *header_view, bool last)
 	{
-		//items->style()->set("top: 40px");
-		items->style()->set("width: 175px");
-		items->style()->set("background: rgb(15,50,77)");
-		items->style()->set("margin: 0 10px 10px 0");
-		items->style()->set("box-shadow: 5px 5px 5px rgba(0,0,0,0.2)");
-		items->set_hidden(true);
+		items->style()->set(R"(
+			width: 175px;
+			background: rgb(83,83,83);
+			/*margin: 0 10px 10px 0;
+			box-shadow: 5px 5px 5px rgba(0,0,0,0.2);*/
+			)");
 
 		set_root_view(items);
 	}

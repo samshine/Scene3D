@@ -120,13 +120,13 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 
 	label = std::make_shared<LabelBaseView>();
 	label->style()->set("font: 12px/18px 'Lato'");
-	label->style()->set("color: white");
+	label->style()->set("color: rgb(230,230,230)");
 	add_child(label);
 
 	textfield = std::make_shared<TextFieldBaseView>();
 	textfield->set_hidden();
 	textfield->style()->set("font: 12px/18px 'Lato'");
-	textfield->style()->set("color: white");
+	textfield->style()->set("color: rgb(230,230,230)");
 	add_child(textfield);
 
 	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
