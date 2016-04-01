@@ -52,6 +52,11 @@ public:
 	std::shared_ptr<uicore::LabelBaseView> label;
 	std::shared_ptr<uicore::TextFieldBaseView> textfield;
 
+	void set_selected();
+	void clear_selected();
+	void set_bold();
+	void clear_bold();
+
 	void begin_edit();
 	void save_edit();
 	void cancel_edit();

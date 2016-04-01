@@ -106,6 +106,12 @@
     <Filter Include="Views\MapEditor">
       <UniqueIdentifier>{c00e0f92-a8ea-4a68-82a3-be679152088c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views\PopupMenu">
+      <UniqueIdentifier>{cfcd37ef-d05f-4fbd-abd9-f6c133292efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\PopupMenu">
+      <UniqueIdentifier>{0fa3913c-2ea6-433d-84f1-f6825ec92040}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -249,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="Controllers\MapEditor\SidePanels\Edit\map_edit_controller.cpp">
       <Filter>Controllers\MapEditor\SidePanels\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\PopupMenu\popup_menu_controller.cpp">
+      <Filter>Controllers\PopupMenu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,6 +420,12 @@
     </ClInclude>
     <ClInclude Include="Views\MapEditor\map_object_list_rollout.h">
       <Filter>Views\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\PopupMenu\popup_menu_controller.h">
+      <Filter>Controllers\PopupMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\PopupMenu\popup_menu_frame.h">
+      <Filter>Views\PopupMenu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

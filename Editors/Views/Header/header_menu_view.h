@@ -24,7 +24,7 @@ public:
 	{
 		items->style()->set(R"(
 			width: 175px;
-			background: rgb(83,83,83);
+			background: rgb(103,103,103);
 			/*margin: 0 10px 10px 0;
 			box-shadow: 5px 5px 5px rgba(0,0,0,0.2);*/
 			)");

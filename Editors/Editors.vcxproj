@@ -33,6 +33,7 @@
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Environment\environment_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Lights\lights_controller.cpp" />
     <ClCompile Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.cpp" />
+    <ClCompile Include="Controllers\PopupMenu\popup_menu_controller.cpp" />
     <ClCompile Include="Controllers\SidePanel\side_panel_controller.cpp" />
     <ClCompile Include="Controllers\Workspace\workspace_controller.cpp" />
     <ClCompile Include="Model\MapEditor\Commands\add_map_material_command.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Environment\environment_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Lights\lights_controller.h" />
     <ClInclude Include="Controllers\ModelEditor\SidePanels\Materials\materials_controller.h" />
+    <ClInclude Include="Controllers\PopupMenu\popup_menu_controller.h" />
     <ClInclude Include="Controllers\SidePanel\side_panel_controller.h" />
     <ClInclude Include="Controllers\Workspace\workspace_controller.h" />
     <ClInclude Include="Model\MapEditor\Commands\add_map_material_command.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="Views\MapEditor\map_object_rollout.h" />
     <ClInclude Include="Views\MapEditor\map_create_rollout.h" />
     <ClInclude Include="Views\MapEditor\map_select_rollout.h" />
+    <ClInclude Include="Views\PopupMenu\popup_menu_frame.h" />
     <ClInclude Include="Views\Rollout\rollout_browse_field_property.h" />
     <ClInclude Include="Views\Rollout\rollout_button.h" />
     <ClInclude Include="Views\Rollout\rollout_header.h" />

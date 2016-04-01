@@ -6,11 +6,13 @@ using namespace uicore;
 
 RolloutList::RolloutList()
 {
-	style()->set("border: 1px solid rgb(100,100,100)");
-	style()->set("flex: 1 0 auto");
-	style()->set("flex-direction: column");
-	style()->set("height: 300px");
-	style()->set("padding: 5px");
+	style()->set(R"(
+		border: 1px solid rgb(100,100,100);
+		flex: 1 0 auto;
+		flex-direction: column;
+		height: 300px;
+		padding: 5px;
+		)");
 
 	content_view()->style()->set("flex-direction: column");
 }
@@ -71,8 +73,7 @@ void RolloutList::clear_selection()
 	if (_selected_item == -1)
 		return;
 
-	_items[_selected_item]->style()->set("background-color: none");
-	_items[_selected_item]->set_needs_render();
+	_items[_selected_item]->clear_selected();
 	_selected_item = -1;
 }
 
@@ -84,8 +85,7 @@ void RolloutList::set_selected(int index)
 		return;
 
 	_selected_item = index;
-	_items[_selected_item]->style()->set("background-color: rgba(255,255,255,0.3)");
-	_items[_selected_item]->set_needs_render();
+	_items[_selected_item]->set_selected();
 }
 
 void RolloutList::set_bold(int index, bool value)
@@ -94,9 +94,9 @@ void RolloutList::set_bold(int index, bool value)
 		return;
 
 	if (value)
-		_items[index]->label->style()->set("font-weight: 900");
+		_items[index]->set_bold();
 	else
-		_items[index]->label->style()->set("font-weight: normal");
+		_items[index]->clear_bold();
 }
 
 int RolloutList::find_index(const RolloutListItemView *search_item) const
@@ -129,11 +129,14 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 	textfield->style()->set("color: rgb(230,230,230)");
 	add_child(textfield);
 
-	slots.connect(label->sig_pointer_release(), [this](PointerEvent &e)
+	slots.connect(sig_pointer_release(), [this](PointerEvent &e)
 	{
+		if (e.target() == textfield)
+			return;
+
 		set_focus();
 		int index = list->find_index(this);
-		if (index == -1)
+		if (index == list->selected_item())
 		{
 			list->sig_selection_clicked()();
 			if (list->is_edit_allowed())
@@ -154,6 +157,30 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 			cancel_edit();
 		}
 	});
+}
+
+void RolloutListItemView::set_selected()
+{
+	style()->set("background-color: rgba(255,255,255,0.3)");
+	set_needs_render();
+}
+
+void RolloutListItemView::clear_selected()
+{
+	style()->set("background-color: none");
+	set_needs_render();
+}
+
+void RolloutListItemView::set_bold()
+{
+	style()->set("font-weight: 900");
+	set_needs_render();
+}
+
+void RolloutListItemView::clear_bold()
+{
+	style()->set("font-weight: normal");
+	set_needs_render();
 }
 
 void RolloutListItemView::begin_edit()

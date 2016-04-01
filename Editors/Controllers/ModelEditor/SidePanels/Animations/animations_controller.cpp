@@ -6,6 +6,7 @@
 #include "Views/Rollout/rollout_text_field_property.h"
 #include "Views/Rollout/rollout_browse_field_property.h"
 #include "Model/ModelEditor/model_app_model.h"
+#include "Controllers/PopupMenu/popup_menu_controller.h"
 
 using namespace uicore;
 
@@ -48,6 +49,23 @@ AnimationsController::AnimationsController()
 
 	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_animations(); });
 
+	slots.connect(animations_list->sig_pointer_release(), [this](PointerEvent &e)
+	{
+		if (e.button() == PointerButton::right)
+		{
+			e.stop_propagation();
+
+			std::vector<PopupMenuItem> menu_items =
+			{
+				{ "Remove", []() {} },
+				{ "Slap?", []() {} },
+				{ "What else can you do with an animation list if you right click it??", []() {} }
+			};
+
+			WindowManager::present_popup<PopupMenuController>(animations_list.get(), e.pos(animations_list.get()), menu_items);
+		}
+	});
+
 	update_animations();
 }
 
@@ -60,6 +78,7 @@ void AnimationsController::update_animations()
 	}
 	animations_list->add_item("");
 	animations_list->set_selected(0);
+	update_animation_fields();
 }
 
 void AnimationsController::update_animation_fields()
