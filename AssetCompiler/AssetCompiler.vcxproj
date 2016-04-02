@@ -32,6 +32,7 @@
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc.h" />
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_animation.h" />
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_attachment_point.h" />
+    <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_bone.h" />
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_material.h" />
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_particle_emitter.h" />
     <ClInclude Include="Include\asset_compiler.h" />

@@ -71,6 +71,20 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		}
 	}
 
+	if (!json["bones"].is_undefined())
+	{
+		for (const auto &json_bone : json["bones"].items())
+		{
+			ModelDescBone bone;
+			bone.name = json_bone["name"].to_string();
+			bone.mesh_bone = json_bone["mesh_bone"].to_string();
+			bone.position = Vec3f(json_bone["position"]["x"].to_float(), json_bone["position"]["y"].to_float(), json_bone["position"]["z"].to_float());
+			bone.rotation = Quaternionf(json_bone["rotation"]["w"].to_float(), json_bone["rotation"]["x"].to_float(), json_bone["rotation"]["y"].to_float(), json_bone["rotation"]["z"].to_float());
+			bone.extents = Vec3f(json_bone["extents"]["x"].to_float(), json_bone["extents"]["y"].to_float(), json_bone["extents"]["z"].to_float());
+			desc.bones.push_back(bone);
+		}
+	}
+
 	for (const auto &json_emitter : json["emitters"].items())
 	{
 		ModelDescParticleEmitter emitter;
@@ -130,6 +144,28 @@ void ModelDesc::save(const std::string &filename)
 		json_attachment_points.items().push_back(json_attachment);
 	}
 
+	JsonValue json_bones = JsonValue::array();
+	for (const auto &bone : bones)
+	{
+		JsonValue json_bone = JsonValue::object();
+		json_bone["name"].set_string(bone.name);
+		json_bone["mesh_bone"].set_string(bone.mesh_bone);
+		json_bone["position"] = JsonValue::object();
+		json_bone["position"]["x"].set_number(bone.position.x);
+		json_bone["position"]["y"].set_number(bone.position.y);
+		json_bone["position"]["z"].set_number(bone.position.z);
+		json_bone["rotation"] = JsonValue::object();
+		json_bone["rotation"]["x"].set_number(bone.rotation.x);
+		json_bone["rotation"]["y"].set_number(bone.rotation.y);
+		json_bone["rotation"]["z"].set_number(bone.rotation.z);
+		json_bone["rotation"]["w"].set_number(bone.rotation.w);
+		json_bone["extents"] = JsonValue::object();
+		json_bone["extents"]["x"].set_number(bone.extents.x);
+		json_bone["extents"]["y"].set_number(bone.extents.y);
+		json_bone["extents"]["z"].set_number(bone.extents.z);
+		json_bones.items().push_back(json_bone);
+	}
+
 	JsonValue json_materials = JsonValue::array();
 	for (const auto &material : materials)
 	{
@@ -148,6 +184,7 @@ void ModelDesc::save(const std::string &filename)
 	json["version"].set_number(1);
 	json["animations"] = json_animations;
 	json["attachment_points"] = json_attachment_points;
+	json["bones"] = json_bones;
 	json["materials"] = json_materials;
 	json["emitters"] = json_emitters;
 	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), fbx_filename));

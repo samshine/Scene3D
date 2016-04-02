@@ -3,10 +3,7 @@
 
 #include "Controllers/SidePanel/side_panel_controller.h"
 
-class RolloutView;
-class RolloutTextFieldProperty;
-class RolloutList;
-class RolloutListItemView;
+class MaterialsSidePanelView;
 
 class MaterialsController : public SidePanelController
 {
@@ -25,13 +22,7 @@ private:
 
 	int get_select_item_index();
 
-	std::shared_ptr<RolloutView> materials;
-	std::shared_ptr<RolloutList> materials_list;
-
-	std::shared_ptr<RolloutView> material;
-	std::shared_ptr<RolloutTextFieldProperty> two_sided_property;
-	std::shared_ptr<RolloutTextFieldProperty> alpha_test_property;
-	std::shared_ptr<RolloutTextFieldProperty> transparent_property;
+	std::shared_ptr<MaterialsSidePanelView> panel;
 
 	uicore::SlotContainer slots;
 };

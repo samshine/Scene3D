@@ -3,10 +3,7 @@
 
 #include "Controllers/SidePanel/side_panel_controller.h"
 
-class RolloutView;
-class RolloutTextFieldProperty;
-class RolloutList;
-class RolloutListItemView;
+class CamerasSidePanelView;
 
 class CamerasController : public SidePanelController
 {
@@ -22,10 +19,7 @@ private:
 
 	int get_select_item_index();
 
-	std::shared_ptr<RolloutView> cameras;
-	std::shared_ptr<RolloutList> cameras_list;
-
-	std::shared_ptr<RolloutView> camera;
+	std::shared_ptr<CamerasSidePanelView> panel;
 
 	uicore::SlotContainer slots;
 };

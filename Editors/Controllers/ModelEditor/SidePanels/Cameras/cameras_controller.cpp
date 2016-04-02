@@ -1,28 +1,17 @@
 
 #include "precomp.h"
 #include "cameras_controller.h"
-#include "Views/Rollout/rollout_view.h"
-#include "Views/Rollout/rollout_list.h"
-#include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/ModelEditor/cameras_sidepanel.h"
 #include "Model/ModelEditor/model_app_model.h"
 
 using namespace uicore;
 
 CamerasController::CamerasController()
 {
-	cameras = std::make_shared<RolloutView>("CAMERAS");
-	camera = std::make_shared<RolloutView>("CAMERA");
+	panel = view->content_view()->add_child<CamerasSidePanelView>();
 
-	view->content_view()->add_child(cameras);
-	view->content_view()->add_child(camera);
-
-	cameras_list = std::make_shared<RolloutList>();
-	cameras_list->set_allow_edit(false);
-
-	cameras->content->add_child(cameras_list);
-
-	slots.connect(cameras_list->sig_selection_changed(), this, &CamerasController::cameras_list_selection_changed);
-	slots.connect(cameras_list->sig_selection_clicked(), this, &CamerasController::cameras_list_selection_clicked);
+	slots.connect(panel->cameras_list->sig_selection_changed(), this, &CamerasController::cameras_list_selection_changed);
+	slots.connect(panel->cameras_list->sig_selection_clicked(), this, &CamerasController::cameras_list_selection_clicked);
 
 	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_cameras(); });
 
@@ -31,14 +20,14 @@ CamerasController::CamerasController()
 
 void CamerasController::update_cameras()
 {
-	cameras_list->clear();
+	panel->cameras_list->clear();
 	bool first = true;
 
 	if (ModelAppModel::instance()->fbx)
 	{
 		for (const auto &camera_name : ModelAppModel::instance()->fbx->camera_names())
 		{
-			cameras_list->add_item(camera_name);
+			panel->cameras_list->add_item(camera_name);
 		}
 	}
 	/*
@@ -58,8 +47,8 @@ void CamerasController::update_cameras()
 	}
 	*/
 
-	if (cameras_list->selected_item() == -1)
-		camera->set_hidden(true);
+	if (panel->cameras_list->selected_item() == -1)
+		panel->camera->set_hidden(true);
 }
 
 int CamerasController::get_select_item_index()
@@ -85,13 +74,13 @@ void CamerasController::update_camera_fields()
 
 	if (index >= 0)
 	{
-		camera->set_hidden(false);
+		panel->camera->set_hidden(false);
 
 		//const auto &camera = ModelAppModel::instance()->desc.cameras[index];
 	}
 	else
 	{
-		camera->set_hidden(true);
+		panel->camera->set_hidden(true);
 	}
 }
 
@@ -102,7 +91,7 @@ void CamerasController::cameras_list_selection_changed()
 
 void CamerasController::cameras_list_selection_clicked()
 {
-	auto selection = cameras_list->selected_item();
+	auto selection = panel->cameras_list->selected_item();
 	if (selection != -1)
 	{
 		/*

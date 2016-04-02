@@ -1,28 +1,17 @@
 
 #include "precomp.h"
 #include "lights_controller.h"
-#include "Views/Rollout/rollout_view.h"
-#include "Views/Rollout/rollout_list.h"
-#include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/ModelEditor/lights_sidepanel.h"
 #include "Model/ModelEditor/model_app_model.h"
 
 using namespace uicore;
 
 LightsController::LightsController()
 {
-	lights = std::make_shared<RolloutView>("LIGHTS");
-	light = std::make_shared<RolloutView>("LIGHT");
+	panel = view->content_view()->add_child<LightsSidePanelView>();
 
-	view->content_view()->add_child(lights);
-	view->content_view()->add_child(light);
-
-	lights_list = std::make_shared<RolloutList>();
-	lights_list->set_allow_edit(false);
-
-	lights->content->add_child(lights_list);
-
-	slots.connect(lights_list->sig_selection_changed(), this, &LightsController::lights_list_selection_changed);
-	slots.connect(lights_list->sig_selection_clicked(), this, &LightsController::lights_list_selection_clicked);
+	slots.connect(panel->lights_list->sig_selection_changed(), this, &LightsController::lights_list_selection_changed);
+	slots.connect(panel->lights_list->sig_selection_clicked(), this, &LightsController::lights_list_selection_clicked);
 
 	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_lights(); });
 
@@ -31,13 +20,13 @@ LightsController::LightsController()
 
 void LightsController::update_lights()
 {
-	lights_list->clear();
+	panel->lights_list->clear();
 
 	if (ModelAppModel::instance()->fbx)
 	{
 		for (const auto &light_name : ModelAppModel::instance()->fbx->light_names())
 		{
-			lights_list->add_item(light_name);
+			panel->lights_list->add_item(light_name);
 		}
 	}
 	/*
@@ -57,8 +46,8 @@ void LightsController::update_lights()
 	}
 	*/
 
-	if (lights_list->selected_item() == -1)
-		light->set_hidden(true);
+	if (panel->lights_list->selected_item() == -1)
+		panel->light->set_hidden(true);
 }
 
 int LightsController::get_select_item_index()
@@ -84,13 +73,13 @@ void LightsController::update_light_fields()
 
 	if (index >= 0)
 	{
-		light->set_hidden(false);
+		panel->light->set_hidden(false);
 
 		//const auto &light = ModelAppModel::instance()->desc.lights[index];
 	}
 	else
 	{
-		light->set_hidden(true);
+		panel->light->set_hidden(true);
 	}
 }
 
@@ -101,7 +90,7 @@ void LightsController::lights_list_selection_changed()
 
 void LightsController::lights_list_selection_clicked()
 {
-	auto selection = lights_list->selected_item();
+	auto selection = panel->lights_list->selected_item();
 	if (selection != -1)
 	{
 		/*

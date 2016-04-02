@@ -112,6 +112,9 @@
     <Filter Include="Controllers\PopupMenu">
       <UniqueIdentifier>{0fa3913c-2ea6-433d-84f1-f6825ec92040}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Views\ModelEditor">
+      <UniqueIdentifier>{96cacef3-a13f-4146-928f-ae3aa41ef142}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controllers\ModelEditor\Scene\scene_controller.cpp">
@@ -258,6 +261,12 @@
     </ClCompile>
     <ClCompile Include="Controllers\PopupMenu\popup_menu_controller.cpp">
       <Filter>Controllers\PopupMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\add_bone_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelEditor\Commands\update_bone_command.cpp">
+      <Filter>Model\ModelEditor\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -426,6 +435,36 @@
     </ClInclude>
     <ClInclude Include="Views\PopupMenu\popup_menu_frame.h">
       <Filter>Views\PopupMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\add_bone_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelEditor\Commands\update_bone_command.h">
+      <Filter>Model\ModelEditor\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\MapEditor\map_edit_sidepanel.h">
+      <Filter>Views\MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\animations_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\attachments_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\bones_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\cameras_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\environment_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\lights_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Views\ModelEditor\materials_sidepanel.h">
+      <Filter>Views\ModelEditor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

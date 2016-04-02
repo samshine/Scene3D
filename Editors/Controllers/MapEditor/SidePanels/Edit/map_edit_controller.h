@@ -3,10 +3,7 @@
 
 #include "Controllers/SidePanel/side_panel_controller.h"
 
-class MapSelectRolloutView;
-class MapCreateRolloutView;
-class MapObjectRolloutView;
-class MapObjectListRolloutView;
+class MapEditSidePanelView;
 
 class MapEditController : public SidePanelController
 {
@@ -50,10 +47,5 @@ private:
 	void edit_object_field_value_changed();
 
 	uicore::SlotContainer slots;
-
-	std::shared_ptr<MapSelectRolloutView> select;
-	std::shared_ptr<MapCreateRolloutView> create;
-	std::shared_ptr<MapObjectRolloutView> create_object;
-	std::shared_ptr<MapObjectListRolloutView> objects;
-	std::shared_ptr<MapObjectRolloutView> edit_object;
+	std::shared_ptr<MapEditSidePanelView> panel;
 };

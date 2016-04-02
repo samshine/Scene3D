@@ -5,9 +5,11 @@
 #include "Commands/add_animation_command.h"
 #include "Commands/add_attachment_command.h"
 #include "Commands/add_material_command.h"
+#include "Commands/add_bone_command.h"
 #include "Commands/update_animation_command.h"
 #include "Commands/update_attachment_command.h"
 #include "Commands/update_material_command.h"
+#include "Commands/update_bone_command.h"
 
 class ModelAppModel
 {

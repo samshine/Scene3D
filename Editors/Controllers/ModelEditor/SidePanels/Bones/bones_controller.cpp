@@ -1,28 +1,17 @@
 
 #include "precomp.h"
 #include "bones_controller.h"
-#include "Views/Rollout/rollout_view.h"
-#include "Views/Rollout/rollout_list.h"
-#include "Views/Rollout/rollout_text_field_property.h"
+#include "Views/ModelEditor/bones_sidepanel.h"
 #include "Model/ModelEditor/model_app_model.h"
 
 using namespace uicore;
 
 BonesController::BonesController()
 {
-	bones = std::make_shared<RolloutView>("BONES");
-	bone = std::make_shared<RolloutView>("BONE");
+	panel = view->content_view()->add_child<BonesSidePanelView>();
 
-	view->content_view()->add_child(bones);
-	view->content_view()->add_child(bone);
-
-	bones_list = std::make_shared<RolloutList>();
-	bones_list->set_allow_edit(false);
-
-	bones->content->add_child(bones_list);
-
-	slots.connect(bones_list->sig_selection_changed(), this, &BonesController::bones_list_selection_changed);
-	slots.connect(bones_list->sig_selection_clicked(), this, &BonesController::bones_list_selection_clicked);
+	slots.connect(panel->bones_list->sig_selection_changed(), this, &BonesController::bones_list_selection_changed);
+	slots.connect(panel->bones_list->sig_edit_saved(), this, &BonesController::bones_list_edit_saved);
 
 	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_bones(); });
 
@@ -31,67 +20,28 @@ BonesController::BonesController()
 
 void BonesController::update_bones()
 {
-	bones_list->clear();
-	bool first = true;
-
-	if (ModelAppModel::instance()->fbx)
-	{
-		for (const auto &bone_name : ModelAppModel::instance()->fbx->bone_names())
-		{
-			bones_list->add_item(bone_name);
-		}
-	}
-	/*
+	panel->bones_list->clear();
 	for (const auto &bone : ModelAppModel::instance()->desc.bones)
 	{
-		auto &item = items[bone.mesh_bone];
-		if (!item)
-			item = bones_list->add_item(bone.mesh_bone);
-
-		item->set_bold(true);
-
-		if (first)
-		{
-			item->set_selected(true, false);
-			first = false;
-		}
+		panel->bones_list->add_item(bone.name);
 	}
-	*/
-
-	if (bones_list->selected_item() == -1)
-		bone->set_hidden(true);
-}
-
-int BonesController::get_select_item_index()
-{
-	/*auto selection = bones_list->selection();
-	if (selection)
-	{
-		std::string name = selection->text();
-
-		const auto &bones = ModelAppModel::instance()->desc.bones;
-		for (size_t i = 0; i < bones.size(); i++)
-		{
-			if (bones[i].mesh_bone == name)
-				return (int)i;
-		}
-	}*/
-	return -1;
+	panel->bones_list->add_item("");
+	panel->bones_list->set_selected(0);
+	update_bone_fields();
 }
 
 void BonesController::update_bone_fields()
 {
-	int index = get_select_item_index();
-
-	if (index >= 0)
+	auto selection = panel->bones_list->selected_item();
+	if (selection != -1 && selection < (int)ModelAppModel::instance()->desc.bones.size())
 	{
-		bone->set_hidden(false);
+		panel->bone_rollout->set_hidden(false);
 
-		//const auto &bone = ModelAppModel::instance()->desc.bones[index];
+		const auto &bone = ModelAppModel::instance()->desc.bones[selection];
 	}
 	else
 	{
-		bone->set_hidden(true);
+		panel->bone_rollout->set_hidden(true);
 	}
 }
 
@@ -100,22 +50,26 @@ void BonesController::bones_list_selection_changed()
 	update_bone_fields();
 }
 
-void BonesController::bones_list_selection_clicked()
+void BonesController::bones_list_edit_saved()
 {
-	auto selection = bones_list->selected_item();
+	auto selection = panel->bones_list->selected_item();
 	if (selection != -1)
 	{
-		/*
-		if (selection->index >= ModelAppModel::instance()->desc.bones.size())
+		if (selection >= (int)ModelAppModel::instance()->desc.bones.size())
 		{
-			ModelAppModel::instance()->desc.bones.resize(selection->index + 1);
-			bones_list->add_item("");
+			ModelDescBone bone;
+			bone.name = panel->bones_list->item_text(selection);
+			ModelAppModel::instance()->undo_system.execute<AddBoneCommand>(bone);
+
+			panel->bones_list->add_item("");
+		}
+		else
+		{
+			ModelDescBone bone = ModelAppModel::instance()->desc.bones[selection];
+			bone.name = panel->bones_list->item_text(selection);
+			ModelAppModel::instance()->undo_system.execute<UpdateBoneCommand>(selection, bone);
 		}
 
-		auto &bone = ModelAppModel::instance()->desc.bones[selection->index];
-		bone.name = selection->text();
-
 		update_bone_fields();
-		*/
 	}
 }
