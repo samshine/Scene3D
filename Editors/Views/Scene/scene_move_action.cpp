@@ -20,7 +20,7 @@ void SceneMoveAction::track_keys(const std::vector<Key> &new_keys)
 		keys[key] = false;
 }
 
-void SceneMoveAction::deactivated(ActivationChangeEvent &e)
+void SceneMoveAction::deactivated(ActivationChangeEvent *e)
 {
 	timer->stop();
 	for (auto &it : keys)
@@ -28,7 +28,7 @@ void SceneMoveAction::deactivated(ActivationChangeEvent &e)
 	end_action();
 }
 
-void SceneMoveAction::focus_lost(FocusChangeEvent &e)
+void SceneMoveAction::focus_lost(FocusChangeEvent *e)
 {
 	timer->stop();
 	for (auto &it : keys)
@@ -36,12 +36,12 @@ void SceneMoveAction::focus_lost(FocusChangeEvent &e)
 	end_action();
 }
 
-void SceneMoveAction::key_press(KeyEvent &e)
+void SceneMoveAction::key_press(KeyEvent *e)
 {
-	auto it = keys.find(e.key());
+	auto it = keys.find(e->key());
 	if (it != keys.end())
 	{
-		keys[e.key()] = true;
+		keys[e->key()] = true;
 		timer->start(16);
 
 		if (!action_active())
@@ -52,12 +52,12 @@ void SceneMoveAction::key_press(KeyEvent &e)
 	}
 }
 
-void SceneMoveAction::key_release(KeyEvent &e)
+void SceneMoveAction::key_release(KeyEvent *e)
 {
-	auto it = keys.find(e.key());
+	auto it = keys.find(e->key());
 	if (it != keys.end())
 	{
-		keys[e.key()] = false;
+		keys[e->key()] = false;
 
 		bool stop = true;
 		for (auto &it : keys)

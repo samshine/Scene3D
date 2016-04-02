@@ -20,7 +20,8 @@ PopupMenuController::PopupMenuController(const std::vector<PopupMenuItem> &items
 			item_view->set_text(item.label);
 
 			auto clicked = item.clicked;
-			slots.connect(item_view->sig_pointer_release(), [=](PointerEvent &e) {
+			slots.connect(item_view->sig_pointer_release(), [=](PointerEvent *e)
+			{
 				if (clicked)
 					clicked();
 				dismiss();

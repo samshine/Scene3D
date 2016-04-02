@@ -30,7 +30,7 @@ RolloutTextFieldProperty::RolloutTextFieldProperty(const std::string &label_text
 	add_child(label);
 	add_child(text_field);
 
-	slots.connect(text_field->sig_enter_pressed(), [&, this]()
+	slots.connect(text_field->sig_enter_pressed(), [&, this](KeyEvent *)
 	{
 		_sig_value_changed();
 	});

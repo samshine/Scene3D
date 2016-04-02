@@ -25,7 +25,7 @@ MapEditorWindow::MapEditorWindow()
 	view->add_child(header_view);
 	view->add_child(workspace_controller->view);
 
-	slots.connect(view->sig_close(), [this](CloseEvent &e)
+	slots.connect(view->sig_close(), [this](CloseEvent *)
 	{
 		dismiss();
 	});

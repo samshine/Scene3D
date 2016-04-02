@@ -5,9 +5,9 @@
 
 using namespace uicore;
 
-void SceneRotateAction::pointer_press(PointerEvent &e)
+void SceneRotateAction::pointer_press(PointerEvent *e)
 {
-	if (e.button() == PointerButton::right)
+	if (e->button() == PointerButton::right)
 	{
 		begin_action();
 
@@ -17,12 +17,12 @@ void SceneRotateAction::pointer_press(PointerEvent &e)
 	}
 }
 
-void SceneRotateAction::pointer_release(PointerEvent &e)
+void SceneRotateAction::pointer_release(PointerEvent *e)
 {
 	if (!action_active())
 		return;
 
-	if (e.button() == PointerButton::right)
+	if (e->button() == PointerButton::right)
 	{
 		end_action();
 
@@ -31,7 +31,7 @@ void SceneRotateAction::pointer_release(PointerEvent &e)
 	}
 }
 
-void SceneRotateAction::pointer_move(PointerEvent &e)
+void SceneRotateAction::pointer_move(PointerEvent *e)
 {
 	if (!action_active())
 		return;

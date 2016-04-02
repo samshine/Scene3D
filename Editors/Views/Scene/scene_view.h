@@ -17,7 +17,7 @@ public:
 	void render_content(const uicore::CanvasPtr &canvas) override;
 
 private:
-	void pointer_press(uicore::PointerEvent &e);
+	void pointer_press(uicore::PointerEvent *e);
 
 	uicore::TimerPtr timer;
 

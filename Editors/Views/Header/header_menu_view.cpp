@@ -35,9 +35,9 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 		button->move_label_before_image();
 }
 
-void HeaderMenuView::button_clicked(PointerEvent &e)
+void HeaderMenuView::button_clicked(PointerEvent *e)
 {
-	e.stop_propagation();
+	e->stop_propagation();
 	WindowManager::present_popup(this, { 0.0f, 40.0f }, menu);
 }
 
@@ -49,9 +49,9 @@ void HeaderMenuView::add_item(const std::string &text, std::function<void()> cli
 	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
 	button->label()->style()->set("color: rgb(230,230,230)");
-	slots.connect(button->sig_pointer_release(), [=](PointerEvent &e)
+	slots.connect(button->sig_pointer_release(), [=](PointerEvent *e)
 	{
-		e.stop_propagation();
+		e->stop_propagation();
 		style()->set("background: none");
 		menu->dismiss();
 		click();

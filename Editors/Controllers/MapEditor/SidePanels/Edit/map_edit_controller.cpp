@@ -27,14 +27,14 @@ MapEditController::MapEditController()
 	create_object->mesh->browse_field->set_text(PathHelp::basename(MapAppModel::instance()->create_object_template.mesh));
 	create_object->fields->text_field->set_text(MapAppModel::instance()->create_object_template.fields.to_json());
 
-	select->button_select->button->func_clicked() = bind_member(this, &MapEditController::select_clicked);
-	select->button_select_move->button->func_clicked() = bind_member(this, &MapEditController::select_move_clicked);
-	select->button_select_rotate->button->func_clicked() = bind_member(this, &MapEditController::select_rotate_clicked);
-	select->button_select_scale->button->func_clicked() = bind_member(this, &MapEditController::select_scale_clicked);
-	create->button_create_object->button->func_clicked() = bind_member(this, &MapEditController::create_object_clicked);
-	create->button_create_trigger->button->func_clicked() = bind_member(this, &MapEditController::create_trigger_clicked);
-	create->button_create_path_point->button->func_clicked() = bind_member(this, &MapEditController::create_path_point_clicked);
-	create->button_create_light_probe->button->func_clicked() = bind_member(this, &MapEditController::create_light_probe_clicked);
+	slots.connect(select->button_select->button->sig_clicked(), bind_member(this, &MapEditController::select_clicked));
+	slots.connect(select->button_select_move->button->sig_clicked(), bind_member(this, &MapEditController::select_move_clicked));
+	slots.connect(select->button_select_rotate->button->sig_clicked(), bind_member(this, &MapEditController::select_rotate_clicked));
+	slots.connect(select->button_select_scale->button->sig_clicked(), bind_member(this, &MapEditController::select_scale_clicked));
+	slots.connect(create->button_create_object->button->sig_clicked(), bind_member(this, &MapEditController::create_object_clicked));
+	slots.connect(create->button_create_trigger->button->sig_clicked(), bind_member(this, &MapEditController::create_trigger_clicked));
+	slots.connect(create->button_create_path_point->button->sig_clicked(), bind_member(this, &MapEditController::create_path_point_clicked));
+	slots.connect(create->button_create_light_probe->button->sig_clicked(), bind_member(this, &MapEditController::create_light_probe_clicked));
 
 	slots.connect(create_object->id->sig_value_changed(), this, &MapEditController::create_object_id_value_changed);
 	slots.connect(create_object->type->sig_value_changed(), this, &MapEditController::create_object_type_value_changed);

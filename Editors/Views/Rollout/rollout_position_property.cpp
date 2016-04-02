@@ -53,7 +53,7 @@ RolloutPositionProperty::RolloutPositionProperty(const std::string &label_text)
 
 		value_group->add_child(row);
 
-		slots.connect(input->sig_enter_pressed(), [&, this]()
+		slots.connect(input->sig_enter_pressed(), [&, this](KeyEvent *)
 		{
 			_sig_value_changed();
 		});

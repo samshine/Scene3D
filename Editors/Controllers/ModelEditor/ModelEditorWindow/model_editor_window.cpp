@@ -31,7 +31,7 @@ ModelEditorWindow::ModelEditorWindow()
 
 	view->style()->set("background: rgb(240,240,240)");
 
-	slots.connect(view->sig_close(), [this](CloseEvent &e)
+	slots.connect(view->sig_close(), [this](CloseEvent *)
 	{
 		dismiss();
 	});

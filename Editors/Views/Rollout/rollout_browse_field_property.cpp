@@ -30,7 +30,7 @@ RolloutBrowseFieldProperty::RolloutBrowseFieldProperty(const std::string &label_
 	add_child(label);
 	add_child(browse_field);
 
-	slots.connect(browse_field->sig_pointer_release(), [&, this](PointerEvent &e)
+	slots.connect(browse_field->sig_pointer_release(), [this](PointerEvent *e)
 	{
 		_sig_browse();
 	});

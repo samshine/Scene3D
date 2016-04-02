@@ -11,17 +11,17 @@ MapSceneCreateObjectAction::MapSceneCreateObjectAction(MapSceneController *contr
 {
 }
 
-void MapSceneCreateObjectAction::pointer_press(PointerEvent &e)
+void MapSceneCreateObjectAction::pointer_press(PointerEvent *e)
 {
 	auto app_model = MapAppModel::instance();
-	if (app_model->tool == MapToolType::create_object && e.button() == PointerButton::left)
+	if (app_model->tool == MapToolType::create_object && e->button() == PointerButton::left)
 	{
 		begin_action();
 
 		auto scene_view = controller->scene_views[view_index];
 
 		Vec3f ray_start, ray_direction;
-		scene_view->unproject(e.pos(scene_view), ray_start, ray_direction);
+		scene_view->unproject(e->pos(scene_view), ray_start, ray_direction);
 
 		auto hit = controller->collision->ray_test_nearest(ray_start, ray_start + ray_direction * 100.0f);
 		if (hit)
@@ -33,12 +33,12 @@ void MapSceneCreateObjectAction::pointer_press(PointerEvent &e)
 	}
 }
 
-void MapSceneCreateObjectAction::pointer_release(PointerEvent &e)
+void MapSceneCreateObjectAction::pointer_release(PointerEvent *e)
 {
-	if (action_active() && e.button() == PointerButton::left)
+	if (action_active() && e->button() == PointerButton::left)
 		end_action();
 }
 
-void MapSceneCreateObjectAction::pointer_move(PointerEvent &e)
+void MapSceneCreateObjectAction::pointer_move(PointerEvent *e)
 {
 }

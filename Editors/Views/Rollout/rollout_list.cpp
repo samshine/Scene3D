@@ -129,9 +129,9 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 	textfield->style()->set("color: rgb(230,230,230)");
 	add_child(textfield);
 
-	slots.connect(sig_pointer_release(), [this](PointerEvent &e)
+	slots.connect(sig_pointer_release(), [this](PointerEvent *e)
 	{
-		if (e.target() == textfield)
+		if (e->target() == textfield)
 			return;
 
 		set_focus();
@@ -148,11 +148,11 @@ RolloutListItemView::RolloutListItemView(RolloutList *init_list) : list(init_lis
 			list->sig_selection_changed()();
 		}
 	});
-	slots.connect(textfield->sig_focus_lost(), [this](FocusChangeEvent &e) { cancel_edit(); });
-	slots.connect(textfield->sig_enter_pressed(), [this]() { save_edit(); });
-	slots.connect(textfield->sig_key_press(), [this](KeyEvent &e)
+	slots.connect(textfield->sig_focus_lost(), [this](FocusChangeEvent *) { cancel_edit(); });
+	slots.connect(textfield->sig_enter_pressed(), [this](EventUI *) { save_edit(); });
+	slots.connect(textfield->sig_key_press(), [this](KeyEvent *e)
 	{
-		if (e.key() == Key::escape)
+		if (e->key() == Key::escape)
 		{
 			cancel_edit();
 		}

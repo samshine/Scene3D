@@ -49,11 +49,11 @@ AnimationsController::AnimationsController()
 
 	slots.connect(ModelAppModel::instance()->sig_load_finished, [this]() { update_animations(); });
 
-	slots.connect(animations_list->sig_pointer_release(), [this](PointerEvent &e)
+	slots.connect(animations_list->sig_pointer_release(), [this](PointerEvent *e)
 	{
-		if (e.button() == PointerButton::right)
+		if (e->button() == PointerButton::right)
 		{
-			e.stop_propagation();
+			e->stop_propagation();
 
 			std::vector<PopupMenuItem> menu_items =
 			{
@@ -62,7 +62,7 @@ AnimationsController::AnimationsController()
 				{ "What else can you do with an animation list if you right click it??", []() {} }
 			};
 
-			WindowManager::present_popup<PopupMenuController>(animations_list.get(), e.pos(animations_list.get()), menu_items);
+			WindowManager::present_popup<PopupMenuController>(animations_list.get(), e->pos(animations_list.get()), menu_items);
 		}
 	});
 

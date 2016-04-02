@@ -10,7 +10,7 @@ SceneView::SceneView()
 
 	set_focus_policy(FocusPolicy::accept);
 
-	slots.connect(sig_pointer_press(), this, &SceneView::pointer_press);
+	slots.connect(sig_pointer_press(), [this](PointerEvent *e) { pointer_press(e); });
 
 	timer = Timer::create();
 	timer->func_expired() = [this]()
@@ -25,7 +25,7 @@ SceneEnginePtr SceneView::engine()
 	return engine;
 }
 
-void SceneView::pointer_press(PointerEvent &e)
+void SceneView::pointer_press(PointerEvent *e)
 {
 	set_focus();
 }

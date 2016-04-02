@@ -11,7 +11,7 @@ public:
 	void add_item(const std::string &text, std::function<void()> click);
 
 private:
-	void button_clicked(uicore::PointerEvent &e);
+	void button_clicked(uicore::PointerEvent *e);
 
 	std::shared_ptr<uicore::ButtonBaseView> button;
 	std::shared_ptr<HeaderMenuPopupController> menu;

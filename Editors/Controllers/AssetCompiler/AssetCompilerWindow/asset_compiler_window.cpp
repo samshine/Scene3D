@@ -11,16 +11,16 @@ AssetCompilerWindow::AssetCompilerWindow()
 	set_icon({ "Icons/App/AppIcon-256.png", "Icons/App/AppIcon-16.png" });
 	set_root_view(view);
 
-	slots.connect(view->sig_close(), [this](CloseEvent &e)
+	slots.connect(view->sig_close(), [this](CloseEvent *)
 	{
 		dismiss();
 	});
 
-	view->asset_list_browse->func_clicked() = [this] { asset_list_browse_clicked(); };
-	view->output_browse->func_clicked() = [this] { output_browse_clicked(); };
-	view->build_button->func_clicked() = [this] { build_button_clicked(); };
-	view->clean_button->func_clicked() = [this] { clean_button_clicked(); };
-	view->cancel_button->func_clicked() = [this] { cancel_button_clicked(); };
+	slots.connect(view->asset_list_browse->sig_clicked(), [this] { asset_list_browse_clicked(); });
+	slots.connect(view->output_browse->sig_clicked(), [this] { output_browse_clicked(); });
+	slots.connect(view->build_button->sig_clicked(), [this] { build_button_clicked(); });
+	slots.connect(view->clean_button->sig_clicked(), [this] { clean_button_clicked(); });
+	slots.connect(view->cancel_button->sig_clicked(), [this] { cancel_button_clicked(); });
 }
 
 void AssetCompilerWindow::asset_list_browse_clicked()

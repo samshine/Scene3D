@@ -4,9 +4,9 @@
 class SceneRotateAction : public uicore::ViewAction
 {
 public:
-	void pointer_press(uicore::PointerEvent &e) override;
-	void pointer_release(uicore::PointerEvent &e) override;
-	void pointer_move(uicore::PointerEvent &e) override;
+	void pointer_press(uicore::PointerEvent *e) override;
+	void pointer_release(uicore::PointerEvent *e) override;
+	void pointer_move(uicore::PointerEvent *e) override;
 
 	std::function<void(const uicore::Vec2i &delta)> func_mouse_move;
 
