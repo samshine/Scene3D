@@ -16,6 +16,7 @@ public:
 
 private:
 	void create_menus();
+	void create_resources();
 	void server_thread_main(std::string hostname, std::string port);
 	void on_log_event(const std::string &type, const std::string &text);
 

@@ -233,7 +233,7 @@ namespace uicore
 		{
 			std::string s = value.get_string();
 			*d = 7;
-			*reinterpret_cast<unsigned short*>(d + 1) = s.length();
+			*reinterpret_cast<unsigned short*>(d + 1) = (unsigned short)s.length();
 			memcpy(d + 3, s.data(), s.length());
 			return 3 + s.length();
 		}
@@ -259,7 +259,7 @@ namespace uicore
 		{
 			DataBufferPtr s = value.get_binary();
 			*d = 11;
-			*reinterpret_cast<unsigned short*>(d + 1) = s->size();
+			*reinterpret_cast<unsigned short*>(d + 1) = (unsigned short)s->size();
 			memcpy(d + 3, s->data(), s->size());
 			return 3 + s->size();
 		}

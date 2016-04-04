@@ -12,7 +12,25 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 {
 	set_cursor_hidden();
 	create_menus();
+	create_resources();
 
+	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
+
+	if (host_game)
+	{
+		server_thread = std::thread(&GameScreenController::server_thread_main, this, !hostname.empty() ? hostname : "localhost", port);
+
+		std::unique_lock<std::mutex> lock(server_mutex);
+		server_condition_var.wait(lock, [&]() { return server_running; });
+	}
+
+	client = std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache());
+	client_game = std::make_shared<GameWorld>(!hostname.empty() ? hostname : "localhost", port, client);
+	GameMaster::create(client_game.get());
+}
+
+void GameScreenController::create_resources()
+{
 	FontDescription font_desc;
 	font_desc.set_height(13.0f);
 	font_desc.set_line_height(18.0f);
@@ -37,20 +55,6 @@ GameScreenController::GameScreenController(std::string hostname, std::string por
 	font_small = Font::create("Consolas", font_small_desc);
 
 	crosshair = Image::create(canvas(), "Resources/UI/HUD/crosshair3_red.png");
-
-	slots.connect(LogEvent::sig_log_event(), this, &GameScreenController::on_log_event);
-
-	if (host_game)
-	{
-		server_thread = std::thread(&GameScreenController::server_thread_main, this, !hostname.empty() ? hostname : "localhost", port);
-
-		std::unique_lock<std::mutex> lock(server_mutex);
-		server_condition_var.wait(lock, [&]() { return server_running; });
-	}
-
-	client = std::make_shared<GameWorldClient>(window(), scene_engine(), sound_cache());
-	client_game = std::make_shared<GameWorld>(!hostname.empty() ? hostname : "localhost", port, client);
-	GameMaster::create(client_game.get());
 }
 
 GameScreenController::~GameScreenController()
@@ -152,9 +156,10 @@ void GameScreenController::update()
 	Path::rect(Rectf::xywh(611.0f, offset + 11.0f, 1.0f, 180.0f))->fill(canvas(), Brush::solid_rgba8(200, 200, 255, 50));
 
 	auto font_small_metrics = font_small->font_metrics(canvas());
-	auto font_metrics = font->font_metrics(canvas());
 	auto font_metrics2 = font2->font_metrics(canvas());
 	auto font_metrics3 = font3->font_metrics(canvas());
+
+	auto font_metrics = font->font_metrics(canvas());
 
 	float y = offset + 180.0f - font_metrics.line_height() + font_metrics.baseline_offset();
 	for (size_t i = log_messages.size(); i > 0; i--)
