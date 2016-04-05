@@ -281,9 +281,9 @@ void GameScreenController::update()
 			Colorf black = Colorf::black;
 			Colorf color1 = Colorf::lightgoldenrodyellow;
 			Colorf color2 = Colorf::whitesmoke;
-			black.a = alpha * alpha;
-			color1.a = alpha;
-			color2.a = alpha;
+			black.w = alpha * alpha;
+			color1.w = alpha;
+			color2.w = alpha;
 
 			font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f + 2.0f, canvas()->height() * 0.3f + 2.0f, announcement_text1, black);
 			font3->draw_text(canvas(), (canvas()->width() - font3->measure_text(canvas(), announcement_text1).advance.width) * 0.5f, canvas()->height() * 0.3f, announcement_text1, color1);

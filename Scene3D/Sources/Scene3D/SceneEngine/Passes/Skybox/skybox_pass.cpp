@@ -37,7 +37,7 @@ void SkyboxPass::run()
 
 		for (size_t i = 0; i < colors.size(); i++)
 		{
-			pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
+			pixels[i] = Vec4f(colors[i].x, colors[i].y, colors[i].z, colors[i].w);
 		}
 
 		auto texture = Texture2D::create(inout.gc, pb->size(), tf_rgba32f);
@@ -154,7 +154,7 @@ void SkyboxPass::create_cloud_texture()
 		for (int x = 0; x < width; x++)
 		{
 			int alpha = (int)clamp(noise.turbulence(x, y, (double)turbulence) * 65535.0 - 20000.0, 0.0, 65535.0);
-			cloud_data[x+y*512] = Vec4us(color.r * 64, color.g * 64, color.b * 64, alpha);
+			cloud_data[x+y*512] = Vec4us(color.x * 64, color.y * 64, color.z * 64, alpha);
 		}
 	}
 	auto texture = Texture2D::create(inout.gc, width, height, tf_rgba16, 0);

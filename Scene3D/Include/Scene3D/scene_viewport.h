@@ -28,6 +28,7 @@ public:
 	virtual uicore::Mat4f eye_to_projection() const = 0;
 	virtual uicore::Mat4f world_to_projection() const = 0;
 
+	virtual uicore::Vec2f project(const uicore::Vec3f &world_pos) = 0;
 	virtual void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction) = 0;
 };
 

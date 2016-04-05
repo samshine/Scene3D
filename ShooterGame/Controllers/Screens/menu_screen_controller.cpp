@@ -26,9 +26,9 @@ MenuScreenController::MenuScreenController()
 	gradient.push_back(Colorf(236 * 8 / 10, 240 * 8 / 10, 243 * 8 / 10));
 	for (auto &g : gradient)
 	{
-		g.r = std::pow(g.r, 2.2f);
-		g.g = std::pow(g.g, 2.2f);
-		g.b = std::pow(g.b, 2.2f);
+		g.x = std::pow(g.x, 2.2f);
+		g.y = std::pow(g.y, 2.2f);
+		g.z = std::pow(g.z, 2.2f);
 	}
 	scene->set_skybox_gradient(gradient);
 

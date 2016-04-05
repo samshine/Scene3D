@@ -268,6 +268,7 @@
     <ClCompile Include="Model\ModelEditor\Commands\update_bone_command.cpp">
       <Filter>Model\ModelEditor\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="Views\Scene\scene_pivot_action.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -466,5 +467,6 @@
     <ClInclude Include="Views\ModelEditor\materials_sidepanel.h">
       <Filter>Views\ModelEditor</Filter>
     </ClInclude>
+    <ClInclude Include="Views\Scene\scene_pivot_action.h" />
   </ItemGroup>
 </Project>

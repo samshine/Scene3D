@@ -17,7 +17,7 @@ SceneViewportImpl::SceneViewportImpl(const SceneEnginePtr &engine) : _engine(std
 Mat4f SceneViewportImpl::world_to_eye() const
 {
 	Quaternionf inv_orientation = Quaternionf::inverse(_camera->orientation());
-	return inv_orientation.to_matrix() * Mat4f::translate(_camera->position());
+	return inv_orientation.to_matrix() * Mat4f::translate(-_camera->position());
 }
 
 Mat4f SceneViewportImpl::eye_to_projection() const
@@ -29,6 +29,15 @@ Mat4f SceneViewportImpl::eye_to_projection() const
 Mat4f SceneViewportImpl::world_to_projection() const
 {
 	return eye_to_projection() * world_to_eye();
+}
+
+Vec2f SceneViewportImpl::project(const Vec3f &world_pos)
+{
+	auto v = world_to_projection() * Vec4f(world_pos, 1.0f);
+	v *= 1.0f / v.w;
+	v.x = (v.x + 1.0f) * 0.5f;
+	v.y = (v.y + 1.0f) * 0.5f;
+	return Vec2f(v.x * _viewport.width() + _viewport.left, _viewport.bottom - v.y * _viewport.height());
 }
 
 void SceneViewportImpl::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)

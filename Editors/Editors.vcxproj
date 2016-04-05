@@ -72,6 +72,7 @@
     <ClCompile Include="Views\Rollout\rollout_view.cpp" />
     <ClCompile Include="Views\Scene\mouse_movement.cpp" />
     <ClCompile Include="Views\Scene\scene_move_action.cpp" />
+    <ClCompile Include="Views\Scene\scene_pivot_action.cpp" />
     <ClCompile Include="Views\Scene\scene_rotate_action.cpp" />
     <ClCompile Include="Views\Scene\scene_view.cpp" />
     <ClCompile Include="Views\Theme\theme_views.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Views\Rollout\rollout_view.h" />
     <ClInclude Include="Views\Scene\mouse_movement.h" />
     <ClInclude Include="Views\Scene\scene_move_action.h" />
+    <ClInclude Include="Views\Scene\scene_pivot_action.h" />
     <ClInclude Include="Views\Scene\scene_rotate_action.h" />
     <ClInclude Include="Views\Scene\scene_view.h" />
     <ClInclude Include="Views\Theme\theme_views.h" />

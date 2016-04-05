@@ -42,6 +42,7 @@ public:
 	uicore::Mat4f eye_to_projection() const override;
 	uicore::Mat4f world_to_projection() const override;
 
+	uicore::Vec2f project(const uicore::Vec3f &world_pos) override;
 	void unproject(const uicore::Vec2i &screen_pos, uicore::Vec3f &out_ray_start, uicore::Vec3f &out_ray_direction) override;
 
 	SceneImpl *scene() const;
