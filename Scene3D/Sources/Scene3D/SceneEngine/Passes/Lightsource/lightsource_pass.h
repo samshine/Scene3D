@@ -21,6 +21,9 @@ struct LightsourceUniforms
 	unsigned int num_tiles_y;
 	unsigned int padding;
 	uicore::Vec4f scene_ambience;
+#ifdef DIFFUSE_GI_TEST
+	uicore::Mat4f eye_to_diffuse_gi;
+#endif
 };
 
 struct LightsourceGPULight
@@ -56,6 +59,9 @@ private:
 
 	uicore::ProgramObjectPtr cull_tiles_program;
 	uicore::ProgramObjectPtr render_tiles_program;
+#ifdef DIFFUSE_GI_TEST
+	uicore::Texture3DPtr diffuse_gi;
+#endif
 
 	std::vector<SceneLightImpl *> lights;
 

@@ -145,6 +145,7 @@
     <ClInclude Include="Sources\Lightmap\lightmap_uv.h" />
     <ClInclude Include="Sources\Lightmap\texture_atlas.h" />
     <ClInclude Include="Sources\precomp.h" />
+    <ClInclude Include="Sources\Raytracer\raytracer.h" />
     <ClInclude Include="Sources\TextureBuilder\texture_builder.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +236,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sources\Raytracer\raytracer.cpp" />
     <ClCompile Include="Sources\TextureBuilder\texture_builder.cpp" />
   </ItemGroup>
   <ItemGroup>

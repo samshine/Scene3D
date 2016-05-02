@@ -33,6 +33,9 @@ cbuffer Uniforms
 	uint num_tiles_y;
 	uint padding; // 16 byte boundary alignment
 	float4 scene_ambience;
+#if defined(DIFFUSE_GI_TEST)
+	float4x4 eye_to_diffuse_gi;
+#endif
 }
 StructuredBuffer<Light> lights;
 
@@ -47,6 +50,11 @@ Texture2D<float4> specular;
 Texture2D<float4> specular_level;
 Texture2D<float4> self_illumination;
 RWTexture2D<float4> out_final;
+
+#if defined(DIFFUSE_GI_TEST)
+Texture3D<float4> diffuse_gi;
+SamplerState diffuse_gi_sampler;
+#endif
 
 groupshared Light local_lights[MAX_LOCAL_LIGHTS]; 
 
@@ -123,6 +131,11 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
 	float3 color = material_self_illumination + material_diffuse_color * scene_ambience.xyz;
+
+#if defined(DIFFUSE_GI_TEST)
+	float4 diffuse_gi_position = mul(eye_to_diffuse_gi, float4(position_in_eye, 1));
+	color += material_diffuse_color * diffuse_gi.SampleLevel(diffuse_gi_sampler, diffuse_gi_position.xyz, 0).xyz;
+#endif
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;

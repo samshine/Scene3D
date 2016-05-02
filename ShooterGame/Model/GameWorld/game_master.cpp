@@ -52,7 +52,7 @@ void GameMaster::setup_game()
 {
 	int level_obj_id = -2;
 
-	std::string map_name = "Levels/Liandri/liandri2.cmap";
+	std::string map_name = "Levels/liandri.cmap";
 
 	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name));
 

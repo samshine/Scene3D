@@ -32,7 +32,7 @@ MenuScreenController::MenuScreenController()
 	}
 	scene->set_skybox_gradient(gradient);
 
-	auto map_data = MapData::load("Resources/Assets/Levels/Liandri/liandri2.cmap");
+	auto map_data = MapData::load("Resources/Assets/Levels/Liandri/liandri.cmap");
 	for (const auto &item : map_data->objects)
 	{
 		if (item.type != "Static" && item.type != "Level")

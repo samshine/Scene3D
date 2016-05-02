@@ -115,6 +115,9 @@ void LightsourcePass::upload()
 	uniforms.num_tiles_x = num_tiles_x;
 	uniforms.num_tiles_y = num_tiles_y;
 	uniforms.scene_ambience = Vec4f(0.02f, 0.02f, 0.022f, 0.0f);
+#ifdef DIFFUSE_GI_TEST
+	uniforms.eye_to_diffuse_gi = Mat4f::scale(Vec3f(1.0f / 64.0f)) * Mat4f::translate(Vec3f(32.0f)) * Mat4f::inverse(inout.world_to_eye);
+#endif
 	inout.frames.front()->compute_uniforms.upload_data(inout.gc, &uniforms, 1);
 
 	Mat4f normal_world_to_eye = Mat4f(Mat3f(inout.world_to_eye)); // This assumes uniform scale
@@ -190,6 +193,9 @@ void LightsourcePass::render()
 	inout.gc->set_texture(5, inout.frames.front()->shadow_maps);
 	inout.gc->set_texture(6, inout.frames.front()->self_illumination_gbuffer);
 	inout.gc->set_texture(7, inout.frames.front()->face_normal_z_gbuffer);
+#ifdef DIFFUSE_GI_TEST
+	inout.gc->set_texture(8, diffuse_gi);
+#endif
 	inout.gc->set_image_texture(0, inout.frames.front()->final_color);
 
 	inout.gc->set_program_object(cull_tiles_program);
@@ -202,6 +208,8 @@ void LightsourcePass::render()
 	inout.gc->dispatch(num_tiles_x, num_tiles_y);
 
 	inout.gc->reset_image_texture(0);
+	inout.gc->reset_texture(8);
+	inout.gc->reset_texture(7);
 	inout.gc->reset_texture(6);
 	inout.gc->reset_texture(5);
 	inout.gc->reset_texture(4);
@@ -232,6 +240,29 @@ void LightsourcePass::update_buffers()
 		inout.frames.front()->compute_visible_lights = StorageVector<unsigned int>(inout.gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 		inout.frames.front()->compute_visible_lights_size = num_tiles_x * num_tiles_y;
 	}
+
+#ifdef DIFFUSE_GI_TEST
+	if (!diffuse_gi)
+	{
+		diffuse_gi = Texture3D::create(inout.gc, Vec3i(256));
+		auto slice = PixelBuffer::create(256, 256, tf_rgba8);
+		for (int z = 0; z < 256; z++)
+		{
+			auto pixels = slice->data_uint32();
+			for (int y = 0; y < 256; y++)
+			{
+				for (int x = 0; x < 256; x++)
+				{
+					uint32_t light = (uint32_t)std::max((y - 128) * 2, 0);
+					if ((x + y) % 2 == 0) light = 0;
+					uint32_t color = (light << 16) | (light << 8) | light | 0xff000000;
+					pixels[x + y * 256] = color;
+				}
+			}
+			diffuse_gi->set_image(inout.gc, slice, z);
+		}
+	}
+#endif
 }
 
 ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, const std::string &program_name, const std::string &source, const std::string &defines)
@@ -269,9 +300,15 @@ ProgramObjectPtr LightsourcePass::compile_and_link(const GraphicContextPtr &gc, 
 	program->set_uniform1i("shadow_maps", 5);
 	program->set_uniform1i("self_illumination", 6);
 	program->set_uniform1i("face_normal_z", 7);
+#ifdef DIFFUSE_GI_TEST
+	program->set_uniform1i("diffuse_gi", 8);
+#endif
 
 	// Samplers
 	program->set_uniform1i("shadow_maps_sampler", 5);
+#ifdef DIFFUSE_GI_TEST
+	program->set_uniform1i("diffuse_gi_sampler", 8);
+#endif
 
 	// Images
 	program->set_uniform1i("out_final", 0);

@@ -348,8 +348,37 @@ void ClientPlayerPawn::frame()
 	{
 		if (!scene_object)
 		{
-			auto model = SceneModel::create(game_world()->client()->scene(), "Models/Kachujin/Kachujin.cmodel");
-			scene_object = SceneObject::create(game_world()->client()->scene(), model);
+			switch (rand() % 4)
+			{
+			default:
+			case 0:
+				{
+					auto model = SceneModel::create(game_world()->client()->scene(), "Models/Kachujin/Kachujin.cmodel");
+					scene_object = SceneObject::create(game_world()->client()->scene(), model);
+				}
+				break;
+			case 1:
+				{
+					auto model = SceneModel::create(game_world()->client()->scene(), "Models/XBot/XBot.cmodel");
+					scene_object = SceneObject::create(game_world()->client()->scene(), model);
+					scene_object->set_scale(Vec3f(1.1f));
+				}
+				break;
+			case 2:
+				{
+					auto model = SceneModel::create(game_world()->client()->scene(), "Models/YBot/YBot.cmodel");
+					scene_object = SceneObject::create(game_world()->client()->scene(), model);
+					scene_object->set_scale(Vec3f(1.1f));
+				}
+				break;
+			case 3:
+				{
+					auto model = SceneModel::create(game_world()->client()->scene(), "Models/Medea/Medea.cmodel");
+					scene_object = SceneObject::create(game_world()->client()->scene(), model);
+					scene_object->set_scale(Vec3f(13.0f));
+				}
+				break;
+			}
 
 			if (animation_move_speed > 0.0f)
 				scene_object->play_animation("forward", false);

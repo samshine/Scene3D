@@ -4,6 +4,7 @@
 #include "AssetCompiler/MapDescription/map_desc.h"
 #include "AssetCompiler/FBXModel/fbx_model.h"
 #include "TextureBuilder/texture_builder.h"
+#include "Raytracer/raytracer.h"
 #include "asset_compiler_impl.h"
 
 using namespace uicore;
@@ -34,21 +35,29 @@ void AssetCompilerImpl::build()
 					auto name = PathHelp::basename(filename);
 					auto ext = PathHelp::extension(filename);
 
+					auto friendly_name = PathHelp::make_relative(asset_directory, filename);
+
 					auto output_path = PathHelp::combine(build_directory, PathHelp::make_relative(asset_directory, path));
 
 					if (Text::equal_caseless(ext, "mapdesc"))
 					{
-						log_message({ CompilerMessageType::info, name });
+						log_message({ CompilerMessageType::info, friendly_name });
 
 						MapDesc desc = MapDesc::load(filename);
 						std::shared_ptr<MapData> map_data = desc.convert(asset_directory);
+
+						/*if (name == "Liandri")
+						{
+							RayTracer raytracer(desc);
+							raytracer.generate_diffuse_gi(PathHelp::combine(output_path, name + ".diffusegi"));
+						}*/
 
 						Directory::create(output_path, true);
 						MapData::save(File::create_always(PathHelp::combine(output_path, name + ".cmap")), map_data);
 					}
 					else if (Text::equal_caseless(ext, "modeldesc"))
 					{
-						log_message({ CompilerMessageType::info, name });
+						log_message({ CompilerMessageType::info, friendly_name });
 
 						ModelDesc desc = ModelDesc::load(filename);
 

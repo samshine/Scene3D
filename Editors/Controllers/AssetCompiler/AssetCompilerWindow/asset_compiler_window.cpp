@@ -16,29 +16,19 @@ AssetCompilerWindow::AssetCompilerWindow()
 		dismiss();
 	});
 
-	slots.connect(view->asset_list_browse->sig_clicked(), [this] { asset_list_browse_clicked(); });
-	slots.connect(view->output_browse->sig_clicked(), [this] { output_browse_clicked(); });
+	slots.connect(view->project_folder_browse->sig_clicked(), [this] { project_folder_browse_clicked(); });
 	slots.connect(view->build_button->sig_clicked(), [this] { build_button_clicked(); });
 	slots.connect(view->clean_button->sig_clicked(), [this] { clean_button_clicked(); });
 	slots.connect(view->cancel_button->sig_clicked(), [this] { cancel_button_clicked(); });
 }
 
-void AssetCompilerWindow::asset_list_browse_clicked()
+void AssetCompilerWindow::project_folder_browse_clicked()
 {
 	BrowseFolderDialog dialog(view.get());
-	dialog.set_title("Select Assets Base Folder");
-	dialog.set_initial_directory(view->asset_list_edit->text());
+	dialog.set_title("Select Project Folder");
+	dialog.set_initial_directory(view->project_folder_edit->text());
 	if (dialog.show())
-		view->asset_list_edit->set_text(dialog.selected_path());
-}
-
-void AssetCompilerWindow::output_browse_clicked()
-{
-	BrowseFolderDialog dialog(view.get());
-	dialog.set_title("Select Output Folder");
-	dialog.set_initial_directory(view->output_edit->text());
-	if (dialog.show())
-		view->output_edit->set_text(dialog.selected_path());
+		view->project_folder_edit->set_text(dialog.selected_path());
 }
 
 void AssetCompilerWindow::build_button_clicked()
@@ -62,7 +52,8 @@ void AssetCompilerWindow::cancel_button_clicked()
 void AssetCompilerWindow::create_compiler()
 {
 	view->clear();
-	compiler = AssetCompiler::create(view->asset_list_edit->text(), view->output_edit->text(), [this](const CompilerMessage &msg)
+	std::string project_folder = view->project_folder_edit->text();
+	compiler = AssetCompiler::create(PathHelp::combine(project_folder, "Assets"), PathHelp::combine(project_folder, "Resources/Assets"), [this](const CompilerMessage &msg)
 	{
 		auto msg_copy = msg;
 		RunLoop::main_thread_task([=]{

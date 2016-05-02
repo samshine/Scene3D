@@ -291,6 +291,7 @@
     <ClCompile Include="Sources\TextureBuilder\texture_builder.cpp">
       <Filter>Sources\TextureBuilder</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Raytracer\raytracer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h">
@@ -674,6 +675,7 @@
     <ClInclude Include="Include\AssetCompiler\ModelDescription\model_desc_bone.h">
       <Filter>Include\ModelDescription</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Raytracer\raytracer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Sources\Crunch\crnlib.cbp">
