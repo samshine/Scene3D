@@ -10,4 +10,6 @@ public:
 private:
 	ScenePtr scene;
 	SceneCameraPtr camera;
+	SceneObjectPtr box;
+	SceneLightPtr light1, light2;
 };

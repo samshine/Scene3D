@@ -27,4 +27,5 @@ public:
 	static void save(const uicore::IODevicePtr &device, std::shared_ptr<ModelData> data);
 	static std::shared_ptr<ModelData> load(const std::string &filename);
 	static std::shared_ptr<ModelData> load(const uicore::IODevicePtr &device);
+	static std::shared_ptr<ModelData> create_box(const uicore::Vec3f &size);
 };
