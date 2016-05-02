@@ -1542,6 +1542,10 @@
     <ClInclude Include="Sources\game_time_impl.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Screen\screen.h" />
+    <ClInclude Include="Sources\Screen\mouse_movement.h" />
+    <ClInclude Include="Include\Screen\screen_controller.h" />
+    <ClInclude Include="Include\screen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2204,5 +2208,8 @@
     <ClCompile Include="Sources\game_time.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Screen\screen.cpp" />
+    <ClCompile Include="Sources\Screen\screen_controller.cpp" />
+    <ClCompile Include="Sources\Screen\mouse_movement.cpp" />
   </ItemGroup>
 </Project>

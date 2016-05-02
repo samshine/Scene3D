@@ -1,12 +1,11 @@
 
 #pragma once
 
-#include "screen_view_controller.h"
 #include "Views/GameMenuView/game_menu_view.h"
 
 class GameWorldClient;
 
-class GameScreenController : public ScreenViewController
+class GameScreenController : public ScreenController
 {
 public:
 	GameScreenController(std::string hostname, std::string port, bool host_game);

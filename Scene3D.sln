@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelEditor", "ModelEditor\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetCompiler", "AssetCompiler\AssetCompiler.vcxproj", "{18B9D9F2-3EC8-4522-A20B-E399CD66BF24}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssetCompiler", "BurstDemo\BurstDemo.vcxproj", "{5910969A-36E4-4187-9984-90C8865CF334}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editors", "Editors\Editors.vcxproj", "{A8588D01-1C50-44CB-92CD-707B951D1AA9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShooterGame", "ShooterGame\ShooterGame.vcxproj", "{C1D1BA03-9318-4439-96C4-911C531B75B6}"
@@ -87,6 +89,18 @@ Global
 		{18B9D9F2-3EC8-4522-A20B-E399CD66BF24}.Release|Win32.Build.0 = Release|Win32
 		{18B9D9F2-3EC8-4522-A20B-E399CD66BF24}.Release|x64.ActiveCfg = Release|x64
 		{18B9D9F2-3EC8-4522-A20B-E399CD66BF24}.Release|x64.Build.0 = Release|x64
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|Win32.Build.0 = Debug|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|x64.ActiveCfg = Debug|x64
+		{5910969A-36E4-4187-9984-90C8865CF334}.Debug|x64.Build.0 = Debug|x64
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|Win32.ActiveCfg = Release|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|Win32.Build.0 = Release|Win32
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|x64.ActiveCfg = Release|x64
+		{5910969A-36E4-4187-9984-90C8865CF334}.Release|x64.Build.0 = Release|x64
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{A8588D01-1C50-44CB-92CD-707B951D1AA9}.Debug|Win32.ActiveCfg = Debug|Win32

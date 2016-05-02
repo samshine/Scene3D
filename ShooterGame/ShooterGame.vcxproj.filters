@@ -3,16 +3,9 @@
   <ItemGroup>
     <ClInclude Include="precomp.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Controllers\Screens\game_screen_controller.h">
-      <Filter>Controllers\Screens</Filter>
-    </ClInclude>
     <ClInclude Include="Controllers\Screens\menu_screen_controller.h">
       <Filter>Controllers\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="Controllers\Screens\screen_view_controller.h">
-      <Filter>Controllers\Screens</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_movement.h" />
     <ClInclude Include="Model\GameWorld\client_player_pawn.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
@@ -73,20 +66,16 @@
     <ClInclude Include="Model\GameWorld\projectile_hit.h">
       <Filter>Model\GameWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Controllers\Screens\game_screen_controller.h">
+      <Filter>Controllers\Screens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="precomp.cpp" />
-    <ClCompile Include="Controllers\Screens\game_screen_controller.cpp">
-      <Filter>Controllers\Screens</Filter>
-    </ClCompile>
     <ClCompile Include="Controllers\Screens\menu_screen_controller.cpp">
       <Filter>Controllers\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="Controllers\Screens\screen_view_controller.cpp">
-      <Filter>Controllers\Screens</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_movement.cpp" />
     <ClCompile Include="Model\GameWorld\client_player_pawn.cpp">
       <Filter>Model\GameWorld</Filter>
     </ClCompile>
@@ -137,6 +126,9 @@
     </ClCompile>
     <ClCompile Include="Model\GameWorld\projectile_hit.cpp">
       <Filter>Model\GameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Screens\game_screen_controller.cpp">
+      <Filter>Controllers\Screens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

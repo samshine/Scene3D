@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "screen_view_controller.h"
 #include "Views/GameMenuView/game_menu_view.h"
 
-class MenuScreenController : public ScreenViewController
+class MenuScreenController : public ScreenController
 {
 public:
 	MenuScreenController();

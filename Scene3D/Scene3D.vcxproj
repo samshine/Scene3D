@@ -63,6 +63,9 @@
     <ClInclude Include="Include\Scene3D\scene_object.h" />
     <ClInclude Include="Include\Scene3D\scene_particle_emitter.h" />
     <ClInclude Include="Include\Scene3D\scene_viewport.h" />
+    <ClInclude Include="Include\screen.h" />
+    <ClInclude Include="Include\Screen\screen.h" />
+    <ClInclude Include="Include\Screen\screen_controller.h" />
     <ClInclude Include="Include\sound.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_object.h" />
     <ClInclude Include="Include\Sound\AudioWorld\audio_world.h" />
@@ -441,6 +444,7 @@
     <ClInclude Include="Sources\Scene3D\Scene\scene_model_impl.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_object_impl.h" />
     <ClInclude Include="Sources\Scene3D\Scene\scene_particle_emitter_impl.h" />
+    <ClInclude Include="Sources\Screen\mouse_movement.h" />
     <ClInclude Include="Sources\Sound\AudioWorld\audio_object_impl.h" />
     <ClInclude Include="Sources\Sound\AudioWorld\audio_world_impl.h" />
     <ClInclude Include="Sources\Sound\Mixer\sound_format_conversion.h" />
@@ -667,6 +671,9 @@
     <ClCompile Include="Sources\Scene3D\Scene\scene_model.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_object.cpp" />
     <ClCompile Include="Sources\Scene3D\Scene\scene_particle_emitter.cpp" />
+    <ClCompile Include="Sources\Screen\mouse_movement.cpp" />
+    <ClCompile Include="Sources\Screen\screen.cpp" />
+    <ClCompile Include="Sources\Screen\screen_controller.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_object.cpp" />
     <ClCompile Include="Sources\Sound\AudioWorld\audio_world.cpp" />
     <ClCompile Include="Sources\Sound\Mixer\sound_format_conversion.cpp" />
