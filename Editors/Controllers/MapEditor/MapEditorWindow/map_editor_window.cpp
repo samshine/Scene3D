@@ -52,7 +52,7 @@ MapEditorWindow::MapEditorWindow()
 void MapEditorWindow::update_window_title()
 {
 	if (!MapAppModel::instance()->open_filename.empty())
-		set_title(PathHelp::basename(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
+		set_title(FilePath::filename_without_extension(MapAppModel::instance()->open_filename) + " - Scene3D Map Editor");
 	else
 		set_title("Model Editor");
 }
@@ -93,7 +93,7 @@ void MapEditorWindow::on_save_as()
 	if (dialog.show())
 	{
 		std::string filename = dialog.filename();
-		if (PathHelp::extension(filename).empty())
+		if (FilePath::extension(filename).empty())
 			filename += ".mapdesc";
 		MapAppModel::instance()->save(filename);
 		update_window_title();

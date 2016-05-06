@@ -54,7 +54,7 @@ void AttachmentsController::update_attachment_fields()
 
 		panel->bone_name_property->text_field->set_text(attachment.bone_name);
 
-		panel->test_model_property->browse_field->set_text(PathHelp::basename(attachment.test_model));
+		panel->test_model_property->browse_field->set_text(FilePath::filename_without_extension(attachment.test_model));
 		panel->test_scale_property->text_field->set_text(Text::to_string(attachment.test_scale));
 	}
 	else

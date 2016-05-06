@@ -50,7 +50,7 @@ EnvironmentController::EnvironmentController()
 
 void EnvironmentController::map_model_updated()
 {
-	panel->map_model_property->browse_field->set_text(PathHelp::basename(ModelAppModel::instance()->map_model));
+	panel->map_model_property->browse_field->set_text(FilePath::filename_without_extension(ModelAppModel::instance()->map_model));
 }
 
 void EnvironmentController::map_model_property_browse()

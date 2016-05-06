@@ -12,7 +12,7 @@ public:
 		if (it != sounds.end())
 			return it->second;
 
-		sounds[id] = SoundBuffer(SoundBuffer(uicore::PathHelp::combine("Resources/Assets", id)));
+		sounds[id] = SoundBuffer(SoundBuffer(uicore::FilePath::combine("Resources/Assets", id)));
 		return sounds[id];
 	}
 

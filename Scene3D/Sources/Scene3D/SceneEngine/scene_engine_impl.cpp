@@ -42,7 +42,7 @@ std::shared_ptr<Model> SceneEngineImpl::get_model(const std::string &model_name)
 
 std::shared_ptr<ModelData> SceneEngineImpl::get_model_data(const std::string &name)
 {
-	return ModelData::load(PathHelp::combine("Resources/Assets", name));
+	return ModelData::load(FilePath::combine("Resources/Assets", name));
 }
 
 void SceneEngineImpl::update_textures(const GraphicContextPtr &gc, float time_elapsed)
@@ -117,11 +117,11 @@ CacheLoadTexture::CacheLoadTexture(SceneEngineImpl *cache, Resource<TexturePtr> 
 
 void CacheLoadTexture::process_work()
 {
-	std::string extension = PathHelp::extension(material_name);
+	std::string extension = FilePath::extension(material_name);
 	std::string filename = material_name;
 
 	if (!File::exists(filename))
-		filename = PathHelp::combine("Resources/Assets/Textures", filename);
+		filename = FilePath::combine("Resources/Assets/Textures", filename);
 
 	if (Text::equal_caseless(extension, "ctexture"))
 	{
@@ -247,7 +247,7 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 {
 	try
 	{
-		std::string base_path = PathHelp::fullpath(material_name);
+		std::string base_path = FilePath::basepath(material_name);
 		auto xml = XmlDocument::load(File::open_existing(material_name), false);
 		auto frames = xml->document_element()->named_item("frames");
 		auto video = xml->document_element()->named_item("video");
@@ -270,7 +270,7 @@ void CacheLoadTexture::load_ctexture(const std::string &material_name)
 					continue;
 
 				std::string filename = filename_node->text();
-				PixelBufferPtr image = ImageFile::load(PathHelp::combine(base_path, filename), std::string(), !linear);
+				PixelBufferPtr image = ImageFile::load(FilePath::combine(base_path, filename), std::string(), !linear);
 				image->flip_vertical();
 				image->premultiply_alpha();
 				if (image->format() == tf_rgba16 && !linear)

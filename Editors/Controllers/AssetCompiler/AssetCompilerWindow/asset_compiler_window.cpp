@@ -53,7 +53,7 @@ void AssetCompilerWindow::create_compiler()
 {
 	view->clear();
 	std::string project_folder = view->project_folder_edit->text();
-	compiler = AssetCompiler::create(PathHelp::combine(project_folder, "Assets"), PathHelp::combine(project_folder, "Resources/Assets"), [this](const CompilerMessage &msg)
+	compiler = AssetCompiler::create(FilePath::combine(project_folder, "Assets"), FilePath::combine(project_folder, "Resources/Assets"), [this](const CompilerMessage &msg)
 	{
 		auto msg_copy = msg;
 		RunLoop::main_thread_task([=]{

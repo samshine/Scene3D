@@ -21,7 +21,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 	if (json["version"].to_number() != 1)
 		throw Exception("Unsupported model description file version");
 
-	desc.fbx_filename = PathHelp::make_absolute(PathHelp::fullpath(filename), json["fbx_filename"].to_string());
+	desc.fbx_filename = FilePath::make_absolute(FilePath::basepath(filename), json["fbx_filename"].to_string());
 
 	for (const auto &json_animation : json["animations"].items())
 	{
@@ -37,7 +37,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		{
 			animation.fbx_filename = json_animation["fbx_filename"].to_string();
 			if (!animation.fbx_filename.empty())
-				animation.fbx_filename = PathHelp::make_absolute(PathHelp::fullpath(filename), animation.fbx_filename);
+				animation.fbx_filename = FilePath::make_absolute(FilePath::basepath(filename), animation.fbx_filename);
 		}
 		desc.animations.push_back(animation);
 	}
@@ -51,7 +51,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		attachment.position = Vec3f(json_attachment["position"]["x"].to_float(), json_attachment["position"]["y"].to_float(), json_attachment["position"]["z"].to_float());
 		if (!json_attachment["test_model"].is_undefined())
 		{
-			attachment.test_model = PathHelp::make_absolute(PathHelp::fullpath(filename), json_attachment["test_model"].to_string());
+			attachment.test_model = FilePath::make_absolute(FilePath::basepath(filename), json_attachment["test_model"].to_string());
 			attachment.test_scale = json_attachment["test_scale"].to_float();
 		}
 		desc.attachment_points.push_back(attachment);
@@ -118,7 +118,7 @@ void ModelDesc::save(const std::string &filename)
 		json_animation["loop"].set_boolean(animation.loop);
 		json_animation["rarity"].set_number(animation.rarity);
 		if (!animation.fbx_filename.empty())
-			json_animation["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), animation.fbx_filename));
+			json_animation["fbx_filename"].set_string(FilePath::make_relative(FilePath::basepath(filename), animation.fbx_filename));
 		else
 			json_animation["fbx_filename"].set_string(animation.fbx_filename);
 		json_animations.items().push_back(json_animation);
@@ -139,7 +139,7 @@ void ModelDesc::save(const std::string &filename)
 		json_attachment["position"]["x"].set_number(attachment.position.x);
 		json_attachment["position"]["y"].set_number(attachment.position.y);
 		json_attachment["position"]["z"].set_number(attachment.position.z);
-		json_attachment["test_model"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), attachment.test_model));
+		json_attachment["test_model"].set_string(FilePath::make_relative(FilePath::basepath(filename), attachment.test_model));
 		json_attachment["test_scale"].set_number(attachment.test_scale);
 		json_attachment_points.items().push_back(json_attachment);
 	}
@@ -187,7 +187,7 @@ void ModelDesc::save(const std::string &filename)
 	json["bones"] = json_bones;
 	json["materials"] = json_materials;
 	json["emitters"] = json_emitters;
-	json["fbx_filename"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), fbx_filename));
+	json["fbx_filename"].set_string(FilePath::make_relative(FilePath::basepath(filename), fbx_filename));
 
 	File::write_all_text(filename, json.to_json());
 }

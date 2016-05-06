@@ -54,7 +54,7 @@ void GameMaster::setup_game()
 
 	std::string map_name = "Levels/liandri.cmap";
 
-	map_data = MapData::load(PathHelp::combine("Resources/Assets", map_name));
+	map_data = MapData::load(FilePath::combine("Resources/Assets", map_name));
 
 	std::unordered_map<std::string, Physics3DShapePtr> level_shapes;
 
@@ -71,7 +71,7 @@ void GameMaster::setup_game()
 		auto it = level_shapes.find(model_name);
 		if (it == level_shapes.end())
 		{
-			std::shared_ptr<ModelData> model_data = ModelData::load(PathHelp::combine("Resources/Assets", model_name));
+			std::shared_ptr<ModelData> model_data = ModelData::load(FilePath::combine("Resources/Assets", model_name));
 
 			level_shapes[model_name] = Physics3DShape::model(model_data);
 			it = level_shapes.find(model_name);

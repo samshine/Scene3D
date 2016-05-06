@@ -22,7 +22,7 @@ std::shared_ptr<MapData> MapDesc::convert(const std::string &asset_directory)
 		map_obj.tilt = obj.tilt;
 		map_obj.scale = obj.scale;
 		if (!obj.mesh.empty())
-			map_obj.mesh = PathHelp::combine(PathHelp::fullpath(PathHelp::make_relative(asset_directory, obj.mesh)), PathHelp::basename(obj.mesh) + ".cmodel");
+			map_obj.mesh = FilePath::combine(FilePath::basepath(FilePath::make_relative(asset_directory, obj.mesh)), FilePath::filename_without_extension(obj.mesh) + ".cmodel");
 		map_obj.animation = obj.animation;
 		map_obj.fields = obj.fields;
 		map->objects.push_back(map_obj);
@@ -86,7 +86,7 @@ MapDesc MapDesc::load(const std::string &filename)
 		object.up = json_object["up"].to_float();
 		object.tilt = json_object["tilt"].to_float();
 		object.scale = json_object["scale"].to_float();
-		object.mesh = PathHelp::make_absolute(PathHelp::fullpath(filename), json_object["mesh"].to_string());
+		object.mesh = FilePath::make_absolute(FilePath::basepath(filename), json_object["mesh"].to_string());
 		object.animation = json_object["animation"].to_string();
 		object.fields = json_object["fields"];
 		desc.objects.push_back(object);
@@ -187,7 +187,7 @@ void MapDesc::save(const std::string &filename)
 		json_object["up"].set_number(object.up);
 		json_object["tilt"].set_number(object.tilt);
 		json_object["scale"].set_number(object.scale);
-		json_object["mesh"].set_string(PathHelp::make_relative(PathHelp::fullpath(filename), object.mesh));
+		json_object["mesh"].set_string(FilePath::make_relative(FilePath::basepath(filename), object.mesh));
 		json_object["animation"].set_string(object.animation);
 		json_object["fields"] = object.fields;
 		json_objects.items().push_back(json_object);

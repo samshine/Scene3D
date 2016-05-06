@@ -67,7 +67,7 @@ void AnimationsController::update_animation_fields()
 		panel->move_property->text_field->set_text(Text::to_string(anim.move_speed));
 		panel->loop_property->text_field->set_text(anim.loop ? "1" : "0");
 		panel->rarity_property->text_field->set_text(Text::to_string(anim.rarity));
-		panel->fbx_filename_property->browse_field->set_text(PathHelp::basename(anim.fbx_filename));
+		panel->fbx_filename_property->browse_field->set_text(FilePath::filename_without_extension(anim.fbx_filename));
 	}
 	else
 	{
@@ -193,7 +193,7 @@ void AnimationsController::fbx_filename_property_browse()
 		{
 			animation.fbx_filename = dialog.filename();
 			app_model->undo_system.execute<UpdateAnimationCommand>(selection, animation);
-			panel->fbx_filename_property->browse_field->set_text(PathHelp::basename(animation.fbx_filename));
+			panel->fbx_filename_property->browse_field->set_text(FilePath::filename_without_extension(animation.fbx_filename));
 		}
 	}
 }

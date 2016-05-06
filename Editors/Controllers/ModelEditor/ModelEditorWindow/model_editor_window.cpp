@@ -72,7 +72,7 @@ ModelEditorWindow::ModelEditorWindow()
 void ModelEditorWindow::update_window_title()
 {
 	if (!ModelAppModel::instance()->open_filename.empty())
-		set_title(PathHelp::basename(ModelAppModel::instance()->open_filename) + " - Scene3D Model Editor");
+		set_title(FilePath::filename_without_extension(ModelAppModel::instance()->open_filename) + " - Scene3D Model Editor");
 	else
 		set_title("Model Editor");
 }
@@ -113,7 +113,7 @@ void ModelEditorWindow::on_save_as()
 	if (dialog.show())
 	{
 		std::string filename = dialog.filename();
-		if (PathHelp::extension(filename).empty())
+		if (FilePath::extension(filename).empty())
 			filename += ".modeldesc";
 		ModelAppModel::instance()->save(filename);
 		update_window_title();

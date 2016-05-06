@@ -31,13 +31,13 @@ void AssetCompilerImpl::build()
 			{
 				for (const auto &filename : Directory::files(path))
 				{
-					auto path = PathHelp::fullpath(filename);
-					auto name = PathHelp::basename(filename);
-					auto ext = PathHelp::extension(filename);
+					auto path = FilePath::basepath(filename);
+					auto name = FilePath::filename_without_extension(filename);
+					auto ext = FilePath::extension(filename);
 
-					auto friendly_name = PathHelp::make_relative(asset_directory, filename);
+					auto friendly_name = FilePath::make_relative(asset_directory, filename);
 
-					auto output_path = PathHelp::combine(build_directory, PathHelp::make_relative(asset_directory, path));
+					auto output_path = FilePath::combine(build_directory, FilePath::make_relative(asset_directory, path));
 
 					if (Text::equal_caseless(ext, "mapdesc"))
 					{
@@ -49,11 +49,11 @@ void AssetCompilerImpl::build()
 						/*if (name == "Liandri")
 						{
 							RayTracer raytracer(desc);
-							raytracer.generate_diffuse_gi(PathHelp::combine(output_path, name + ".diffusegi"));
+							raytracer.generate_diffuse_gi(FilePath::combine(output_path, name + ".diffusegi"));
 						}*/
 
 						Directory::create(output_path, true);
-						MapData::save(File::create_always(PathHelp::combine(output_path, name + ".cmap")), map_data);
+						MapData::save(File::create_always(FilePath::combine(output_path, name + ".cmap")), map_data);
 					}
 					else if (Text::equal_caseless(ext, "modeldesc"))
 					{
@@ -64,12 +64,12 @@ void AssetCompilerImpl::build()
 						auto model = FBXModel::load(desc.fbx_filename);
 						std::shared_ptr<ModelData> model_data = model->convert(desc);
 
-						auto texture_output_path = PathHelp::combine(build_directory, "Textures");
+						auto texture_output_path = FilePath::combine(build_directory, "Textures");
 						Directory::create(texture_output_path, true);
 						TextureBuilder::build(model_data, texture_output_path);
 
 						Directory::create(output_path, true);
-						ModelData::save(File::create_always(PathHelp::combine(output_path, name + ".cmodel")), model_data);
+						ModelData::save(File::create_always(FilePath::combine(output_path, name + ".cmodel")), model_data);
 					}
 				}
 

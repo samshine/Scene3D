@@ -17,7 +17,7 @@ MapEditController::MapEditController()
 	panel->create_object->up->text_field->set_text(MapAppModel::instance()->create_object_template.up);
 	panel->create_object->tilt->text_field->set_text(MapAppModel::instance()->create_object_template.tilt);
 	panel->create_object->scale->text_field->set_text(MapAppModel::instance()->create_object_template.scale);
-	panel->create_object->mesh->browse_field->set_text(PathHelp::basename(MapAppModel::instance()->create_object_template.mesh));
+	panel->create_object->mesh->browse_field->set_text(FilePath::filename_without_extension(MapAppModel::instance()->create_object_template.mesh));
 	panel->create_object->fields->text_field->set_text(MapAppModel::instance()->create_object_template.fields.to_json());
 
 	slots.connect(panel->select->button_select->button->sig_clicked(), bind_member(this, &MapEditController::select_clicked));
@@ -167,7 +167,7 @@ void MapEditController::create_object_mesh_browse()
 	if (dialog.show())
 	{
 		object.mesh = dialog.filename();
-		panel->create_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
+		panel->create_object->mesh->browse_field->set_text(FilePath::filename_without_extension(object.mesh));
 	}
 }
 
@@ -186,7 +186,7 @@ void MapEditController::create_object_field_value_changed()
 void MapEditController::object_updated(size_t index)
 {
 	const auto &object = MapAppModel::instance()->desc.objects[index];
-	panel->objects->objects_list->set_item_text(index, string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::basename(object.mesh)));
+	panel->objects->objects_list->set_item_text(index, string_format("%1 (%2 - %3)", object.id, object.type, FilePath::filename_without_extension(object.mesh)));
 
 	if (index == panel->objects->objects_list->selected_item())
 		update_object_fields();
@@ -199,7 +199,7 @@ void MapEditController::update_objects()
 	int i = 0;
 	for (const auto &object : MapAppModel::instance()->desc.objects)
 	{
-		panel->objects->objects_list->add_item(string_format("%1 (%2 - %3)", object.id, object.type, PathHelp::basename(object.mesh)));
+		panel->objects->objects_list->add_item(string_format("%1 (%2 - %3)", object.id, object.type, FilePath::filename_without_extension(object.mesh)));
 		i++;
 	}
 
@@ -233,7 +233,7 @@ void MapEditController::update_object_fields()
 		panel->edit_object->up->text_field->set_text(Text::to_string(object.up));
 		panel->edit_object->tilt->text_field->set_text(Text::to_string(object.tilt));
 		panel->edit_object->scale->text_field->set_text(Text::to_string(object.scale));
-		panel->edit_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
+		panel->edit_object->mesh->browse_field->set_text(FilePath::filename_without_extension(object.mesh));
 		panel->edit_object->fields->text_field->set_text(object.fields.to_json());
 	}
 	else
@@ -350,7 +350,7 @@ void MapEditController::edit_object_mesh_browse()
 		{
 			object.mesh = dialog.filename();
 			MapAppModel::instance()->undo_system.execute<UpdateMapObjectCommand>(selection, object);
-			panel->edit_object->mesh->browse_field->set_text(PathHelp::basename(object.mesh));
+			panel->edit_object->mesh->browse_field->set_text(FilePath::filename_without_extension(object.mesh));
 		}
 	}
 }
