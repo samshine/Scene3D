@@ -107,7 +107,7 @@ void SceneObjectImpl::move(Vec3f offset)
 
 void SceneObjectImpl::rotate(float dir, float up, float tilt)
 {
-	set_orientation(orientation() * Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
+	set_orientation(orientation() * Quaternionf::euler(radians(up), radians(dir), radians(tilt)));
 }
 
 void SceneObjectImpl::attachment_location(const std::string &name, Vec3f &attach_position, Quaternionf &attach_orientation, Vec3f &attach_scale) const

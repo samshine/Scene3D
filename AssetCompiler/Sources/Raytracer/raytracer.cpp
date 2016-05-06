@@ -38,7 +38,7 @@ RayTracer::RayTracer(const MapDesc &desc)
 			}
 		}
 
-		Quaternionf rotation(obj_desc.up, obj_desc.dir, obj_desc.tilt, angle_degrees, order_YXZ);
+		auto rotation = Quaternionf::euler(radians(obj_desc.up), radians(obj_desc.dir), radians(obj_desc.tilt));
 
 		auto scaled_shape = shape;
 		if (obj_desc.scale != 1.0f)

@@ -127,7 +127,7 @@ void PlayerPawn::update_character_controller(const PlayerPawnMovement &movement)
 
 	if (!character_controller.is_flying())
 	{
-		Quaternionf move_direction(0.0f, movement.dir, 0.0f, angle_degrees, order_YXZ);
+		auto move_direction = Quaternionf::euler(0.0f, radians(movement.dir), 0.0f);
 
 		switch (movement.action)
 		{

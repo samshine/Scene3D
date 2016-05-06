@@ -7,7 +7,7 @@ public:
 	EulerRotation() { }
 	EulerRotation(float dir, float up, float tilt = 0.0f) : dir(dir), up(up), tilt(tilt) { }
 
-	uicore::Quaternionf to_quaternionf() const { return uicore::Quaternionf(up, dir, tilt, uicore::angle_degrees, uicore::order_YXZ); }
+	uicore::Quaternionf to_quaternionf() const { return uicore::Quaternionf::euler(uicore::radians(up), uicore::radians(dir), uicore::radians(tilt)); }
 
 	static EulerRotation lerp(const EulerRotation &a, const EulerRotation &b, float t)
 	{

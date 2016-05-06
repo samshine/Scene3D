@@ -46,8 +46,7 @@ void AttachmentsController::update_attachment_fields()
 		panel->position_property->input_y->set_text(Text::to_string(attachment.position.y));
 		panel->position_property->input_z->set_text(Text::to_string(attachment.position.z));
 
-		Vec3f rotation = attachment.orientation.to_matrix().get_euler(order_YXZ);
-		rotation *= 180.0f / PI;
+		Vec3f rotation = degrees(attachment.orientation.to_matrix().get_euler(EulerOrder::yxz));
 
 		panel->orientation_property->input_x->set_text(Text::to_string(rotation.x));
 		panel->orientation_property->input_y->set_text(Text::to_string(rotation.y));
@@ -119,7 +118,7 @@ void AttachmentsController::orientation_property_value_changed()
 		rotation.x = panel->orientation_property->input_x->text_float();
 		rotation.y = panel->orientation_property->input_y->text_float();
 		rotation.z = panel->orientation_property->input_z->text_float();
-		attachment.orientation.set(rotation, angle_degrees, order_YXZ);
+		attachment.orientation = Quaternionf::euler(radians(rotation));
 
 		app_model->undo_system.execute<UpdateAttachmentCommand>(selection, attachment);
 	}

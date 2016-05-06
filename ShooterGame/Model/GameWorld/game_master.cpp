@@ -79,8 +79,8 @@ void GameMaster::setup_game()
 
 		auto shape = (item.scale == 1.0f) ? it->second : Physics3DShape::scale_model(it->second, scale);
 
-		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->kinematic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
-		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->dynamic_collision(), shape, 0.0f, position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ)));
+		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->kinematic_collision(), shape, 0.0f, position, Quaternionf::euler(radians(rotate))));
+		level_collision_objects.push_back(Physics3DObject::rigid_body(game_world()->dynamic_collision(), shape, 0.0f, position, Quaternionf::euler(radians(rotate))));
 	}
 
 	for (auto obj : level_collision_objects)
@@ -112,10 +112,10 @@ void GameMaster::setup_game()
 
 			Vec3f position = item.position;
 			Vec3f scale = Vec3f(item.scale);
-			Vec3f rotate(item.dir, item.up, item.tilt);
+			Vec3f rotate(item.up, item.dir, item.tilt);
 			std::string model_name = item.mesh;
 			std::string animation_name = item.animation;
-			game_world()->client()->objects().push_back(SceneObject::create(game_world()->client()->scene(), SceneModel::create(game_world()->client()->scene(), model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+			game_world()->client()->objects().push_back(SceneObject::create(game_world()->client()->scene(), SceneModel::create(game_world()->client()->scene(), model_name), position, Quaternionf::euler(rotate), scale));
 			game_world()->client()->objects().back()->play_animation(animation_name, true);
 		}
 
@@ -124,7 +124,7 @@ void GameMaster::setup_game()
 
 	for (const auto &objdesc : map_data->objects)
 	{
-		Quaternionf orientation(objdesc.up, objdesc.dir, objdesc.tilt, angle_degrees, order_YXZ);
+		auto orientation = Quaternionf::euler(radians(objdesc.up), radians(objdesc.dir), radians(objdesc.tilt));
 
 		auto &fields = objdesc.fields;
 

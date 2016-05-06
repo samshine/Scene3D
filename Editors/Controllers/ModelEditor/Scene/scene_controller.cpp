@@ -41,7 +41,7 @@ SceneController::SceneController()
 			if (keys[Key::lcontrol])
 				thrust.y -= 1.0f;
 
-			Quaternionf camera_quaternion(rotation.x, rotation.y, rotation.z, angle_degrees, order_YXZ);
+			auto camera_quaternion = Quaternionf::euler(radians(rotation));
 			position += camera_quaternion.rotate_vector(thrust) * time_elapsed * move_speed;
 		}
 
@@ -99,7 +99,7 @@ void SceneController::setup_scene()
 
 	light1 = SceneLight::create(scene);
 	light1->set_position(Vec3f(30.0f, 42.0f, -30.0f));
-	light1->set_orientation(Quaternionf(45.0f, 315.0f, 0.0f, angle_degrees, order_YXZ));
+	light1->set_orientation(Quaternionf::euler(radians(45.0f), radians(315.0f), 0.0f));
 	light1->set_type(SceneLight::type_spot);
 	light1->set_attenuation_start(900.0f);
 	light1->set_attenuation_end(1000.0f);
@@ -122,7 +122,7 @@ void SceneController::update_scene(const SceneViewportPtr &scene_viewport, const
 {
 	gametime.update();
 
-	Quaternionf camera_quaternion(rotation.x, rotation.y, rotation.z, angle_degrees, order_YXZ);
+	auto camera_quaternion = Quaternionf::euler(radians(rotation));
 
 	scene_viewport->camera()->set_position(position);
 	scene_viewport->camera()->set_orientation(camera_quaternion);

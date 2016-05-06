@@ -47,7 +47,7 @@ ModelDesc ModelDesc::load(const std::string &filename)
 		ModelDescAttachmentPoint attachment;
 		attachment.bone_name = json_attachment["bone_name"].to_string();
 		attachment.name = json_attachment["name"].to_string();
-		attachment.orientation = Quaternionf(json_attachment["orientation"]["w"].to_float(), json_attachment["orientation"]["x"].to_float(), json_attachment["orientation"]["y"].to_float(), json_attachment["orientation"]["z"].to_float());
+		attachment.orientation = Quaternionf(json_attachment["orientation"]["x"].to_float(), json_attachment["orientation"]["y"].to_float(), json_attachment["orientation"]["z"].to_float(), json_attachment["orientation"]["w"].to_float());
 		attachment.position = Vec3f(json_attachment["position"]["x"].to_float(), json_attachment["position"]["y"].to_float(), json_attachment["position"]["z"].to_float());
 		if (!json_attachment["test_model"].is_undefined())
 		{

@@ -17,7 +17,7 @@ Rocket::Rocket(GameWorld *world, PlayerPawn *owner, const uicore::Vec3f &init_po
 Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObject(world)
 {
 	pos = Vec3f(net_event["x"].to_float(), net_event["y"].to_float(), net_event["z"].to_float());
-	orientation = Quaternionf(net_event["rw"].to_float(), net_event["rx"].to_float(), net_event["ry"].to_float(), net_event["rz"].to_float());
+	orientation = Quaternionf(net_event["rx"].to_float(), net_event["ry"].to_float(), net_event["rz"].to_float(), net_event["rw"].to_float());
 	owner = (PlayerPawn*)world->net_object(net_event["ownerId"].to_int()).get();
 
 	last_pos = pos;
@@ -39,7 +39,7 @@ Rocket::Rocket(GameWorld *world, const uicore::JsonValue &net_event) : GameObjec
 		emitter = SceneParticleEmitter::create(game_world()->client()->scene());
 		emitter->set_type(SceneParticleEmitter::type_spot);
 		emitter->set_position(pos);
-		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+		emitter->set_orientation(Quaternionf::euler(radians(-90.0f), 0.0f, 0.0f));
 		emitter->set_falloff(30.0f);
 		emitter->set_particles_per_second(200.0f);
 		emitter->set_life_span(1.0f);
@@ -131,7 +131,7 @@ void Rocket::tick()
 		if (game_world()->client())
 		{
 			auto orientation = Quaternionf(Mat4f::look_at(Vec3f(0.0f), ray_hit.normal, std::abs(ray_hit.normal.y) > std::abs(ray_hit.normal.z) ? Vec3f(0.0f, 0.0f, 1.0f) : Vec3f(0.0f, 1.0f, 0.0f))).inverse();
-			orientation = orientation * Quaternionf(0.0f, 0.0f, (rand() / (float)RAND_MAX) * 2 * PI, angle_radians, order_XYZ);
+			orientation = orientation * Quaternionf::euler(0.0f, 0.0f, (rand() / (float)RAND_MAX) * 2 * PI, EulerOrder::xyz);
 
 			auto decal = SceneDecal::create(game_world()->client()->scene());
 			decal->set_position(ray_hit.position);

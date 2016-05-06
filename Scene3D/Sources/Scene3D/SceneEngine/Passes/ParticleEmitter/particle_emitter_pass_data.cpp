@@ -59,9 +59,9 @@ void ParticleEmitterPassData::emit()
 {
 	Quaternionf particle_orientation;
 	if (emitter->type() == SceneParticleEmitter::type_spot)
-		particle_orientation = emitter->orientation() * Quaternionf(random(-emitter->falloff(), emitter->falloff()), random(-emitter->falloff(), emitter->falloff()), 0.0f, angle_degrees, order_YXZ);
+		particle_orientation = emitter->orientation() * Quaternionf::euler(radians(random(-emitter->falloff(), emitter->falloff())), radians(random(-emitter->falloff(), emitter->falloff())), 0.0f);
 	else
-		particle_orientation = Quaternionf(random(-180.0f, 180.0f), random(-180.0f, 180.0f), random(-180.0f, 180.0f), angle_degrees, order_ZYX);
+		particle_orientation = Quaternionf::euler(radians(random(-180.0f, 180.0f)), radians(random(-180.0f, 180.0f)), radians(random(-180.0f, 180.0f)), EulerOrder::zyx);
 
 	last_emitted_index = (last_emitted_index + 1) % cpu_particles.size();
 	cpu_particles[last_emitted_index].position = emitter->position();

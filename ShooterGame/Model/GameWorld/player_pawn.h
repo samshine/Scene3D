@@ -66,7 +66,7 @@ public:
 	void ground_moved(const uicore::Vec3f &offset);
 
 	uicore::Vec3f get_position() { return character_controller.get_position(); }
-	uicore::Quaternionf get_orientation() { return uicore::Quaternionf(up, dir, 0.0f, uicore::angle_degrees, uicore::order_YXZ); }
+	uicore::Quaternionf get_orientation() { return uicore::Quaternionf::euler(uicore::radians(up), uicore::radians(dir), 0.0f); }
 	float get_health() const { return health; }
 	float get_armor() const { return armor_body + armor_shoulder; }
 

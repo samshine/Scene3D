@@ -25,7 +25,7 @@ ProjectileHit::ProjectileHit(GameWorld *world, const uicore::Vec3f &init_pos, co
 		emitter = SceneParticleEmitter::create(game_world()->client()->scene());
 		emitter->set_type(SceneParticleEmitter::type_spot);
 		emitter->set_position(pos);
-		emitter->set_orientation(Quaternionf(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+		emitter->set_orientation(Quaternionf::euler(radians(-90.0f), 0.0f, 0.0f));
 		emitter->set_falloff(30.0f);
 		emitter->set_particles_per_second(200.0f);
 		emitter->set_life_span(0.5f);

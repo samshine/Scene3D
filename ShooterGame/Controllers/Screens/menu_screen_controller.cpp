@@ -11,7 +11,7 @@ MenuScreenController::MenuScreenController()
 	scene = Scene::create(scene_engine());
 	scene_camera = SceneCamera::create(scene);
 	scene_camera->set_position(Vec3f(0.0f, 1.8f, -3.0f));
-	scene_camera->set_orientation(Quaternionf(10.0f, 22.0f, 4.0f, angle_degrees, order_YXZ));
+	scene_camera->set_orientation(Quaternionf::euler(radians(10.0f), radians(22.0f), radians(4.0f)));
 
 	scene->show_skybox_stars(false);
 	std::vector<Colorf> gradient;
@@ -40,10 +40,10 @@ MenuScreenController::MenuScreenController()
 
 		Vec3f position = item.position;
 		Vec3f scale = Vec3f(item.scale);
-		Vec3f rotate(item.dir, item.up, item.tilt);
+		Vec3f rotate(item.up, item.dir, item.tilt);
 		std::string model_name = item.mesh;
 		std::string animation_name = item.animation;
-		scene_objects.push_back(SceneObject::create(scene, SceneModel::create(scene, model_name), position, Quaternionf(rotate.y, rotate.x, rotate.z, angle_degrees, order_YXZ), scale));
+		scene_objects.push_back(SceneObject::create(scene, SceneModel::create(scene, model_name), position, Quaternionf::euler(radians(rotate)), scale));
 		scene_objects.back()->play_animation(animation_name, true);
 	}
 

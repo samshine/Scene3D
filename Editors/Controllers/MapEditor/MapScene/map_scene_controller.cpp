@@ -52,7 +52,7 @@ MapSceneController::MapSceneController()
 					if (keys[Key::lcontrol])
 						thrust.y -= 1.0f;
 
-					Quaternionf camera_quaternion(rotation[index].x, rotation[index].y, rotation[index].z, angle_degrees, order_YXZ);
+					auto camera_quaternion = Quaternionf::euler(radians(rotation[index]));
 					position[index] += camera_quaternion.rotate_vector(thrust) * time_elapsed * move_speed;
 				}
 
@@ -120,7 +120,7 @@ void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_v
 	if (index == 0)
 		gametime.update();
 
-	Quaternionf camera_quaternion(rotation[index].x, rotation[index].y, rotation[index].z, angle_degrees, order_YXZ);
+	auto camera_quaternion = Quaternionf::euler(radians(rotation[index]));
 
 	scene_viewport->camera()->set_position(position[index]);
 	scene_viewport->camera()->set_orientation(camera_quaternion);
@@ -159,7 +159,7 @@ void MapSceneController::update_scene(int index, const SceneViewportPtr &scene_v
 				}
 			}
 
-			Quaternionf rotation(obj_desc.up, obj_desc.dir, obj_desc.tilt, angle_degrees, order_YXZ);
+			auto rotation = Quaternionf::euler(radians(obj_desc.up), radians(obj_desc.dir), radians(obj_desc.tilt));
 			object->scene_object = SceneObject::create(scene, model, obj_desc.position, rotation, Vec3f(obj_desc.scale));
 
 			auto scaled_shape = shape;

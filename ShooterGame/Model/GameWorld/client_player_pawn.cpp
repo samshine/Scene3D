@@ -289,7 +289,7 @@ void ClientPlayerPawn::frame()
 
 	bool first_person_camera = true;
 
-	Quaternionf look_dir = Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ);
+	auto look_dir = Quaternionf::euler(radians(up), radians(dir), 0.0f);
 	Vec3f look_pos = mix(last_position, next_position, frame_interpolated_time()) + eye_offset;
 
 	/*
@@ -387,7 +387,7 @@ void ClientPlayerPawn::frame()
 		}
 
 		scene_object->set_position(mix(last_position, next_position, frame_interpolated_time()));
-		scene_object->set_orientation(Quaternionf(clamp(-up * 0.5f, -15.0f, 15.0f), 180.0f + dir, 0.0f, angle_degrees, order_YXZ));
+		scene_object->set_orientation(Quaternionf::euler(radians(Vec3f { clamp(-up * 0.5f, -15.0f, 15.0f), 180.0f + dir, 0.0f } )));
 		scene_object->update(frame_time_elapsed());
 	}
 	else

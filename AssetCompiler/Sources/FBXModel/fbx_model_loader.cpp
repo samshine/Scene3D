@@ -743,7 +743,7 @@ void FBXModelLoader::convert_light(FbxNode *node)
 	FbxLight *light = static_cast<FbxLight*>(node->GetNodeAttribute());
 
 	// Directional lights with a 0,0,0 rotation vector points in the -Y direction. Ours point in the +Z direction.
-	Quaternionf directionRotation(-90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ);
+	auto directionRotation = Quaternionf::euler(radians(-90.0f), 0.0f, 0.0f);
 
 	// Is a light "geometric"? Nobody knows!
 	FbxAMatrix inverseZ = FbxAMatrix(FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(0.0, 0.0, 0.0, 1.0), FbxVector4(1.0, 1.0, -1.0, 1.0));
@@ -955,7 +955,7 @@ Mat4f FBXModelLoader::to_mat4f(const FbxAMatrix &m)
 
 Quaternionf FBXModelLoader::to_quaternionf(const FbxQuaternion &q)
 {
-	return Quaternionf((float)q.GetAt(3), (float)q.GetAt(0), (float)q.GetAt(1), (float)q.GetAt(2));
+	return Quaternionf((float)q.GetAt(0), (float)q.GetAt(1), (float)q.GetAt(2), (float)q.GetAt(3));
 }
 
 /*

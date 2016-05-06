@@ -66,13 +66,13 @@ PlayerRagdoll::PlayerRagdoll(GameWorld *world, const Vec3f &pos, const Quaternio
 		parts[i] = Physics3DObject::rigid_body(game_world()->dynamic_collision(), shapes[i], mass[i], pos, orientation);
 	}
 
-	calc_constraint_location(joint_head, part_torso, Vec3f(0, sizes[part_torso].y, 0), part_head, Vec3f(0, -sizes[part_head].y, 0), Quaternionf(1, 0, 0, 0));
-	calc_constraint_location(joint_upper_arm_left_lower_arm_left, part_upper_arm_left, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
-	calc_constraint_location(joint_upper_arm_right_lower_arm_right, part_upper_arm_right, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.7f, -0.0f));
-	calc_constraint_location(joint_upper_leg_left_lower_leg_left, part_upper_leg_left, Vec3f(0, sizes[part_upper_leg_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_leg_left].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
-	calc_constraint_location(joint_upper_leg_right_lower_leg_right, part_upper_leg_right, Vec3f(0, sizes[part_upper_leg_right].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_leg_right].y * 0.5f, 0), Quaternionf(0.70f, -0.0f, 0.70f, -0.0f));
-	calc_constraint_location(joint_torso_upper_leg_left, part_torso, Vec3f(sizes[part_torso].x - sizes[part_upper_leg_left].x, -sizes[part_torso].y, 0), part_upper_leg_left, Vec3f(0, -sizes[part_upper_leg_left].y * 0.5f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
-	calc_constraint_location(joint_torso_upper_leg_right, part_torso, Vec3f(-sizes[part_torso].x + sizes[part_upper_leg_right].x, -sizes[part_torso].y, 0), part_upper_leg_right, Vec3f(0, -sizes[part_upper_leg_right].y * 0.5f, 0), Quaternionf(0.38f, 0.0f, 0.0f, 0.92f));
+	calc_constraint_location(joint_head, part_torso, Vec3f(0, sizes[part_torso].y, 0), part_head, Vec3f(0, -sizes[part_head].y, 0), Quaternionf());
+	calc_constraint_location(joint_upper_arm_left_lower_arm_left, part_upper_arm_left, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(-0.0f, 0.7f, -0.0f, 0.70f));
+	calc_constraint_location(joint_upper_arm_right_lower_arm_right, part_upper_arm_right, Vec3f(0, sizes[part_upper_arm_left].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_arm_left].y * 0.5f, 0), Quaternionf(-0.0f, 0.7f, -0.0f, 0.70f));
+	calc_constraint_location(joint_upper_leg_left_lower_leg_left, part_upper_leg_left, Vec3f(0, sizes[part_upper_leg_left].y * 0.5f, 0), part_lower_arm_left, Vec3f(0, -sizes[part_lower_leg_left].y * 0.5f, 0), Quaternionf(-0.0f, 0.70f, -0.0f, 0.70f));
+	calc_constraint_location(joint_upper_leg_right_lower_leg_right, part_upper_leg_right, Vec3f(0, sizes[part_upper_leg_right].y * 0.5f, 0), part_lower_arm_right, Vec3f(0, -sizes[part_lower_leg_right].y * 0.5f, 0), Quaternionf(-0.0f, 0.70f, -0.0f, 0.70f));
+	calc_constraint_location(joint_torso_upper_leg_left, part_torso, Vec3f(sizes[part_torso].x - sizes[part_upper_leg_left].x, -sizes[part_torso].y, 0), part_upper_leg_left, Vec3f(0, -sizes[part_upper_leg_left].y * 0.5f, 0), Quaternionf(0.0f, 0.0f, 0.92f, 0.38f));
+	calc_constraint_location(joint_torso_upper_leg_right, part_torso, Vec3f(-sizes[part_torso].x + sizes[part_upper_leg_right].x, -sizes[part_torso].y, 0), part_upper_leg_right, Vec3f(0, -sizes[part_upper_leg_right].y * 0.5f, 0), Quaternionf(0.0f, 0.0f, 0.92f, 0.38f));
 	calc_constraint_location(joint_torso_upper_arm_left, part_torso, Vec3f(sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_left].x, 0), part_upper_arm_left, Vec3f(0, -sizes[part_upper_arm_left].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
 	calc_constraint_location(joint_torso_upper_arm_right, part_torso, Vec3f(-sizes[part_torso].x, sizes[part_torso].y - sizes[part_upper_arm_right].x, 0), part_upper_arm_right, Vec3f(0, -sizes[part_upper_arm_right].y * 0.5f, 0), Quaternionf(0, 0, 0, 1));
 	

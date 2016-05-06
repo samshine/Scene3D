@@ -38,7 +38,7 @@ DemoScreenController::DemoScreenController()
 void DemoScreenController::update()
 {
 	float rotate = game_time().time_elapsed() * 100.0f;
-	box->set_orientation(box->orientation() * Quaternionf(rotate, rotate, rotate, angle_degrees, order_XYZ));
+	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
 	scene_viewport()->set_camera(camera);
 	scene_viewport()->render(gc());

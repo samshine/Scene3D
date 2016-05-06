@@ -99,7 +99,7 @@ Quaternionf Physics3DObjectImpl::orientation() const
 {
 	btTransform transform = object->getWorldTransform();
 	btQuaternion rotation = transform.getRotation();
-	return Quaternionf(rotation.getW(), rotation.getX(), rotation.getY(), rotation.getZ());
+	return Quaternionf(rotation.getX(), rotation.getY(), rotation.getZ(), rotation.getW());
 }
 
 bool Physics3DObjectImpl::static_object() const

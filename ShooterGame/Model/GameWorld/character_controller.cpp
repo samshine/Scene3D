@@ -186,7 +186,7 @@ void CharacterController::end_step_up()
 		if (flying)
 		{
 			// Absorb some of the speed if we land in a direction different than forward/back (for better impulse based landings)
-			Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+			auto move_direction = Quaternionf::euler(0.0f, radians(rotation.dir), 0.0f);
 			Vec3f move_vector = move_direction.rotate_vector(Vec3f(0.0f, 0.0f, 1.0f));
 			velocity = mix(move_vector * Vec3f::dot(move_vector, velocity), velocity, 0.25f);
 		}
@@ -277,7 +277,7 @@ void CharacterController::apply_thrust(float tick_elapsed)
 {
 	velocity -= velocity * air_resistance * tick_elapsed;
 
-	Quaternionf move_direction(0.0f, rotation.dir, 0.0f, angle_degrees, order_YXZ);
+	auto move_direction = Quaternionf::euler(0.0f, radians(rotation.dir), 0.0f);
 	Vec3f move_vector = move_direction.rotate_vector(Vec3f(thrust_vec.x, 0.0f, thrust_vec.y));
 
 	if (flying)
