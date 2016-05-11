@@ -30,6 +30,7 @@ private:
 	SceneLightPtr light1, light2;
 
 	uicore::FontPtr font;
+	uicore::Texture2DPtr particle_texture;
 
 	uicore::ProgramObjectPtr program;
 	uicore::StorageBufferPtr storage;
@@ -43,7 +44,7 @@ private:
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
-	const int particle_count = 1024;
+	const int particle_count = 1;
 
 	std::shared_ptr<GPUCollision> collision;
 };

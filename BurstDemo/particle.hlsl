@@ -24,6 +24,6 @@ void main(uint3 threadId : SV_DispatchThreadID )
 	else
 	{
 		particles[index].pos += particles[index].velocity;
-		particles[index].size = 0.01;// (1 + cos(radians(particles[index].velocity.x))) * 0.05;
+		particles[index].size = 1;// (1 + cos(radians(particles[index].velocity.x))) * 0.05;
 	}
 }
