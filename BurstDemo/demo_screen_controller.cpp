@@ -24,6 +24,8 @@ DemoScreenController::DemoScreenController()
 
 	font = Font::create("Segoe UI", 13.0f);
 
+	particle_texture = Texture2D::create(gc(), "Resources/particle1.png");
+
 	auto shader = ShaderObject::create(gc(), ShaderType::compute, File::read_all_text("particle.hlsl"));
 	shader->compile();
 
@@ -33,7 +35,7 @@ DemoScreenController::DemoScreenController()
 	program->set_storage_buffer_index("particles", 0);
 
 	storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
-	staging = StagingBuffer::create(gc(), sizeof(Particle) * particle_count);
+//	staging = StagingBuffer::create(gc(), sizeof(Particle) * particle_count);
 
 	collision = std::make_shared<GPUCollision>(gc());
 	collision->set_shape(ModelData::create_box(Vec3f{ 20.0f, 20.0f, 5.0f }));
@@ -93,7 +95,6 @@ void DemoScreenController::update()
 	float rotate = game_time().time_elapsed() * 100.0f;
 	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
-
 	gc()->set_program_object(program);
 	gc()->set_storage_buffer(0, storage);
 	gc()->dispatch(particle_count);
@@ -134,7 +135,7 @@ void DemoScreenController::update()
 		gc()->set_program_object(program2);
 
 		gc()->set_uniform_buffer(0, gpu_uniforms);
-		gc()->set_texture(0, collision->gpu_output_image);
+		gc()->set_texture(0, particle_texture);
 
 		gc()->draw_primitives_array_instanced(type_triangles, 0, 6, particle_count);
 
