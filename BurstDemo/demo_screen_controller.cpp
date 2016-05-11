@@ -1,6 +1,7 @@
 
 #include "precomp.h"
 #include "demo_screen_controller.h"
+#include "gpu_collision.h"
 
 using namespace uicore;
 
@@ -33,6 +34,9 @@ DemoScreenController::DemoScreenController()
 
 	storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
 	staging = StagingBuffer::create(gc(), sizeof(Particle) * particle_count);
+
+	collision = std::make_shared<GPUCollision>(gc());
+	collision->set_shape(ModelData::create_box(Vec3f{ 20.0f, 20.0f, 5.0f }));
 }
 
 void DemoScreenController::update()
@@ -61,7 +65,13 @@ void DemoScreenController::update()
 
 	storage->copy_from(gc(), staging);
 
+	collision->update();
+
 	canvas()->begin();
 	font->draw_text(canvas(), 100.0f, 100.0f, string_format("Particle pos: %1, %2, %3", pos.x, pos.y, pos.z));
+
+	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
+	img->draw(canvas(), 100.0f, 150.0f);
+
 	canvas()->end();
 }

@@ -19,6 +19,26 @@ public:
 	static bool find_any_hit(TriangleMeshShape *shape1, SphereShape *shape2);
 	static bool find_any_hit(TriangleMeshShape *shape, const uicore::Vec3f &ray_start, const uicore::Vec3f &ray_end);
 
+	struct Node
+	{
+		Node() : left(-1), right(-1), element_index(-1) { }
+		Node(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max, int element_index) : aabb(aabb_min, aabb_max), left(-1), right(-1), element_index(element_index) { }
+		Node(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max, int left, int right) : aabb(aabb_min, aabb_max), left(left), right(right), element_index(-1) { }
+
+		uicore::AxisAlignedBoundingBox aabb;
+		int left;
+		int right;
+		int element_index;
+	};
+
+	const uicore::Vec3f *vertices;
+	const int num_vertices;
+	const unsigned int *elements;
+	int num_elements;
+
+	std::vector<Node> nodes;
+	int root;
+
 private:
 	static float sweep(TriangleMeshShape *shape1, SphereShape *shape2, int a, const uicore::Vec3f &target);
 
@@ -41,25 +61,5 @@ private:
 	inline bool is_leaf(int node_index);
 	inline float volume(int node_index);
 
-	struct Node
-	{
-		Node() : left(-1), right(-1), element_index(-1) { }
-		Node(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max, int element_index) : aabb(aabb_min, aabb_max), left(-1), right(-1), element_index(element_index) { }
-		Node(const uicore::Vec3f &aabb_min, const uicore::Vec3f &aabb_max, int left, int right) : aabb(aabb_min, aabb_max), left(left), right(right), element_index(-1) { }
-
-		uicore::AxisAlignedBoundingBox aabb;
-		int left;
-		int right;
-		int element_index;
-	};
-
 	int subdivide(int *triangles, int num_triangles, const uicore::Vec3f *centroids, int *work_buffer);
-
-	const uicore::Vec3f *vertices;
-	const int num_vertices;
-	const unsigned int *elements;
-	int num_elements;
-
-	std::vector<Node> nodes;
-	int root;
 };

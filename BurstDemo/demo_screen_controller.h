@@ -1,6 +1,8 @@
 
 #pragma once
 
+class GPUCollision;
+
 class DemoScreenController : public ScreenController
 {
 public:
@@ -28,4 +30,6 @@ private:
 	};
 
 	const int particle_count = 64;
+
+	std::shared_ptr<GPUCollision> collision;
 };
