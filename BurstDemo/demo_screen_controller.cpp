@@ -100,6 +100,7 @@ void DemoScreenController::update()
 	gc()->set_storage_buffer(0, nullptr);
 	gc()->set_program_object(nullptr);
 
+	/*
 	storage->copy_to(gc(), staging);
 
 	staging->lock(gc(), access_read_write);
@@ -112,6 +113,7 @@ void DemoScreenController::update()
 	staging->unlock();
 
 	storage->copy_from(gc(), staging);
+	*/
 
 	scene_engine()->set_custom_pass([&](Mat4f eye_to_projection, Mat4f world_to_eye, FrameBufferPtr fb_final_color, Sizef viewport_size)
 	{
@@ -155,7 +157,7 @@ void DemoScreenController::update()
 	collision->update();
 
 	canvas()->begin();
-	font->draw_text(canvas(), 100.0f, 100.0f, string_format("Particle pos: %1, %2, %3", pos.x, pos.y, pos.z));
+	//font->draw_text(canvas(), 100.0f, 100.0f, string_format("Particle pos: %1, %2, %3", pos.x, pos.y, pos.z));
 
 	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
 	img->draw(canvas(), 100.0f, 150.0f);
