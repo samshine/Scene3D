@@ -41,7 +41,7 @@ void main(uint3 threadId : SV_DispatchThreadID)
 
 	float4 color = float4(x / width, y / height, 0, 1);
 
-	float3 ray_from = float3(threadId.x - width * 0.5, threadId.y - height * 0.5, 0);
+	float3 ray_from = float3(x - width * 0.5, y - height * 0.5, 0);
 	float3 ray_to = ray_from + float3(0, 0, 10);
 
 	if (find_any_hit(ray_from, ray_to))

@@ -28,6 +28,8 @@ public:
 	int model_instance_maps() const override { return render.frames.front()->next_model_staging_buffer; }
 	const std::vector<GPUTimer::Result> &gpu_results() const override { return render.gpu_results; }
 
+	void set_custom_pass(std::function<void(uicore::Mat4f eye_to_projection, uicore::Mat4f world_to_eye, uicore::FrameBufferPtr fb_final_color, uicore::Size viewport_size)> callback) override { render.custom_pass = callback; }
+
 	std::shared_ptr<Model> get_model(const std::string &model_name);
 	std::shared_ptr<ModelData> get_model_data(const std::string &name);
 	Resource<uicore::TexturePtr> get_texture(const uicore::GraphicContextPtr &gc, const std::string &name, bool linear);

@@ -134,9 +134,22 @@ public:
 	std::vector<GPUTimer::Result> gpu_results;
 	GPUTimer gpu_timer;
 
+	std::function<void(uicore::Mat4f eye_to_projection, uicore::Mat4f world_to_eye, uicore::FrameBufferPtr fb_final_color, uicore::Size viewport_size)> custom_pass;
+
 private:
 	SceneRender(const SceneRender &) = delete;
 	SceneRender &operator=(const SceneRender &) = delete;
 
 	void setup_passes();
+};
+
+class CustomPass : public ScenePass
+{
+public:
+	CustomPass(SceneRender &inout) : inout(inout) { }
+
+	std::string name() const override { return "custom"; }
+	void run() override;
+
+	SceneRender &inout;
 };

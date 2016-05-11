@@ -191,10 +191,21 @@ void SceneRender::setup_passes()
 	passes.push_back(std::make_shared<TransparencyPass>(*this));
 	passes.push_back(std::make_shared<ParticleEmitterPass>(*this));
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));
+	passes.push_back(std::make_shared<CustomPass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(*this));
 	//passes.push_back(std::make_shared<SSAOPass>(*this));
 	passes.push_back(std::make_shared<SceneLinesPass>(*this));
 	passes.push_back(std::make_shared<FinalPass>(*this));
+}
+
+void CustomPass::run()
+{
+	if (inout.custom_pass)
+	{
+		Size viewport_size = inout.engine->render.viewport_size;
+		Mat4f eye_to_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
+		inout.custom_pass(eye_to_projection, inout.world_to_eye, inout.frames.front()->fb_final_color, inout.viewport_size);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

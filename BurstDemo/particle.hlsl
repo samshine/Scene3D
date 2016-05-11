@@ -2,7 +2,7 @@
 struct Particle
 {
 	float3 pos;
-	float padding;
+	float size;
 	float3 velocity;
 	float life;
 };
