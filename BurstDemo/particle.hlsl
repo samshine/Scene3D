@@ -18,10 +18,10 @@ void main(uint3 threadId : SV_DispatchThreadID )
 
 	if (particles[index].life <= 0)
 	{
-		particles[index].pos = float3(0, 0, 10) + float3(-sin(radians(index)), -cos(radians(index)), -sin(radians(index))) * 4;
+		particles[index].pos = float3(0, 0, 70) + float3(-sin(radians(index)), -cos(radians(index)), -sin(radians(index))) * 4;
 		particles[index].velocity.x = cos(radians(index)) * 2 + index / 400.0;
 		particles[index].velocity.y = sin(radians(index)) * 2 + index / 400.0;
-		particles[index].life = 10;
+		particles[index].life = 20;
 		particles[index].size = 1;
 	}
 	else
