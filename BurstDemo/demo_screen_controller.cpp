@@ -13,8 +13,8 @@ DemoScreenController::DemoScreenController()
 
 	camera = SceneCamera::create(scene);
 
-	//box = SceneObject::create(scene, SceneModel::create(scene, ModelData::create_box(Vec3f{ 1.0f, 1.0f, 1.0f })));
-	//box->set_position(Vec3f{ 0.0f, 0.0f, 10.0f });
+	box = SceneObject::create(scene, SceneModel::create(scene, ModelData::create_box(Vec3f{ 1.0f, 1.0f, 1.0f })));
+	box->set_position(Vec3f{ 0.0f, 0.0f, 10.0f });
 
 	light1 = SceneLight::create(scene);
 	light1->set_position(Vec3f{ 10.0f, 10.0f, 10.0f });
@@ -90,8 +90,8 @@ DemoScreenController::DemoScreenController()
 
 void DemoScreenController::update()
 {
-	//float rotate = game_time().time_elapsed() * 100.0f;
-	//box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
+	float rotate = game_time().time_elapsed() * 100.0f;
+	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
 
 	gc()->set_program_object(program);
