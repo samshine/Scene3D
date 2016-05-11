@@ -9,12 +9,12 @@ DemoScreenController::DemoScreenController()
 {
 	scene = Scene::create(scene_engine());
 	scene->show_skybox_stars(false);
-	scene->set_skybox_gradient(std::vector<Colorf> { Colorf::darkslategray, Colorf::darkslateblue });
-
+//	scene->set_skybox_gradient(std::vector<Colorf> { Colorf::darkslategray, Colorf::darkslateblue });
+	scene->set_skybox_gradient(std::vector<Colorf> { Colorf::black, Colorf::black });
 	camera = SceneCamera::create(scene);
 
-	box = SceneObject::create(scene, SceneModel::create(scene, ModelData::create_box(Vec3f{ 1.0f, 1.0f, 1.0f })));
-	box->set_position(Vec3f{ 0.0f, 0.0f, 10.0f });
+//	box = SceneObject::create(scene, SceneModel::create(scene, ModelData::create_box(Vec3f{ 1.0f, 1.0f, 1.0f })));
+//	box->set_position(Vec3f{ 0.0f, 0.0f, 10.0f });
 
 	light1 = SceneLight::create(scene);
 	light1->set_position(Vec3f{ 10.0f, 10.0f, 10.0f });
@@ -24,7 +24,7 @@ DemoScreenController::DemoScreenController()
 
 	font = Font::create("Segoe UI", 13.0f);
 
-	particle_texture = Texture2D::create(gc(), "Resources/particle1.png");
+	particle_texture = Texture2D::create(gc(), "Resources/particle2.png");
 
 	auto shader = ShaderObject::create(gc(), ShaderType::compute, File::read_all_text("particle.hlsl"));
 	shader->compile();
@@ -70,8 +70,8 @@ DemoScreenController::DemoScreenController()
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(true);
-	//blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
-	blend_desc.set_blend_function(blend_one, blend_one, blend_zero, blend_one);
+	blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_zero, blend_zero);
+	//blend_desc.set_blend_function(blend_one, blend_one, blend_zero, blend_one);
 	blend_state = gc()->create_blend_state(blend_desc);
 
 	DepthStencilStateDescription depth_stencil_desc;
@@ -93,7 +93,7 @@ DemoScreenController::DemoScreenController()
 void DemoScreenController::update()
 {
 	float rotate = game_time().time_elapsed() * 100.0f;
-	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
+//	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
 	gc()->set_program_object(program);
 	gc()->set_storage_buffer(0, storage);
@@ -160,8 +160,8 @@ void DemoScreenController::update()
 	canvas()->begin();
 	//font->draw_text(canvas(), 100.0f, 100.0f, string_format("Particle pos: %1, %2, %3", pos.x, pos.y, pos.z));
 
-	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
-	img->draw(canvas(), 100.0f, 150.0f);
+//	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
+//	img->draw(canvas(), 100.0f, 150.0f);
 
 	canvas()->end();
 }

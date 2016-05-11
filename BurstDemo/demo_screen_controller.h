@@ -44,7 +44,7 @@ private:
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
-	const int particle_count = 1;
+	const int particle_count = 1024;
 
 	std::shared_ptr<GPUCollision> collision;
 };
