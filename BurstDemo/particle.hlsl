@@ -22,7 +22,7 @@ void main(uint3 threadId : SV_DispatchThreadID )
 		particles[index].velocity.x = cos(radians(index)) * 2 + index / 400.0;
 		particles[index].velocity.y = sin(radians(index)) * 2 + index / 400.0;
 		particles[index].life = 20;
-		particles[index].size = 1;
+		particles[index].size = 1 - index / float(1024) + 0.001;
 	}
 	else
 	{
