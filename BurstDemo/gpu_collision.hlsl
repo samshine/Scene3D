@@ -53,7 +53,7 @@ void main(uint3 threadId : SV_DispatchThreadID)
 
 	float4 color = float4(x / width, y / height, 0, 1);
 
-	float3 ray_from = float3(x - width * 0.5, y - height * 0.10, -5) * 0.01;
+	float3 ray_from = float3(x - width * 0.5, y - height * 0.10, -5) * 0.005;
 	float3 ray_to = ray_from + float3(0, 0, 10);
 
 	SphereShape sphere;

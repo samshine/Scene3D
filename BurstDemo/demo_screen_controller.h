@@ -1,8 +1,6 @@
 
 #pragma once
 
-class GPUCollision;
-
 class DemoScreenController : public ScreenController
 {
 public:
@@ -44,6 +42,4 @@ private:
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
 	const int particle_count = 1024;
-
-	std::shared_ptr<GPUCollision> collision;
 };

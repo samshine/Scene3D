@@ -37,7 +37,7 @@ void GPUCollision::set_shape(const Vec3f * vertices, int num_vertices, const uns
 
 	gpu_uniforms = UniformBuffer::create(gc, &cpu_uniforms, sizeof(UniformsBlock));
 
-	gpu_output_image = Texture2D::create(gc, 256, 256, tf_rgba8);
+	gpu_output_image = Texture2D::create(gc, 640, 480, tf_rgba8);
 }
 
 void GPUCollision::update()
@@ -49,7 +49,7 @@ void GPUCollision::update()
 	gc->set_storage_buffer(2, gpu_vertices);
 	gc->set_image_texture(0, gpu_output_image);
 
-	gc->dispatch(256, 256);
+	gc->dispatch(gpu_output_image->width(), gpu_output_image->height());
 
 	gc->set_uniform_buffer(0, nullptr);
 	gc->set_storage_buffer(0, nullptr);
