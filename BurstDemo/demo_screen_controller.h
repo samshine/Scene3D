@@ -34,7 +34,6 @@ private:
 
 	uicore::ProgramObjectPtr program;
 	uicore::StorageBufferPtr storage;
-	uicore::StagingBufferPtr staging;
 
 	uicore::ProgramObjectPtr program2;
 	uicore::BlendStatePtr blend_state;

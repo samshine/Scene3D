@@ -35,10 +35,10 @@ DemoScreenController::DemoScreenController()
 	program->set_storage_buffer_index("particles", 0);
 
 	storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
-//	staging = StagingBuffer::create(gc(), sizeof(Particle) * particle_count);
 
 	collision = std::make_shared<GPUCollision>(gc());
-	collision->set_shape(ModelData::create_box(Vec3f{ 20.0f, 20.0f, 5.0f }));
+	collision->set_shape(ModelData::create_box(Vec3f{ 20.0f, 20.0f, 5.0f } * 0.01f));
+	//collision->set_shape(ModelData::load("C:\\Development\\Workspaces\\Scene3D\\ShooterGame\\Resources\\Assets\\Models\\XBot\\XBot.cmodel"));
 
 	auto vertex_shader = ShaderObject::create(gc(), ShaderType::vertex, File::read_all_text("particle_vertex.hlsl"));
 	vertex_shader->compile();
@@ -101,21 +101,6 @@ void DemoScreenController::update()
 	gc()->set_storage_buffer(0, nullptr);
 	gc()->set_program_object(nullptr);
 
-	/*
-	storage->copy_to(gc(), staging);
-
-	staging->lock(gc(), access_read_write);
-
-	Particle *particles = (Particle*)staging->data();
-	auto pos = particles[0].pos;
-	particles[0].size = 1.0f;
-	particles[0].velocity = Vec3f(0.01f, 0.0f, 0.1f);
-
-	staging->unlock();
-
-	storage->copy_from(gc(), staging);
-	*/
-
 	scene_engine()->set_custom_pass([&](Mat4f eye_to_projection, Mat4f world_to_eye, FrameBufferPtr fb_final_color, Sizef viewport_size)
 	{
 		Uniforms uniforms;
@@ -160,8 +145,8 @@ void DemoScreenController::update()
 	canvas()->begin();
 	//font->draw_text(canvas(), 100.0f, 100.0f, string_format("Particle pos: %1, %2, %3", pos.x, pos.y, pos.z));
 
-//	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
-//	img->draw(canvas(), 100.0f, 150.0f);
+	auto img = Image::create(collision->gpu_output_image, collision->gpu_output_image->size());
+	img->draw(canvas(), 100.0f, 150.0f);
 
 	canvas()->end();
 }
