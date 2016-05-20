@@ -144,7 +144,7 @@ void SkyboxPass::create_cloud_texture()
 	int width = 512;
 	int height = 512;
 	int turbulence = 300;
-	Color color = Color::mediumslateblue;
+	Color color = StandardColor::mediumslateblue();
 
 	Noise2D noise(width, height);
 	auto cloud = PixelBuffer::create(width, height, tf_rgba16);

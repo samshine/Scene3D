@@ -57,7 +57,7 @@ public:
 	uicore::Vec3f _position;
 	uicore::Quaternionf _orientation;
 
-	uicore::Vec3f _color = uicore::Vec3f(uicore::Colorf::white);
+	uicore::Vec3f _color = uicore::Vec3f(uicore::StandardColorf::white());
 	float _falloff = 90.0f;
 	float _hotspot = 45.0f;
 	float _ambient_illumination = 0.0f;

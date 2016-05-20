@@ -8,8 +8,8 @@ DemoScreenController::DemoScreenController()
 {
 	scene = Scene::create(scene_engine());
 	scene->show_skybox_stars(false);
-//	scene->set_skybox_gradient(std::vector<Colorf> { Colorf::darkslategray, Colorf::darkslateblue });
-	scene->set_skybox_gradient(std::vector<Colorf> { Colorf::black, Colorf::black });
+//	scene->set_skybox_gradient(std::vector<Colorf> { StandardColorf::darkslategray(), StandardColorf::darkslateblue() });
+	scene->set_skybox_gradient(std::vector<Colorf> { StandardColorf::black(), StandardColorf::black() });
 	camera = SceneCamera::create(scene);
 
 //	box = SceneObject::create(scene, SceneModel::create(scene, ModelData::create_box(Vec3f{ 1.0f, 1.0f, 1.0f })));

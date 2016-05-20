@@ -9,7 +9,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	style()->set("flex-direction: row");
 	style()->set("flex: none");
 	style()->set("padding: 2px 0");
-	style()->set("background: rgb(83,83,83)");
+	//style()->set("background: rgb(83,83,83)");
 
 	button = std::make_shared<ButtonBaseView>();
 	button->style()->set("flex: none");
@@ -25,7 +25,7 @@ HeaderMenuView::HeaderMenuView(const std::string &text, const std::string &icon,
 	}
 	button->label()->set_text(Text::to_upper(text));
 	button->label()->style()->set("font: 12px/18px 'Lato'");
-	button->label()->style()->set("color: rgb(230,230,230)");
+	//button->label()->style()->set("color: rgb(230,230,230)");
 	slots.connect(button->sig_pointer_release(), bind_member(this, &HeaderMenuView::button_clicked));
 	add_child(button);
 

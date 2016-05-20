@@ -22,3 +22,15 @@ private:
 	std::shared_ptr<uicore::View> left_buttons;
 	std::shared_ptr<uicore::View> right_buttons;
 };
+
+class HeaderBrightView : public HeaderView
+{
+public:
+	HeaderBrightView()
+	{
+		style()->set(R"(
+			background: rgb(240,240,240);
+			color: black;
+		)");
+	}
+};

@@ -172,8 +172,8 @@ void GameScreenController::update()
 			break;
 		}
 
-		font->draw_text(canvas(), 22.0f, y + 2.0f, msg, Colorf::black);
-		font->draw_text(canvas(), 20.0f, y, msg, Colorf::whitesmoke);
+		font->draw_text(canvas(), 22.0f, y + 2.0f, msg, StandardColorf::black());
+		font->draw_text(canvas(), 20.0f, y, msg, StandardColorf::whitesmoke());
 		y -= font_metrics.line_height();
 	}
 
@@ -193,21 +193,21 @@ void GameScreenController::update()
 			std::string weapon1_text = "Ice Launcher";
 			std::string weapon2_text = "Ammo: 100";
 
-			font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset(), health_text, Colorf::black);
-			font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset(), health_text, Colorf::springgreen);
-			font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::black);
-			font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, Colorf::orangered);
+			font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset(), health_text, StandardColorf::black());
+			font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset(), health_text, StandardColorf::springgreen());
+			font2->draw_text(canvas(), 12.0f, 12.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, StandardColorf::black());
+			font2->draw_text(canvas(), 10.0f, 10.0f + font_metrics2.baseline_offset() + font_metrics2.line_height(), armor_text, StandardColorf::orangered());
 
-			font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::black);
-			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, Colorf::springgreen);
-			font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::black);
-			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, Colorf::orangered);
+			font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, StandardColorf::black());
+			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon1_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() * 2.0f + font_metrics2.baseline_offset(), weapon1_text, StandardColorf::springgreen());
+			font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 8.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, StandardColorf::black());
+			font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), weapon2_text).advance.width, canvas()->height() - 10.0f - font_metrics2.line_height() + font_metrics2.baseline_offset(), weapon2_text, StandardColorf::orangered());
 		}
 
 		std::string score_text = string_format("Score: %1", GameMaster::instance(client_game.get())->score);
 
-		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, Colorf::black);
-		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, Colorf::whitesmoke);
+		font2->draw_text(canvas(), canvas()->width() - 8.0f - font2->measure_text(canvas(), score_text).advance.width, 12.0f + font_metrics2.baseline_offset(), score_text, StandardColorf::black());
+		font2->draw_text(canvas(), canvas()->width() - 10.0f - font2->measure_text(canvas(), score_text).advance.width, 10.0f + font_metrics2.baseline_offset(), score_text, StandardColorf::whitesmoke());
 
 		update_stats_cooldown = std::max(update_stats_cooldown - game_time().time_elapsed(), 0.0f);
 		if (update_stats_cooldown == 0.0f)
@@ -253,23 +253,23 @@ void GameScreenController::update()
 		y = 200.0f + font_small_metrics.baseline_offset();
 		for (const auto &text : update_stats)
 		{
-			font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
-			font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, Colorf::whitesmoke);
+			font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, StandardColorf::black());
+			font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, StandardColorf::whitesmoke());
 			y += font_small_metrics.line_height();
 		}
-		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, Colorf::black);
-		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), fps).advance.width, y, fps, Colorf::whitesmoke);
+		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), fps).advance.width, y + 2.0f, fps, StandardColorf::black());
+		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), fps).advance.width, y, fps, StandardColorf::whitesmoke());
 		y += font_small_metrics.line_height();
-		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), ping).advance.width, y + 2.0f, ping, Colorf::black);
-		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), ping).advance.width, y, ping, Colorf::whitesmoke);
+		font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), ping).advance.width, y + 2.0f, ping, StandardColorf::black());
+		font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), ping).advance.width, y, ping, StandardColorf::whitesmoke());
 		y += font_small_metrics.line_height();
 
 		y += font_small_metrics.line_height();
 
 		for (const auto &text : update_stats2)
 		{
-			font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, Colorf::black);
-			font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, Colorf::whitesmoke);
+			font_small->draw_text(canvas(), canvas()->width() - 8.0f - font_small->measure_text(canvas(), text).advance.width, y + 2.0f, text, StandardColorf::black());
+			font_small->draw_text(canvas(), canvas()->width() - 10.0f - font_small->measure_text(canvas(), text).advance.width, y, text, StandardColorf::whitesmoke());
 			y += font_small_metrics.line_height();
 		}
 
@@ -278,9 +278,9 @@ void GameScreenController::update()
 			auto announcement_text1 = GameMaster::instance(client_game.get())->announcement_text1;
 			auto announcement_text2 = GameMaster::instance(client_game.get())->announcement_text2;
 			float alpha = clamp(GameMaster::instance(client_game.get())->announcement_timeout, 0.0f, 1.0f);
-			Colorf black = Colorf::black;
-			Colorf color1 = Colorf::lightgoldenrodyellow;
-			Colorf color2 = Colorf::whitesmoke;
+			Colorf black = StandardColorf::black();
+			Colorf color1 = StandardColorf::lightgoldenrodyellow();
+			Colorf color2 = StandardColorf::whitesmoke();
 			black.w = alpha * alpha;
 			color1.w = alpha;
 			color2.w = alpha;

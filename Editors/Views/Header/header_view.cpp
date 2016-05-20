@@ -12,6 +12,7 @@ HeaderView::HeaderView()
 		flex: none;
 		background: rgb(83,83,83);
 		border-bottom: 1px solid rgb(159,184,194);
+		color: rgb(230,230,230);
 		)");
 
 	left_buttons = std::make_shared<View>();

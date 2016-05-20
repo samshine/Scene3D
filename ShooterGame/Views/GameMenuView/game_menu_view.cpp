@@ -184,8 +184,8 @@ void GameMenuView::update()
 		std::string str = "Shooter Game!";
 		float advance_width = font_h1->measure_text(canvas(), str).advance.width;
 		float x = (canvas()->size().width - advance_width) * 0.5f;
-		font_h1->draw_text(canvas(), x + 2.0f, y + 2.0f, str, Colorf::black);
-		font_h1->draw_text(canvas(), x, y, str, Colorf::palegoldenrod);
+		font_h1->draw_text(canvas(), x + 2.0f, y + 2.0f, str, StandardColorf::black());
+		font_h1->draw_text(canvas(), x, y, str, StandardColorf::palegoldenrod());
 	}
 
 	blink = std::fmod(blink + game_time().time_elapsed() * 2.0f, 2.0f);
@@ -221,11 +221,11 @@ void GameMenuView::update()
 		float x0 = (canvas()->size().width - advance_width) * 0.5f;
 		float x1 = (canvas()->size().width + advance_width) * 0.5f - edit_advance_width;
 
-		font->draw_text(canvas(), x0 + 2.0f, y + 2.0f, item.name, Colorf::black);
-		font->draw_text(canvas(), x0, y, item.name, i == current_menu_index && !edit_mode ? Colorf::floralwhite : Colorf::lightsteelblue);
+		font->draw_text(canvas(), x0 + 2.0f, y + 2.0f, item.name, StandardColorf::black());
+		font->draw_text(canvas(), x0, y, item.name, i == current_menu_index && !edit_mode ? StandardColorf::floralwhite() : StandardColorf::lightsteelblue());
 
-		font->draw_text(canvas(), x1 + 2.0f, y + 2.0f, edit_text, Colorf::black);
-		font->draw_text(canvas(), x1, y, edit_text, i == current_menu_index && edit_mode ? Colorf::floralwhite : Colorf::lightsteelblue);
+		font->draw_text(canvas(), x1 + 2.0f, y + 2.0f, edit_text, StandardColorf::black());
+		font->draw_text(canvas(), x1, y, edit_text, i == current_menu_index && edit_mode ? StandardColorf::floralwhite() : StandardColorf::lightsteelblue());
 
 		item_boxes.push_back(Rectf::xywh(x0, y - font_metrics.ascent(), advance_width, font_metrics.height()));
 

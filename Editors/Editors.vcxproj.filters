@@ -269,6 +269,10 @@
       <Filter>Model\ModelEditor\Commands</Filter>
     </ClCompile>
     <ClCompile Include="Views\Scene\scene_pivot_action.cpp" />
+    <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\build_controller.cpp" />
+    <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_explorer_controller.cpp" />
+    <ClCompile Include="Views\AssetCompilerWindow\tree_view.cpp" />
+    <ClCompile Include="Views\AssetCompilerWindow\tree_item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -468,5 +472,12 @@
       <Filter>Views\ModelEditor</Filter>
     </ClInclude>
     <ClInclude Include="Views\Scene\scene_pivot_action.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\build_view.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\asset_explorer_view.h" />
+    <ClInclude Include="Controllers\AssetCompiler\AssetCompilerWindow\build_controller.h" />
+    <ClInclude Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_explorer_controller.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\tree_view.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\tree_item.h" />
+    <ClInclude Include="Views\AssetCompilerWindow\tree_node_view.h" />
   </ItemGroup>
 </Project>
