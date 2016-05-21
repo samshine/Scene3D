@@ -13,6 +13,8 @@ typedef std::weak_ptr<TreeItem> TreeItemWeakPtr;
 class TreeItem : std::enable_shared_from_this<TreeItem>
 {
 public:
+	TreeItem(const std::string &name);
+
 	TreeItem *parent() const;
 
 	TreeItemPtr first_child() const;
@@ -21,13 +23,18 @@ public:
 	TreeItemPtr next_sibling() const;
 
 	bool has_child_nodes() const { return (bool)first_child(); }
+	int depth() const;
 
 	TreeBaseView *tree_view() const;
 
 	TreeItemPtr insert_before(const TreeItemPtr &new_child, const TreeItemPtr &ref_child);
 	TreeItemPtr replace_child(const TreeItemPtr &new_child, const TreeItemPtr &old_child);
-	TreeItemPtr remove_child(const TreeItemPtr &old_child);
-	TreeItemPtr append_child(const TreeItemPtr &new_child);
+	TreeItemPtr add_child(const TreeItemPtr &new_child);
+
+	void remove_from_parent();
+
+	const std::string &name() const;
+	void set_name(const std::string &name);
 
 	uicore::PixelBufferPtr create_drag_image();
 
@@ -56,6 +63,8 @@ private:
 	TreeItemPtr _first_child, _last_child;
 	TreeItemPtr _next_sibling;
 	TreeItemWeakPtr _prev_sibling;
+
+	std::string _name;
 
 	friend class TreeBaseView;
 };

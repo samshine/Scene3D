@@ -35,7 +35,9 @@ public:
 
 TreeBaseView::TreeBaseView() : impl(new TreeBaseViewImpl())
 {
-	impl->root_item = std::make_shared<TreeItem>();
+	content_view()->style()->set("flex-direction: column");
+
+	impl->root_item = std::make_shared<TreeItem>("#root");
 	impl->root_item->_tree_view = this;
 }
 
@@ -175,4 +177,30 @@ Signal<void()> &TreeBaseView::sig_selection_changing()
 Signal<void()> &TreeBaseView::sig_single_expand()
 {
 	return impl->sig_single_expand;
+}
+
+void TreeBaseView::item_added(const TreeItemPtr &item, int level)
+{
+	item->_node_view = content_view()->add_child<TreeNodeView>();
+	item->_node_view->label->set_text(item->name());
+	item->_node_view->set_ident(impl->indent * level);
+
+	for (auto child = item->first_child(); child; child = child->next_sibling())
+		item_added(child, level + 1);
+}
+
+void TreeBaseView::item_updated(const TreeItemPtr &item)
+{
+	if (item->_node_view)
+		item->_node_view->label->set_text(item->name());
+}
+
+void TreeBaseView::item_removed(const TreeItemPtr &item)
+{
+	for (auto child = item->first_child(); child; child = child->next_sibling())
+		item_removed(child);
+
+	if (item->_node_view)
+		item->_node_view->remove_from_parent();
+	item->_node_view = nullptr;
 }

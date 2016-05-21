@@ -50,5 +50,11 @@ public:
 	uicore::Signal<void()> &sig_single_expand();
 
 private:
+	void item_added(const TreeItemPtr &item, int level);
+	void item_updated(const TreeItemPtr &item);
+	void item_removed(const TreeItemPtr &item);
+
 	std::unique_ptr<TreeBaseViewImpl> impl;
+
+	friend class TreeItem;
 };
