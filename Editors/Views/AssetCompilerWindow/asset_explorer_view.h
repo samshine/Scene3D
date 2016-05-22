@@ -24,6 +24,8 @@ public:
 
 		auto item1 = std::make_shared<TreeItem>("Item 1");
 		auto item2 = std::make_shared<TreeItem>("Item 2");
+		tree_view->root_item()->add_child(item1);
+		tree_view->root_item()->add_child(item2);
 
 		auto child_item1 = item1->add_child(std::make_shared<TreeItem>("Child Item 1"));
 		auto child_item2 = item1->add_child(std::make_shared<TreeItem>("Child Item 2"));
@@ -35,9 +37,6 @@ public:
 		child_item1->add_child(std::make_shared<TreeItem>("Lazy fox"));
 		child_item1->add_child(std::make_shared<TreeItem>("Quick dog"));
 		child_item1->add_child(std::make_shared<TreeItem>("Jumper"));
-
-		tree_view->root_item()->add_child(item1);
-		tree_view->root_item()->add_child(item2);
 	}
 
 	std::shared_ptr<TreeBaseView> tree_view;

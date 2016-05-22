@@ -48,8 +48,8 @@ public:
 
 	void clear()
 	{
-		while (!log_scroll->content_view()->children().empty())
-			log_scroll->content_view()->children().back()->remove_from_parent();
+		for (auto v = log_scroll->content_view()->last_child(); v != nullptr; v = log_scroll->content_view()->last_child())
+			v->remove_from_parent();
 	}
 
 	void log(const CompilerMessage &msg)

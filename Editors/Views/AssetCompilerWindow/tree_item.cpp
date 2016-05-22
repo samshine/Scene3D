@@ -19,8 +19,9 @@ void TreeItem::set_name(const std::string &name)
 	if (_name != name)
 	{
 		_name = name;
-		if (_tree_view)
-			_tree_view->item_updated(shared_from_this());
+		auto tree = tree_view();
+		if (tree)
+			tree->item_updated(shared_from_this());
 	}
 }
 
@@ -51,7 +52,10 @@ TreeItemPtr TreeItem::next_sibling() const
 
 TreeBaseView *TreeItem::tree_view() const
 {
-	return _tree_view;
+	if (_parent)
+		return _parent->tree_view();
+	else
+		return _tree_view;
 }
 
 TreeItemPtr TreeItem::insert_before(const TreeItemPtr &new_child, const TreeItemPtr &ref_child)
@@ -68,23 +72,21 @@ TreeItemPtr TreeItem::insert_before(const TreeItemPtr &new_child, const TreeItem
 	if (new_child->parent())
 		new_child->remove_from_parent();
 
-	auto prev = ref_child->previous_sibling();
-	if (prev)
-	{
-		new_child->_prev_sibling = prev;
-		prev->_next_sibling = new_child;
-	}
-
+	new_child->_prev_sibling = ref_child->_prev_sibling;
+	new_child->_next_sibling = ref_child;
 	ref_child->_prev_sibling = new_child;
+
+	if (new_child->previous_sibling())
+		new_child->previous_sibling()->_next_sibling = new_child;
 
 	if (_first_child == ref_child)
 		_first_child = new_child;
 
 	new_child->_parent = this;
-	new_child->_tree_view = _tree_view;
 
-	if (_tree_view)
-		_tree_view->item_added(new_child, new_child->depth() - 1);
+	auto tree = tree_view();
+	if (tree)
+		tree->item_added(new_child, new_child->depth() - 1);
 
 	return new_child;
 }
@@ -110,10 +112,9 @@ void TreeItem::remove_from_parent()
 
 	auto old_child = shared_from_this();
 
-	if (_tree_view)
-		_tree_view->item_removed(old_child);
-
-	_tree_view = nullptr;
+	auto tree = tree_view();
+	if (tree)
+		tree->item_removed(old_child);
 
 	if (_parent->_first_child == old_child)
 		_parent->_first_child = old_child->next_sibling();
@@ -154,10 +155,10 @@ TreeItemPtr TreeItem::add_child(const TreeItemPtr &new_child)
 	}
 
 	new_child->_parent = this;
-	new_child->_tree_view = _tree_view;
 
-	if (_tree_view)
-		_tree_view->item_added(new_child, new_child->depth() - 1);
+	auto tree = tree_view();
+	if (tree)
+		tree->item_added(new_child, new_child->depth() - 1);
 
 	return new_child;
 }

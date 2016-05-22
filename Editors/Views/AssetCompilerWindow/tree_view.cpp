@@ -181,9 +181,11 @@ Signal<void()> &TreeBaseView::sig_single_expand()
 
 void TreeBaseView::item_added(const TreeItemPtr &item, int level)
 {
-	item->_node_view = content_view()->add_child<TreeNodeView>();
+	item->_node_view = std::make_shared<TreeNodeView>();
 	item->_node_view->label->set_text(item->name());
 	item->_node_view->set_ident(impl->indent * level);
+
+	content_view()->insert_before(item->_node_view, find_next_view(item));
 
 	for (auto child = item->first_child(); child; child = child->next_sibling())
 		item_added(child, level + 1);
@@ -203,4 +205,20 @@ void TreeBaseView::item_removed(const TreeItemPtr &item)
 	if (item->_node_view)
 		item->_node_view->remove_from_parent();
 	item->_node_view = nullptr;
+}
+
+std::shared_ptr<TreeNodeView> TreeBaseView::find_next_view(const TreeItemPtr &item)
+{
+	if (item->first_child())
+		return item->first_child()->_node_view;
+	else if (item->next_sibling())
+		return item->next_sibling()->_node_view;
+
+	for (auto parent = item->parent(); parent != nullptr; parent = parent->parent())
+	{
+		if (parent->next_sibling())
+			return parent->next_sibling()->_node_view;
+	}
+
+	return nullptr;
 }

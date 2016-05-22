@@ -4,6 +4,7 @@
 class TreeItem;
 typedef std::shared_ptr<TreeItem> TreeItemPtr;
 class TreeBaseViewImpl;
+class TreeNodeView;
 
 class TreeBaseView : public uicore::ScrollBaseView
 {
@@ -53,6 +54,7 @@ private:
 	void item_added(const TreeItemPtr &item, int level);
 	void item_updated(const TreeItemPtr &item);
 	void item_removed(const TreeItemPtr &item);
+	std::shared_ptr<TreeNodeView> find_next_view(const TreeItemPtr &item);
 
 	std::unique_ptr<TreeBaseViewImpl> impl;
 
