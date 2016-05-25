@@ -11,6 +11,7 @@ public:
 	AssetCompilerWindow();
 
 private:
+	void update_window_title();
 	void on_open();
 
 	std::shared_ptr<AssetCompilerWindowView> view = std::make_shared<AssetCompilerWindowView>();

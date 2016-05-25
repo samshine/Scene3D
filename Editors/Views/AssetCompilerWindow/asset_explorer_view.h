@@ -22,21 +22,14 @@ public:
 
 		tree_view = add_child<TreeBaseView>();
 
-		auto item1 = std::make_shared<TreeItem>("Item 1");
-		auto item2 = std::make_shared<TreeItem>("Item 2");
-		tree_view->root_item()->add_child(item1);
-		tree_view->root_item()->add_child(item2);
+		tree_view->scrollbar_x_view()->style()->set("flex: none");
+		tree_view->scrollbar_x_view()->track()->style()->set("padding: 0 4px");
+		tree_view->scrollbar_x_view()->thumb()->style()->set("background: rgb(208,209,215)");
 
-		auto child_item1 = item1->add_child(std::make_shared<TreeItem>("Child Item 1"));
-		auto child_item2 = item1->add_child(std::make_shared<TreeItem>("Child Item 2"));
-		auto child_item3 = item1->add_child(std::make_shared<TreeItem>("Child Item 3"));
-		auto child_item4 = item2->add_child(std::make_shared<TreeItem>("Child Item 4"));
-		auto child_item5 = item2->add_child(std::make_shared<TreeItem>("Child Item 5"));
+		tree_view->scrollbar_y_view()->style()->set("flex: none");
+		tree_view->scrollbar_y_view()->track()->style()->set("padding: 0 4px");
+		tree_view->scrollbar_y_view()->thumb()->style()->set("background: rgb(208,209,215)");
 
-		child_item1->add_child(std::make_shared<TreeItem>("Foobar"));
-		child_item1->add_child(std::make_shared<TreeItem>("Lazy fox"));
-		child_item1->add_child(std::make_shared<TreeItem>("Quick dog"));
-		child_item1->add_child(std::make_shared<TreeItem>("Jumper"));
 	}
 
 	std::shared_ptr<TreeBaseView> tree_view;

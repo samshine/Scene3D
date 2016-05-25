@@ -273,6 +273,7 @@
     <ClCompile Include="Controllers\AssetCompiler\AssetCompilerWindow\asset_explorer_controller.cpp" />
     <ClCompile Include="Views\AssetCompilerWindow\tree_view.cpp" />
     <ClCompile Include="Views\AssetCompilerWindow\tree_item.cpp" />
+    <ClCompile Include="Model\AssetFolder\asset_folder_model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controllers\ModelEditor\Scene\scene_controller.h">
@@ -479,5 +480,6 @@
     <ClInclude Include="Views\AssetCompilerWindow\tree_view.h" />
     <ClInclude Include="Views\AssetCompilerWindow\tree_item.h" />
     <ClInclude Include="Views\AssetCompilerWindow\tree_node_view.h" />
+    <ClInclude Include="Model\AssetFolder\asset_folder_model.h" />
   </ItemGroup>
 </Project>
