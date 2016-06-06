@@ -22,5 +22,6 @@ void main(uint3 threadId : SV_DispatchThreadID )
 	float time_elapsed = 0.016666f;
 
 	particles[index].pos += particles[index].velocity * time_elapsed;
+	particles[index].size -= time_elapsed * 10;
 	particles[index].life -= time_elapsed;
 }

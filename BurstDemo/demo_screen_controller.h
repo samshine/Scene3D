@@ -54,5 +54,5 @@ private:
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
 	const int emitter_count = 64;
-	const int particle_count = 1024;
+	const int particle_count = 128*1024;
 };

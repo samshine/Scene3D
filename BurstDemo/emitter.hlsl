@@ -30,11 +30,12 @@ void main(uint3 threadId : SV_DispatchThreadID)
 		// Create a particle
 		Particle particle;
 		particle.pos = emitters[index].pos;
-		particle.velocity.x = cos(radians(index)) * 2 + index / 400.0;
-		particle.velocity.y = cos(radians(index)) * 2 + index / 400.0;
+		particle.velocity.x = cos(radians(emitters[index].emit_position * 10));
+		particle.velocity.y = sin(radians(emitters[index].emit_position * 10));
 		particle.velocity.z = 0;
-		particle.life = 20;
-		particle.size = 1 - index / float(1024) + 0.001;
+		particle.velocity *= 20;
+		particle.life = 1;
+		particle.size = 5;
 		particle.particle_subarray_start = 0;
 		particle.particle_subarray_size = 0;
 		particle.emit_position = 0;
@@ -43,6 +44,6 @@ void main(uint3 threadId : SV_DispatchThreadID)
 		// Insert it into particles array:
 		particles[emitters[index].particle_subarray_start + emitters[index].emit_position] = particle;
 		emitters[index].emit_position = (emitters[index].emit_position + 1) % emitters[index].particle_subarray_size;
-		emitters[index].emit_cooldown = 2;
+		emitters[index].emit_cooldown = 0.005;
 	}
 }
