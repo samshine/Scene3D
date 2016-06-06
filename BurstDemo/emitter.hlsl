@@ -34,8 +34,8 @@ void main(uint3 threadId : SV_DispatchThreadID)
 		particle.velocity.y = sin(radians(emitters[index].emit_position * 10));
 		particle.velocity.z = 0;
 		particle.velocity *= 20;
-		particle.life = 1;
-		particle.size = 5;
+		particle.life = 4;
+		particle.size = 0.5;
 		particle.particle_subarray_start = 0;
 		particle.particle_subarray_size = 0;
 		particle.emit_position = 0;

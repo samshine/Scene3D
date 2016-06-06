@@ -33,7 +33,7 @@ DemoScreenController::DemoScreenController()
 	for (int i = 0; i < emitter_count; i++)
 	{
 		auto &emitter = emitters[i];
-		emitter.pos = Vec3f(0, 0, 70) + Vec3f(-std::sin(radians((float)i)), -std::cos(radians((float)i)), -std::sin(radians((float)i))) * 4.0f;
+		emitter.pos = Vec3f(0, 0, 70) + Vec3f(-std::sin(radians(i * 360.0f / emitter_count)), -std::cos(radians(i * 360.0f / emitter_count)), 0.0f) * 20.0f;
 		emitter.life = 1;
 		emitter.particle_subarray_start = particle_count * i / emitter_count;
 		emitter.particle_subarray_size = particle_count / emitter_count;
