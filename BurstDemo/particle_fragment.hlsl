@@ -17,6 +17,11 @@ struct Particle // Needs to match particle.hlsl
 	float size;
 	float3 velocity;
 	float life;
+
+	int particle_subarray_start;
+	int particle_subarray_size;
+	int emit_position;
+	float emit_cooldown;
 };
 
 Texture2D ParticleTexture;

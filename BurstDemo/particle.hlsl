@@ -5,6 +5,11 @@ struct Particle
 	float size;
 	float3 velocity;
 	float life;
+
+	int particle_subarray_start;
+	int particle_subarray_size;
+	int emit_position;
+	float emit_cooldown;
 };
 
 RWStructuredBuffer<Particle> particles;
