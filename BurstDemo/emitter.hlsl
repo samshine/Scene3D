@@ -27,7 +27,7 @@ void main(uint3 threadId : SV_DispatchThreadID)
 	// Is it time to emit?
 	if (emitters[index].emit_cooldown <= 0 && emitters[index].life > 0)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			// Create a particle
 			Particle particle;
