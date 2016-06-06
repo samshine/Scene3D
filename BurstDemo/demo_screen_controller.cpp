@@ -125,7 +125,7 @@ void DemoScreenController::update()
 	float rotate = game_time().time_elapsed() * 100.0f;
 //	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
-	gc()->set_program_object(particle_update_program);
+	gc()->set_program_object(emitter_program);
 	gc()->set_storage_buffer(0, emitters_storage);
 	gc()->set_storage_buffer(1, particles_storage);
 	gc()->dispatch(emitter_count);

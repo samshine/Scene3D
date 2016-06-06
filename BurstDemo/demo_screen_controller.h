@@ -53,6 +53,6 @@ private:
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
-	const int emitter_count = 1024;
+	const int emitter_count = 64;
 	const int particle_count = 1024;
 };
