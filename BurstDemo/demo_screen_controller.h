@@ -8,6 +8,10 @@ public:
 	void update() override;
 
 private:
+	void compile_emitter_program();
+	void compile_particle_update_program();
+	void compile_particle_render_program();
+
 	struct Particle
 	{
 		uicore::Vec3f pos;
@@ -35,10 +39,13 @@ private:
 	uicore::FontPtr font;
 	uicore::Texture2DPtr particle_texture;
 
-	uicore::ProgramObjectPtr program;
-	uicore::StorageBufferPtr storage;
+	uicore::StorageBufferPtr emitters_storage;
+	uicore::StorageBufferPtr particles_storage;
 
-	uicore::ProgramObjectPtr program2;
+	uicore::ProgramObjectPtr emitter_program;
+	uicore::ProgramObjectPtr particle_update_program;
+
+	uicore::ProgramObjectPtr particle_render_program;
 	uicore::BlendStatePtr blend_state;
 	uicore::DepthStencilStatePtr depth_stencil_state;
 	uicore::RasterizerStatePtr rasterizer_state;
@@ -46,5 +53,6 @@ private:
 	uicore::VertexArrayVector<uicore::Vec3f> billboard_positions;
 	uicore::UniformVector<Uniforms> gpu_uniforms;
 
+	const int emitter_count = 1024;
 	const int particle_count = 1024;
 };

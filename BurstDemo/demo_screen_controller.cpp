@@ -25,32 +25,55 @@ DemoScreenController::DemoScreenController()
 
 	particle_texture = Texture2D::create(gc(), "Resources/particle2.png");
 
+	compile_emitter_program();
+	compile_particle_update_program();
+	compile_particle_render_program();
+
+	emitters_storage = StorageBuffer::create(gc(), sizeof(Particle) * emitter_count, sizeof(Particle));
+	particles_storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
+}
+
+void DemoScreenController::compile_emitter_program()
+{
+	auto shader = ShaderObject::create(gc(), ShaderType::compute, File::read_all_text("emitter.hlsl"));
+	shader->compile();
+
+	emitter_program = ProgramObject::create(gc());
+	emitter_program->attach(shader);
+	emitter_program->link();
+	emitter_program->set_storage_buffer_index("emitters", 0);
+	emitter_program->set_storage_buffer_index("particles", 1);
+}
+
+void DemoScreenController::compile_particle_update_program()
+{
 	auto shader = ShaderObject::create(gc(), ShaderType::compute, File::read_all_text("particle.hlsl"));
 	shader->compile();
 
-	program = ProgramObject::create(gc());
-	program->attach(shader);
-	program->link();
-	program->set_storage_buffer_index("particles", 0);
+	particle_update_program = ProgramObject::create(gc());
+	particle_update_program->attach(shader);
+	particle_update_program->link();
+	particle_update_program->set_storage_buffer_index("particles", 0);
+}
 
-	storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
-
+void DemoScreenController::compile_particle_render_program()
+{
 	auto vertex_shader = ShaderObject::create(gc(), ShaderType::vertex, File::read_all_text("particle_vertex.hlsl"));
 	vertex_shader->compile();
 
 	auto fragment_shader = ShaderObject::create(gc(), ShaderType::fragment, File::read_all_text("particle_fragment.hlsl"));
 	fragment_shader->compile();
 
-	program2 = ProgramObject::create(gc());
-	program2->attach(vertex_shader);
-	program2->attach(fragment_shader);
-	program2->bind_attribute_location(0, "AttrPosition");
-	program2->bind_frag_data_location(0, "FragColor");
-	program2->link();
-	program2->set_uniform_buffer_index("Uniforms", 0);
-	program2->set_uniform1i("ParticleTexture", 0);
-	program2->set_uniform1i("ParticleSampler", 0);
-	program2->set_storage_buffer_index("particles", 0);
+	particle_render_program = ProgramObject::create(gc());
+	particle_render_program->attach(vertex_shader);
+	particle_render_program->attach(fragment_shader);
+	particle_render_program->bind_attribute_location(0, "AttrPosition");
+	particle_render_program->bind_frag_data_location(0, "FragColor");
+	particle_render_program->link();
+	particle_render_program->set_uniform_buffer_index("Uniforms", 0);
+	particle_render_program->set_uniform1i("ParticleTexture", 0);
+	particle_render_program->set_uniform1i("ParticleSampler", 0);
+	particle_render_program->set_storage_buffer_index("particles", 0);
 
 	Vec3f cpu_billboard_positions[6] =
 	{
@@ -90,8 +113,16 @@ void DemoScreenController::update()
 	float rotate = game_time().time_elapsed() * 100.0f;
 //	box->set_orientation(box->orientation() * Quaternionf::euler(Vec3f(radians(rotate)), EulerOrder::xyz));
 
-	gc()->set_program_object(program);
-	gc()->set_storage_buffer(0, storage);
+	gc()->set_program_object(particle_update_program);
+	gc()->set_storage_buffer(0, emitters_storage);
+	gc()->set_storage_buffer(1, particles_storage);
+	gc()->dispatch(emitter_count);
+	gc()->set_storage_buffer(0, nullptr);
+	gc()->set_storage_buffer(1, nullptr);
+	gc()->set_program_object(nullptr);
+
+	gc()->set_program_object(particle_update_program);
+	gc()->set_storage_buffer(0, particles_storage);
 	gc()->dispatch(particle_count);
 	gc()->set_storage_buffer(0, nullptr);
 	gc()->set_program_object(nullptr);
@@ -111,8 +142,8 @@ void DemoScreenController::update()
 		gc()->set_blend_state(blend_state);
 		gc()->set_rasterizer_state(rasterizer_state);
 		gc()->set_primitives_array(prim_array);
-		gc()->set_storage_buffer(0, storage);
-		gc()->set_program_object(program2);
+		gc()->set_storage_buffer(0, particles_storage);
+		gc()->set_program_object(particle_render_program);
 
 		gc()->set_uniform_buffer(0, gpu_uniforms);
 		gc()->set_texture(0, particle_texture);
