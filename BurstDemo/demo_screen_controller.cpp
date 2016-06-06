@@ -29,7 +29,19 @@ DemoScreenController::DemoScreenController()
 	compile_particle_update_program();
 	compile_particle_render_program();
 
-	emitters_storage = StorageBuffer::create(gc(), sizeof(Particle) * emitter_count, sizeof(Particle));
+	std::vector<Particle> emitters(emitter_count);
+	for (int i = 0; i < emitter_count; i++)
+	{
+		auto &emitter = emitters[i];
+		emitter.pos = Vec3f(0, 0, 70) + Vec3f(-std::sin(radians((float)i)), -std::cos(radians((float)i)), -std::sin(radians((float)i))) * 4.0f;
+		emitter.life = 1;
+		emitter.particle_subarray_start = particle_count * i / emitter_count;
+		emitter.particle_subarray_size = particle_count / emitter_count;
+		emitter.emit_position = 0;
+		emitter.emit_cooldown = 0;
+	}
+
+	emitters_storage = StorageBuffer::create(gc(), emitters.data(), sizeof(Particle) * emitter_count, sizeof(Particle));
 	particles_storage = StorageBuffer::create(gc(), sizeof(Particle) * particle_count, sizeof(Particle));
 }
 
