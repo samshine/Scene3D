@@ -276,7 +276,7 @@ void GaussianBlur::compute_blur_samples(int sample_count, float blur_amount, std
 		sample_weights[i * 2 + 1] = weight;
 		sample_weights[i * 2 + 2] = weight;
 		sample_offsets[i * 2 + 1] = i + 1;
-		sample_offsets[i * 2 + 2] = i - 1;
+		sample_offsets[i * 2 + 2] = -i - 1;
 
 		total_weights += weight * 2;
 	}
