@@ -196,7 +196,7 @@ void LightsourcePass::render()
 #ifdef DIFFUSE_GI_TEST
 	inout.gc->set_texture(8, diffuse_gi);
 #endif
-	inout.gc->set_image_texture(0, inout.frames.front()->final_color);
+	inout.gc->set_image_texture(0, inout.frames.front()->current_pipeline_texture());
 
 	inout.gc->set_program_object(cull_tiles_program);
 	inout.gc->dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);

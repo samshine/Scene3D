@@ -1,4 +1,4 @@
-namespace { const char *vertex_bloom_combine_hlsl() { return R"shaderend(
+namespace { const char *vertex_screen_quad_hlsl() { return R"shaderend(
 
 struct VertexIn
 {
@@ -8,7 +8,7 @@ struct VertexIn
 struct VertexOut
 {
 	float4 PositionInProjection : SV_Position;
-	float2 TexCoord : TexCoord;
+	float2 TexCoord : PixelTexCoord;
 };
 
 VertexOut main(VertexIn input)

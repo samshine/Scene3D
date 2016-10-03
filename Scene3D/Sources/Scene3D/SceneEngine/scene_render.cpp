@@ -61,6 +61,7 @@ void SceneRender::render(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	gc = render_gc;
 	gpu_timer.begin_frame(gc);
 
+	setup_screen_quad(gc);
 	setup_passes();
 
 	if (frames.empty())
@@ -156,6 +157,33 @@ void SceneRender::update(const GraphicContextPtr &render_gc, SceneViewportImpl *
 	// To do: update scene object animations here too
 }
 
+void SceneRender::setup_screen_quad(const GraphicContextPtr &gc)
+{
+	if (screen_quad_primitives)
+		return;
+
+	Vec4f positions[6] =
+	{
+		Vec4f(-1.0f, -1.0f, 1.0f, 1.0f),
+		Vec4f(1.0f, -1.0f, 1.0f, 1.0f),
+		Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+		Vec4f(1.0f, -1.0f, 1.0f, 1.0f),
+		Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+		Vec4f(1.0f,  1.0f, 1.0f, 1.0f)
+	};
+	screen_quad_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
+	screen_quad_primitives = PrimitivesArray::create(gc);
+	screen_quad_primitives->set_attributes(0, screen_quad_positions);
+
+	BlendStateDescription blend_desc;
+	blend_desc.enable_blending(false);
+	no_blend = gc->create_blend_state(blend_desc);
+
+	RasterizerStateDescription rasterizer_desc;
+	rasterizer_desc.set_culled(false);
+	no_cull_rasterizer = gc->create_rasterizer_state(rasterizer_desc);
+}
+
 void SceneRender::setup_passes()
 {
 	if (!passes.empty())
@@ -178,7 +206,8 @@ void SceneRender::setup_passes()
 	passes.push_back(std::make_shared<DecalsPass>(*this));
 	passes.push_back(std::make_shared<SkyboxPass>(*this));
 	passes.push_back(std::make_shared<ShadowMapPass>(*this));
-	
+	//passes.push_back(std::make_shared<SSAOPass>(*this));
+
 	if (use_compute_shader_pass)
 	{
 		passes.push_back(std::make_shared<LightsourcePass>(*this));
@@ -193,7 +222,7 @@ void SceneRender::setup_passes()
 	//passes.push_back(std::make_shared<LensFlarePass>(*this));
 	passes.push_back(std::make_shared<CustomPass>(*this));
 	passes.push_back(std::make_shared<BloomPass>(*this));
-	//passes.push_back(std::make_shared<SSAOPass>(*this));
+	passes.push_back(std::make_shared<LensDistortionPass>(*this));
 	passes.push_back(std::make_shared<SceneLinesPass>(*this));
 	passes.push_back(std::make_shared<FinalPass>(*this));
 }
@@ -204,7 +233,7 @@ void CustomPass::run()
 	{
 		Size viewport_size = inout.engine->render.viewport_size;
 		Mat4f eye_to_projection = Mat4f::perspective(inout.engine->render.field_of_view, viewport_size.width / (float)viewport_size.height, 0.1f, 1.e10f, handed_left, inout.gc->clip_z_range());
-		inout.custom_pass(eye_to_projection, inout.world_to_eye, inout.frames.front()->fb_final_color, inout.viewport_size);
+		inout.custom_pass(eye_to_projection, inout.world_to_eye, inout.frames.front()->current_pipeline_fb(), inout.viewport_size);
 	}
 }
 
@@ -224,7 +253,7 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	for (auto &fb_blur : fb_bloom_blurv) fb_blur = nullptr;
 	for (auto &fb_blur : fb_bloom_blurh) fb_blur = nullptr;
 	fb_ambient_occlusion = nullptr;
-	fb_final_color = nullptr;
+	for (auto &pipeline : fb_pipeline) pipeline = nullptr;
 	zbuffer = nullptr;
 	diffuse_color_gbuffer = nullptr;
 	specular_color_gbuffer = nullptr;
@@ -235,7 +264,7 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	for (auto &blur : bloom_blurv) blur = nullptr;
 	for (auto &blur : bloom_blurh) blur = nullptr;
 	ambient_occlusion = nullptr;
-	final_color = nullptr;
+	for (auto &pipeline : pipeline) pipeline = nullptr;
 
 	gc->flush();
 
@@ -247,7 +276,8 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	face_normal_z_gbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 	zbuffer = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_depth_component24);
 
-	final_color = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
+	for (int i = 0; i < num_pipeline_buffers; i++)
+		pipeline[i] = Texture2D::create(gc, viewport_size.width, viewport_size.height, tf_rgba16f);
 
 	auto bloom_size = Size(std::max(viewport_size.width / 2, 1), std::max(viewport_size.height / 2, 1));
 	for (int i = 0; i < bloom_levels; i++)
@@ -280,9 +310,12 @@ void SceneRenderFrame::setup_pass_buffers(SceneRender *render)
 	fb_self_illumination->attach_color(0, self_illumination_gbuffer);
 	fb_self_illumination->attach_depth(zbuffer);
 
-	fb_final_color = FrameBuffer::create(gc);
-	fb_final_color->attach_color(0, final_color);
-	fb_final_color->attach_depth(zbuffer);
+	for (int i = 0; i < num_pipeline_buffers; i++)
+	{
+		fb_pipeline[i] = FrameBuffer::create(gc);
+		fb_pipeline[i]->attach_color(0, pipeline[i]);
+		fb_pipeline[i]->attach_depth(zbuffer);
+	}
 
 	for (int i = 0; i < bloom_levels; i++)
 	{

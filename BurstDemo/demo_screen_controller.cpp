@@ -139,7 +139,7 @@ void DemoScreenController::update()
 	gc()->set_storage_buffer(0, nullptr);
 	gc()->set_program_object(nullptr);
 
-	scene_engine()->set_custom_pass([&](Mat4f eye_to_projection, Mat4f world_to_eye, FrameBufferPtr fb_final_color, Sizef viewport_size)
+	scene_engine()->set_custom_pass([&](Mat4f eye_to_projection, Mat4f world_to_eye, FrameBufferPtr pipeline_fb, Sizef viewport_size)
 	{
 		Uniforms uniforms;
 		uniforms.eye_to_projection = eye_to_projection;
@@ -148,7 +148,7 @@ void DemoScreenController::update()
 
 		gc()->set_depth_range(0.0f, 0.9f);
 
-		gc()->set_frame_buffer(fb_final_color);
+		gc()->set_frame_buffer(pipeline_fb);
 		gc()->set_viewport(viewport_size, gc()->texture_image_y_axis());
 		gc()->set_depth_stencil_state(depth_stencil_state);
 		gc()->set_blend_state(blend_state);

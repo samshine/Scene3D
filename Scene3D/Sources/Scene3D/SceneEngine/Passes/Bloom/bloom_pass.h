@@ -16,10 +16,7 @@ public:
 private:
 	SceneRender &inout;
 
-	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArrayPtr rect_primarray;
 	uicore::ProgramObjectPtr extract_shader;
 	uicore::ProgramObjectPtr combine_shader;
-	uicore::BlendStatePtr blend_state;
 	uicore::BlendStatePtr add_blend_state;
 };

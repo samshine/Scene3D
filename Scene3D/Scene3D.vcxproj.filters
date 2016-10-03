@@ -1101,9 +1101,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\final_pass.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
     </ClInclude>
@@ -1124,9 +1121,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\lightsource_simple_pass.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
@@ -1209,33 +1203,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\fragment_present_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\vertex_present_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Final\vertex_present_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_extract_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\accumulate_lpv_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\init_gv_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\init_lpv_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\propagate_lpv_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\render_result_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\GBuffer\fragment_gbuffer_glsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\GBuffer</Filter>
     </ClInclude>
@@ -1299,15 +1266,6 @@
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Skybox\vertex_cube_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Skybox</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\vertex_ssao_extract_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\fragment_transparency_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
     </ClInclude>
@@ -1319,9 +1277,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Transparency\vertex_transparency_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Transparency</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_extract_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\SSAO</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene3D\MapData\map_data.h">
       <Filter>Include\Scene3D\MapData</Filter>
@@ -1337,24 +1292,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\fragment_bloom_combine_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Bloom\vertex_bloom_combine_hlsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\vertex_log_average_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_average_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_log_downscale_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\fragment_exposure_glsl.h">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SceneLines\fragment_scene_lines_hlsl.h">
       <Filter>Sources\Scene3D\SceneEngine\Passes\SceneLines</Filter>
@@ -1546,6 +1483,27 @@
     <ClInclude Include="Sources\Screen\mouse_movement.h" />
     <ClInclude Include="Include\Screen\screen_controller.h" />
     <ClInclude Include="Include\screen.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\vertex_screen_quad_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\vertex_screen_quad_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\exposure_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_average_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_combine_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_extract_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensDistortion\lens_distortion_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensDistortion\fragment_lens_distortion_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LinearDepth\fragment_linear_depth_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LinearDepth\linear_depth_pass.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_depth_blur_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_combine_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_glsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LinearDepth\fragment_linear_depth_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\LensDistortion\fragment_lens_distortion_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_average_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_combine_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\Exposure\fragment_exposure_extract_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_depth_blur_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_combine_hlsl.h" />
+    <ClInclude Include="Sources\Scene3D\SceneEngine\Passes\SSAO\fragment_ssao_hlsl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Scene3D\Culling\OctTree\oct_tree.cpp">
@@ -2055,9 +2013,6 @@
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Bloom\bloom_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Bloom</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\DiffuseGI\diffuse_gi_pass_cs.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\DiffuseGI</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Final\final_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\Final</Filter>
     </ClCompile>
@@ -2075,9 +2030,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LightsourceSimple\lightsource_simple_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\LightsourceSimple</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LogAverageLight\log_average_light.cpp">
-      <Filter>Sources\Scene3D\SceneEngine\Passes\LogAverageLight</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\ParticleEmitter\particle_emitter_pass.cpp">
       <Filter>Sources\Scene3D\SceneEngine\Passes\ParticleEmitter</Filter>
@@ -2211,5 +2163,8 @@
     <ClCompile Include="Sources\Screen\screen.cpp" />
     <ClCompile Include="Sources\Screen\screen_controller.cpp" />
     <ClCompile Include="Sources\Screen\mouse_movement.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\Exposure\exposure_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LensDistortion\lens_distortion_pass.cpp" />
+    <ClCompile Include="Sources\Scene3D\SceneEngine\Passes\LinearDepth\linear_depth_pass.cpp" />
   </ItemGroup>
 </Project>

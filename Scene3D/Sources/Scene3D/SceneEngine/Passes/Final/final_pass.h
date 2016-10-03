@@ -16,7 +16,4 @@ private:
 	SceneRender &inout;
 
 	uicore::ProgramObjectPtr present_shader;
-	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArrayPtr rect_primarray;
-	uicore::RasterizerStatePtr rasterizer_state;
 };

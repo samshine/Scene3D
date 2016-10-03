@@ -3,7 +3,7 @@ namespace { const char *fragment_bloom_combine_hlsl() { return R"shaderend(
 struct PixelIn
 {
 	float4 ScreenPos : SV_Position;
-	float2 TexCoord : TexCoord;
+	float2 TexCoord : PixelTexCoord;
 };
 
 struct PixelOut

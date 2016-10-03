@@ -1,4 +1,4 @@
-namespace { const char *vertex_bloom_extract_glsl() { return R"shaderend(
+namespace { const char *vertex_screen_quad_glsl() { return R"shaderend(
 
 in vec4 PositionInProjection;
 out vec2 TexCoord;

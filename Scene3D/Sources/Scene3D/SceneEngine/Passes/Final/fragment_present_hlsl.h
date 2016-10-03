@@ -5,7 +5,7 @@ namespace {
 struct PixelIn
 {
 	float4 ScreenPos : SV_Position;
-	float2 TexCoord : TexCoord;
+	float2 TexCoord : PixelTexCoord;
 };
 
 struct PixelOut

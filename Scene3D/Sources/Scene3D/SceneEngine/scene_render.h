@@ -20,6 +20,8 @@
 #include "Scene3D/SceneEngine/Passes/ParticleEmitter/particle_emitter_pass.h"
 #include "Scene3D/SceneEngine/Passes/LensFlare/lens_flare_pass.h"
 #include "Scene3D/SceneEngine/Passes/SceneLines/scene_lines_pass.h"
+#include "Scene3D/SceneEngine/Passes/LensDistortion/lens_distortion_pass.h"
+#include "Scene3D/SceneEngine/Passes/Exposure/exposure_pass.h"
 #include <memory>
 #include <map>
 
@@ -31,6 +33,7 @@ class SceneRenderFrame
 {
 public:
 	enum { bloom_levels = 4 };
+	enum { num_pipeline_buffers = 2};
 
 	uicore::Texture2DArrayPtr shadow_maps;
 	uicore::Texture2DPtr shadow_map_blur_texture;
@@ -45,7 +48,7 @@ public:
 	uicore::FrameBufferPtr fb_bloom_blurv[bloom_levels];
 	uicore::FrameBufferPtr fb_bloom_blurh[bloom_levels];
 	uicore::FrameBufferPtr fb_ambient_occlusion;
-	uicore::FrameBufferPtr fb_final_color;
+	uicore::FrameBufferPtr fb_pipeline[num_pipeline_buffers];
 
 	uicore::Texture2DPtr zbuffer;
 
@@ -57,7 +60,13 @@ public:
 	uicore::Texture2DPtr face_normal_z_gbuffer;
 	uicore::Texture2DPtr ambient_occlusion;
 
-	uicore::Texture2DPtr final_color;
+	uicore::Texture2DPtr pipeline[num_pipeline_buffers];
+	int current_pipeline_index = 0;
+
+	const uicore::Texture2DPtr &current_pipeline_texture() { return pipeline[current_pipeline_index]; }
+	const uicore::FrameBufferPtr &current_pipeline_fb() { return fb_pipeline[current_pipeline_index]; }
+	const uicore::FrameBufferPtr &next_pipeline_fb() { return fb_pipeline[(current_pipeline_index + 1) % num_pipeline_buffers]; }
+	void next_pipeline_buffer() { current_pipeline_index = (current_pipeline_index + 1) % num_pipeline_buffers; }
 
 	uicore::Texture2DPtr bloom_blurv[bloom_levels];
 	uicore::Texture2DPtr bloom_blurh[bloom_levels];
@@ -121,6 +130,11 @@ public:
 	uicore::Texture2DPtr skybox_texture;
 	bool show_skybox_stars = false;
 
+	uicore::VertexArrayVector<uicore::Vec4f> screen_quad_positions;
+	uicore::PrimitivesArrayPtr screen_quad_primitives;
+	uicore::BlendStatePtr no_blend;
+	uicore::RasterizerStatePtr no_cull_rasterizer;
+
 	std::vector<std::shared_ptr<ScenePass>> passes;
 	std::deque<std::shared_ptr<SceneRenderFrame>> frames;
 
@@ -134,12 +148,13 @@ public:
 	std::vector<GPUTimer::Result> gpu_results;
 	GPUTimer gpu_timer;
 
-	std::function<void(uicore::Mat4f eye_to_projection, uicore::Mat4f world_to_eye, uicore::FrameBufferPtr fb_final_color, uicore::Size viewport_size)> custom_pass;
+	std::function<void(uicore::Mat4f eye_to_projection, uicore::Mat4f world_to_eye, uicore::FrameBufferPtr pipeline_fb, uicore::Size viewport_size)> custom_pass;
 
 private:
 	SceneRender(const SceneRender &) = delete;
 	SceneRender &operator=(const SceneRender &) = delete;
 
+	void setup_screen_quad(const uicore::GraphicContextPtr &gc);
 	void setup_passes();
 };
 

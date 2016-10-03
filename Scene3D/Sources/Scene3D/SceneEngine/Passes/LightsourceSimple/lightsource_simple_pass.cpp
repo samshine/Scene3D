@@ -227,7 +227,7 @@ void LightsourceSimplePass::render()
 
 	//inout.timer.begin_time(inout.gc, "light(simple)");
 
-	inout.gc->set_frame_buffer(inout.frames.front()->fb_final_color);
+	inout.gc->set_frame_buffer(inout.frames.front()->current_pipeline_fb());
 
 	inout.gc->set_viewport(inout.viewport_size, inout.gc->texture_image_y_axis());
 

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Scene3D/SceneEngine/Passes/scene_pass.h"
-#include "Scene3D/SceneEngine/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/SceneEngine/scene_render.h"
 #include "Scene3D/SceneEngine/resource.h"
 
@@ -16,19 +15,30 @@ public:
 private:
 	struct UniformBuffer
 	{
-		float f;
-		float f_div_aspect;
-		float padding0, padding1;
-		uicore::Vec4f sampledata[160];
+		uicore::Vec2f UVToViewA;
+		uicore::Vec2f UVToViewB;
+		uicore::Vec2f InvFullResolution;
+		float NDotVBias;
+		float NegInvR2;
+		float RadiusToScreen;
+		float AOMultiplier;
+		float AOStrength;
+		float BlurSharpness;
+		float PowExponent;
+		float Padding1, Padding2, Padding3;
+		uicore::Vec2f Scale;
+		uicore::Vec2f Offset;
 	};
 
-	static float random_value();
+	void create_ssao_shader();
+	void create_blur_shader(bool vertical);
+	void create_combine_shader();
 
 	SceneRender &inout;
 
-	uicore::ProgramObjectPtr extract_shader;
-	uicore::VertexArrayVector<uicore::Vec4f> rect_positions;
-	uicore::PrimitivesArrayPtr rect_primarray;
-	uicore::BlendStatePtr blend_state;
+	uicore::ProgramObjectPtr ssao_shader;
+	uicore::ProgramObjectPtr blur_vertical_shader;
+	uicore::ProgramObjectPtr blur_horizontal_shader;
+	uicore::ProgramObjectPtr combine_shader;
 	uicore::UniformVector<UniformBuffer> uniforms;
 };
